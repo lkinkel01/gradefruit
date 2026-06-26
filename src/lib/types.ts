@@ -1,4 +1,4 @@
-export type View = 'landing' | 'dashboard' | 'analysis' | 'linalg' | 'stochastik' | 'videos' | 'saved' | 'tutors';
+export type View = 'landing' | 'dashboard' | 'analysis' | 'linalg' | 'stochastik' | 'videos' | 'saved' | 'tutors' | 'account';
 
 export interface Topic {
   id: View;

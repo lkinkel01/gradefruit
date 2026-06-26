@@ -1,5 +1,6 @@
 'use client';
 import { View } from '@/lib/types';
+import { useAuth } from '@/lib/AuthContext';
 import styles from './Topbar.module.css';
 
 const LABELS: Partial<Record<View, string>> = {
@@ -10,6 +11,7 @@ const LABELS: Partial<Record<View, string>> = {
   videos: 'Erklärvideos',
   saved: 'Gespeichert',
   tutors: '1:1 Nachhilfe',
+  account: 'Mein Konto',
 };
 
 interface Props {
@@ -17,9 +19,14 @@ interface Props {
   dark: boolean;
   onToggleDark: () => void;
   onOpenNav: () => void;
+  onNavigate: (v: View) => void;
+  onOpenAuth: () => void;
 }
 
-export default function Topbar({ view, dark, onToggleDark, onOpenNav }: Props) {
+export default function Topbar({ view, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
+  const { user } = useAuth();
+  const initials = user ? (user.user_metadata?.full_name || user.email || 'U').slice(0, 2).toUpperCase() : null;
+
   return (
     <div className={styles.topbar}>
       <button className={styles.hamb} onClick={onOpenNav} aria-label="Menü">
@@ -46,6 +53,13 @@ export default function Topbar({ view, dark, onToggleDark, onOpenNav }: Props) {
           </svg>
         )}
       </button>
+      {user ? (
+        <button className={styles.avatarBtn} onClick={() => onNavigate('account')} title="Mein Konto">
+          {initials}
+        </button>
+      ) : (
+        <button className={styles.loginBtn} onClick={onOpenAuth}>Anmelden</button>
+      )}
       <div className={styles.shield}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
