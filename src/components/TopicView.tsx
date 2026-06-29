@@ -7,6 +7,8 @@ import styles from './TopicView.module.css';
 import SceneModal from './SceneModal';
 import { SCENES, Scene } from '@/lib/scenes';
 import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
+import { LINALG_TASKS } from '@/lib/linalgTasks';
+import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
 
 interface Task {
   id: string;
@@ -31,52 +33,13 @@ const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; 
     label: 'Lineare Algebra & Geometrie',
     color: '#6C63FF',
     badge: 'Wahlbereich',
-    tasks: [
-      {
-        id: 'l1', tag: 'Vektoren', src: 'Abitur Hessen 2023 · B1',
-        q: 'Gegeben sind die Punkte A(1|2|3) und B(4|6|3). Berechnen Sie den Abstand |AB|.',
-        steps: [
-          { label: 'Verbindungsvektor', math: 'AB⃗ = (4−1, 6−2, 3−3) = (3, 4, 0)' },
-          { label: 'Betrag', math: '|AB| = √(3² + 4² + 0²) = √25 = 5' },
-        ],
-        result: '|AB| = 5',
-        locked: false,
-        videoId: 'l1',
-      },
-      {
-        id: 'l2', tag: 'Geraden & Ebenen', src: 'Abitur Hessen 2022 · B2',
-        q: 'Untersuchen Sie, ob der Punkt P(2|3|1) auf der Geraden g liegt.',
-        steps: [],
-        result: '',
-        locked: true,
-      },
-    ],
+    tasks: LINALG_TASKS,
   },
   stochastik: {
     label: 'Stochastik',
     color: '#17B26A',
     badge: 'Pflichtbereich',
-    tasks: [
-      {
-        id: 's1', tag: 'Binomialverteilung', src: 'Abitur Hessen 2023 · C1',
-        q: 'Eine faire Münze wird 10-mal geworfen. Wie groß ist P(genau 4 Mal Kopf)?',
-        steps: [
-          { label: 'Parameter', math: 'n = 10, k = 4, p = 0,5' },
-          { label: 'Formel', math: 'P(X=4) = C(10,4) · 0,5⁴ · 0,5⁶' },
-          { label: 'Berechnung', math: 'P(X=4) = 210 · 0,0625 · 0,015625' },
-        ],
-        result: 'P(X=4) ≈ 0,205 (20,5%)',
-        locked: false,
-        videoId: 'v6',
-      },
-      {
-        id: 's2', tag: 'Bedingte Wahrscheinlichkeit', src: 'Abitur Hessen 2022 · C2',
-        q: 'Verwenden Sie den Satz von Bayes für folgende Aufgabe ...',
-        steps: [],
-        result: '',
-        locked: true,
-      },
-    ],
+    tasks: STOCHASTIK_TASKS,
   },
 };
 
