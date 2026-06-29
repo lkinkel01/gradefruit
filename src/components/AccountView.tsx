@@ -1,19 +1,43 @@
 'use client';
 import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
+import { useProgress } from '@/lib/ProgressContext';
 import { createClient } from '@/lib/supabase';
 import styles from './AccountView.module.css';
 
 interface Props {
   onNavigate: (v: string) => void;
+  onOpenCheckout: () => void;
 }
 
-export default function AccountView({ onNavigate }: Props) {
-  const { user, signOut } = useAuth();
+export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
+  const { user, session, signOut } = useAuth();
+  const { owned, plan } = useProgress();
   const supabase = createClient();
   const [name, setName] = useState(user?.user_metadata?.full_name ?? '');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [portalBusy, setPortalBusy] = useState(false);
+
+  // Öffnet das Stripe-Kundenportal (Abo ansehen/ändern/kündigen)
+  const openPortal = async () => {
+    if (portalBusy || !session?.access_token) return;
+    setPortalBusy(true);
+    try {
+      const res = await fetch('/api/stripe/portal', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      const data = await res.json().catch(() => null);
+      if (res.ok && data?.url) {
+        window.location.href = data.url as string;
+        return;
+      }
+    } catch {
+      /* Fehler ignorieren – Button wird wieder aktiv */
+    }
+    setPortalBusy(false);
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -74,15 +98,34 @@ export default function AccountView({ onNavigate }: Props) {
 
       <div className={styles.section}>
         <div className={styles.sectionTitle}>Zugang</div>
-        <div className={styles.planRow}>
-          <div>
-            <b>Gratis-Zugang</b>
-            <p>Für den Vollzugang alle Themen und Aufgaben freischalten.</p>
+        {!owned ? (
+          <div className={styles.planRow}>
+            <div>
+              <b>Gratis-Zugang</b>
+              <p>Du nutzt gerade den Probezugang. Schalte den Vollzugang frei: alle Themen, Altklausuren, Erklärvideos und Tutor-Anfragen.</p>
+            </div>
+            <button className="btn primary btn sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={onOpenCheckout}>
+              Vollzugang freischalten
+            </button>
           </div>
-          <button className="btn primary btn sm" style={{ fontSize: 13, flexShrink: 0 }}>
-            Vollzugang — 79 €
-          </button>
-        </div>
+        ) : plan === 'subscription' ? (
+          <div className={styles.planRow}>
+            <div>
+              <b>Monats-Abo · aktiv ✓</b>
+              <p>Du hast vollen Zugang. Monatlich kündbar – verwalte oder kündige dein Abo jederzeit.</p>
+            </div>
+            <button className="btn light sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={openPortal} disabled={portalBusy}>
+              {portalBusy ? '…' : 'Abo verwalten'}
+            </button>
+          </div>
+        ) : (
+          <div className={styles.planRow}>
+            <div>
+              <b>Komplettkurs · Vollzugang aktiv ✓</b>
+              <p>Du hast vollen Zugang bis zur Prüfung. Viel Erfolg beim Lernen!</p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className={styles.danger}>

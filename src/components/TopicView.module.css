@@ -24,6 +24,9 @@
   transition: .15s; display: inline-flex; align-items: center; gap: 7px;
 }
 .mini:hover { border-color: var(--accent); color: var(--accent-d); }
+.miniDone { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+.miniDone:hover { border-color: var(--green); color: var(--green); }
+.miniSaved { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-d); }
 
 .solution { border-top: 1px solid var(--line); background: var(--surface-2); }
 .solInner { padding: 6px 22px 14px; }

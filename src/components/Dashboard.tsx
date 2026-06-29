@@ -1,5 +1,6 @@
 'use client';
 import { View, TOPICS } from '@/lib/types';
+import { useProgress } from '@/lib/ProgressContext';
 import styles from './Dashboard.module.css';
 
 interface Props {
@@ -7,9 +8,8 @@ interface Props {
 }
 
 export default function Dashboard({ onNavigate }: Props) {
-  const totalDone = TOPICS.reduce((a, t) => a + t.done, 0);
-  const totalTasks = TOPICS.reduce((a, t) => a + t.tasks, 0);
-  const pct = Math.round((totalDone / totalTasks) * 100);
+  const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
+  const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
   return (
     <div className={styles.page}>
@@ -33,7 +33,7 @@ export default function Dashboard({ onNavigate }: Props) {
             </svg>
             <div>
               <div className={styles.bigPct}>{pct}%</div>
-              <div className={styles.sub}>{totalDone} von {totalTasks} Aufgaben</div>
+              <div className={styles.sub}>{totalDone} von {totalLessons} Aufgaben</div>
             </div>
           </div>
           <button className={`btn primary ${styles.contBtn}`} onClick={() => onNavigate('analysis')}>
@@ -53,7 +53,7 @@ export default function Dashboard({ onNavigate }: Props) {
                 </div>
                 <div className={styles.tx}>
                   <b>{t.label}</b>
-                  <small>{t.done}/{t.tasks} Aufgaben</small>
+                  <small>{topicDone(t.id)}/{topicTotal(t.id)} Aufgaben</small>
                 </div>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" strokeWidth="2" strokeLinecap="round">
                   <polyline points="9 18 15 12 9 6" />

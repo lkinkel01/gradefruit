@@ -46,7 +46,7 @@
 .dbody { flex: 1; overflow-y: auto; padding: 8px 18px 16px; }
 .empty { text-align: center; color: var(--faint); font-size: 13.5px; padding: 24px 10px; line-height: 1.6; }
 
-.msg { font-size: 14px; line-height: 1.5; padding: 11px 14px; border-radius: 14px; max-width: 92%; margin-bottom: 7px; }
+.msg { font-size: 14px; line-height: 1.5; padding: 11px 14px; border-radius: 14px; max-width: 92%; margin-bottom: 7px; white-space: pre-wrap; word-break: break-word; }
 .q { margin-left: auto; background: var(--accent); color: #fff; border-bottom-right-radius: 5px; }
 .a { background: #F0EEF3; color: var(--ink); border-bottom-left-radius: 5px; }
 
@@ -68,8 +68,30 @@
 .pchip:hover { border-color: var(--accent); color: var(--accent-d); }
 
 .dfoot { border-top: 1px solid var(--line); padding: 12px 14px; }
+
+.fileError {
+  font-size: 12.5px; color: #D92D20; background: #FEF3F2;
+  border: 1px solid #FECDCA; border-radius: 9px;
+  padding: 7px 11px; margin-bottom: 8px; line-height: 1.4;
+}
+
+.attachChip {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--surface-2); border: 1px solid var(--line);
+  border-radius: 10px; padding: 7px 9px; margin-bottom: 8px;
+  color: var(--ink); font-size: 13px;
+}
+.attachChip svg { color: var(--accent-d); flex-shrink: 0; }
+.attachName { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.attachRemove {
+  border: none; background: transparent; cursor: pointer;
+  color: var(--muted); font-size: 14px; line-height: 1;
+  padding: 2px 4px; border-radius: 6px; flex-shrink: 0;
+}
+.attachRemove:hover { background: var(--line); color: var(--ink); }
+
 .askform { display: flex; gap: 8px; }
-.askform input {
+.askform input[type="text"], .askform > input:not([type]) {
   flex: 1; border: 1px solid var(--line-strong); border-radius: 11px;
   padding: 11px 14px; font-family: inherit; font-size: 14px;
   background: var(--canvas); color: var(--ink); outline: none;
@@ -80,5 +102,12 @@
   border-radius: 11px; padding: 0 16px; cursor: pointer;
   display: flex; align-items: center;
 }
+.attachBtn {
+  background: var(--surface-2) !important; color: var(--muted) !important;
+  border: 1px solid var(--line-strong) !important; padding: 0 12px !important;
+}
+.attachBtn:hover:not(:disabled) { color: var(--accent-d) !important; border-color: var(--accent) !important; }
+.askform button:disabled { opacity: .5; cursor: not-allowed; }
+.pchip:disabled { opacity: .6; cursor: not-allowed; }
 
 @media (max-width: 560px) { .drawer { width: 100%; max-width: 100%; } }

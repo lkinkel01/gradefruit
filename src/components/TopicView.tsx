@@ -1,7 +1,11 @@
 'use client';
 import { useState } from 'react';
 import { View } from '@/lib/types';
+import { useAuth } from '@/lib/AuthContext';
+import { useProgress } from '@/lib/ProgressContext';
 import styles from './TopicView.module.css';
+import SceneModal from './SceneModal';
+import { SCENES, Scene } from '@/lib/scenes';
 
 interface Task {
   id: string;
@@ -11,6 +15,7 @@ interface Task {
   steps: { label: string; math: string }[];
   result: string;
   locked: boolean;
+  videoId?: string; // passendes Erklärvideo (Schlüssel aus scenes.ts)
 }
 
 const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; tasks: Task[] }> = {
@@ -32,6 +37,7 @@ const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; 
         ],
         result: 'HP(0 | 2)   TP(2 | −2)',
         locked: false,
+        videoId: 'v2',
       },
       {
         id: 'a2', tag: 'Integralrechnung', src: 'Abitur Hessen 2022 · A2',
@@ -42,6 +48,7 @@ const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; 
         ],
         result: '∫₀² (2x+1) dx = 6',
         locked: false,
+        videoId: 'v3',
       },
       {
         id: 'a3', tag: 'Kurvendiskussion', src: 'Abitur Hessen 2021 · B1',
@@ -66,6 +73,7 @@ const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; 
         ],
         result: '|AB| = 5',
         locked: false,
+        videoId: 'l1',
       },
       {
         id: 'l2', tag: 'Geraden & Ebenen', src: 'Abitur Hessen 2022 · B2',
@@ -91,6 +99,7 @@ const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; 
         ],
         result: 'P(X=4) ≈ 0,205 (20,5%)',
         locked: false,
+        videoId: 'v6',
       },
       {
         id: 's2', tag: 'Bedingte Wahrscheinlichkeit', src: 'Abitur Hessen 2022 · C2',
@@ -112,7 +121,10 @@ interface Props {
 
 export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }: Props) {
   const topic = TOPIC_DATA[topicId as string];
+  const { user } = useAuth();
+  const { isUnderstood, isSaved, toggleUnderstood, toggleSaved } = useProgress();
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
+  const [video, setVideo] = useState<Scene | null>(null);
 
   if (!topic) return null;
 
@@ -150,6 +162,18 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
                 </button>
               ) : (
                 <>
+                  {task.videoId && SCENES[task.videoId] && (
+                    <button
+                      className={styles.mini}
+                      style={{ background: topic.color, color: '#fff', borderColor: 'transparent' }}
+                      onClick={() => setVideo(SCENES[task.videoId!])}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <polygon points="6 4 20 12 6 20 6 4" />
+                      </svg>
+                      Video ansehen
+                    </button>
+                  )}
                   <button
                     className={styles.mini}
                     onClick={() => toggle(task.id)}
@@ -170,6 +194,29 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
                     </svg>
                     KI fragen
                   </button>
+                  {user && (
+                    <>
+                      <button
+                        className={`${styles.mini} ${isUnderstood(topicId, task.id) ? styles.miniDone : ''}`}
+                        onClick={() => toggleUnderstood(topicId, task.id)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        {isUnderstood(topicId, task.id) ? 'Verstanden' : 'Verstanden?'}
+                      </button>
+                      <button
+                        className={`${styles.mini} ${isSaved(topicId, task.id) ? styles.miniSaved : ''}`}
+                        onClick={() => toggleSaved(topicId, task.id)}
+                        aria-label="Aufgabe speichern"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill={isSaved(topicId, task.id) ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                        </svg>
+                        {isSaved(topicId, task.id) ? 'Gespeichert' : 'Speichern'}
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -203,6 +250,8 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
           Frage stellen
         </button>
       </div>
+
+      <SceneModal scene={video} onClose={() => setVideo(null)} />
     </div>
   );
 }

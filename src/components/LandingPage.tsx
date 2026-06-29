@@ -2,11 +2,14 @@
 import styles from './LandingPage.module.css';
 
 interface Props {
+  isAuthed: boolean;
+  owned: boolean;
   onEnter: () => void;
   onOpenCheckout: () => void;
+  onSignOut: () => void;
 }
 
-export default function LandingPage({ onEnter, onOpenCheckout }: Props) {
+export default function LandingPage({ isAuthed, owned, onEnter, onOpenCheckout, onSignOut }: Props) {
   return (
     <div className={styles.lpage}>
       <nav className={styles.lnav}>
@@ -15,8 +18,17 @@ export default function LandingPage({ onEnter, onOpenCheckout }: Props) {
           Gradefruit
         </div>
         <div className={styles.lbtns}>
-          <button className="btn light" onClick={onEnter}>Anmelden</button>
-          <button className="btn primary" onClick={onOpenCheckout}>Vollzugang</button>
+          {isAuthed ? (
+            <>
+              <button className="btn light" onClick={onSignOut}>Abmelden</button>
+              <button className="btn primary" onClick={onEnter}>Weiter lernen</button>
+            </>
+          ) : (
+            <>
+              <button className="btn light" onClick={onEnter}>Anmelden</button>
+              <button className="btn primary" onClick={onOpenCheckout}>Vollzugang</button>
+            </>
+          )}
         </div>
       </nav>
 
@@ -25,10 +37,23 @@ export default function LandingPage({ onEnter, onOpenCheckout }: Props) {
         <h1>Besteh dein<br /><span className={styles.grad}>Mathe-Abi.</span></h1>
         <p>Alle Themen, echte Abituraufgaben und Schritt-für-Schritt-Erklärungen — genau auf den hessischen Grundkurs zugeschnitten.</p>
         <div className={styles.cta}>
-          <button className="btn primary" onClick={onEnter}>Kostenlos starten</button>
-          <button className="btn light" onClick={onOpenCheckout}>Vollzugang 79 €</button>
+          {isAuthed ? (
+            <>
+              <button className="btn primary" onClick={onEnter}>Weiter lernen</button>
+              {!owned && <button className="btn light" onClick={onOpenCheckout}>Vollzugang 79 €</button>}
+            </>
+          ) : (
+            <>
+              <button className="btn primary" onClick={onEnter}>Kostenlos starten</button>
+              <button className="btn light" onClick={onOpenCheckout}>Vollzugang 79 €</button>
+            </>
+          )}
         </div>
-        <p className={styles.microline}>Keine Anmeldung nötig · Sofort loslegen</p>
+        <p className={styles.microline}>
+          {isAuthed
+            ? 'Schön, dass du wieder da bist — mach da weiter, wo du aufgehört hast.'
+            : 'Keine Anmeldung nötig · Sofort loslegen'}
+        </p>
       </div>
 
       <div className={styles.topicchips}>
@@ -76,14 +101,18 @@ export default function LandingPage({ onEnter, onOpenCheckout }: Props) {
             <h3>Schnuppern</h3>
             <div className={styles.price}>0 €</div>
             <div className={styles.per}>für immer kostenlos</div>
-            <button className="btn light" style={{ marginTop: 'auto' }} onClick={onEnter}>Jetzt starten</button>
+            <button className="btn light" style={{ marginTop: 'auto' }} onClick={onEnter}>{isAuthed ? 'Weiter lernen' : 'Jetzt starten'}</button>
           </div>
           <div className={`${styles.plan} ${styles.planHl}`}>
             <div className={styles.pt}>Empfohlen</div>
             <h3>Vollzugang</h3>
             <div className={styles.price}>79 €</div>
             <div className={styles.per}>einmalig · bis zur Prüfung</div>
-            <button className="btn primary" style={{ marginTop: 'auto' }} onClick={onOpenCheckout}>Jetzt freischalten</button>
+            {owned ? (
+              <button className="btn light" style={{ marginTop: 'auto' }} disabled>Dein Zugang ist aktiv ✓</button>
+            ) : (
+              <button className="btn primary" style={{ marginTop: 'auto' }} onClick={onOpenCheckout}>Jetzt freischalten</button>
+            )}
           </div>
         </div>
       </div>

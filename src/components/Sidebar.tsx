@@ -1,5 +1,6 @@
 'use client';
 import { View, TOPICS } from '@/lib/types';
+import { useProgress } from '@/lib/ProgressContext';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -29,9 +30,8 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function Sidebar({ view, owned, onNavigate, onOpenCheckout }: Props) {
-  const totalDone = TOPICS.reduce((a, t) => a + t.done, 0);
-  const totalTasks = TOPICS.reduce((a, t) => a + t.tasks, 0);
-  const pct = Math.round((totalDone / totalTasks) * 100);
+  const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
+  const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
   return (
     <aside className={styles.sidebar}>
@@ -42,7 +42,7 @@ export default function Sidebar({ view, owned, onNavigate, onOpenCheckout }: Pro
 
       <div className={styles.course}>
         <div className={styles.courseTitle}>Mathe-Abi Hessen 2027</div>
-        <div className={styles.courseSub}>Grundkurs · {totalDone}/{totalTasks} Aufgaben</div>
+        <div className={styles.courseSub}>Grundkurs · {totalDone}/{totalLessons} Aufgaben</div>
         <div className={styles.prog}>
           <div className={styles.bar}><i style={{ width: `${pct}%` }} /></div>
           <div className={styles.progLbl}>{pct}% abgeschlossen</div>
@@ -59,7 +59,7 @@ export default function Sidebar({ view, owned, onNavigate, onOpenCheckout }: Pro
           >
             <span className={styles.cdot} style={{ background: t.color }} />
             <span className={styles.ti}>{t.label}</span>
-            {t.done === t.tasks
+            {topicTotal(t.id) > 0 && topicDone(t.id) === topicTotal(t.id)
               ? <span className={styles.stDone}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg></span>
               : !owned && <span className={styles.stLock}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></span>
             }
