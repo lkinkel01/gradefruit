@@ -9,6 +9,9 @@ import { SCENES, Scene } from '@/lib/scenes';
 import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
 import { LINALG_TASKS } from '@/lib/linalgTasks';
 import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
+import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
+import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
+import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
 
 interface Task {
   id: string;
@@ -22,24 +25,27 @@ interface Task {
   mistakes?: string[]; // 2 typische Fehler (optional)
 }
 
-const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; tasks: Task[] }> = {
+const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; gk: Task[]; lk: Task[] }> = {
   analysis: {
     label: 'Analysis',
     color: '#F0524A',
     badge: 'Pflichtbereich',
-    tasks: ANALYSIS_TASKS,
+    gk: ANALYSIS_TASKS,
+    lk: ANALYSIS_LK_TASKS,
   },
   linalg: {
     label: 'Lineare Algebra & Geometrie',
     color: '#6C63FF',
     badge: 'Wahlbereich',
-    tasks: LINALG_TASKS,
+    gk: LINALG_TASKS,
+    lk: LINALG_LK_TASKS,
   },
   stochastik: {
     label: 'Stochastik',
     color: '#17B26A',
     badge: 'Pflichtbereich',
-    tasks: STOCHASTIK_TASKS,
+    gk: STOCHASTIK_TASKS,
+    lk: STOCHASTIK_LK_TASKS,
   },
 };
 
@@ -56,8 +62,11 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
   const { isUnderstood, isSaved, toggleUnderstood, toggleSaved } = useProgress();
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
   const [video, setVideo] = useState<Scene | null>(null);
+  const [level, setLevel] = useState<'gk' | 'lk'>('gk');
 
   if (!topic) return null;
+
+  const tasks = topic[level];
 
   const toggle = (id: string) => {
     setOpenSolutions(prev => {
@@ -75,7 +84,28 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
       <h1 className={styles.ph1}>{topic.label}</h1>
       <p className={styles.pblurb}>Echte Abituraufgaben mit Schritt-für-Schritt-Lösungen.</p>
 
-      {topic.tasks.map(task => (
+      <div className={styles.levelSwitch} role="tablist" aria-label="Kursniveau wählen">
+        <button
+          role="tab"
+          aria-selected={level === 'gk'}
+          className={`${styles.levelBtn} ${level === 'gk' ? styles.levelBtnActive : ''}`}
+          style={level === 'gk' ? { background: topic.color, borderColor: topic.color } : undefined}
+          onClick={() => setLevel('gk')}
+        >
+          Grundkurs
+        </button>
+        <button
+          role="tab"
+          aria-selected={level === 'lk'}
+          className={`${styles.levelBtn} ${level === 'lk' ? styles.levelBtnActive : ''}`}
+          style={level === 'lk' ? { background: topic.color, borderColor: topic.color } : undefined}
+          onClick={() => setLevel('lk')}
+        >
+          Leistungskurs
+        </button>
+      </div>
+
+      {tasks.map(task => (
         <div key={task.id} className={styles.task}>
           <div className={styles.taskHead}>
             <div className={styles.taskTag}>

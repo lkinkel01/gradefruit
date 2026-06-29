@@ -5,6 +5,21 @@
 .ph1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
 .pblurb { font-size: 15.5px; color: var(--muted); max-width: 60ch; margin-bottom: 20px; }
 
+.levelSwitch {
+  display: inline-flex; gap: 4px; margin-bottom: 22px;
+  padding: 4px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--surface-2);
+}
+.levelBtn {
+  border: 1px solid transparent; background: transparent;
+  cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 600;
+  color: var(--muted); padding: 8px 18px; border-radius: 9px;
+  transition: .15s;
+}
+.levelBtn:hover { color: var(--ink); }
+.levelBtnActive { color: #fff; }
+.levelBtnActive:hover { color: #fff; }
+
 .task {
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow);
