@@ -137,6 +137,26 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
           </div>
         </div>
       </div>
+
+      <div className={styles.closing}>
+        <h2>Bereit für dein Mathe-Abi?</h2>
+        <p>Starte kostenlos und ohne Anmeldung. Den Vollzugang schaltest du frei, wenn du bereit bist.</p>
+        <button className="btn primary" onClick={onEnter}>{isAuthed ? 'Weiter lernen' : 'Kostenlos starten'}</button>
+      </div>
+
+      <footer className={styles.foot}>
+        <div className={styles.footbrand}>
+          <span className={styles.dot} />
+          Gradefruit
+        </div>
+        <div className={styles.foottrust}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          Sichere Bezahlung über Stripe · SSL-verschlüsselt
+        </div>
+        <div className={styles.footcopy}>© 2026 Gradefruit · Mathe-Abi Hessen 2027</div>
+      </footer>
     </div>
   );
 }
