@@ -19,7 +19,7 @@
 .dhead h2 { font-size: 17px; word-break: break-word; padding-right: 34px; }
 .dclose {
   position: absolute; top: 16px; right: 16px;
-  border: none; background: #F0EDF2; width: 30px; height: 30px;
+  border: none; background: var(--control); width: 30px; height: 30px;
   border-radius: 9px; cursor: pointer; color: var(--muted); font-size: 15px;
 }
 .snippet {
@@ -30,7 +30,7 @@
 .snipLabel { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--accent-d); margin-bottom: 3px; }
 
 .seg {
-  display: flex; gap: 3px; background: #ECEAF0;
+  display: flex; gap: 3px; background: var(--control);
   padding: 3px; border-radius: 11px; margin: 14px 22px 0;
 }
 .seg button {
@@ -48,7 +48,7 @@
 
 .msg { font-size: 14px; line-height: 1.5; padding: 11px 14px; border-radius: 14px; max-width: 92%; margin-bottom: 7px; white-space: pre-wrap; word-break: break-word; }
 .q { margin-left: auto; background: var(--accent); color: #fff; border-bottom-right-radius: 5px; }
-.a { background: #F0EEF3; color: var(--ink); border-bottom-left-radius: 5px; }
+.a { background: var(--bubble-ai); color: var(--ink); border-bottom-left-radius: 5px; }
 
 .typing { display: inline-flex !important; gap: 4px; align-items: center; }
 .typing span { width: 7px; height: 7px; border-radius: 99px; background: var(--faint); animation: tdot 1s infinite; }
@@ -70,8 +70,8 @@
 .dfoot { border-top: 1px solid var(--line); padding: 12px 14px; }
 
 .fileError {
-  font-size: 12.5px; color: #D92D20; background: #FEF3F2;
-  border: 1px solid #FECDCA; border-radius: 9px;
+  font-size: 12.5px; color: var(--danger); background: var(--danger-soft);
+  border: 1px solid var(--danger-line); border-radius: 9px;
   padding: 7px 11px; margin-bottom: 8px; line-height: 1.4;
 }
 

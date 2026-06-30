@@ -22,12 +22,12 @@
 .field input:focus { border-color: var(--accent); }
 
 .error {
-  background: var(--accent-soft); border: 1px solid #f8b4b0; border-radius: 10px;
-  padding: 10px 13px; font-size: 13px; color: var(--accent-d); margin-bottom: 10px;
+  background: var(--danger-soft); border: 1px solid var(--danger-line); border-radius: 10px;
+  padding: 10px 13px; font-size: 13px; color: var(--danger); margin-bottom: 10px;
 }
 .info {
-  background: var(--green-soft); border: 1px solid #a7f0cc; border-radius: 10px;
-  padding: 10px 13px; font-size: 13px; color: #0f7044; margin-bottom: 10px;
+  background: var(--green-soft); border: 1px solid var(--success-line); border-radius: 10px;
+  padding: 10px 13px; font-size: 13px; color: var(--success); margin-bottom: 10px;
 }
 
 .switchMode {

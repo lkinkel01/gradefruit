@@ -11,7 +11,14 @@
   letter-spacing: -0.02em;
 }
 .dot { width: 10px; height: 10px; border-radius: 99px; background: var(--accent); margin-top: 1px; }
-.lbtns { display: flex; gap: 10px; }
+.lbtns { display: flex; align-items: center; gap: 10px; }
+.darkToggle {
+  border: 1px solid var(--line-strong); background: var(--surface);
+  width: 40px; height: 40px; border-radius: 12px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--ink); flex-shrink: 0; transition: .15s;
+}
+.darkToggle:hover { border-color: var(--accent); color: var(--accent-d); }
 
 .hero { padding: 46px 0 8px; max-width: 660px; }
 .eyebrow {

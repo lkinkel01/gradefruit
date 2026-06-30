@@ -150,6 +150,8 @@ export default function Home() {
         <LandingPage
           isAuthed={!!user}
           owned={owned}
+          dark={dark}
+          onToggleDark={() => setDark(d => !d)}
           onEnter={() => user ? setView('dashboard') : openAuth('register')}
           onOpenCheckout={() => user ? openCheckout('gk') : openAuth('register')}
           onSignOut={handleSignOut}
