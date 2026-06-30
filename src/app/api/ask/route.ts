@@ -249,7 +249,7 @@ export async function POST(req: Request) {
           console.error('Anthropic-Stream-Fehler:', err);
           controller.enqueue(
             encoder.encode(
-              '\n\n⚠️ Entschuldigung, da ist gerade etwas schiefgelaufen. Bitte versuch es gleich noch einmal.',
+              '\n\nEntschuldigung, da ist gerade etwas schiefgelaufen. Bitte versuch es gleich noch einmal.',
             ),
           );
         } finally {

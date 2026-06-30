@@ -13,7 +13,7 @@ export default function Dashboard({ onNavigate }: Props) {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.ph1}>Hallo 👋</h1>
+      <h1 className={styles.ph1}>Hallo</h1>
       <p className={styles.pblurb}>Dein Mathe-Abi 2027 – Hessen Grundkurs. Mach weiter, wo du aufgehört hast.</p>
 
       <div className={styles.dgrid}>

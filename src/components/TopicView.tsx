@@ -214,7 +214,7 @@ export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onO
                 )}
                 {task.mistakes && task.mistakes.length > 0 && (
                   <div className={styles.mistakes}>
-                    <div className={styles.mistakesTitle}>⚠️ Typische Fehler</div>
+                    <div className={styles.mistakesTitle}>Typische Fehler</div>
                     <ul className={styles.mistakesList}>
                       {task.mistakes.map((m, i) => (
                         <li key={i}>{m}</li>

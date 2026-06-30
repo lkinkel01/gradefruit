@@ -65,7 +65,12 @@ export default function TutorsView() {
       )}
       {bookingTutor && booked && (
         <div className={styles.bookPanel} style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 32, marginBottom: 8 }}>✅</div>
+          <div style={{ marginBottom: 10, display: 'flex', justifyContent: 'center' }}>
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="8.5 12.5 11 15 16 9" />
+            </svg>
+          </div>
           <h3>Anfrage gesendet!</h3>
           <p style={{ color: 'var(--muted)', marginTop: 6, marginBottom: 16 }}>Dein Tutor meldet sich in Kürze bei dir.</p>
           <button className="btn light" onClick={() => setBookingTutor(null)}>Zurück</button>

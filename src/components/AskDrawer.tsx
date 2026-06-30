@@ -113,7 +113,7 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
     // Tutor-Modus: noch kein echter Versand, freundlicher Platzhalter
     if (mode === 'tutor') {
       const label = attachment
-        ? (question ? `${question}\n📎 ${attachment.name}` : `📎 ${attachment.name}`)
+        ? (question ? `${question}\n${attachment.name}` : attachment.name)
         : question;
       setMessages(prev => [
         ...prev,
@@ -135,7 +135,7 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
     const history = messages.map(m => ({ role: m.role, text: m.text }));
     const sentAttachment = attachment;
     const userLabel = sentAttachment
-      ? (question ? `${question}\n📎 ${sentAttachment.name}` : `📎 ${sentAttachment.name}`)
+      ? (question ? `${question}\n${sentAttachment.name}` : sentAttachment.name)
       : question;
 
     // Nutzer-Nachricht + leere KI-Nachricht (wird gestreamt) anzeigen

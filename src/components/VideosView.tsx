@@ -22,7 +22,7 @@ export default function VideosView() {
     if (scene) {
       setActive(scene);
     } else {
-      setNotice('Dieses Erklärvideo kommt bald 🙂');
+      setNotice('Dieses Erklärvideo kommt bald.');
       setTimeout(() => setNotice(''), 2600);
     }
   };
