@@ -88,4 +88,10 @@
 .lockCard .btn { min-width: 230px; }
 .lockHint { font-size: 12.5px; color: var(--faint); margin-top: 14px; }
 
-@media (max-width: 560px) { .page { padding: 22px 18px 96px; } .solInner { padding: 6px 18px 14px; } .taskHead { padding: 16px 18px; } .lockCard { padding: 30px 20px 26px; } }
+@media (max-width: 560px) {
+  .page { padding: 22px 18px 96px; }
+  .solInner { padding: 6px 18px 14px; }
+  .taskHead { padding: 16px 18px; }
+  .lockCard { padding: 30px 20px 26px; }
+  .stepMt, .result { overflow-x: auto; }
+}
