@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import styles from './Dashboard.module.css';
@@ -10,11 +11,33 @@ interface Props {
 export default function Dashboard({ onNavigate }: Props) {
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
+  const open = Math.max(0, totalLessons - totalDone);
+
+  const [greeting, setGreeting] = useState('Hallo');
+  useEffect(() => {
+    const h = new Date().getHours();
+    setGreeting(h < 11 ? 'Guten Morgen' : h < 18 ? 'Hallo' : 'Guten Abend');
+  }, []);
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.ph1}>Hallo</h1>
+      <h1 className={styles.ph1}>{greeting}</h1>
       <p className={styles.pblurb}>Dein Mathe-Abi 2027 – Hessen Grundkurs. Mach weiter, wo du aufgehört hast.</p>
+
+      <div className={styles.stats}>
+        <div className={styles.stat}>
+          <div className={styles.statNum}>{totalDone}</div>
+          <div className={styles.statLabel}>Aufgaben erledigt</div>
+        </div>
+        <div className={styles.stat}>
+          <div className={styles.statNum}>{open}</div>
+          <div className={styles.statLabel}>Noch offen</div>
+        </div>
+        <div className={styles.stat}>
+          <div className={styles.statNum}>{TOPICS.length}</div>
+          <div className={styles.statLabel}>Themen</div>
+        </div>
+      </div>
 
       <div className={styles.dgrid}>
         <div className={styles.dcard}>
@@ -53,7 +76,18 @@ export default function Dashboard({ onNavigate }: Props) {
                 </div>
                 <div className={styles.tx}>
                   <b>{t.label}</b>
-                  <small>{topicDone(t.id)}/{topicTotal(t.id)} Aufgaben</small>
+                  <div className={styles.tbarRow}>
+                    <div className={styles.tbarTrack}>
+                      <div
+                        className={styles.tbarFill}
+                        style={{
+                          width: `${topicTotal(t.id) > 0 ? Math.round((topicDone(t.id) / topicTotal(t.id)) * 100) : 0}%`,
+                          background: t.color,
+                        }}
+                      />
+                    </div>
+                    <small>{topicDone(t.id)}/{topicTotal(t.id)}</small>
+                  </div>
                 </div>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" strokeWidth="2" strokeLinecap="round">
                   <polyline points="9 18 15 12 9 6" />
