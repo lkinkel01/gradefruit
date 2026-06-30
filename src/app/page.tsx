@@ -18,15 +18,19 @@ import styles from './page.module.css';
 
 // Ohne Login darf nur Analysis geöffnet werden (Probezugang)
 const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'account', 'landing'];
+// Themen-Seiten mit eigener Bezahlschranke – Eingeloggte dürfen sie immer öffnen
+// (die Sperre pro Kursstufe steckt direkt in der Themenseite).
+const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
 
 export default function Home() {
   const { user, loading, signOut } = useAuth();
-  const { owned, refresh } = useProgress();
+  const { owned, ownedLk, refresh } = useProgress();
 
   const [view, setView] = useState<View>('landing');
   const [dark, setDark] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [checkoutCourse, setCheckoutCourse] = useState<'gk' | 'lk'>('gk');
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [askOpen, setAskOpen] = useState(false);
@@ -87,22 +91,31 @@ export default function Home() {
 
   // Sobald der Zugang wirklich aktiv ist, Erfolg bestätigen
   useEffect(() => {
-    if (owned && notice.startsWith('Zahlung erfolgreich')) {
+    if ((owned || ownedLk) && notice.startsWith('Zahlung erfolgreich')) {
       setNotice('✓ Vollzugang ist jetzt aktiv. Viel Erfolg beim Lernen!');
       const t = setTimeout(() => setNotice(''), 5000);
       return () => clearTimeout(t);
     }
-  }, [owned, notice]);
+  }, [owned, ownedLk, notice]);
+
+  const openCheckout = (course: 'gk' | 'lk' = 'gk') => {
+    setCheckoutCourse(course);
+    setCheckoutOpen(true);
+  };
 
   const navigate = (v: View) => {
-    // Gesperrte Views → Login oder Checkout verlangen
+    // Nicht eingeloggt → Login verlangen (außer freie Views)
     if (!user && !FREE_VIEWS.includes(v)) {
       setAuthMode('login');
       setAuthOpen(true);
       return;
     }
-    if (user && !owned && !FREE_VIEWS.includes(v)) {
-      setCheckoutOpen(true);
+    // Eingeloggt, aber ohne Zugang: Themen-Seiten dürfen trotzdem geöffnet
+    // werden – die Bezahlschranke steckt jetzt direkt in der Themenseite
+    // (pro Kursstufe). Andere kostenpflichtige Views (Videos, Tutoren)
+    // zeigen weiterhin den Checkout.
+    if (user && !owned && !ownedLk && !FREE_VIEWS.includes(v) && !TOPIC_VIEWS.includes(v)) {
+      openCheckout('gk');
       return;
     }
     setView(v);
@@ -138,10 +151,10 @@ export default function Home() {
           isAuthed={!!user}
           owned={owned}
           onEnter={() => user ? setView('dashboard') : openAuth('register')}
-          onOpenCheckout={() => user ? setCheckoutOpen(true) : openAuth('register')}
+          onOpenCheckout={() => user ? openCheckout('gk') : openAuth('register')}
           onSignOut={handleSignOut}
         />
-        <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} />
+        <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} course={checkoutCourse} />
         <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} initialMode={authMode} />
       </>
     );
@@ -157,13 +170,14 @@ export default function Home() {
           <TopicView
             topicId={view}
             owned={owned}
-            onOpenCheckout={() => setCheckoutOpen(true)}
+            ownedLk={ownedLk}
+            onOpenCheckout={openCheckout}
             onOpenAsk={openAsk}
           />
         );
       case 'videos': return <VideosView />;
       case 'tutors': return <TutorsView />;
-      case 'account': return <AccountView onNavigate={(v) => setView(v as View)} onOpenCheckout={() => setCheckoutOpen(true)} />;
+      case 'account': return <AccountView onNavigate={(v) => setView(v as View)} onOpenCheckout={openCheckout} />;
       case 'saved':
         return (
           <div style={{ maxWidth: 820, margin: '0 auto', padding: '30px 26px' }}>
@@ -195,8 +209,9 @@ export default function Home() {
         <Sidebar
           view={view}
           owned={owned}
+          ownedLk={ownedLk}
           onNavigate={navigate}
-          onOpenCheckout={() => setCheckoutOpen(true)}
+          onOpenCheckout={() => openCheckout('gk')}
         />
         <div className={styles.content}>
           <Topbar
@@ -216,6 +231,7 @@ export default function Home() {
       <CheckoutModal
         open={checkoutOpen}
         onClose={() => setCheckoutOpen(false)}
+        course={checkoutCourse}
       />
       <AuthModal
         open={authOpen}

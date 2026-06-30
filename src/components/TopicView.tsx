@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
@@ -52,21 +52,34 @@ const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; 
 interface Props {
   topicId: View;
   owned: boolean;
-  onOpenCheckout: () => void;
+  ownedLk: boolean;
+  onOpenCheckout: (course: 'gk' | 'lk') => void;
   onOpenAsk: (ctx: string, snippet: string) => void;
 }
 
-export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }: Props) {
+export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onOpenAsk }: Props) {
   const topic = TOPIC_DATA[topicId as string];
   const { user } = useAuth();
   const { isUnderstood, isSaved, toggleUnderstood, toggleSaved } = useProgress();
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
   const [video, setVideo] = useState<Scene | null>(null);
   const [level, setLevel] = useState<'gk' | 'lk'>('gk');
+  const userPickedLevel = useRef(false);
+  const isFree = topicId === 'analysis';
+
+  // LK-only-Schüler automatisch auf den LK-Tab schicken (und GK-only auf GK),
+  // solange sie die Stufe nicht selbst angetippt haben. Analysis ist gratis –
+  // dort bleibt die Wahl immer frei.
+  useEffect(() => {
+    if (userPickedLevel.current || isFree) return;
+    if (level === 'gk' && !owned && ownedLk) setLevel('lk');
+    else if (level === 'lk' && !ownedLk && owned) setLevel('gk');
+  }, [owned, ownedLk, isFree, level]);
 
   if (!topic) return null;
 
   const tasks = topic[level];
+  const hasAccess = level === 'gk' ? isFree || owned : isFree || ownedLk;
 
   const toggle = (id: string) => {
     setOpenSolutions(prev => {
@@ -90,7 +103,7 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
           aria-selected={level === 'gk'}
           className={`${styles.levelBtn} ${level === 'gk' ? styles.levelBtnActive : ''}`}
           style={level === 'gk' ? { background: topic.color, borderColor: topic.color } : undefined}
-          onClick={() => setLevel('gk')}
+          onClick={() => { userPickedLevel.current = true; setLevel('gk'); }}
         >
           Grundkurs
         </button>
@@ -99,13 +112,13 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
           aria-selected={level === 'lk'}
           className={`${styles.levelBtn} ${level === 'lk' ? styles.levelBtnActive : ''}`}
           style={level === 'lk' ? { background: topic.color, borderColor: topic.color } : undefined}
-          onClick={() => setLevel('lk')}
+          onClick={() => { userPickedLevel.current = true; setLevel('lk'); }}
         >
           Leistungskurs
         </button>
       </div>
 
-      {tasks.map(task => (
+      {hasAccess && tasks.map(task => (
         <div key={task.id} className={styles.task}>
           <div className={styles.taskHead}>
             <div className={styles.taskTag}>
@@ -114,8 +127,8 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
             </div>
             <p className={styles.taskQ}>{task.q}</p>
             <div className={styles.rowActions}>
-              {task.locked && !owned ? (
-                <button className="btn primary btn sm" style={{ fontSize: 13 }} onClick={onOpenCheckout}>
+              {task.locked && !hasAccess ? (
+                <button className="btn primary btn sm" style={{ fontSize: 13 }} onClick={() => onOpenCheckout(level)}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                   </svg>
@@ -214,6 +227,31 @@ export default function TopicView({ topicId, owned, onOpenCheckout, onOpenAsk }:
           )}
         </div>
       ))}
+
+      {!hasAccess && (
+        <div className={styles.lockCard}>
+          <div className={styles.lockBadge} style={{ background: topic.color }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </div>
+          <div className={styles.lockTitle}>
+            {level === 'lk' ? 'Leistungskurs freischalten' : 'Grundkurs freischalten'}
+          </div>
+          <p className={styles.lockText}>
+            Schalte alle {topic.label}-Aufgaben{level === 'lk' ? ' im Leistungskurs' : ''} mit
+            Schritt-für-Schritt-Lösungen, Erklärvideos und Fragen an KI &amp; Tutor frei.
+          </p>
+          <button
+            className="btn primary"
+            onClick={() => onOpenCheckout(level)}
+            style={{ background: topic.color, borderColor: topic.color }}
+          >
+            {level === 'lk' ? 'Leistungskurs kaufen' : 'Grundkurs kaufen'}
+          </button>
+          <p className={styles.lockHint}>Analysis kannst du in beiden Stufen kostenlos ausprobieren.</p>
+        </div>
+      )}
 
       <div className={styles.topicFoot}>
         <button className="btn light">← Zurück</button>

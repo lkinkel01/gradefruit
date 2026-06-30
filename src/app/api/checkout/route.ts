@@ -6,8 +6,6 @@ import { createAdminClient } from '@/lib/supabaseAdmin';
 // wir schicken den Nutzer nur zur gehosteten Stripe-Bezahlseite weiter.
 export const runtime = 'nodejs';
 
-const COURSE_SLUG = 'mathe-gk';
-
 function json(body: unknown, status: number) {
   return new Response(JSON.stringify(body), {
     status,
@@ -39,11 +37,15 @@ export async function POST(req: Request) {
     return json({ error: 'unauthorized', message: 'Bitte melde dich an, um den Zugang zu kaufen.' }, 401);
   }
 
-  // 3) Tarif aus dem Body lesen ('full' = Einmalkauf, 'month' = Abo)
+  // 3) Tarif + Kurs aus dem Body lesen
+  //    plan:   'full' = Einmalkauf, 'month' = Abo
+  //    course: 'gk'   = Grundkurs,  'lk'    = Leistungskurs (getrennt kaufbar)
   let plan: 'full' | 'month' | null = null;
+  let course: 'gk' | 'lk' = 'gk';
   try {
-    const body = (await req.json()) as { plan?: string };
+    const body = (await req.json()) as { plan?: string; course?: string };
     plan = body.plan === 'month' ? 'month' : body.plan === 'full' ? 'full' : null;
+    course = body.course === 'lk' ? 'lk' : 'gk';
   } catch {
     return json({ error: 'bad_request', message: 'Ungültige Anfrage.' }, 400);
   }
@@ -51,8 +53,17 @@ export async function POST(req: Request) {
     return json({ error: 'bad_request', message: 'Bitte wähle einen Tarif aus.' }, 400);
   }
 
-  // 4) Passende Preis-ID (in .env.local hinterlegt) auswählen
-  const priceId = plan === 'full' ? process.env.STRIPE_PRICE_ONE_TIME : process.env.STRIPE_PRICE_MONTHLY;
+  const COURSE_SLUG = course === 'lk' ? 'mathe-lk' : 'mathe-gk';
+
+  // 4) Passende Preis-ID (in .env.local / Vercel hinterlegt) auswählen
+  const priceId =
+    course === 'lk'
+      ? plan === 'full'
+        ? process.env.STRIPE_PRICE_LK_ONE_TIME
+        : process.env.STRIPE_PRICE_LK_MONTHLY
+      : plan === 'full'
+        ? process.env.STRIPE_PRICE_ONE_TIME
+        : process.env.STRIPE_PRICE_MONTHLY;
   if (!priceId) {
     return json(
       { error: 'server_misconfig', message: 'Für diesen Tarif ist auf dem Server kein Preis hinterlegt.' },

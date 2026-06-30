@@ -73,4 +73,19 @@
 .mistakesList li { font-size: 13.5px; line-height: 1.5; color: var(--ink); }
 .topicFoot { display: flex; justify-content: space-between; gap: 10px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); }
 
-@media (max-width: 560px) { .page { padding: 22px 18px 96px; } .solInner { padding: 6px 18px 14px; } .taskHead { padding: 16px 18px; } }
+.lockCard {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 38px 28px 32px; text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+}
+.lockBadge {
+  width: 54px; height: 54px; border-radius: 16px; color: #fff;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+}
+.lockTitle { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+.lockText { font-size: 14.5px; color: var(--muted); max-width: 46ch; line-height: 1.55; margin-bottom: 20px; }
+.lockCard .btn { min-width: 230px; }
+.lockHint { font-size: 12.5px; color: var(--faint); margin-top: 14px; }
+
+@media (max-width: 560px) { .page { padding: 22px 18px 96px; } .solInner { padding: 6px 18px 14px; } .taskHead { padding: 16px 18px; } .lockCard { padding: 30px 20px 26px; } }

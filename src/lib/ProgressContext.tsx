@@ -4,6 +4,7 @@ import { createClient } from './supabase';
 import { useAuth } from './AuthContext';
 
 const COURSE_SLUG = 'mathe-gk';
+const COURSE_SLUG_LK = 'mathe-lk';
 
 interface ProgressState {
   understood: boolean;
@@ -12,8 +13,10 @@ interface ProgressState {
 
 interface ProgressCtx {
   ready: boolean;
-  owned: boolean;
-  plan: string | null;
+  owned: boolean;     // Grundkurs aktiv?
+  ownedLk: boolean;   // Leistungskurs aktiv?
+  plan: string | null;     // Grundkurs-Tarif
+  planLk: string | null;   // Leistungskurs-Tarif
   refresh: () => Promise<void>;
   isUnderstood: (topicSlug: string, lessonSlug: string) => boolean;
   isSaved: (topicSlug: string, lessonSlug: string) => boolean;
@@ -38,8 +41,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   // Map lessonId -> Fortschritt
   const [progress, setProgress] = useState<Record<string, ProgressState>>({});
   const [courseId, setCourseId] = useState<string | null>(null);
+  const [courseIdLk, setCourseIdLk] = useState<string | null>(null);
   const [owned, setOwned] = useState(false);
+  const [ownedLk, setOwnedLk] = useState(false);
   const [plan, setPlan] = useState<string | null>(null);
+  const [planLk, setPlanLk] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -62,23 +68,30 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         (byTopic[topic.slug] ??= []).push(row.id);
       });
 
-      // 2) Nur eingeloggt: Kauf-Status + Fortschritt laden
+      // 2) Nur eingeloggt: Kauf-Status (GK + LK) + Fortschritt laden
       let cId: string | null = null;
+      let cIdLk: string | null = null;
       let isOwned = false;
+      let isOwnedLk = false;
       let planVal: string | null = null;
+      let planValLk: string | null = null;
       const prog: Record<string, ProgressState> = {};
 
       if (user) {
-        const { data: course } = await supabase
-          .from('courses').select('id').eq('slug', COURSE_SLUG).maybeSingle();
-        cId = course?.id ?? null;
+        const { data: courses } = await supabase
+          .from('courses').select('id, slug').in('slug', [COURSE_SLUG, COURSE_SLUG_LK]);
+        (courses ?? []).forEach((c: { id: string; slug: string }) => {
+          if (c.slug === COURSE_SLUG) cId = c.id;
+          if (c.slug === COURSE_SLUG_LK) cIdLk = c.id;
+        });
 
-        if (cId) {
-          const { data: purchase } = await supabase
-            .from('purchases').select('status, plan').eq('course_id', cId).maybeSingle();
-          isOwned = purchase?.status === 'active';
-          planVal = (purchase?.plan as string | null) ?? null;
-        }
+        // RLS sorgt dafür, dass nur eigene Käufe zurückkommen
+        const { data: purchases } = await supabase
+          .from('purchases').select('course_id, status, plan');
+        (purchases ?? []).forEach((p: { course_id: string; status: string; plan: string | null }) => {
+          if (p.course_id === cId) { isOwned = p.status === 'active'; planVal = p.plan ?? null; }
+          if (p.course_id === cIdLk) { isOwnedLk = p.status === 'active'; planValLk = p.plan ?? null; }
+        });
 
         // RLS sorgt dafür, dass nur eigene Zeilen zurückkommen
         const { data: rows } = await supabase
@@ -92,8 +105,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       setLessonId(idMap);
       setLessonsByTopic(byTopic);
       setCourseId(cId);
+      setCourseIdLk(cIdLk);
       setOwned(isOwned);
+      setOwnedLk(isOwnedLk);
       setPlan(planVal);
+      setPlanLk(planValLk);
       setProgress(prog);
       setReady(true);
     })();
@@ -142,25 +158,39 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   // Den Zugang schaltet ausschließlich der Stripe-Webhook frei; hier wird
   // nur gelesen, damit die App den frisch freigeschalteten Zugang sieht.
   const refresh = useCallback(async () => {
-    if (!user) { setOwned(false); setPlan(null); return; }
-    let cId = courseId;
-    if (!cId) {
-      const { data: course } = await supabase
-        .from('courses').select('id').eq('slug', COURSE_SLUG).maybeSingle();
-      cId = course?.id ?? null;
-      if (cId) setCourseId(cId);
+    if (!user) { setOwned(false); setOwnedLk(false); setPlan(null); setPlanLk(null); return; }
+    let gkId = courseId;
+    let lkId = courseIdLk;
+    if (!gkId || !lkId) {
+      const { data: courses } = await supabase
+        .from('courses').select('id, slug').in('slug', [COURSE_SLUG, COURSE_SLUG_LK]);
+      (courses ?? []).forEach((c: { id: string; slug: string }) => {
+        if (c.slug === COURSE_SLUG) gkId = c.id;
+        if (c.slug === COURSE_SLUG_LK) lkId = c.id;
+      });
+      if (gkId) setCourseId(gkId);
+      if (lkId) setCourseIdLk(lkId);
     }
-    if (!cId) { setOwned(false); setPlan(null); return; }
-    const { data: purchase } = await supabase
-      .from('purchases').select('status, plan').eq('course_id', cId).maybeSingle();
-    setOwned(purchase?.status === 'active');
-    setPlan((purchase?.plan as string | null) ?? null);
-  }, [user?.id, courseId]); // eslint-disable-line react-hooks/exhaustive-deps
+    const { data: purchases } = await supabase
+      .from('purchases').select('course_id, status, plan');
+    const gkP = (purchases ?? []).find(
+      (p: { course_id: string; status: string; plan: string | null }) => p.course_id === gkId,
+    );
+    const lkP = (purchases ?? []).find(
+      (p: { course_id: string; status: string; plan: string | null }) => p.course_id === lkId,
+    );
+    setOwned(gkP?.status === 'active');
+    setPlan(gkP?.plan ?? null);
+    setOwnedLk(lkP?.status === 'active');
+    setPlanLk(lkP?.plan ?? null);
+  }, [user?.id, courseId, courseIdLk]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const value: ProgressCtx = {
     ready,
     owned,
+    ownedLk,
     plan,
+    planLk,
     refresh,
     isUnderstood: (t, l) => getState(t, l).understood,
     isSaved: (t, l) => getState(t, l).saved,

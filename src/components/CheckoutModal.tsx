@@ -6,13 +6,34 @@ import styles from './Modal.module.css';
 interface Props {
   open: boolean;
   onClose: () => void;
+  course?: 'gk' | 'lk';
 }
 
-export default function CheckoutModal({ open, onClose }: Props) {
+// Anzeige-Texte je Kurs. WICHTIG: Die hier gezeigten Preise sind nur Anzeige –
+// abgerechnet wird IMMER der echte Stripe-Preis. Halte beide Werte gleich.
+const COURSE_INFO = {
+  gk: {
+    tag: 'Mathe-Abi Hessen 2027 · Grundkurs',
+    title: 'Vollzugang',
+    blurb: 'Alle Grundkurs-Themen, Aufgaben, Altklausuren, Erklärvideos und Fragen an KI & Tutor.',
+    full: '79 €',
+    month: '14,90 €',
+  },
+  lk: {
+    tag: 'Mathe-Abi Hessen 2027 · Leistungskurs',
+    title: 'LK-Vollzugang',
+    blurb: 'Alle Leistungskurs-Themen, Aufgaben, Altklausuren, Erklärvideos und Fragen an KI & Tutor.',
+    full: '99 €',
+    month: '17,90 €',
+  },
+} as const;
+
+export default function CheckoutModal({ open, onClose, course = 'gk' }: Props) {
   const { session } = useAuth();
   const [selected, setSelected] = useState<'full' | 'month'>('full');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const info = COURSE_INFO[course];
 
   async function startCheckout() {
     if (busy) return;
@@ -29,7 +50,7 @@ export default function CheckoutModal({ open, onClose }: Props) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ plan: selected }),
+        body: JSON.stringify({ plan: selected, course }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data?.url) {
@@ -51,9 +72,9 @@ export default function CheckoutModal({ open, onClose }: Props) {
       <div className={`${styles.modal} ${open ? styles.open : ''}`} role="dialog">
         <div className={styles.mhead}>
           <button className={styles.mclose} onClick={onClose} disabled={busy}>✕</button>
-          <div className={styles.ptag}>Mathe-Abi Hessen 2027 · Grundkurs</div>
-          <h2>Vollzugang</h2>
-          <p>Alle Themen, Aufgaben, Altklausuren, Erklärvideos und Fragen an KI &amp; Tutor.</p>
+          <div className={styles.ptag}>{info.tag}</div>
+          <h2>{info.title}</h2>
+          <p>{info.blurb}</p>
         </div>
         <div className={styles.mbody}>
           <div
@@ -62,7 +83,7 @@ export default function CheckoutModal({ open, onClose }: Props) {
           >
             <div className={styles.radio} />
             <div className={styles.ox}><b>Komplettkurs</b><small>einmalig · Zugang bis zur Prüfung</small></div>
-            <div className={styles.op}>79 €</div>
+            <div className={styles.op}>{info.full}</div>
           </div>
           <div
             className={`${styles.opt} ${selected === 'month' ? styles.sel : ''}`}
@@ -70,7 +91,7 @@ export default function CheckoutModal({ open, onClose }: Props) {
           >
             <div className={styles.radio} />
             <div className={styles.ox}><b>Monatlich</b><small>monatlich kündbar</small></div>
-            <div className={styles.op}>14,90 €<small>/ Monat</small></div>
+            <div className={styles.op}>{info.month}<small>/ Monat</small></div>
           </div>
 
           {error && <div className={styles.checkoutError}>{error}</div>}

@@ -7,12 +7,12 @@ import styles from './AccountView.module.css';
 
 interface Props {
   onNavigate: (v: string) => void;
-  onOpenCheckout: () => void;
+  onOpenCheckout: (course: 'gk' | 'lk') => void;
 }
 
 export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
   const { user, session, signOut } = useAuth();
-  const { owned, plan } = useProgress();
+  const { owned, ownedLk, plan, planLk } = useProgress();
   const supabase = createClient();
   const [name, setName] = useState(user?.user_metadata?.full_name ?? '');
   const [saved, setSaved] = useState(false);
@@ -57,6 +57,37 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
   const initials = (name || user.email || 'U').slice(0, 2).toUpperCase();
   const provider = user.app_metadata?.provider;
 
+  // Zugangs-Zeile pro Kurs (Grundkurs / Leistungskurs) – getrennt kaufbar.
+  const accessRow = (label: string, isOwned: boolean, coursePlan: string | null, course: 'gk' | 'lk') =>
+    !isOwned ? (
+      <div className={styles.planRow}>
+        <div>
+          <b>{label}: Gratis-Zugang</b>
+          <p>Analysis kannst du gratis ausprobieren. Schalte den {label}-Vollzugang frei: alle Themen, Altklausuren, Erklärvideos und Tutor-Anfragen.</p>
+        </div>
+        <button className="btn primary btn sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={() => onOpenCheckout(course)}>
+          {label} freischalten
+        </button>
+      </div>
+    ) : coursePlan === 'subscription' ? (
+      <div className={styles.planRow}>
+        <div>
+          <b>{label}: Monats-Abo · aktiv ✓</b>
+          <p>Du hast vollen Zugang. Monatlich kündbar – verwalte oder kündige dein Abo jederzeit.</p>
+        </div>
+        <button className="btn light sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={openPortal} disabled={portalBusy}>
+          {portalBusy ? '…' : 'Abo verwalten'}
+        </button>
+      </div>
+    ) : (
+      <div className={styles.planRow}>
+        <div>
+          <b>{label}: Vollzugang aktiv ✓</b>
+          <p>Du hast vollen Zugang bis zur Prüfung. Viel Erfolg beim Lernen!</p>
+        </div>
+      </div>
+    );
+
   return (
     <div className={styles.page}>
       <h1 className={styles.ph1}>Mein Konto</h1>
@@ -98,34 +129,8 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
 
       <div className={styles.section}>
         <div className={styles.sectionTitle}>Zugang</div>
-        {!owned ? (
-          <div className={styles.planRow}>
-            <div>
-              <b>Gratis-Zugang</b>
-              <p>Du nutzt gerade den Probezugang. Schalte den Vollzugang frei: alle Themen, Altklausuren, Erklärvideos und Tutor-Anfragen.</p>
-            </div>
-            <button className="btn primary btn sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={onOpenCheckout}>
-              Vollzugang freischalten
-            </button>
-          </div>
-        ) : plan === 'subscription' ? (
-          <div className={styles.planRow}>
-            <div>
-              <b>Monats-Abo · aktiv ✓</b>
-              <p>Du hast vollen Zugang. Monatlich kündbar – verwalte oder kündige dein Abo jederzeit.</p>
-            </div>
-            <button className="btn light sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={openPortal} disabled={portalBusy}>
-              {portalBusy ? '…' : 'Abo verwalten'}
-            </button>
-          </div>
-        ) : (
-          <div className={styles.planRow}>
-            <div>
-              <b>Komplettkurs · Vollzugang aktiv ✓</b>
-              <p>Du hast vollen Zugang bis zur Prüfung. Viel Erfolg beim Lernen!</p>
-            </div>
-          </div>
-        )}
+        {accessRow('Grundkurs', owned, plan, 'gk')}
+        {accessRow('Leistungskurs', ownedLk, planLk, 'lk')}
       </div>
 
       <div className={styles.danger}>
