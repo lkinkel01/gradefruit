@@ -7,11 +7,12 @@ interface Props {
   dark: boolean;
   onToggleDark: () => void;
   onEnter: () => void;
+  onLogin: () => void;
   onOpenCheckout: () => void;
   onSignOut: () => void;
 }
 
-export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnter, onOpenCheckout, onSignOut }: Props) {
+export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnter, onLogin, onOpenCheckout, onSignOut }: Props) {
   return (
     <div className={styles.lpage}>
       <nav className={styles.lnav}>
@@ -46,7 +47,7 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
             </>
           ) : (
             <>
-              <button className="btn light" onClick={onEnter}>Anmelden</button>
+              <button className="btn light" onClick={onLogin}>Anmelden</button>
               <button className="btn primary" onClick={onOpenCheckout}>Vollzugang</button>
             </>
           )}

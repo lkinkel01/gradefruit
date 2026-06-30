@@ -16,8 +16,10 @@ import AuthModal from '@/components/AuthModal';
 import AskDrawer from '@/components/AskDrawer';
 import styles from './page.module.css';
 
-// Ohne Login darf nur Analysis geöffnet werden (Probezugang)
-const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'account', 'landing'];
+// Ohne Login frei zugänglich (Probezugang): Übersicht, alle Themenseiten und Konto.
+// Achtung: Inhalt bleibt pro Stufe gesperrt – nur Analysis ist gratis, der Rest
+// zeigt Gästen nur die Vorschau-Sperre mit Kauf-Hinweis.
+const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'linalg', 'stochastik', 'account', 'landing'];
 // Themen-Seiten mit eigener Bezahlschranke – Eingeloggte dürfen sie immer öffnen
 // (die Sperre pro Kursstufe steckt direkt in der Themenseite).
 const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
@@ -99,6 +101,8 @@ export default function Home() {
   }, [owned, ownedLk, notice]);
 
   const openCheckout = (course: 'gk' | 'lk' = 'gk') => {
+    // Kaufen geht nur mit Konto – Gäste zuerst zur Registrierung schicken.
+    if (!user) { openAuth('register'); return; }
     setCheckoutCourse(course);
     setCheckoutOpen(true);
   };
@@ -152,7 +156,8 @@ export default function Home() {
           owned={owned}
           dark={dark}
           onToggleDark={() => setDark(d => !d)}
-          onEnter={() => user ? setView('dashboard') : openAuth('register')}
+          onEnter={() => user ? setView('dashboard') : setView('analysis')}
+          onLogin={() => openAuth('login')}
           onOpenCheckout={() => user ? openCheckout('gk') : openAuth('register')}
           onSignOut={handleSignOut}
         />
