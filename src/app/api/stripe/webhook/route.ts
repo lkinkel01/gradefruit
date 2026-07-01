@@ -118,6 +118,29 @@ export async function POST(req: Request) {
         break;
       }
 
+      // Einmalkauf voll zurückerstattet -> Zugang wieder entziehen
+      case 'charge.refunded': {
+        const charge = event.data.object as Stripe.Charge;
+        // Nur bei VOLLER Rückerstattung entziehen (Teilerstattungen ignorieren)
+        if (!charge.refunded) break;
+        const paymentIntentId = idOf(charge.payment_intent);
+        if (!paymentIntentId) break;
+        // Passende Checkout-Sitzung finden, um genau den richtigen Kauf zuzuordnen
+        const sessions = await stripe.checkout.sessions.list({
+          payment_intent: paymentIntentId,
+          limit: 1,
+        });
+        const refundedSession = sessions.data[0];
+        if (refundedSession?.id) {
+          await admin
+            .from('purchases')
+            .update({ status: 'cancelled', updated_at: new Date().toISOString() })
+            .eq('stripe_checkout_session_id', refundedSession.id);
+          console.log(`Zugang nach Rückerstattung entzogen (Session ${refundedSession.id}).`);
+        }
+        break;
+      }
+
       default:
         // andere Ereignisse ignorieren wir bewusst
         break;
