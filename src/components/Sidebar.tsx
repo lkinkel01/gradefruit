@@ -62,7 +62,7 @@ export default function Sidebar({ view, owned, ownedLk, onNavigate, onOpenChecko
             <span className={styles.ti}>{t.label}</span>
             {topicTotal(t.id) > 0 && topicDone(t.id) === topicTotal(t.id)
               ? <span className={styles.stDone}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg></span>
-              : !owned && !ownedLk && <span className={styles.stLock}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></span>
+              : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></span>
             }
           </button>
         ))}

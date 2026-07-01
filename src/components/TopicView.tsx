@@ -206,6 +206,16 @@ export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onO
                     <div className={styles.stepBody}>
                       <div className={styles.stepLd}>{step.label}</div>
                       <div className={styles.stepMt}>{step.math}</div>
+                      <button
+                        className={styles.stepAsk}
+                        onClick={() => onOpenAsk(topic.label, `Schritt ${i + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${task.q}`)}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
+                          <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
+                        </svg>
+                        Diesen Schritt erklären
+                      </button>
                     </div>
                   </div>
                 ))}
