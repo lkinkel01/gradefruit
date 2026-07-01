@@ -10,6 +10,24 @@ interface Props {
   initialMode?: 'login' | 'register';
 }
 
+// Übersetzt die häufigsten Supabase-Fehlermeldungen in freundliches Deutsch.
+function germanAuthError(msg: string): string {
+  const m = msg.toLowerCase();
+  if (m.includes('already registered') || m.includes('already exists') || m.includes('user already'))
+    return 'Diese E-Mail ist schon registriert. Melde dich einfach an.';
+  if (m.includes('password') && (m.includes('at least') || m.includes('should be') || m.includes('6 characters')))
+    return 'Das Passwort muss mindestens 6 Zeichen haben.';
+  if (m.includes('weak password') || m.includes('pwned') || m.includes('too weak'))
+    return 'Bitte wähle ein sichereres Passwort (länger, mit Zahlen oder Zeichen).';
+  if (m.includes('invalid') && m.includes('email'))
+    return 'Diese E-Mail-Adresse sieht nicht gültig aus. Bitte prüfe sie.';
+  if (m.includes('rate limit') || m.includes('too many'))
+    return 'Zu viele Versuche. Bitte warte einen Moment und versuch es dann erneut.';
+  if (m.includes('signups not allowed') || m.includes('signup is disabled'))
+    return 'Die Registrierung ist gerade nicht möglich. Bitte versuch es später erneut.';
+  return 'Registrierung fehlgeschlagen. Bitte prüfe deine Angaben und versuch es erneut.';
+}
+
 export default function AuthModal({ open, onClose, initialMode = 'login' }: Props) {
   const supabase = createClient();
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
@@ -27,16 +45,20 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Prop
     setLoading(true); reset();
 
     if (mode === 'register') {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email, password,
         options: { data: { full_name: name } },
       });
-      if (error) setError(error.message);
-      else setInfo('Bestätigungs-E-Mail gesendet! Bitte überprüfe dein Postfach.');
+      if (error) setError(germanAuthError(error.message));
+      else if (data.session) onClose(); // E-Mail-Bestätigung ist aus -> sofort eingeloggt
+      else setInfo('Bestätigungs-E-Mail gesendet! Bitte überprüfe dein Postfach (auch den Spam-Ordner).');
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) setError('E-Mail oder Passwort falsch.');
-      else onClose();
+      if (error) {
+        setError(/email not confirmed/i.test(error.message)
+          ? 'Bitte bestätige zuerst deine E-Mail – der Link ist in deinem Postfach.'
+          : 'E-Mail oder Passwort falsch.');
+      } else onClose();
     }
     setLoading(false);
   };
