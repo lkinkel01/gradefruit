@@ -1,4 +1,4 @@
-// 14 originale Übungsaufgaben "Lineare Algebra / Geometrie" im Abitur-Stil (Mathe-Abi Hessen, Grundkurs).
+// 22 originale Übungsaufgaben "Lineare Algebra / Geometrie" im Abitur-Stil (Mathe-Abi Hessen, Grundkurs).
 // Selbst formuliert – NICHT aus echten Klausuren kopiert.
 // Struktur kompatibel mit dem Task-Typ der Plattform (TopicView), erweitert um "mistakes".
 
@@ -255,6 +255,145 @@ export const LINALG_TASKS: LinalgTask[] = [
     mistakes: [
       "Vergessen, durch den Betrag des Normalenvektors zu teilen (hier ÷ 3).",
       "Im Zähler die rechte Seite (− 6) nicht abziehen oder den Betrag weglassen, sodass ein negativer „Abstand\" entsteht.",
+    ],
+    locked: false,
+  },
+  {
+    id: "lg15",
+    tag: "Einheitsvektor",
+    src: "Original-Übung · Abi-Stil B15",
+    q: "Bestimmen Sie einen Vektor der Länge 6, der in dieselbe Richtung wie a = (2, −1, 2) zeigt.",
+    steps: [
+      { label: "Betrag von a", math: "|a| = √(2² + (−1)² + 2²) = √9 = 3" },
+      { label: "Einheitsvektor (Länge 1)", math: "a⁰ = (1/|a|)·a = (2/3, −1/3, 2/3)" },
+      { label: "Auf Länge 6 strecken", math: "6 · a⁰ = (4, −2, 4)" },
+    ],
+    result: "v = (4, −2, 4)   (Länge 6, Richtung von a)",
+    mistakes: [
+      "Nur den Einheitsvektor bilden und das Strecken auf die gewünschte Länge (· 6) vergessen.",
+      "Beim Normieren mit |a| multiplizieren statt zu dividieren – der Einheitsvektor ist a geteilt durch |a|.",
+    ],
+    locked: false,
+  },
+  {
+    id: "lg16",
+    tag: "Schwerpunkt",
+    src: "Original-Übung · Abi-Stil B16",
+    q: "Bestimmen Sie den Schwerpunkt S des Dreiecks mit den Eckpunkten A(1|2|0), B(4|−1|3) und C(1|2|3).",
+    steps: [
+      { label: "Formel für den Schwerpunkt", math: "S = ⅓ · (A + B + C)" },
+      { label: "Komponenten addieren", math: "( 1+4+1,  2+(−1)+2,  0+3+3 ) = (6, 3, 6)" },
+      { label: "Durch 3 teilen", math: "S = (6/3, 3/3, 6/3)" },
+    ],
+    result: "S(2 | 1 | 2)",
+    mistakes: [
+      "Durch 2 statt durch 3 teilen – ein Dreieck hat drei Eckpunkte, also Summe geteilt durch 3.",
+      "Die Ortsvektoren subtrahieren statt addieren; der Schwerpunkt ist der Durchschnitt aller drei Punkte.",
+    ],
+    locked: false,
+  },
+  {
+    id: "lg17",
+    tag: "Lagebeziehung Geraden",
+    src: "Original-Übung · Abi-Stil B17",
+    q: "Untersuchen Sie die Lage der Geraden g: x = (1, 0, 0) + s·(1, 2, 3) und h: x = (0, 0, 1) + t·(2, 4, 6) zueinander.",
+    steps: [
+      { label: "Richtungsvektoren vergleichen", math: "(2, 4, 6) = 2 · (1, 2, 3)  →  Richtungen parallel" },
+      { label: "Identisch? Aufpunkt (0,0,1) von h in g?", math: "1. Koord.: 1 + s = 0  →  s = −1" },
+      { label: "Kontrolle mit s = −1", math: "2. Koord.: 0 + 2·(−1) = −2 ≠ 0  →  Aufpunkt liegt NICHT auf g" },
+    ],
+    result: "g und h sind echt parallel (nicht identisch, kein Schnittpunkt)",
+    mistakes: [
+      "Aus parallelen Richtungsvektoren sofort auf „identisch\" schließen – erst die Punktprobe entscheidet zwischen echt parallel und identisch.",
+      "Bei der Punktprobe nur die erste Koordinate prüfen; der Parameter s muss in ALLEN Koordinaten passen.",
+    ],
+    locked: false,
+  },
+  {
+    id: "lg18",
+    tag: "Lagebeziehung Gerade–Ebene",
+    src: "Original-Übung · Abi-Stil B18",
+    q: "Untersuchen Sie die Lage der Geraden g: x = (1, 1, 1) + t·(1, 1, −2) zur Ebene E: x + y + z = 10.",
+    steps: [
+      { label: "Normalenvektor der Ebene", math: "n = (1, 1, 1)" },
+      { label: "Richtungsvektor · Normalenvektor", math: "(1, 1, −2) · (1, 1, 1) = 1 + 1 − 2 = 0  →  Richtung ⊥ n" },
+      { label: "In der Ebene? Aufpunkt (1,1,1) prüfen", math: "1 + 1 + 1 = 3 ≠ 10  →  Aufpunkt liegt NICHT in E" },
+    ],
+    result: "g ist echt parallel zur Ebene E (kein Schnittpunkt)",
+    mistakes: [
+      "Aus „Richtung · n = 0\" sofort „kein Schnittpunkt\" folgern – die Gerade könnte auch komplett IN der Ebene liegen; das klärt die Punktprobe.",
+      "Statt Richtung · n das Skalarprodukt mit dem Aufpunkt bilden; für die Lage zählt der Richtungsvektor gegen den Normalenvektor.",
+    ],
+    locked: false,
+  },
+  {
+    id: "lg19",
+    tag: "Ebene aus 3 Punkten",
+    src: "Original-Übung · Abi-Stil B19",
+    q: "Stellen Sie eine Parametergleichung der Ebene E durch die Punkte A(1|0|0), B(0|1|0) und C(0|0|1) auf.",
+    steps: [
+      { label: "Stützpunkt wählen", math: "Aufpunkt A(1, 0, 0)" },
+      { label: "Erster Spannvektor", math: "AB = B − A = (−1, 1, 0)" },
+      { label: "Zweiter Spannvektor", math: "AC = C − A = (−1, 0, 1)" },
+      { label: "Parameterform aufstellen", math: "E: x = (1,0,0) + s·(−1,1,0) + t·(−1,0,1)" },
+    ],
+    result: "E: x = (1, 0, 0) + s·(−1, 1, 0) + t·(−1, 0, 1)",
+    mistakes: [
+      "Die Spannvektoren zwischen wechselnden Punkten bilden, ohne für beide denselben Stützpunkt (hier A) zu verwenden.",
+      "Zwei parallele oder gleiche Spannvektoren wählen; sie müssen verschiedene Richtungen haben, sonst spannen sie keine Ebene auf.",
+    ],
+    locked: false,
+  },
+  {
+    id: "lg20",
+    tag: "Parameter- zu Koordinatenform",
+    src: "Original-Übung · Abi-Stil B20",
+    q: "Bestimmen Sie eine Koordinatengleichung der Ebene E: x = (2, 0, 0) + s·(1, 1, 0) + t·(1, 0, 1).",
+    steps: [
+      { label: "Normalenvektor per Kreuzprodukt", math: "n = (1,1,0) × (1,0,1)" },
+      { label: "Kreuzprodukt berechnen", math: "= (1·1 − 0·0,  0·1 − 1·1,  1·0 − 1·1) = (1, −1, −1)" },
+      { label: "Ansatz Koordinatenform", math: "x − y − z = d" },
+      { label: "d über den Stützpunkt (2,0,0)", math: "d = 2 − 0 − 0 = 2" },
+    ],
+    result: "E: x − y − z = 2",
+    mistakes: [
+      "Die mittlere Komponente des Kreuzprodukts mit falschem Vorzeichen berechnen – die „Mitte\" trägt das Minus.",
+      "d aus einem Spannvektor statt aus dem Stützpunkt bestimmen; eingesetzt wird der Ortspunkt der Ebene.",
+    ],
+    locked: false,
+  },
+  {
+    id: "lg21",
+    tag: "Punktspiegelung",
+    src: "Original-Übung · Abi-Stil B21",
+    q: "Spiegeln Sie den Punkt P(1|2|3) am Punkt Z(4|4|4). Bestimmen Sie den Bildpunkt P'.",
+    steps: [
+      { label: "Z ist Mittelpunkt von P und P'", math: "Z = ½ · (P + P')" },
+      { label: "Nach P' umstellen", math: "P' = 2·Z − P" },
+      { label: "Einsetzen", math: "P' = (2·4 − 1,  2·4 − 2,  2·4 − 3) = (7, 6, 5)" },
+    ],
+    result: "P'(7 | 6 | 5)",
+    mistakes: [
+      "P' = 2P − Z statt P' = 2Z − P bilden – gespiegelt wird um Z, deshalb steht Z im doppelten Term.",
+      "Nur den Verbindungsvektor PZ angeben; der Bildpunkt liegt noch einmal dieselbe Strecke hinter Z.",
+    ],
+    locked: false,
+  },
+  {
+    id: "lg22",
+    tag: "Raute (Nachweis)",
+    src: "Original-Übung · Abi-Stil B22",
+    q: "Zeigen Sie, dass das Viereck ABCD mit A(0|0|0), B(2|1|2), C(3|3|4) und D(1|2|2) eine Raute ist.",
+    steps: [
+      { label: "Seitenvektoren", math: "AB = (2,1,2),  BC = (1,2,2),  CD = (−2,−1,−2),  DA = (−1,−2,−2)" },
+      { label: "Längen berechnen", math: "|AB| = √(4+1+4) = 3;  |BC| = √(1+4+4) = 3" },
+      { label: "Restliche Seiten", math: "|CD| = 3,  |DA| = 3  →  alle Seiten gleich lang" },
+      { label: "Parallelogramm nachweisen", math: "AB = DC = (2,1,2)  →  gegenüberliegende Seiten parallel & gleich" },
+    ],
+    result: "Alle vier Seiten sind 3 LE lang und ABCD ist ein Parallelogramm  →  Raute",
+    mistakes: [
+      "Nur gleiche Seitenlängen zeigen – im Raum muss zusätzlich AB = DC gelten, sonst ist es kein (ebenes) Parallelogramm.",
+      "Beim Betrag die Vorzeichen „mitschleppen\"; durch das Quadrieren wird ohnehin alles positiv, (−2)² = 4.",
     ],
     locked: false,
   },

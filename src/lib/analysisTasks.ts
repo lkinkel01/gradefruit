@@ -1,4 +1,4 @@
-// 15 originale Übungsaufgaben "Analysis" im Abitur-Stil (Mathe-Abi Hessen, Grundkurs).
+// 23 originale Übungsaufgaben "Analysis" im Abitur-Stil (Mathe-Abi Hessen, Grundkurs).
 // Selbst formuliert – NICHT aus echten Klausuren kopiert.
 // Struktur kompatibel mit dem Task-Typ der Plattform (TopicView), erweitert um "mistakes".
 
@@ -296,6 +296,153 @@ export const ANALYSIS_TASKS: AnalysisTask[] = [
     mistakes: [
       "Bei b) die Rate f(t) direkt als Wassermenge deuten – die zugeflossene Menge ist das INTEGRAL der Zuflussrate.",
       "Bei a) integrieren statt ableiten: das Maximum der Rate findet man über f'(t) = 0, nicht über das Integral.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an16",
+    tag: "Nullstellen",
+    src: "Original-Übung · Abi-Stil A16",
+    q: "Bestimmen Sie alle Nullstellen der Funktion f mit f(x) = x⁴ − 5x² + 4.",
+    steps: [
+      { label: "Substitution", math: "u = x²  →  u² − 5u + 4 = 0" },
+      { label: "Quadratische Gleichung lösen", math: "(u − 1)(u − 4) = 0  →  u = 1, u = 4" },
+      { label: "Rücksubstitution u = 1", math: "x² = 1  →  x = 1 und x = −1" },
+      { label: "Rücksubstitution u = 4", math: "x² = 4  →  x = 2 und x = −2" },
+    ],
+    result: "x ∈ {−2; −1; 1; 2}",
+    mistakes: [
+      "Nach der Substitution bei u = 1 und u = 4 stehen bleiben – das sind Werte für u = x², nicht die gesuchten x-Werte. Die Rücksubstitution fehlt.",
+      "Bei x² = 4 nur x = 2 angeben und die zweite Lösung x = −2 vergessen (jede positive Zahl hat zwei Wurzeln mit ±).",
+    ],
+    locked: false,
+  },
+  {
+    id: "an17",
+    tag: "Symmetrie",
+    src: "Original-Übung · Abi-Stil A17",
+    q: "Untersuchen Sie den Graphen von f mit f(x) = x⁴ − 3x² + 2 auf Symmetrie zum Koordinatensystem.",
+    steps: [
+      { label: "Ansatz Achsensymmetrie", math: "prüfe, ob f(−x) = f(x)" },
+      { label: "f(−x) berechnen", math: "f(−x) = (−x)⁴ − 3(−x)² + 2" },
+      { label: "Vereinfachen", math: "= x⁴ − 3x² + 2 = f(x)" },
+      { label: "Deutung", math: "f(−x) = f(x)  →  achsensymmetrisch zur y-Achse" },
+    ],
+    result: "Der Graph ist achsensymmetrisch zur y-Achse.",
+    mistakes: [
+      "(−x)⁴ oder (−x)² mit negativem Vorzeichen versehen – bei GERADEN Exponenten fällt das Minus weg: (−x)⁴ = x⁴.",
+      "Achsensymmetrie (f(−x) = f(x)) und Punktsymmetrie zum Ursprung (f(−x) = −f(x)) verwechseln.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an18",
+    tag: "Grenzverhalten",
+    src: "Original-Übung · Abi-Stil A18",
+    q: "Untersuchen Sie das Verhalten von f mit f(x) = −2x³ + 5x² − x + 1 für x → +∞ und x → −∞.",
+    steps: [
+      { label: "Höchste Potenz bestimmt das Verhalten", math: "maßgeblich ist der Term −2x³" },
+      { label: "x → +∞", math: "−2x³ → −∞,  also f(x) → −∞" },
+      { label: "x → −∞", math: "x³ → −∞, mal (−2) → +∞,  also f(x) → +∞" },
+    ],
+    result: "x → +∞: f(x) → −∞;   x → −∞: f(x) → +∞",
+    mistakes: [
+      "Alle Summanden einzeln betrachten – für x → ±∞ entscheidet allein der Term mit der höchsten Potenz.",
+      "Das Minus des Leitkoeffizienten (−2) übersehen und die beiden Grenzwerte vertauschen.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an19",
+    tag: "Normale",
+    src: "Original-Übung · Abi-Stil A19",
+    q: "Bestimmen Sie die Gleichung der Normalen an den Graphen von f mit f(x) = x² an der Stelle x₀ = 1.",
+    steps: [
+      { label: "Berührpunkt", math: "f(1) = 1  →  P(1 | 1)" },
+      { label: "Tangentensteigung", math: "f'(x) = 2x  →  f'(1) = 2" },
+      { label: "Normalensteigung (negativer Kehrwert)", math: "m_n = −1 / f'(1) = −1/2" },
+      { label: "Normalen-Ansatz", math: "y = −1/2 · (x − 1) + 1" },
+      { label: "Ausmultiplizieren", math: "y = −1/2 x + 1/2 + 1" },
+    ],
+    result: "y = −1/2 x + 3/2",
+    mistakes: [
+      "Die Normale mit derselben Steigung wie die Tangente ansetzen – die Normale steht senkrecht dazu, also m_n = −1/m.",
+      "Beim negativen Kehrwert das Minus vergessen: aus m = 2 wird m_n = −1/2, nicht +1/2.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an20",
+    tag: "Kettenregel",
+    src: "Original-Übung · Abi-Stil A20",
+    q: "Bestimmen Sie die erste Ableitung von f mit f(x) = (x² − 1)³.",
+    steps: [
+      { label: "Innere und äußere Funktion", math: "äußere: u³ (mit u = x² − 1);  innere: x² − 1" },
+      { label: "Äußere ableiten", math: "(u³)' = 3u² = 3(x² − 1)²" },
+      { label: "Innere ableiten", math: "(x² − 1)' = 2x" },
+      { label: "Kettenregel: äußere · innere", math: "f'(x) = 3(x² − 1)² · 2x" },
+      { label: "Zusammenfassen", math: "f'(x) = 6x(x² − 1)²" },
+    ],
+    result: "f'(x) = 6x·(x² − 1)²",
+    mistakes: [
+      "Die innere Ableitung · 2x vergessen und nur 3(x² − 1)² schreiben – das ist der klassische Kettenregel-Fehler.",
+      "Erst die Klammer ausmultiplizieren und sich dabei verrechnen; mit der Kettenregel geht es schneller und sicherer.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an21",
+    tag: "Fläche (e-Funktion)",
+    src: "Original-Übung · Abi-Stil A21",
+    q: "Berechnen Sie den Inhalt der Fläche, die der Graph von f mit f(x) = e^x über dem Intervall [0; 2] mit der x-Achse einschließt.",
+    steps: [
+      { label: "Fläche als Integral", math: "A = ∫₀² e^x dx" },
+      { label: "Stammfunktion", math: "F(x) = e^x" },
+      { label: "Grenzen einsetzen", math: "F(2) − F(0) = e² − e⁰" },
+      { label: "e⁰ = 1 verwenden", math: "= e² − 1" },
+    ],
+    result: "A = e² − 1 ≈ 6,39 FE",
+    mistakes: [
+      "e⁰ = 0 setzen statt e⁰ = 1 – jede Potenz mit dem Exponenten 0 ergibt 1.",
+      "Die untere Grenze nicht abziehen und nur e² angeben; der Term − 1 gehört dazu.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an22",
+    tag: "Trigonometrie",
+    src: "Original-Übung · Abi-Stil A22",
+    q: "Bestimmen Sie die Hoch- und Tiefpunkte von f mit f(x) = 2 + sin(x) im Intervall [0; 2π].",
+    steps: [
+      { label: "Erste Ableitung", math: "f'(x) = cos(x)" },
+      { label: "Notwendige Bedingung f'(x) = 0", math: "cos(x) = 0  →  x = π/2 und x = 3π/2" },
+      { label: "Zweite Ableitung", math: "f''(x) = −sin(x)" },
+      { label: "Art bei x = π/2", math: "f''(π/2) = −1 < 0  →  Hochpunkt" },
+      { label: "Art bei x = 3π/2", math: "f''(3π/2) = 1 > 0  →  Tiefpunkt" },
+      { label: "y-Werte", math: "f(π/2) = 3,  f(3π/2) = 1" },
+    ],
+    result: "HP(π/2 | 3),  TP(3π/2 | 1)",
+    mistakes: [
+      "Die Ableitungen von sin und cos verwechseln: (sin x)' = cos x und (cos x)' = −sin x.",
+      "Im Intervall [0; 2π] nur eine Lösung von cos(x) = 0 finden und x = 3π/2 vergessen.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an23",
+    tag: "Sachkontext (Bestand)",
+    src: "Original-Übung · Abi-Stil A23",
+    q: "In einen Tank fließt Wasser. Die Zuflussrate in Litern pro Minute ist f(t) = 3t (t in Minuten, 0 ≤ t ≤ 5). Zu Beginn (t = 0) sind bereits 20 Liter im Tank. Wie viel Wasser ist nach 5 Minuten im Tank?",
+    steps: [
+      { label: "Zugeflossene Menge = Integral der Rate", math: "∫₀⁵ 3t dt" },
+      { label: "Stammfunktion", math: "F(t) = 1,5 t²" },
+      { label: "Grenzen einsetzen", math: "F(5) − F(0) = 1,5 · 25 − 0 = 37,5 L" },
+      { label: "Anfangsbestand addieren", math: "20 L + 37,5 L" },
+    ],
+    result: "Nach 5 Minuten sind 57,5 Liter im Tank.",
+    mistakes: [
+      "Den Anfangsbestand (20 L) vergessen – das Integral liefert nur die ZUGEFLOSSENE Menge, nicht den Gesamtbestand.",
+      "Den Funktionswert f(5) = 15 als Menge deuten; die zugeflossene Menge ist das Integral der Rate, nicht ihr Funktionswert.",
     ],
     locked: false,
   },

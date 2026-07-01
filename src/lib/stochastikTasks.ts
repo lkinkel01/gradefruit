@@ -1,4 +1,4 @@
-// 14 originale Übungsaufgaben "Stochastik" im Abitur-Stil (Mathe-Abi Hessen, Grundkurs).
+// 22 originale Übungsaufgaben "Stochastik" im Abitur-Stil (Mathe-Abi Hessen, Grundkurs).
 // Selbst formuliert – NICHT aus echten Klausuren kopiert.
 // Struktur kompatibel mit dem Task-Typ der Plattform (TopicView), erweitert um "mistakes".
 
@@ -253,6 +253,145 @@ export const STOCHASTIK_TASKS: StochastikTask[] = [
     mistakes: [
       "„Mindestens 8\" als nur P(X=8) deuten – auch X = 9 und X = 10 gehören dazu.",
       "Bei p = 0,5 die Faktoren getrennt behandeln; jeder Pfad ergibt insgesamt 0,5¹⁰ = 1/1024.",
+    ],
+    locked: false,
+  },
+  {
+    id: "st15",
+    tag: "Binomial (höchstens k)",
+    src: "Original-Übung · Abi-Stil C15",
+    q: "Ein Los enthält 10 % Ausschuss. Es werden 20 Teile zufällig entnommen. Mit welcher Wahrscheinlichkeit sind höchstens 2 Teile Ausschuss?",
+    steps: [
+      { label: "Modell", math: "Binomialverteilung mit n = 20, p = 0,1;  gesucht P(X ≤ 2)" },
+      { label: "Zerlegen", math: "P(X ≤ 2) = P(X=0) + P(X=1) + P(X=2)" },
+      { label: "Einzelwahrscheinlichkeiten", math: "P(0) = 0,9²⁰ ≈ 0,1216;  P(1) ≈ 0,2702;  P(2) = C(20,2)·0,1²·0,9¹⁸ ≈ 0,2852" },
+      { label: "Summe", math: "≈ 0,1216 + 0,2702 + 0,2852" },
+    ],
+    result: "P(X ≤ 2) ≈ 0,677 (≈ 67,7 %)",
+    mistakes: [
+      "„Höchstens 2\" nur als P(X=2) deuten – dazu gehören auch X = 0 und X = 1.",
+      "Am Taschenrechner P(X=2) statt der kumulierten Wahrscheinlichkeit P(X≤2) (binomcdf) nehmen.",
+    ],
+    locked: false,
+  },
+  {
+    id: "st16",
+    tag: "Mindestanzahl (Binomial)",
+    src: "Original-Übung · Abi-Stil C16",
+    q: "Ein Glücksrad zeigt mit Wahrscheinlichkeit p = 0,2 einen Gewinn. Wie oft muss man mindestens drehen, damit mit einer Wahrscheinlichkeit von mindestens 99 % wenigstens einmal ein Gewinn dabei ist?",
+    steps: [
+      { label: "Ansatz über das Gegenereignis", math: "P(X ≥ 1) = 1 − 0,8ⁿ ≥ 0,99" },
+      { label: "Umstellen", math: "0,8ⁿ ≤ 0,01" },
+      { label: "Logarithmieren", math: "n ≥ ln(0,01) / ln(0,8) ≈ 20,64" },
+      { label: "Aufrunden (n ganzzahlig)", math: "n = 21" },
+    ],
+    result: "mindestens n = 21 Drehungen",
+    mistakes: [
+      "Das Ergebnis 20,64 abrunden – für „mindestens 99 %\" muss man immer AUFrunden, sonst wird die Schranke nicht erreicht.",
+      "Beim Teilen durch das negative ln(0,8) das Ungleichheitszeichen falsch behandeln; sauber „0,8ⁿ ≤ 0,01\" ansetzen.",
+    ],
+    locked: false,
+  },
+  {
+    id: "st17",
+    tag: "Baumdiagramm (genau eins)",
+    src: "Original-Übung · Abi-Stil C17",
+    q: "In einer Urne liegen 3 rote und 2 blaue Kugeln. Es werden 2 Kugeln ohne Zurücklegen gezogen. Mit welcher Wahrscheinlichkeit ist genau eine Kugel rot?",
+    steps: [
+      { label: "Zwei Pfade führen zum Ereignis", math: "(rot, blau) und (blau, rot)" },
+      { label: "Pfad (rot, blau)", math: "3/5 · 2/4 = 6/20" },
+      { label: "Pfad (blau, rot)", math: "2/5 · 3/4 = 6/20" },
+      { label: "Pfade addieren", math: "6/20 + 6/20 = 12/20" },
+    ],
+    result: "P(genau 1 rot) = 3/5 = 0,6",
+    mistakes: [
+      "Nur einen Pfad (z. B. rot–blau) rechnen – „genau eine rote\" umfasst BEIDE Reihenfolgen.",
+      "Innerhalb eines Pfades addieren; entlang eines Astes wird multipliziert, erst die verschiedenen Pfade werden addiert.",
+    ],
+    locked: false,
+  },
+  {
+    id: "st18",
+    tag: "Bedingte Wahrscheinlichkeit",
+    src: "Original-Übung · Abi-Stil C18",
+    q: "Für zwei Ereignisse gilt P(A) = 0,5, P(B) = 0,4 und P(A∩B) = 0,3. Berechnen Sie P(A|B) und P(B|A).",
+    steps: [
+      { label: "Formel", math: "P(A|B) = P(A∩B) / P(B)" },
+      { label: "P(A|B) einsetzen", math: "= 0,3 / 0,4 = 0,75" },
+      { label: "Andere Richtung", math: "P(B|A) = P(A∩B) / P(A) = 0,3 / 0,5 = 0,6" },
+    ],
+    result: "P(A|B) = 0,75;  P(B|A) = 0,6",
+    mistakes: [
+      "Durch die falsche Wahrscheinlichkeit teilen: bei P(A|B) steht die Bedingung B im Nenner, also ÷ P(B).",
+      "P(A|B) und P(B|A) für gleich halten – sie unterscheiden sich, sobald P(A) ≠ P(B).",
+    ],
+    locked: false,
+  },
+  {
+    id: "st19",
+    tag: "Additionssatz",
+    src: "Original-Übung · Abi-Stil C19",
+    q: "Für zwei Ereignisse gilt P(A) = 0,5, P(B) = 0,4 und P(A∩B) = 0,2. Berechnen Sie P(A∪B).",
+    steps: [
+      { label: "Additionssatz", math: "P(A∪B) = P(A) + P(B) − P(A∩B)" },
+      { label: "Einsetzen", math: "= 0,5 + 0,4 − 0,2" },
+    ],
+    result: "P(A∪B) = 0,7",
+    mistakes: [
+      "Den Schnitt P(A∩B) nicht abziehen und einfach 0,5 + 0,4 = 0,9 rechnen – der gemeinsame Teil würde doppelt gezählt.",
+      "Den Additionssatz auch bei unvereinbaren Ereignissen mit einem Schnitt ansetzen; sind A und B disjunkt, ist P(A∩B) = 0.",
+    ],
+    locked: false,
+  },
+  {
+    id: "st20",
+    tag: "Wahrscheinlichkeitsverteilung",
+    src: "Original-Übung · Abi-Stil C20",
+    q: "Zwei faire Münzen werden geworfen. Die Zufallsgröße X zählt die Anzahl „Kopf\". Stellen Sie die Wahrscheinlichkeitsverteilung auf und berechnen Sie E(X).",
+    steps: [
+      { label: "Alle Ergebnisse (je 1/4)", math: "ZZ, ZK, KZ, KK" },
+      { label: "Verteilung", math: "P(X=0) = 1/4,  P(X=1) = 2/4 = 1/2,  P(X=2) = 1/4" },
+      { label: "Erwartungswert", math: "E(X) = 0·(1/4) + 1·(1/2) + 2·(1/4)" },
+    ],
+    result: "E(X) = 1   (Verteilung: 1/4, 1/2, 1/4 für X = 0, 1, 2)",
+    mistakes: [
+      "P(X=1) nur als 1/4 ansetzen – für „genau 1 Kopf\" gibt es ZWEI Ergebnisse (ZK und KZ), also 2/4.",
+      "Beim Erwartungswert die Werte ungewichtet mitteln (0+1+2)/3, statt mit den Wahrscheinlichkeiten zu gewichten.",
+    ],
+    locked: false,
+  },
+  {
+    id: "st21",
+    tag: "Sigma-Regeln",
+    src: "Original-Übung · Abi-Stil C21",
+    q: "Eine faire Münze wird 100-mal geworfen (p = 0,5 für Kopf). In welchem Intervall liegt die Anzahl der Köpfe mit einer Wahrscheinlichkeit von etwa 95,4 % (2σ-Umgebung)?",
+    steps: [
+      { label: "Erwartungswert", math: "μ = n·p = 100·0,5 = 50" },
+      { label: "Standardabweichung", math: "σ = √(n·p·(1−p)) = √(100·0,5·0,5) = √25 = 5" },
+      { label: "2σ-Umgebung (≈ 95,4 %)", math: "[μ − 2σ; μ + 2σ] = [50 − 10; 50 + 10]" },
+    ],
+    result: "mit ≈ 95,4 % liegt die Trefferzahl im Intervall [40; 60]",
+    mistakes: [
+      "Für die ≈ 95,4-%-Umgebung μ ± σ statt μ ± 2σ nehmen – diese Regel gehört zu ZWEI Standardabweichungen.",
+      "σ mit der Varianz (25) verwechseln; erst die Wurzel ziehen (σ = 5), dann ± 2σ rechnen.",
+    ],
+    locked: false,
+  },
+  {
+    id: "st22",
+    tag: "Hypothesentest",
+    src: "Original-Übung · Abi-Stil C22",
+    q: "Ein Hersteller behauptet, höchstens 10 % seiner Produkte seien fehlerhaft. Zur Prüfung werden n = 50 Produkte getestet (Signifikanzniveau 5 %). Der Ablehnungsbereich wurde als {X ≥ 10} bestimmt. In der Stichprobe sind 12 Produkte fehlerhaft. Wie lautet die Testentscheidung?",
+    steps: [
+      { label: "Hypothesen", math: "H₀: p ≤ 0,10 (Behauptung),   H₁: p > 0,10" },
+      { label: "Ablehnungsbereich (gegeben)", math: "{X ≥ 10} auf dem 5-%-Niveau" },
+      { label: "Beobachtung", math: "in der Stichprobe: X = 12" },
+      { label: "Vergleich", math: "12 ≥ 10  →  X liegt im Ablehnungsbereich" },
+    ],
+    result: "H₀ wird abgelehnt – die Behauptung „höchstens 10 % fehlerhaft\" wird auf dem 5-%-Niveau verworfen.",
+    mistakes: [
+      "Aus der Ablehnung folgern „H₁ ist bewiesen\" – ein Test beweist nichts, ein Irrtum (Fehler 1. Art) bleibt mit bis zu 5 % möglich.",
+      "Den Ablehnungsbereich auf der falschen Seite ansetzen; wegen H₁: p > 0,10 wird nur bei GROSSEN Werten von X abgelehnt.",
     ],
     locked: false,
   },
