@@ -75,7 +75,7 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
             <span className={styles.grad}>Vorbereitung, die sitzt.</span>
           </h1>
           <p>
-            Alle drei Prüfungsgebiete — strukturiert, klar, direkt auf das hessische Abitur zugeschnitten. Mit echten Aufgaben, vollständigen Musterlösungen und einer KI, die Schritt für Schritt erklärt.
+            Drei Prüfungsgebiete, vollständig vorbereitet — mit echten Abituraufgaben aus Hessen, vollständigen Musterlösungen und einem KI-Assistenten, der jeden Rechenschritt erklärt.
           </p>
           <div className={styles.cta}>
             {isAuthed ? (
@@ -148,7 +148,8 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
 
       {/* Subject overview */}
       <section className={styles.lsec}>
-        <div className={styles.lh}>Prüfungsgebiete</div>
+        <div className={styles.lh}>Was dich im Abi erwartet</div>
+        <p className={styles.secIntro}>Drei Prüfungsgebiete, vollständig abgedeckt — priorisiert nach Häufigkeit im hessischen Abitur.</p>
         <div className={styles.subjectGrid}>
           {[
             {
@@ -189,18 +190,18 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
           {[
             {
               num: '01',
-              title: 'Thema öffnen',
-              desc: 'Wähle ein Thema aus einem der drei Prüfungsgebiete — nach Abiturrelevanz sortiert, direkt auf Hessen zugeschnitten.',
+              title: 'Thema wählen',
+              desc: 'Wähle ein Thema aus Analysis, Linearer Algebra oder Stochastik — priorisiert nach Häufigkeit im hessischen Abitur.',
             },
             {
               num: '02',
-              title: 'Verstehen',
+              title: 'Durcharbeiten',
               desc: 'Erklärvideo oder Text — in deinem Tempo, so oft du willst. Kein Weiterklicken, wenn du noch nicht bereit bist.',
             },
             {
               num: '03',
-              title: 'Üben & Nachhaken',
-              desc: 'Echte Abituraufgaben mit Musterlösungen. Steckst du fest, erklärt der KI-Assistent den nächsten Schritt.',
+              title: 'Üben & nachhaken',
+              desc: 'Rechne echte Abituraufgaben nach — mit vollständigen Musterlösungen. Steckst du fest, erklärt dir der KI-Assistent Schritt für Schritt weiter.',
             },
           ].map(s => (
             <div key={s.num} className={styles.step}>
@@ -214,12 +215,12 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
 
       {/* Features */}
       <section className={styles.lsec}>
-        <div className={styles.lh}>Was drin ist</div>
+        <div className={styles.lh}>Was du bekommst</div>
         <div className={styles.incl}>
           {[
             {
               title: 'Abituraufgaben mit Musterlösungen',
-              desc: 'Echte Aufgaben aus Hessen — mit vollständigen, nachvollziehbaren Lösungen, keine oberflächlichen Antworten.',
+              desc: 'Originalgetreue Aufgaben aus hessischen Abiturprüfungen — mit vollständigen Musterlösungen, die jeden Schritt zeigen.',
               color: '#F0524A',
             },
             {
@@ -234,7 +235,7 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
             },
             {
               title: '1:1 Nachhilfe',
-              desc: 'Für hartnäckige Themen: Echte Tutor:innen, direkt über die Plattform buchbar.',
+              desc: 'Für Themen, die nicht sitzen: buchbare 1:1-Sessions mit erfahrenen Mathe-Tutor:innen.',
               color: '#F5A623',
             },
           ].map(item => (
@@ -255,33 +256,33 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
 
       {/* Pricing */}
       <section className={styles.lsec}>
-        <div className={styles.lh}>Preise</div>
+        <div className={styles.lh}>Dein Zugang</div>
         <div className={styles.plans}>
           <div className={styles.plan}>
             <div className={styles.pt}>Gratis</div>
-            <h3>Schnuppern</h3>
+            <h3>Einstieg</h3>
             <div className={styles.price}>0 €</div>
-            <div className={styles.per}>für immer kostenlos</div>
+            <div className={styles.per}>dauerhaft kostenlos</div>
             <div className={styles.planFeats}>
               <PlanFeat text="Erste Themen in jedem Gebiet" />
-              <PlanFeat text="Basis-Erklärungen" />
-              <PlanFeat text="Begrenzte Aufgabenanzahl" />
+              <PlanFeat text="Einführende Erklärungen je Gebiet" />
+              <PlanFeat text="Erste Aufgaben pro Thema" />
             </div>
             <button className="btn light" style={{ marginTop: 'auto' }} onClick={onEnter}>
-              {isAuthed ? 'Weiter lernen' : 'Jetzt starten'}
+              {isAuthed ? 'Weiter lernen' : 'Kostenlos starten'}
             </button>
           </div>
           <div className={`${styles.plan} ${styles.planHl}`}>
             <div className={styles.pt}>Empfohlen</div>
             <h3>Vollzugang</h3>
             <div className={styles.price}>79 €</div>
-            <div className={styles.per}>einmalig · bis zur Prüfung</div>
+            <div className={styles.per}>einmalig · kein Abo · bis zur Prüfung</div>
             <div className={styles.planFeats}>
-              <PlanFeat text="Alle Themen & Aufgaben" highlight />
+              <PlanFeat text="Alle Themen & Aufgaben freigeschaltet" highlight />
               <PlanFeat text="Vollständige Musterlösungen" highlight />
-              <PlanFeat text="Erklärvideos zu jedem Thema" highlight />
-              <PlanFeat text="KI-Assistent unbegrenzt" highlight />
-              <PlanFeat text="1:1 Nachhilfe buchbar" highlight />
+              <PlanFeat text="Erklärvideos zu allen Themen" highlight />
+              <PlanFeat text="KI-Assistent ohne Limit" highlight />
+              <PlanFeat text="1:1 Nachhilfe mit echten Tutor:innen" highlight />
             </div>
             {owned ? (
               <button className="btn light" style={{ marginTop: 'auto' }} disabled>Dein Zugang ist aktiv</button>
@@ -295,10 +296,16 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
       {/* Closing CTA */}
       <div className={styles.closing}>
         <h2>Deine Vorbereitung beginnt hier.</h2>
-        <p>Starte kostenlos und ohne Account. Den Vollzugang schaltest du frei, wenn du bereit bist.</p>
-        <button className="btn primary" onClick={onEnter}>
-          {isAuthed ? 'Weiter lernen' : 'Kostenlos starten'}
-        </button>
+        <p>Starte kostenlos — kein Account nötig. Den Vollzugang schaltest du frei, wenn du bereit bist.</p>
+        <div className={styles.cta} style={{ justifyContent: 'center' }}>
+          <button className="btn primary" onClick={onEnter}>
+            {isAuthed ? 'Weiter lernen' : 'Kostenlos starten'}
+          </button>
+          {!isAuthed && !owned && (
+            <button className="btn light" onClick={onOpenCheckout}>Vollzugang — 79 €</button>
+          )}
+        </div>
+        <p className={styles.microline}>Einmalige Zahlung · kein Abo · Zugang bis zur Prüfung</p>
       </div>
 
       <footer className={styles.foot}>
@@ -311,6 +318,10 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
           Sichere Zahlung über Stripe · SSL-verschlüsselt
+        </div>
+        <div className={styles.footlinks}>
+          <a href="/impressum">Impressum</a>
+          <a href="/datenschutz">Datenschutz</a>
         </div>
         <div className={styles.footcopy}>© 2026 Gradefruit · Mathe-Abitur Hessen 2027</div>
       </footer>
