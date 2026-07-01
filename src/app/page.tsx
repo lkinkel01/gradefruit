@@ -180,6 +180,7 @@ export default function Home() {
             ownedLk={ownedLk}
             onOpenCheckout={openCheckout}
             onOpenAsk={openAsk}
+            onNavigate={navigate}
           />
         );
       case 'videos': return <VideosView />;

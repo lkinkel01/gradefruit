@@ -55,9 +55,10 @@ interface Props {
   ownedLk: boolean;
   onOpenCheckout: (course: 'gk' | 'lk') => void;
   onOpenAsk: (ctx: string, snippet: string) => void;
+  onNavigate: (v: View) => void;
 }
 
-export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onOpenAsk }: Props) {
+export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onOpenAsk, onNavigate }: Props) {
   const topic = TOPIC_DATA[topicId as string];
   const { user } = useAuth();
   const { isUnderstood, isSaved, toggleUnderstood, toggleSaved } = useProgress();
@@ -95,7 +96,7 @@ export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onO
         <span className={styles.tbadge} style={{ background: topic.color }}>{topic.badge}</span>
       </div>
       <h1 className={styles.ph1}>{topic.label}</h1>
-      <p className={styles.pblurb}>Echte Abituraufgaben mit Schritt-für-Schritt-Lösungen.</p>
+      <p className={styles.pblurb}>Prüfungsnahe Aufgaben im Abitur-Stil – mit Schritt-für-Schritt-Lösungen.</p>
 
       <div className={styles.levelSwitch} role="tablist" aria-label="Kursniveau wählen">
         <button
@@ -264,7 +265,7 @@ export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onO
       )}
 
       <div className={styles.topicFoot}>
-        <button className="btn light">← Zurück</button>
+        <button className="btn light" onClick={() => onNavigate('dashboard')}>← Zurück</button>
         <button className="btn primary" onClick={() => onOpenAsk(topic.label, '')}>
           Frage stellen
         </button>

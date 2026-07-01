@@ -63,7 +63,7 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
       <div className={styles.planRow}>
         <div>
           <b>{label}: Gratis-Zugang</b>
-          <p>Analysis kannst du gratis ausprobieren. Schalte den {label}-Vollzugang frei: alle Themen, Altklausuren, Erklärvideos und Tutor-Anfragen.</p>
+          <p>Analysis kannst du gratis ausprobieren. Schalte den {label}-Vollzugang frei: alle Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und Tutor-Anfragen.</p>
         </div>
         <button className="btn primary btn sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={() => onOpenCheckout(course)}>
           {label} freischalten
