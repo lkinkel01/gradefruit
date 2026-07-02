@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
@@ -52,37 +52,24 @@ export default function Home() {
     setDark(document.body.classList.contains('dark'));
   }, []);
 
-  // Theme anwenden und dauerhaft merken, sobald der Nutzer es umschaltet. Der
-  // erste Durchlauf wird übersprungen, damit die vom Inline-Skript gesetzte
-  // Klasse nicht kurz entfernt wird – genau das würde das Flackern auslösen.
-  const themeReady = useRef(false);
-  useEffect(() => {
-    if (!themeReady.current) { themeReady.current = true; return; }
+  // Theme umschalten. WICHTIG (vor allem für Safari/WebKit): Erst die
+  // Body-Klasse SYNCHRON umstellen, dann per State-Änderung die betroffenen
+  // Bereiche komplett neu aufbauen (der key-Wechsel im JSX weiter unten).
+  // Safari aktualisiert die Farb-Variablen bereits vorhandener Elemente beim
+  // Umschalten NICHT zuverlässig – nur frisch erzeugte Elemente lesen die neuen
+  // Farben. Deshalb reicht kein Neuzeichnen; die Elemente müssen neu entstehen.
+  const setTheme = (next: boolean) => {
     const body = document.body;
-    // Wichtig: Übergänge während des Wechsels kurz abschalten und ein
-    // Neuzeichnen erzwingen. Sonst behalten einzelne Flächen den alten Modus,
-    // bis man die Seite neu lädt (das war der halb-hell/halb-dunkel-Fehler).
-    body.classList.add('theme-switching');
-    body.classList.toggle('dark', dark);
-    // Harten Repaint erzwingen: manche Browser zeichnen beim Theme-Wechsel
-    // nicht ALLE Flächen neu (halb hell / halb dunkel, bis man neu lädt). Ein
-    // reines Reflow (offsetHeight) reicht dafür nicht. Body für einen Moment aus
-    // dem Render-Baum nehmen und wieder einsetzen erzwingt ein vollständiges
-    // Neuzeichnen. Läuft synchron vor dem nächsten Frame – kein Flackern.
-    // Scroll-Position sichern & wiederherstellen (display:none setzt sie sonst
-    // auf 0 zurück).
-    const sx = window.scrollX, sy = window.scrollY;
-    const prevDisplay = body.style.display;
-    body.style.display = 'none';
-    void body.offsetHeight;
-    body.style.display = prevDisplay;
-    window.scrollTo(sx, sy);
-    // Übergänge gleich wieder anschalten (für Hover-Effekte etc.). setTimeout
-    // statt requestAnimationFrame, damit es auch in Hintergrund-Tabs sicher feuert.
-    const t = setTimeout(() => body.classList.remove('theme-switching'), 40);
-    try { localStorage.setItem('gf-theme', dark ? 'dark' : 'light'); } catch { /* Speicher gesperrt */ }
-    return () => clearTimeout(t);
-  }, [dark]);
+    body.classList.add('theme-switching');       // Übergänge kurz aus
+    body.classList.toggle('dark', next);          // Farb-Variablen umstellen
+    setTimeout(() => body.classList.remove('theme-switching'), 60);
+    try { localStorage.setItem('gf-theme', next ? 'dark' : 'light'); } catch { /* Speicher gesperrt */ }
+    setDark(next);                                 // löst den Neuaufbau (key) aus
+  };
+
+  // Wechselt bei jedem Theme-Wechsel und zwingt React, die Bereiche neu
+  // aufzubauen, damit sie mit den neuen Farben entstehen (Safari-Fix).
+  const themeKey = dark ? 'dark' : 'light';
 
   useEffect(() => {
     document.body.classList.toggle('navopen', navOpen);
@@ -187,10 +174,11 @@ export default function Home() {
     return (
       <>
         <LandingPage
+          key={themeKey}
           isAuthed={!!user}
           owned={owned}
           dark={dark}
-          onToggleDark={() => setDark(d => !d)}
+          onToggleDark={() => setTheme(!dark)}
           onEnter={() => user ? setView('dashboard') : setView('analysis')}
           onLogin={() => openAuth('login')}
           onOpenCheckout={() => user ? openCheckout('gk') : openAuth('register')}
@@ -248,7 +236,7 @@ export default function Home() {
           {notice}
         </div>
       )}
-      <div className={styles.shell}>
+      <div className={styles.shell} key={themeKey}>
         <Sidebar
           view={view}
           owned={owned}
@@ -260,7 +248,7 @@ export default function Home() {
           <Topbar
             view={view}
             dark={dark}
-            onToggleDark={() => setDark(d => !d)}
+            onToggleDark={() => setTheme(!dark)}
             onOpenNav={() => setNavOpen(n => !n)}
             onNavigate={navigate}
             onOpenAuth={() => openAuth('login')}
