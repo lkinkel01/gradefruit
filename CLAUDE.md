@@ -6,6 +6,8 @@ Lernplattform für das **schriftliche Mathe-Abitur Hessen 2027**. Ziel: Schüler
 kaufen Zugang (GK oder LK) und üben mit Aufgaben, Lösungen, KI-Hilfe und Erklärvideos.
 
 > Hinweis: `@AGENTS.md` oben warnt, dass diese **Next.js-Version von der Standard-Version abweicht** – vor Code-Änderungen die Doku in `node_modules/next/dist/docs/` beachten.
+>
+> **Aktueller Stand, offene Aufgaben & Übergabe an ChatGPT: [PROJECT_STATUS.md](PROJECT_STATUS.md)** (nach größeren Änderungen aktualisieren). Diese CLAUDE.md = dauerhafte Regeln/Referenz; PROJECT_STATUS.md = aktueller Stand.
 
 ---
 
@@ -31,7 +33,7 @@ kaufen Zugang (GK oder LK) und üben mit Aufgaben, Lösungen, KI-Hilfe und Erkl�
 
 - **Next.js 16.2.9** (App Router, Turbopack) + **TypeScript** — abweichende Version, siehe `@AGENTS.md`
 - **CSS Modules** zum Stylen – **kein Tailwind**
-- **Supabase**: Auth (E-Mail+Passwort; Google-OAuth ist NICHT aktiv) + Postgres mit **RLS**
+- **Supabase**: Auth (E-Mail+Passwort **und Google-OAuth – aktiv seit 07/2026**) + Postgres mit **RLS**
 - **Stripe** im **TEST-/Sandbox-Modus**
 - **ElevenLabs** für Text-to-Speech (Erklärvideo-Stimme)
 
