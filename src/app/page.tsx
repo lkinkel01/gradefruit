@@ -64,7 +64,19 @@ export default function Home() {
     // bis man die Seite neu lädt (das war der halb-hell/halb-dunkel-Fehler).
     body.classList.add('theme-switching');
     body.classList.toggle('dark', dark);
-    void body.offsetHeight; // erzwingt sofortiges Neu-Berechnen/Zeichnen
+    // Harten Repaint erzwingen: manche Browser zeichnen beim Theme-Wechsel
+    // nicht ALLE Flächen neu (halb hell / halb dunkel, bis man neu lädt). Ein
+    // reines Reflow (offsetHeight) reicht dafür nicht. Body für einen Moment aus
+    // dem Render-Baum nehmen und wieder einsetzen erzwingt ein vollständiges
+    // Neuzeichnen. Läuft synchron vor dem nächsten Frame – kein Flackern.
+    // Scroll-Position sichern & wiederherstellen (display:none setzt sie sonst
+    // auf 0 zurück).
+    const sx = window.scrollX, sy = window.scrollY;
+    const prevDisplay = body.style.display;
+    body.style.display = 'none';
+    void body.offsetHeight;
+    body.style.display = prevDisplay;
+    window.scrollTo(sx, sy);
     // Übergänge gleich wieder anschalten (für Hover-Effekte etc.). setTimeout
     // statt requestAnimationFrame, damit es auch in Hintergrund-Tabs sicher feuert.
     const t = setTimeout(() => body.classList.remove('theme-switching'), 40);
