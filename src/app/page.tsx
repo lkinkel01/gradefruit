@@ -58,8 +58,18 @@ export default function Home() {
   const themeReady = useRef(false);
   useEffect(() => {
     if (!themeReady.current) { themeReady.current = true; return; }
-    document.body.classList.toggle('dark', dark);
+    const body = document.body;
+    // Wichtig: Übergänge während des Wechsels kurz abschalten und ein
+    // Neuzeichnen erzwingen. Sonst behalten einzelne Flächen den alten Modus,
+    // bis man die Seite neu lädt (das war der halb-hell/halb-dunkel-Fehler).
+    body.classList.add('theme-switching');
+    body.classList.toggle('dark', dark);
+    void body.offsetHeight; // erzwingt sofortiges Neu-Berechnen/Zeichnen
+    // Übergänge gleich wieder anschalten (für Hover-Effekte etc.). setTimeout
+    // statt requestAnimationFrame, damit es auch in Hintergrund-Tabs sicher feuert.
+    const t = setTimeout(() => body.classList.remove('theme-switching'), 40);
     try { localStorage.setItem('gf-theme', dark ? 'dark' : 'light'); } catch { /* Speicher gesperrt */ }
+    return () => clearTimeout(t);
   }, [dark]);
 
   useEffect(() => {

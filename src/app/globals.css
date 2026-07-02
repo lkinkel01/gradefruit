@@ -88,6 +88,17 @@ body.dark {
 }
 body.dark .topbar { background: rgba(18,17,24,.86); }
 
+/* Beim Hell/Dunkel-Wechsel kurz ALLE Übergänge aus, damit die ganze Seite
+   sofort und gleichzeitig umschaltet. Ohne das bleiben einzelne Flächen im
+   alten Farbton hängen, bis man neu lädt. Die Klasse wird nur für einen
+   Frame gesetzt (siehe page.tsx). */
+body.theme-switching,
+body.theme-switching *,
+body.theme-switching *::before,
+body.theme-switching *::after {
+  transition: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
