@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
@@ -45,8 +45,21 @@ export default function Home() {
     if (user && view === 'landing') setView('dashboard');
   }, [user]);
 
+  // Das Inline-Skript in layout.tsx hat das gespeicherte Theme schon vor dem
+  // ersten Rendern als Body-Klasse gesetzt (kein Aufblitzen). React gleicht
+  // seinen Zustand hier einmalig daran an.
   useEffect(() => {
+    setDark(document.body.classList.contains('dark'));
+  }, []);
+
+  // Theme anwenden und dauerhaft merken, sobald der Nutzer es umschaltet. Der
+  // erste Durchlauf wird übersprungen, damit die vom Inline-Skript gesetzte
+  // Klasse nicht kurz entfernt wird – genau das würde das Flackern auslösen.
+  const themeReady = useRef(false);
+  useEffect(() => {
+    if (!themeReady.current) { themeReady.current = true; return; }
     document.body.classList.toggle('dark', dark);
+    try { localStorage.setItem('gf-theme', dark ? 'dark' : 'light'); } catch { /* Speicher gesperrt */ }
   }, [dark]);
 
   useEffect(() => {

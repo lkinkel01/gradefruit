@@ -11,7 +11,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="de">
-      <body>
+      <body suppressHydrationWarning>
+        {/* Setzt das gespeicherte Theme VOR dem ersten Rendern, damit die Seite
+            nicht kurz hell aufblitzt und dann auf Dunkel springt. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('gf-theme')==='dark')document.body.classList.add('dark')}catch(e){}`,
+          }}
+        />
         <AuthProvider>
           <ProgressProvider>{children}</ProgressProvider>
         </AuthProvider>
