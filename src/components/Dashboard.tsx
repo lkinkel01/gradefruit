@@ -6,14 +6,16 @@ import styles from './Dashboard.module.css';
 
 interface Props {
   onNavigate: (v: View) => void;
+  level: 'gk' | 'lk';
+  choosable: boolean;
+  onChooseLevel: (l: 'gk' | 'lk') => void;
 }
 
-export default function Dashboard({ onNavigate }: Props) {
-  const { totalDone, totalLessons, topicDone, topicTotal, owned, ownedLk } = useProgress();
+export default function Dashboard({ onNavigate, level, choosable, onChooseLevel }: Props) {
+  const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
   const open = Math.max(0, totalLessons - totalDone);
-  // Kurs-Bezeichnung richtet sich nach dem, was der Nutzer freigeschaltet hat.
-  const kurs = owned && ownedLk ? 'Grund- & Leistungskurs' : ownedLk ? 'Leistungskurs' : owned ? 'Grundkurs' : 'Grund- & Leistungskurs';
+  const kurs = level === 'lk' ? 'Leistungskurs' : 'Grundkurs';
 
   const [greeting, setGreeting] = useState('Hallo');
   useEffect(() => {
@@ -25,6 +27,32 @@ export default function Dashboard({ onNavigate }: Props) {
     <div className={styles.page}>
       <h1 className={styles.ph1}>{greeting}</h1>
       <p className={styles.pblurb}>Dein Mathe-Abi 2027 – Hessen {kurs}. Mach weiter, wo du aufgehört hast.</p>
+
+      <div className={styles.courseRow}>
+        <span className={styles.courseLabel}>Dein Kurs</span>
+        {choosable ? (
+          <div className={styles.courseSeg} role="tablist" aria-label="Kursniveau wählen">
+            <button
+              role="tab"
+              aria-selected={level === 'gk'}
+              className={`${styles.courseBtn} ${level === 'gk' ? styles.courseOn : ''}`}
+              onClick={() => onChooseLevel('gk')}
+            >
+              Grundkurs
+            </button>
+            <button
+              role="tab"
+              aria-selected={level === 'lk'}
+              className={`${styles.courseBtn} ${level === 'lk' ? styles.courseOn : ''}`}
+              onClick={() => onChooseLevel('lk')}
+            >
+              Leistungskurs
+            </button>
+          </div>
+        ) : (
+          <span className={styles.courseBadge}>{kurs}</span>
+        )}
+      </div>
 
       <div className={styles.stats}>
         <div className={styles.stat}>

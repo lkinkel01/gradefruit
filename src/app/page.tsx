@@ -30,6 +30,9 @@ export default function Home() {
 
   const [view, setView] = useState<View>('landing');
   const [dark, setDark] = useState(false);
+  // Kursstufe: Wer gekauft hat, hat sich entschieden. Nur Gäste (und wer beide
+  // Kurse besitzt) wählen selbst; die Wahl wird lokal gemerkt.
+  const [prefLevel, setPrefLevel] = useState<'gk' | 'lk'>('gk');
   const [navOpen, setNavOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [checkoutCourse, setCheckoutCourse] = useState<'gk' | 'lk'>('gk');
@@ -50,7 +53,19 @@ export default function Home() {
   // seinen Zustand hier einmalig daran an.
   useEffect(() => {
     setDark(document.body.classList.contains('dark'));
+    try {
+      const l = localStorage.getItem('gf-level');
+      if (l === 'gk' || l === 'lk') setPrefLevel(l);
+    } catch { /* Speicher gesperrt */ }
   }, []);
+
+  // Besitzt jemand genau einen Kurs, zählt der Kauf. Sonst die eigene Wahl.
+  const level: 'gk' | 'lk' = owned && !ownedLk ? 'gk' : ownedLk && !owned ? 'lk' : prefLevel;
+  const levelChoosable = owned === ownedLk; // niemand oder beide gekauft
+  const chooseLevel = (l: 'gk' | 'lk') => {
+    setPrefLevel(l);
+    try { localStorage.setItem('gf-level', l); } catch { /* Speicher gesperrt */ }
+  };
 
   // Theme umschalten. WICHTIG (vor allem für Safari/WebKit): Erst die
   // Body-Klasse SYNCHRON umstellen, dann per State-Änderung die betroffenen
@@ -194,13 +209,15 @@ export default function Home() {
 
   const renderContent = () => {
     switch (view) {
-      case 'dashboard': return <Dashboard onNavigate={navigate} />;
+      case 'dashboard':
+        return <Dashboard onNavigate={navigate} level={level} choosable={levelChoosable} onChooseLevel={chooseLevel} />;
       case 'analysis':
       case 'linalg':
       case 'stochastik':
         return (
           <TopicView
             topicId={view}
+            level={level}
             owned={owned}
             ownedLk={ownedLk}
             onOpenCheckout={openCheckout}
@@ -218,7 +235,8 @@ export default function Home() {
             <p style={{ color: 'var(--faint)', marginTop: 40, textAlign: 'center' }}>Noch nichts gespeichert.</p>
           </div>
         );
-      default: return <Dashboard onNavigate={navigate} />;
+      default:
+        return <Dashboard onNavigate={navigate} level={level} choosable={levelChoosable} onChooseLevel={chooseLevel} />;
     }
   };
 

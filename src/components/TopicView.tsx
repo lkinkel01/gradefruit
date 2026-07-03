@@ -1,11 +1,12 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import styles from './TopicView.module.css';
 import SceneModal from './SceneModal';
 import { SCENES, Scene } from '@/lib/scenes';
+import { SUMMARIES } from '@/lib/summaries';
 import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
 import { LINALG_TASKS } from '@/lib/linalgTasks';
 import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
@@ -22,7 +23,7 @@ interface Task {
   result: string;
   locked: boolean;
   videoId?: string; // passendes Erklärvideo (Schlüssel aus scenes.ts)
-  mistakes?: string[]; // 2 typische Fehler (optional)
+  mistakes?: string[];
 }
 
 const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; gk: Task[]; lk: Task[] }> = {
@@ -51,6 +52,7 @@ const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; 
 
 interface Props {
   topicId: View;
+  level: 'gk' | 'lk';
   owned: boolean;
   ownedLk: boolean;
   onOpenCheckout: (course: 'gk' | 'lk') => void;
@@ -58,31 +60,47 @@ interface Props {
   onNavigate: (v: View) => void;
 }
 
-export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onOpenAsk, onNavigate }: Props) {
+type Tab = 'zusammenfassung' | 'uebungen';
+
+export default function TopicView({ topicId, level, owned, ownedLk, onOpenCheckout, onOpenAsk, onNavigate }: Props) {
   const topic = TOPIC_DATA[topicId as string];
   const { user } = useAuth();
   const { isUnderstood, isSaved, toggleUnderstood, toggleSaved } = useProgress();
+  const [tab, setTab] = useState<Tab>('zusammenfassung');
+  const [openCards, setOpenCards] = useState<Set<string>>(new Set());
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
   const [video, setVideo] = useState<Scene | null>(null);
-  const [level, setLevel] = useState<'gk' | 'lk'>('gk');
-  const userPickedLevel = useRef(false);
   const isFree = topicId === 'analysis';
 
-  // LK-only-Schüler automatisch auf den LK-Tab schicken (und GK-only auf GK),
-  // solange sie die Stufe nicht selbst angetippt haben. Analysis ist gratis –
-  // dort bleibt die Wahl immer frei.
+  const tasks = topic ? topic[level] : [];
+  const doneCount = tasks.filter(t => isUnderstood(topicId, t.id)).length;
+
+  // Einstieg: Wer hier schon gelernt hat, landet direkt bei den Übungen.
+  // Neue Lernende starten bei der Zusammenfassung. Erste offene Karte aufklappen.
   useEffect(() => {
-    if (userPickedLevel.current || isFree) return;
-    if (level === 'gk' && !owned && ownedLk) setLevel('lk');
-    else if (level === 'lk' && !ownedLk && owned) setLevel('gk');
-  }, [owned, ownedLk, isFree, level]);
+    const done = tasks.filter(t => isUnderstood(topicId, t.id)).length;
+    setTab(done > 0 ? 'uebungen' : 'zusammenfassung');
+    const firstOpen = tasks.find(t => !isUnderstood(topicId, t.id)) ?? tasks[0];
+    setOpenCards(firstOpen ? new Set([firstOpen.id]) : new Set());
+    setOpenSolutions(new Set());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [topicId, level]);
 
   if (!topic) return null;
 
-  const tasks = topic[level];
-  const hasAccess = level === 'gk' ? isFree || owned : isFree || ownedLk;
+  const hasAccess = isFree || (level === 'gk' ? owned : ownedLk);
+  const summary = SUMMARIES[topicId as 'analysis' | 'linalg' | 'stochastik']?.[level];
+  const levelLabel = level === 'lk' ? 'Leistungskurs' : 'Grundkurs';
 
-  const toggle = (id: string) => {
+  const toggleCard = (id: string) => {
+    setOpenCards(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSolution = (id: string) => {
     setOpenSolutions(prev => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
@@ -94,173 +112,233 @@ export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onO
     <div className={styles.page}>
       <div className={styles.thead}>
         <span className={styles.tbadge} style={{ background: topic.color }}>{topic.badge}</span>
+        <span className={styles.levelChip}>{levelLabel}</span>
       </div>
       <h1 className={styles.ph1}>{topic.label}</h1>
-      <p className={styles.pblurb}>Prüfungsnahe Aufgaben im Abitur-Stil – mit Schritt-für-Schritt-Lösungen.</p>
+      <p className={styles.pblurb}>Prüfungsnahe Aufgaben im Abitur-Stil, mit Zusammenfassung, Formeln und Schritt-für-Schritt-Lösungen.</p>
 
-      <div className={styles.levelSwitch} role="tablist" aria-label="Kursniveau wählen">
+      {hasAccess && (
+        <div className={styles.progressRow}>
+          <div className={styles.progressTrack}>
+            <div
+              className={styles.progressFill}
+              style={{ width: `${tasks.length ? Math.round((doneCount / tasks.length) * 100) : 0}%`, background: topic.color }}
+            />
+          </div>
+          <span className={styles.progressLabel}>{doneCount} von {tasks.length} verstanden</span>
+        </div>
+      )}
+
+      <div className={styles.tabs} role="tablist" aria-label="Bereich wählen">
         <button
           role="tab"
-          aria-selected={level === 'gk'}
-          className={`${styles.levelBtn} ${level === 'gk' ? styles.levelBtnActive : ''}`}
-          style={level === 'gk' ? { background: topic.color, borderColor: topic.color } : undefined}
-          onClick={() => { userPickedLevel.current = true; setLevel('gk'); }}
+          aria-selected={tab === 'zusammenfassung'}
+          className={`${styles.tabBtn} ${tab === 'zusammenfassung' ? styles.tabOn : ''}`}
+          onClick={() => setTab('zusammenfassung')}
         >
-          Grundkurs
+          Zusammenfassung
         </button>
         <button
           role="tab"
-          aria-selected={level === 'lk'}
-          className={`${styles.levelBtn} ${level === 'lk' ? styles.levelBtnActive : ''}`}
-          style={level === 'lk' ? { background: topic.color, borderColor: topic.color } : undefined}
-          onClick={() => { userPickedLevel.current = true; setLevel('lk'); }}
+          aria-selected={tab === 'uebungen'}
+          className={`${styles.tabBtn} ${tab === 'uebungen' ? styles.tabOn : ''}`}
+          onClick={() => setTab('uebungen')}
         >
-          Leistungskurs
+          Übungen · {tasks.length}
         </button>
       </div>
 
-      {hasAccess && tasks.map(task => (
-        <div key={task.id} className={styles.task}>
-          <div className={styles.taskHead}>
-            <div className={styles.taskTag}>
-              <span className={styles.lbl}>{task.tag}</span>
-              <span className={styles.src}>{task.src}</span>
-            </div>
-            <p className={styles.taskQ}>{task.q}</p>
-            <div className={styles.rowActions}>
-              {task.locked && !hasAccess ? (
-                <button className="btn primary btn sm" style={{ fontSize: 13 }} onClick={() => onOpenCheckout(level)}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                  </svg>
-                  Lösung freischalten
-                </button>
-              ) : (
-                <>
-                  {task.videoId && SCENES[task.videoId] && (
-                    <button
-                      className={styles.mini}
-                      style={{ background: topic.color, color: '#fff', borderColor: 'transparent' }}
-                      onClick={() => setVideo(SCENES[task.videoId!])}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="6 4 20 12 6 20 6 4" />
-                      </svg>
-                      Video ansehen
-                    </button>
-                  )}
-                  <button
-                    className={styles.mini}
-                    onClick={() => toggle(task.id)}
-                    aria-expanded={openSolutions.has(task.id)}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                      <polyline points={openSolutions.has(task.id) ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
-                    </svg>
-                    {openSolutions.has(task.id) ? 'Lösung verbergen' : 'Lösung zeigen'}
-                  </button>
-                  <button
-                    className={styles.mini}
-                    onClick={() => onOpenAsk(topic.label, task.q)}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                      <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
-                      <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
-                    </svg>
-                    KI fragen
-                  </button>
-                  {user && (
-                    <>
-                      <button
-                        className={`${styles.mini} ${isUnderstood(topicId, task.id) ? styles.miniDone : ''}`}
-                        onClick={() => toggleUnderstood(topicId, task.id)}
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                        {isUnderstood(topicId, task.id) ? 'Verstanden' : 'Verstanden?'}
-                      </button>
-                      <button
-                        className={`${styles.mini} ${isSaved(topicId, task.id) ? styles.miniSaved : ''}`}
-                        onClick={() => toggleSaved(topicId, task.id)}
-                        aria-label="Aufgabe speichern"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill={isSaved(topicId, task.id) ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                        </svg>
-                        {isSaved(topicId, task.id) ? 'Gespeichert' : 'Speichern'}
-                      </button>
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-
-          {openSolutions.has(task.id) && task.steps.length > 0 && (
-            <div className={styles.solution}>
-              <div className={styles.solInner}>
-                <div className={styles.solTitle}>Schritt-für-Schritt-Lösung</div>
-                {task.steps.map((step, i) => (
-                  <div key={i} className={styles.sstep}>
-                    <div className={styles.stepNum}>{i + 1}</div>
-                    <div className={styles.stepBody}>
-                      <div className={styles.stepLd}>{step.label}</div>
-                      <div className={styles.stepMt}>{step.math}</div>
-                      <button
-                        className={styles.stepAsk}
-                        onClick={() => onOpenAsk(topic.label, `Schritt ${i + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${task.q}`)}
-                      >
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                          <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
-                          <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
-                        </svg>
-                        Diesen Schritt erklären
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                {task.result && (
-                  <div className={styles.result}>{task.result}</div>
-                )}
-                {task.mistakes && task.mistakes.length > 0 && (
-                  <div className={styles.mistakes}>
-                    <div className={styles.mistakesTitle}>Typische Fehler</div>
-                    <ul className={styles.mistakesList}>
-                      {task.mistakes.map((m, i) => (
-                        <li key={i}>{m}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
-
-      {!hasAccess && (
+      {!hasAccess ? (
         <div className={styles.lockCard}>
           <div className={styles.lockBadge} style={{ background: topic.color }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
           </div>
-          <div className={styles.lockTitle}>
-            {level === 'lk' ? 'Leistungskurs freischalten' : 'Grundkurs freischalten'}
-          </div>
+          <div className={styles.lockTitle}>{levelLabel} freischalten</div>
           <p className={styles.lockText}>
-            Schalte alle {topic.label}-Aufgaben{level === 'lk' ? ' im Leistungskurs' : ''} mit
-            Schritt-für-Schritt-Lösungen, Erklärvideos und Fragen an die KI frei.
+            Schalte alle {topic.label}-Inhalte im {levelLabel} frei: Zusammenfassung mit
+            Formeln, Aufgaben mit Schritt-für-Schritt-Lösungen, Erklärvideos und Fragen an die KI.
           </p>
           <button
             className="btn primary"
             onClick={() => onOpenCheckout(level)}
             style={{ background: topic.color, borderColor: topic.color }}
           >
-            {level === 'lk' ? 'Leistungskurs kaufen' : 'Grundkurs kaufen'}
+            {levelLabel} kaufen
           </button>
-          <p className={styles.lockHint}>Analysis kannst du in beiden Stufen kostenlos ausprobieren.</p>
+          <p className={styles.lockHint}>Analysis kannst du kostenlos ausprobieren.</p>
+        </div>
+      ) : tab === 'zusammenfassung' && summary ? (
+        <div className={styles.summaryWrap}>
+          <p className={styles.summaryIntro}>{summary.intro}</p>
+          {summary.sections.map((sec, i) => (
+            <div key={sec.title} className={styles.sumCard} style={{ animationDelay: `${i * 45}ms` }}>
+              <div className={styles.sumHead}>
+                <span className={styles.sumDot} style={{ background: topic.color }} />
+                <h3 className={styles.sumTitle}>{sec.title}</h3>
+              </div>
+              <p className={styles.sumText}>{sec.text}</p>
+              <div className={styles.formulas}>
+                {sec.formulas.map((f, j) => (
+                  <div key={j} className={styles.formula}>{f}</div>
+                ))}
+              </div>
+            </div>
+          ))}
+          <div className={styles.summaryFoot}>
+            <button className="btn primary" style={{ background: topic.color, borderColor: topic.color }} onClick={() => setTab('uebungen')}>
+              Jetzt üben
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className={styles.cards}>
+          {tasks.map((task, i) => {
+            const open = openCards.has(task.id);
+            const done = isUnderstood(topicId, task.id);
+            const saved = isSaved(topicId, task.id);
+            const scene = task.videoId ? SCENES[task.videoId] : undefined;
+            return (
+              <div key={task.id} className={`${styles.card} ${open ? styles.cardOpen : ''}`}>
+                <button className={styles.cardHead} onClick={() => toggleCard(task.id)} aria-expanded={open}>
+                  <span className={`${styles.cardNum} ${done ? styles.cardNumDone : ''}`} style={done ? undefined : { background: topic.color }}>
+                    {done ? (
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    ) : (
+                      i + 1
+                    )}
+                  </span>
+                  <span className={styles.cardTitle}>{task.tag}</span>
+                  <span className={styles.cardMeta}>
+                    {scene && (
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-label="Mit Erklärvideo">
+                        <polygon points="6 4 20 12 6 20 6 4" />
+                      </svg>
+                    )}
+                    {saved && (
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-label="Zum Wiederholen gemerkt">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                      </svg>
+                    )}
+                  </span>
+                  <svg className={styles.chev} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                    <polyline points={open ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
+                  </svg>
+                </button>
+
+                {open && (
+                  <div className={styles.cardBody}>
+                    <p className={styles.taskQ}>{task.q}</p>
+
+                    <div className={styles.rowActions}>
+                      <button className={styles.mini} onClick={() => toggleSolution(task.id)} aria-expanded={openSolutions.has(task.id)}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <polyline points={openSolutions.has(task.id) ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
+                        </svg>
+                        {openSolutions.has(task.id) ? 'Lösung verbergen' : 'Lösung Schritt für Schritt'}
+                      </button>
+                      {scene && (
+                        <button
+                          className={styles.mini}
+                          style={{ background: topic.color, color: '#fff', borderColor: 'transparent' }}
+                          onClick={() => setVideo(scene)}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="6 4 20 12 6 20 6 4" />
+                          </svg>
+                          Video ansehen
+                        </button>
+                      )}
+                      <button className={styles.mini} onClick={() => onOpenAsk(topic.label, task.q)}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
+                          <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
+                        </svg>
+                        KI fragen
+                      </button>
+                      <button
+                        className={styles.mini}
+                        onClick={() => onOpenAsk(topic.label, `Ich habe diese Aufgabe selbst gerechnet und möchte meine Lösung prüfen lassen (Foto oder PDF hochladen): ${task.q}`)}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        Eigene Lösung prüfen
+                      </button>
+                      <span className={styles.soonChip} title="Persönliche Tutoren sind bald verfügbar">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="8" r="3.4" /><path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
+                        </svg>
+                        Tutor · bald
+                      </span>
+                    </div>
+
+                    {openSolutions.has(task.id) && task.steps.length > 0 && (
+                      <div className={styles.solution}>
+                        <div className={styles.solTitle}>Schritt-für-Schritt-Lösung</div>
+                        {task.steps.map((step, si) => (
+                          <div key={si} className={styles.sstep} style={{ animationDelay: `${si * 50}ms` }}>
+                            <div className={styles.stepNum}>{si + 1}</div>
+                            <div className={styles.stepBody}>
+                              <div className={styles.stepLd}>{step.label}</div>
+                              <div className={styles.stepMt}>{step.math}</div>
+                              <button
+                                className={styles.stepAsk}
+                                onClick={() => onOpenAsk(topic.label, `Schritt ${si + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${task.q}`)}
+                              >
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                                  <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
+                                  <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
+                                </svg>
+                                Diesen Schritt erklären
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                        {task.result && <div className={styles.result}>{task.result}</div>}
+                        {task.mistakes && task.mistakes.length > 0 && (
+                          <div className={styles.mistakes}>
+                            <div className={styles.mistakesTitle}>Typische Fehler</div>
+                            <ul className={styles.mistakesList}>
+                              {task.mistakes.map((m, mi) => (
+                                <li key={mi}>{m}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {user && (
+                      <div className={styles.cardFoot}>
+                        <button
+                          className={`${styles.mini} ${done ? styles.miniDone : ''}`}
+                          onClick={() => toggleUnderstood(topicId, task.id)}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          {done ? 'Verstanden' : 'Verstanden?'}
+                        </button>
+                        <button
+                          className={`${styles.mini} ${saved ? styles.miniSaved : ''}`}
+                          onClick={() => toggleSaved(topicId, task.id)}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill={saved ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                          </svg>
+                          {saved ? 'Zum Wiederholen gemerkt' : 'Später wiederholen'}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 

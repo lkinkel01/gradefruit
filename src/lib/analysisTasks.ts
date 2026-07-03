@@ -11,12 +11,14 @@ export interface AnalysisTask {
   result: string;                              // Endergebnis
   mistakes: string[];                          // 2 typische Fehler
   locked: boolean;
+  videoId?: string;                            // passendes Erklärvideo (scenes.ts)
 }
 
 export const ANALYSIS_TASKS: AnalysisTask[] = [
   {
     id: "an1",
     tag: "Extrempunkte",
+    videoId: "v2",
     src: "Original-Übung · Abi-Stil A1",
     q: "Bestimmen Sie alle lokalen Extrempunkte der Funktion f mit f(x) = 2x³ − 3x² − 12x + 5.",
     steps: [
@@ -77,6 +79,7 @@ export const ANALYSIS_TASKS: AnalysisTask[] = [
   {
     id: "an4",
     tag: "Tangente",
+    videoId: "v1",
     src: "Original-Übung · Abi-Stil A4",
     q: "Bestimmen Sie die Gleichung der Tangente an den Graphen von f mit f(x) = x³ − 3x + 2 an der Stelle x₀ = 2.",
     steps: [
@@ -96,6 +99,7 @@ export const ANALYSIS_TASKS: AnalysisTask[] = [
   {
     id: "an5",
     tag: "Bestimmtes Integral",
+    videoId: "v3",
     src: "Original-Übung · Abi-Stil A5",
     q: "Berechnen Sie das bestimmte Integral ∫₁³ (3x² − 4x + 1) dx.",
     steps: [
@@ -114,6 +118,7 @@ export const ANALYSIS_TASKS: AnalysisTask[] = [
   {
     id: "an6",
     tag: "Fläche zur x-Achse",
+    videoId: "v3",
     src: "Original-Übung · Abi-Stil A6",
     q: "Der Graph von f mit f(x) = 4 − x² schließt mit der x-Achse eine Fläche ein. Berechnen Sie ihren Inhalt.",
     steps: [

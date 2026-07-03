@@ -3,6 +3,26 @@
 .ph1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
 .pblurb { font-size: 15.5px; color: var(--muted); max-width: 60ch; margin-bottom: 20px; }
 
+/* Kurs-Zeile: Anzeige bzw. einmalige Wahl der Kursstufe */
+.courseRow { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.courseLabel { font-size: 12.5px; font-weight: 600; color: var(--faint); }
+.courseSeg {
+  display: inline-flex; gap: 4px; padding: 4px;
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2);
+}
+.courseBtn {
+  border: none; background: transparent; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--muted); padding: 7px 15px; border-radius: 9px; transition: .15s;
+}
+.courseBtn:hover { color: var(--ink); }
+.courseOn { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.courseBadge {
+  font-size: 12.5px; font-weight: 700; color: var(--muted);
+  border: 1px solid var(--line-strong); background: var(--surface);
+  padding: 6px 14px; border-radius: 99px;
+}
+
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
 .stat {
   background: var(--surface); border: 1px solid var(--line);

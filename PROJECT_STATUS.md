@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 03: Landingpage-Politur)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 04: Lernbereich)
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -35,6 +35,13 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 - ✅ Auth (E-Mail+Passwort + Google-Login)
 - ✅ GK & LK, je 3 Themen, je ~22 Original-Aufgaben (Schritt-Lösungen, typische
   Fehler, Video-Verknüpfung)
+- ✅ Lernbereich (Sprint 04, 07/2026): Kursstufe wird aus dem Kauf abgeleitet
+  (kein GK/LK-Umschalter mehr in den Themen; Gäste wählen einmalig auf der
+  Übersicht, localStorage `gf-level`), Themen-Seiten mit Tabs **Zusammenfassung
+  (Formelsammlung, `src/lib/summaries.ts`) | Übungen**, Übungen als einklappbare
+  **Lernkarten** pro Unterthema (Lösung, Video, KI, „Eigene Lösung prüfen" via
+  KI-Drawer-Upload, Tutor-bald-Platzhalter, Verstanden/Später wiederholen),
+  6 Erklärvideos an passende GK-Aufgaben verknüpft (`videoId`)
 - ✅ KI-Coach (Fragen zu Aufgabe/Schritt), rate-limitiert
 - ✅ Erklärvideos (ElevenLabs-Stimme + animierte Szenen)
 - ✅ Checkout-Flow (GK+LK, einmalig+Abo), Webhook (inkl. Rückerstattung →

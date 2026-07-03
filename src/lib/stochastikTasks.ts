@@ -11,6 +11,7 @@ export interface StochastikTask {
   result: string;                              // Endergebnis
   mistakes: string[];                          // 2 typische Fehler
   locked: boolean;
+  videoId?: string;                            // passendes Erklärvideo (scenes.ts)
 }
 
 export const STOCHASTIK_TASKS: StochastikTask[] = [
@@ -190,6 +191,7 @@ export const STOCHASTIK_TASKS: StochastikTask[] = [
   {
     id: "st11",
     tag: "Binomialverteilung P(X=k)",
+    videoId: "v6",
     src: "Original-Übung · Abi-Stil C11",
     q: "Erfahrungsgemäß sind 20 % der Teile von Sorte A. Es werden 10 Teile zufällig entnommen. Mit welcher Wahrscheinlichkeit sind genau 2 davon von Sorte A?",
     steps: [
@@ -208,6 +210,7 @@ export const STOCHASTIK_TASKS: StochastikTask[] = [
   {
     id: "st12",
     tag: "Binomial (mindestens eins)",
+    videoId: "v6",
     src: "Original-Übung · Abi-Stil C12",
     q: "Ein Bauteil ist mit Wahrscheinlichkeit 5 % defekt. Einer Lieferung werden 10 Bauteile zufällig entnommen. Mit welcher Wahrscheinlichkeit ist mindestens ein Bauteil defekt?",
     steps: [

@@ -11,6 +11,7 @@ export interface LinalgTask {
   result: string;                              // Endergebnis
   mistakes: string[];                          // 2 typische Fehler
   locked: boolean;
+  videoId?: string;                            // passendes Erklärvideo (scenes.ts)
 }
 
 export const LINALG_TASKS: LinalgTask[] = [
@@ -50,6 +51,7 @@ export const LINALG_TASKS: LinalgTask[] = [
   {
     id: "lg3",
     tag: "Skalarprodukt & Winkel",
+    videoId: "v4",
     src: "Original-Übung · Abi-Stil B3",
     q: "Berechnen Sie die Größe des Winkels zwischen den Vektoren a = (1, 0, 1) und b = (0, 1, 1).",
     steps: [
@@ -68,6 +70,7 @@ export const LINALG_TASKS: LinalgTask[] = [
   {
     id: "lg4",
     tag: "Orthogonalität",
+    videoId: "v4",
     src: "Original-Übung · Abi-Stil B4",
     q: "Prüfen Sie, ob die Vektoren u = (2, 3, −1) und v = (1, 1, 5) senkrecht zueinander stehen.",
     steps: [
@@ -102,6 +105,7 @@ export const LINALG_TASKS: LinalgTask[] = [
   {
     id: "lg6",
     tag: "Gerade & Punktprobe",
+    videoId: "v5",
     src: "Original-Übung · Abi-Stil B6",
     q: "Stellen Sie die Gleichung der Geraden g durch A(1|2|0) und B(3|6|4) auf und prüfen Sie, ob P(4|8|6) auf g liegt.",
     steps: [
@@ -120,6 +124,7 @@ export const LINALG_TASKS: LinalgTask[] = [
   {
     id: "lg7",
     tag: "Schnittpunkt zweier Geraden",
+    videoId: "v5",
     src: "Original-Übung · Abi-Stil B7",
     q: "Bestimmen Sie den Schnittpunkt der Geraden g: x = (1, 0, 1) + s·(1, 2, 1) und h: x = (2, 3, 3) + t·(1, 1, 0).",
     steps: [
