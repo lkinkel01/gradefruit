@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-02
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 02: Landingpage)
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -40,8 +40,14 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 - ✅ Checkout-Flow (GK+LK, einmalig+Abo), Webhook (inkl. Rückerstattung →
   Zugang entziehen), Stripe-Kundenportal
 - ✅ Konto-Seite, Fortschritt (verstanden/gespeichert)
-- ✅ Landing-Page, Impressum, Datenschutz
+- ✅ Landing-Page (Sprint 02, 07/2026): neues Logo, Hero für GK+LK, **interaktive
+  Produkt-Demo** (echte Gratis-Aufgabe + Lösung + Video-Player; KI als markierte
+  Beispiel-Antworten; Speichern/Tutor mit ehrlichen Hinweisen), Preisbereich mit
+  GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), gestraffte Sektionen
+- ✅ Impressum, Datenschutz
 - ✅ Dark Mode (persistiert, kein Aufblitzen beim Laden)
+- 🟡 **Lernfeed** (`/feed`, vertikaler Swipe-Feed der Erklärvideos, Login-Gate):
+  fertig gebaut + getestet, aber **noch NICHT deployt** (nur lokal)
 
 ## Bekannte Probleme / offen
 - 🔴 **Stripe im TEST-Modus** — echte Kunden können NICHT zahlen. Umstellung auf
@@ -54,9 +60,10 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 
 ## Nächste sinnvolle Schritte
 1. Safari-Dark-Mode verifizieren (Leon).
-2. **Stripe TEST → LIVE** schalten (echter Umsatz).
-3. Mehr Aufgaben / Themen-Tiefe; Design-Feinschliff.
-4. (Optional) Inhalte server-seitig laden (Härtung der Bezahlschranke).
+2. **Stripe TEST → LIVE** schalten (echter Umsatz), davor AGB/Widerruf/MwSt-Ausweis.
+3. Lernfeed reviewen und deployen (liegt fertig im Arbeitsverzeichnis).
+4. Mehr Aufgaben / Themen-Tiefe; Erklärvideos an Aufgaben verknüpfen (`videoId`).
+5. (Optional) Inhalte server-seitig laden (Härtung der Bezahlschranke).
 
 ## Arbeitsteilung & Regeln
 - **Claude Code**: kennt Codebasis, setzt um, committet/pusht **nur auf ausdrückliche

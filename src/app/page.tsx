@@ -177,11 +177,13 @@ export default function Home() {
           key={themeKey}
           isAuthed={!!user}
           owned={owned}
+          ownedLk={ownedLk}
           dark={dark}
           onToggleDark={() => setTheme(!dark)}
           onEnter={() => user ? setView('dashboard') : setView('analysis')}
           onLogin={() => openAuth('login')}
-          onOpenCheckout={() => user ? openCheckout('gk') : openAuth('register')}
+          onRegister={() => openAuth('register')}
+          onOpenCheckout={(course) => user ? openCheckout(course) : openAuth('register')}
           onSignOut={handleSignOut}
         />
         <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} course={checkoutCourse} />

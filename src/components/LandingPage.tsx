@@ -1,27 +1,56 @@
 'use client';
 import styles from './LandingPage.module.css';
+import LandingDemo from './LandingDemo';
 
 interface Props {
   isAuthed: boolean;
   owned: boolean;
+  ownedLk: boolean;
   dark: boolean;
   onToggleDark: () => void;
   onEnter: () => void;
   onLogin: () => void;
-  onOpenCheckout: () => void;
+  onRegister: () => void;
+  onOpenCheckout: (course: 'gk' | 'lk') => void;
   onSignOut: () => void;
 }
 
-const PlanFeat = ({ text, highlight }: { text: string; highlight?: boolean }) => (
+// Gradefruit-Logo: Frucht mit Blatt und Haken. Als SVG gestochen scharf
+// in jeder Größe und automatisch passend zu Hell- und Dunkelmodus.
+const Logo = ({ size = 30 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
+    <defs>
+      <linearGradient id="gfLogoGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#FF8A7A" />
+        <stop offset="1" stopColor="#D93A30" />
+      </linearGradient>
+    </defs>
+    <circle cx="15.4" cy="18" r="12.6" fill="url(#gfLogoGrad)" />
+    <path
+      d="M17.6 6.4 C18.8 3.4 21.8 1.9 25 2.4 C24.6 5.6 22 8 18.6 7.9 C18.2 7.9 17.8 7.4 17.6 6.4 Z"
+      fill="#17B26A"
+    />
+    <polyline
+      points="9.6 18.6 13.8 22.8 21.6 13.6"
+      fill="none"
+      stroke="#fff"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const PlanFeat = ({ text }: { text: string }) => (
   <div className={styles.planFeat}>
-    <svg className={highlight ? styles.featCkHL : styles.featCk} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={styles.featCk} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="20 6 9 17 4 12" />
     </svg>
     {text}
   </div>
 );
 
-export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnter, onLogin, onOpenCheckout, onSignOut }: Props) {
+export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDark, onEnter, onLogin, onRegister, onOpenCheckout, onSignOut }: Props) {
   return (
     <div className={styles.lpage}>
       <div className={styles.bgGlow} aria-hidden="true" />
@@ -29,7 +58,7 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
       {/* Nav */}
       <nav className={styles.lnav}>
         <div className={styles.brand}>
-          <span className={styles.dot} />
+          <Logo />
           Gradefruit
         </div>
         <div className={styles.lbtns}>
@@ -60,7 +89,7 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
           ) : (
             <>
               <button className="btn light" onClick={onLogin}>Anmelden</button>
-              <button className="btn primary" onClick={onOpenCheckout}>Vollzugang</button>
+              <button className="btn primary" onClick={onRegister}>Registrieren</button>
             </>
           )}
         </div>
@@ -69,87 +98,43 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroText}>
-          <div className={styles.eyebrow}>Mathe-Abitur Hessen 2027 · Grundkurs</div>
+          <div className={styles.eyebrow}>Mathe-Abi Hessen 2027 · Grundkurs und Leistungskurs</div>
           <h1>
-            Mathe-Abi 2027.<br />
-            <span className={styles.grad}>Vorbereitung, die sitzt.</span>
+            Dein ganzes Mathe-Abi.<br />
+            <span className={styles.grad}>An einem Ort.</span>
           </h1>
           <p>
-            Drei Prüfungsgebiete, vollständig vorbereitet — mit echten Abituraufgaben aus Hessen, vollständigen Musterlösungen und einem KI-Assistenten, der jeden Rechenschritt erklärt.
+            Prüfungsnahe Aufgaben, verständliche Schritt-für-Schritt-Lösungen, kurze
+            Erklärvideos und eine KI, die dir jeden Rechenschritt erklärt. Du hörst auf
+            zu suchen und fängst an zu verstehen.
           </p>
           <div className={styles.cta}>
             {isAuthed ? (
-              <>
-                <button className="btn primary" onClick={onEnter}>Weiter lernen</button>
-                {!owned && <button className="btn light" onClick={onOpenCheckout}>Vollzugang — 79 €</button>}
-              </>
+              <button className="btn primary" onClick={onEnter}>Weiter lernen</button>
             ) : (
-              <>
-                <button className="btn primary" onClick={onEnter}>Kostenlos starten</button>
-                <button className="btn light" onClick={onOpenCheckout}>Vollzugang — 79 €</button>
-              </>
+              <button className="btn primary" onClick={onEnter}>Kostenlos ausprobieren</button>
             )}
+            <a className="btn light" href="#preise">Preise ansehen</a>
           </div>
           <p className={styles.microline}>
             {isAuthed
-              ? 'Schön, dass du wieder da bist — mach da weiter, wo du aufgehört hast.'
-              : 'Kein Account nötig · Sofort loslegen'}
+              ? 'Schön, dass du wieder da bist. Mach genau da weiter, wo du aufgehört hast.'
+              : 'Analysis ist gratis. Kein Account und keine Zahlungsdaten nötig.'}
           </p>
         </div>
 
-        <div className={styles.heroVisual} aria-hidden="true">
-          <div className={styles.mockCard}>
-            <div className={styles.mockTop}>
-              <span className={styles.mockBadge}>Analysis</span>
-              <span className={styles.mockBadgeSub}>Kurvendiskussion</span>
-            </div>
-            <div className={styles.mockTaskBox}>
-              <div className={styles.mockTaskLabel}>Aufgabe 3 b)</div>
-              <div className={styles.mockTaskText}>
-                Bestimme die Nullstellen von f und zeige rechnerisch, dass der Graph von f punktsymmetrisch zum Ursprung ist.
-              </div>
-            </div>
-            <div className={styles.mockSep} />
-            <div className={styles.mockAI}>
-              <div className={styles.mockAIHeader}>
-                <span className={styles.mockAIPulse} />
-                <span className={styles.mockAILabel}>KI-Hilfe</span>
-              </div>
-              <div className={styles.mockAIBubble}>
-                Setze f(x) = 0 und löse nach x auf. Für die Punktsymmetrie prüfst du, ob f(−x) = −f(x) gilt — dann ist der Ursprung der Symmetriepunkt.
-              </div>
-            </div>
-            <div className={styles.mockProgress}>
-              <div className={styles.mockProgRow}>
-                <span>Kurvendiskussion</span>
-                <span className={styles.mockProgVal}>3 / 7 Aufgaben</span>
-              </div>
-              <div className={styles.mockProgBar}>
-                <div className={styles.mockProgFill} />
-              </div>
-            </div>
-          </div>
+        <div className={styles.heroVisual}>
+          <LandingDemo onRegister={onRegister} />
         </div>
       </section>
-
-      {/* Topic chips */}
-      <div className={styles.topicchips}>
-        {[
-          { label: 'Analysis', color: '#F0524A' },
-          { label: 'Lineare Algebra & Geometrie', color: '#6C63FF' },
-          { label: 'Stochastik', color: '#17B26A' },
-        ].map(t => (
-          <span key={t.label} className={styles.tchip}>
-            <span className={styles.cdot} style={{ background: t.color }} />
-            {t.label}
-          </span>
-        ))}
-      </div>
 
       {/* Subject overview */}
       <section className={styles.lsec}>
         <div className={styles.lh}>Was dich im Abi erwartet</div>
-        <p className={styles.secIntro}>Drei Prüfungsgebiete, vollständig abgedeckt — priorisiert nach Häufigkeit im hessischen Abitur.</p>
+        <p className={styles.secIntro}>
+          Drei Prüfungsgebiete, aufgebaut nach dem hessischen Lehrplan. Jedes Thema gibt
+          es für Grundkurs und Leistungskurs.
+        </p>
         <div className={styles.subjectGrid}>
           {[
             {
@@ -183,59 +168,29 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
         </div>
       </section>
 
-      {/* How it works */}
-      <section className={styles.lsec}>
-        <div className={styles.lh}>So funktioniert es</div>
-        <div className={styles.steps}>
-          {[
-            {
-              num: '01',
-              title: 'Thema wählen',
-              desc: 'Wähle ein Thema aus Analysis, Linearer Algebra oder Stochastik — priorisiert nach Häufigkeit im hessischen Abitur.',
-            },
-            {
-              num: '02',
-              title: 'Durcharbeiten',
-              desc: 'Erklärvideo oder Text — in deinem Tempo, so oft du willst. Kein Weiterklicken, wenn du noch nicht bereit bist.',
-            },
-            {
-              num: '03',
-              title: 'Üben & nachhaken',
-              desc: 'Rechne echte Abituraufgaben nach — mit vollständigen Musterlösungen. Steckst du fest, erklärt dir der KI-Assistent Schritt für Schritt weiter.',
-            },
-          ].map(s => (
-            <div key={s.num} className={styles.step}>
-              <div className={styles.stepNum}>{s.num}</div>
-              <h3 className={styles.stepTitle}>{s.title}</h3>
-              <p className={styles.stepDesc}>{s.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Features */}
       <section className={styles.lsec}>
         <div className={styles.lh}>Was du bekommst</div>
         <div className={styles.incl}>
           {[
             {
-              title: 'Abituraufgaben mit Musterlösungen',
-              desc: 'Originalgetreue Aufgaben aus hessischen Abiturprüfungen — mit vollständigen Musterlösungen, die jeden Schritt zeigen.',
+              title: 'Über 130 Aufgaben mit Musterlösungen',
+              desc: 'Originale Übungsaufgaben im Stil der hessischen Abiturprüfung. Jede Lösung zeigt dir jeden einzelnen Schritt.',
               color: '#F0524A',
             },
             {
               title: 'Erklärvideos',
-              desc: 'Kurze, dichte Videos zu jedem Thema. Kein Füllstoff — nur was du für das Abi brauchst.',
+              desc: 'Kurze, dichte Videos zu zentralen Themen. Kein Füllstoff, nur was du fürs Abi brauchst.',
               color: '#6C63FF',
             },
             {
-              title: 'KI-Assistent',
-              desc: 'Fragen auf Deutsch stellen. Die KI erklärt Schritt für Schritt — nicht nur das Ergebnis, sondern den Weg.',
+              title: 'KI-Hilfe',
+              desc: 'Stell deine Frage auf Deutsch. Die KI erklärt dir den Weg Schritt für Schritt, nicht nur das Ergebnis.',
               color: '#17B26A',
             },
             {
-              title: '1:1 Nachhilfe',
-              desc: 'Für Themen, die nicht sitzen: buchbare 1:1-Sessions mit erfahrenen Mathe-Tutor:innen.',
+              title: '1:1 Nachhilfe (bald)',
+              desc: 'Buchbare Einzelstunden mit Tutor:innen sind in Vorbereitung. Bis dahin beantwortet dir die KI jede Frage sofort.',
               color: '#F5A623',
             },
           ].map(item => (
@@ -255,62 +210,76 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
       </section>
 
       {/* Pricing */}
-      <section className={styles.lsec}>
-        <div className={styles.lh}>Dein Zugang</div>
+      <section className={styles.lsec} id="preise">
+        <div className={styles.lh}>Preise</div>
+        <p className={styles.secIntro}>
+          Wähle deinen Kurs. Beides gibt es als Einmalzahlung oder als Monatsabo,
+          jederzeit kündbar. Analysis testest du vorher gratis.
+        </p>
         <div className={styles.plans}>
           <div className={styles.plan}>
-            <div className={styles.pt}>Gratis</div>
-            <h3>Einstieg</h3>
-            <div className={styles.price}>0 €</div>
-            <div className={styles.per}>dauerhaft kostenlos</div>
-            <div className={styles.planFeats}>
-              <PlanFeat text="Erste Themen in jedem Gebiet" />
-              <PlanFeat text="Einführende Erklärungen je Gebiet" />
-              <PlanFeat text="Erste Aufgaben pro Thema" />
-            </div>
-            <button className="btn light" style={{ marginTop: 'auto' }} onClick={onEnter}>
-              {isAuthed ? 'Weiter lernen' : 'Kostenlos starten'}
-            </button>
-          </div>
-          <div className={`${styles.plan} ${styles.planHl}`}>
-            <div className={styles.pt}>Empfohlen</div>
-            <h3>Vollzugang</h3>
+            <div className={styles.pt} style={{ color: '#F0524A' }}>Grundkurs</div>
+            <h3>GK-Vollzugang</h3>
             <div className={styles.price}>79 €</div>
-            <div className={styles.per}>einmalig · kein Abo · bis zur Prüfung</div>
+            <div className={styles.per}>einmalig, Zugang bis zur Prüfung</div>
+            <div className={styles.altPrice}>oder 14,90 € pro Monat, monatlich kündbar</div>
             <div className={styles.planFeats}>
-              <PlanFeat text="Alle Themen & Aufgaben freigeschaltet" highlight />
-              <PlanFeat text="Vollständige Musterlösungen" highlight />
-              <PlanFeat text="Erklärvideos zu allen Themen" highlight />
-              <PlanFeat text="KI-Assistent ohne Limit" highlight />
-              <PlanFeat text="1:1 Nachhilfe mit echten Tutor:innen" highlight />
+              <PlanFeat text="Alle Grundkurs-Themen und Aufgaben" />
+              <PlanFeat text="Schritt-für-Schritt-Lösungen zu jeder Aufgabe" />
+              <PlanFeat text="Erklärvideos zu zentralen Themen" />
+              <PlanFeat text="KI-Hilfe inklusive" />
             </div>
             {owned ? (
               <button className="btn light" style={{ marginTop: 'auto' }} disabled>Dein Zugang ist aktiv</button>
             ) : (
-              <button className="btn primary" style={{ marginTop: 'auto' }} onClick={onOpenCheckout}>Jetzt freischalten</button>
+              <button className="btn primary" style={{ marginTop: 'auto' }} onClick={() => onOpenCheckout('gk')}>
+                Grundkurs freischalten
+              </button>
+            )}
+          </div>
+          <div className={styles.plan}>
+            <div className={styles.pt} style={{ color: '#6C63FF' }}>Leistungskurs</div>
+            <h3>LK-Vollzugang</h3>
+            <div className={styles.price}>99 €</div>
+            <div className={styles.per}>einmalig, Zugang bis zur Prüfung</div>
+            <div className={styles.altPrice}>oder 17,90 € pro Monat, monatlich kündbar</div>
+            <div className={styles.planFeats}>
+              <PlanFeat text="Alle Leistungskurs-Themen und Aufgaben" />
+              <PlanFeat text="Schritt-für-Schritt-Lösungen zu jeder Aufgabe" />
+              <PlanFeat text="Erklärvideos zu zentralen Themen" />
+              <PlanFeat text="KI-Hilfe inklusive" />
+            </div>
+            {ownedLk ? (
+              <button className="btn light" style={{ marginTop: 'auto' }} disabled>Dein Zugang ist aktiv</button>
+            ) : (
+              <button className="btn primary" style={{ marginTop: 'auto' }} onClick={() => onOpenCheckout('lk')}>
+                Leistungskurs freischalten
+              </button>
             )}
           </div>
         </div>
+        <p className={styles.planNote}>
+          Sichere Bezahlung über Stripe. Die Wahl zwischen Einmalzahlung und Abo triffst
+          du im nächsten Schritt.
+        </p>
       </section>
 
       {/* Closing CTA */}
       <div className={styles.closing}>
-        <h2>Deine Vorbereitung beginnt hier.</h2>
-        <p>Starte kostenlos — kein Account nötig. Den Vollzugang schaltest du frei, wenn du bereit bist.</p>
+        <h2>Bereit für dein Mathe-Abi?</h2>
+        <p>Starte kostenlos mit Analysis. Den Vollzugang holst du dir, wenn du so weit bist.</p>
         <div className={styles.cta} style={{ justifyContent: 'center' }}>
           <button className="btn primary" onClick={onEnter}>
             {isAuthed ? 'Weiter lernen' : 'Kostenlos starten'}
           </button>
-          {!isAuthed && !owned && (
-            <button className="btn light" onClick={onOpenCheckout}>Vollzugang — 79 €</button>
-          )}
+          <a className="btn light" href="#preise">Preise ansehen</a>
         </div>
-        <p className={styles.microline}>Einmalige Zahlung · kein Abo · Zugang bis zur Prüfung</p>
+        <p className={styles.microline}>Einmalzahlung oder Monatsabo · sichere Bezahlung über Stripe</p>
       </div>
 
       <footer className={styles.foot}>
         <div className={styles.footbrand}>
-          <span className={styles.dot} />
+          <Logo size={22} />
           Gradefruit
         </div>
         <div className={styles.foottrust}>
@@ -323,7 +292,7 @@ export default function LandingPage({ isAuthed, owned, dark, onToggleDark, onEnt
           <a href="/impressum">Impressum</a>
           <a href="/datenschutz">Datenschutz</a>
         </div>
-        <div className={styles.footcopy}>© 2026 Gradefruit · Mathe-Abitur Hessen 2027</div>
+        <div className={styles.footcopy}>© 2026 Gradefruit · Mathe-Abi Hessen 2027</div>
       </footer>
     </div>
   );
