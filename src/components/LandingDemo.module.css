@@ -1,43 +1,35 @@
 /* Interaktive Produkt-Demo im Hero der Landingpage.
-   Baut auf den globalen Design-Tokens auf und spiegelt die echte App-Optik. */
+   Eine Mini-Version der echten App: gleiche Tokens, gleiche Muster.
+   Alle Bewegungen respektieren prefers-reduced-motion (globals.css). */
+@keyframes gfReveal {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: none; }
+}
+
 .demo {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 22px;
   padding: 20px;
   width: 100%;
-  max-width: 430px;
+  max-width: 432px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02), 0 18px 54px rgba(0, 0, 0, 0.08);
 }
 
 .head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.badge {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--accent);
-  background: var(--accent-soft);
-  padding: 3px 9px;
-  border-radius: 99px;
-}
-.headSub {
-  font-size: 12.5px;
-  color: var(--muted);
-  font-weight: 500;
+  justify-content: space-between;
+  margin-bottom: 13px;
 }
 .live {
-  margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--muted);
 }
 .pulse {
@@ -47,12 +39,59 @@
   background: var(--green);
   flex-shrink: 0;
 }
+.headSub {
+  font-size: 12.5px;
+  color: var(--faint);
+  font-weight: 500;
+}
+
+/* Kursstufen-Umschalter, wie in der echten Themenansicht */
+.levelRow {
+  display: flex;
+  gap: 7px;
+  margin-bottom: 13px;
+}
+.levelBtn {
+  flex: 1;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 99px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.levelBtn:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+.levelOn {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.levelOn:hover {
+  border-color: var(--accent);
+  color: #fff;
+}
 
 .taskBox {
   background: var(--canvas);
   border-radius: 12px;
   padding: 13px 15px;
   margin-bottom: 12px;
+  animation: gfReveal 0.3s ease both;
+}
+.taskTag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-d);
+  margin-bottom: 6px;
 }
 .taskText {
   font-size: 13.5px;
@@ -78,12 +117,15 @@
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, transform 0.15s;
+  transition: border-color 0.15s, color 0.15s, transform 0.15s, background 0.15s;
 }
 .mini:hover {
   border-color: var(--accent);
   color: var(--accent-d);
   transform: translateY(-1px);
+}
+.mini:active {
+  transform: scale(0.97);
 }
 .miniOn {
   border-color: var(--accent);
@@ -91,11 +133,14 @@
   background: var(--accent-soft);
 }
 
-.solution {
+/* Aufklappende Bereiche (Lösung, KI, Hinweise) */
+.reveal {
   margin-top: 14px;
   border-top: 1px solid var(--line);
   padding-top: 14px;
+  animation: gfReveal 0.28s ease both;
 }
+
 .solTitle {
   font-size: 11px;
   font-weight: 700;
@@ -116,6 +161,7 @@
   display: flex;
   gap: 10px;
   align-items: flex-start;
+  animation: gfReveal 0.35s ease both;
 }
 .stepNum {
   flex: 0 0 20px;
@@ -151,13 +197,9 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 12.5px;
   font-weight: 600;
+  animation: gfReveal 0.35s ease both;
 }
 
-.panel {
-  margin-top: 14px;
-  border-top: 1px solid var(--line);
-  padding-top: 14px;
-}
 .panelTitle {
   font-size: 12.5px;
   font-weight: 700;
@@ -204,6 +246,7 @@
   padding: 8px 12px;
   font-size: 12.5px;
   max-width: 90%;
+  animation: gfReveal 0.3s ease both;
 }
 .aiBubble {
   align-self: flex-start;
@@ -214,6 +257,7 @@
   font-size: 12.5px;
   line-height: 1.55;
   max-width: 95%;
+  animation: gfReveal 0.35s ease 0.18s both;
 }
 .exampleTag {
   display: block;

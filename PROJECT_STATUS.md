@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 02: Landingpage)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 03: Landingpage-Politur)
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -40,10 +40,12 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 - ✅ Checkout-Flow (GK+LK, einmalig+Abo), Webhook (inkl. Rückerstattung →
   Zugang entziehen), Stripe-Kundenportal
 - ✅ Konto-Seite, Fortschritt (verstanden/gespeichert)
-- ✅ Landing-Page (Sprint 02, 07/2026): neues Logo, Hero für GK+LK, **interaktive
-  Produkt-Demo** (echte Gratis-Aufgabe + Lösung + Video-Player; KI als markierte
+- ✅ Landing-Page (Sprint 02+03, 07/2026): Grapefruit-Logo (Querschnitt mit
+  herausgezogenem Segment, SVG), Sticky-Nav mit Milchglas, Hero für GK+LK,
+  USP-Leiste, **interaktive Produkt-Demo mit GK/LK-Umschalter** (echte
+  Gratis-Aufgaben beider Stufen + Lösung + Video-Player; KI als markierte
   Beispiel-Antworten; Speichern/Tutor mit ehrlichen Hinweisen), Preisbereich mit
-  GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), gestraffte Sektionen
+  GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), global aufgewertete Buttons
 - ✅ Impressum, Datenschutz
 - ✅ Dark Mode (persistiert, kein Aufblitzen beim Laden)
 - 🟡 **Lernfeed** (`/feed`, vertikaler Swipe-Feed der Erklärvideos, Login-Gate):

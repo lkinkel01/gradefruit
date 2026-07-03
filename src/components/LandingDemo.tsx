@@ -1,68 +1,119 @@
 'use client';
 import { useState } from 'react';
 import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
+import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
 import { SCENES, Scene } from '@/lib/scenes';
 import SceneModal from './SceneModal';
 import styles from './LandingDemo.module.css';
 
-// Interaktive Produkt-Demo auf der Landingpage.
-// Nutzt eine ECHTE Gratis-Aufgabe (Analysis) und den ECHTEN Video-Player.
-// KI-Antworten sind hier vorbereitete Beispiele und klar als solche markiert –
+// Interaktive Produkt-Demo auf der Landingpage: eine Mini-Version der Plattform.
+// Nutzt ECHTE Gratis-Aufgaben (Analysis, GK und LK) und den ECHTEN Video-Player.
+// KI-Antworten sind vorbereitete Beispiele und klar als solche markiert –
 // nichts wird vorgetäuscht.
 
 interface Props {
   onRegister: () => void;
 }
 
-const TASK = ANALYSIS_TASKS[0];
+interface KiExample {
+  q: string;
+  a: string;
+}
+
+// Pro Kursstufe: echte Aufgabe + dazu passende Beispiel-Fragen an die KI.
+const LEVELS = {
+  gk: {
+    label: 'Grundkurs',
+    task: ANALYSIS_TASKS[0],
+    ki: [
+      {
+        q: 'Warum brauche ich die zweite Ableitung?',
+        a: 'Die erste Ableitung liefert dir nur die Kandidaten, also Stellen mit Steigung null. Ob dort wirklich ein Hoch- oder Tiefpunkt liegt, verrät die Krümmung: f″(2) = 18 ist positiv, der Graph macht eine Linkskurve, also liegt bei x = 2 ein Tiefpunkt.',
+      },
+      {
+        q: 'Woher kommt (x − 2)(x + 1)?',
+        a: 'Du suchst zwei Zahlen, deren Produkt −2 und deren Summe −1 ergibt. Das sind −2 und +1. Damit zerfällt x² − x − 2 in (x − 2)(x + 1), und die Nullstellen 2 und −1 kannst du direkt ablesen.',
+      },
+    ] as KiExample[],
+  },
+  lk: {
+    label: 'Leistungskurs',
+    task: ANALYSIS_LK_TASKS[0],
+    ki: [
+      {
+        q: 'Warum brauche ich hier die Produktregel?',
+        a: 'Weil f aus zwei Faktoren besteht, die beide von x abhängen: x² und e^x. Solche Produkte darfst du nicht Faktor für Faktor ableiten, sonst fehlt ein Summand. Die Produktregel verbindet beides: u′v + uv′.',
+      },
+      {
+        q: 'Warum darf ich e^x ausklammern?',
+        a: 'Beide Summanden enthalten den Faktor e^x. Klammerst du ihn aus, bleibt e^x · (x² + 2x). Das ist dieselbe Funktion, nur kompakter, und Nullstellen der Ableitung erkennst du sofort.',
+      },
+    ] as KiExample[],
+  },
+} as const;
+
+type Level = keyof typeof LEVELS;
+type View = 'task' | 'solution' | 'ki' | 'save' | 'tutor';
+
 const DEMO_SCENE = SCENES['v1'];
 
-// Vorbereitete Beispiel-Fragen samt Antworten (klar als Beispiel gekennzeichnet).
-const KI_EXAMPLES = [
-  {
-    q: 'Warum brauche ich die zweite Ableitung?',
-    a: 'Die erste Ableitung liefert dir nur die Kandidaten, also Stellen mit Steigung null. Ob dort wirklich ein Hoch- oder Tiefpunkt liegt, verrät die Krümmung: f″(2) = 18 ist positiv, der Graph macht eine Linkskurve, also liegt bei x = 2 ein Tiefpunkt.',
-  },
-  {
-    q: 'Woher kommt (x − 2)(x + 1)?',
-    a: 'Du suchst zwei Zahlen, deren Produkt −2 und deren Summe −1 ergibt. Das sind −2 und +1. Damit zerfällt x² − x − 2 in (x − 2)(x + 1), und die Nullstellen 2 und −1 kannst du direkt ablesen.',
-  },
-];
-
-type Panel = 'none' | 'ki' | 'save' | 'tutor';
-
 export default function LandingDemo({ onRegister }: Props) {
-  const [showSolution, setShowSolution] = useState(false);
-  const [panel, setPanel] = useState<Panel>('none');
+  const [level, setLevel] = useState<Level>('gk');
+  const [view, setView] = useState<View>('task');
   const [kiIndex, setKiIndex] = useState<number | null>(null);
   const [video, setVideo] = useState<Scene | null>(null);
 
-  const togglePanel = (p: Panel) => setPanel(prev => (prev === p ? 'none' : p));
+  const current = LEVELS[level];
+  const task = current.task;
+
+  // Wie in der echten App: eine Sache im Fokus. Ein zweiter Tap schließt wieder.
+  const toggleView = (v: View) => setView(prev => (prev === v ? 'task' : v));
+
+  const switchLevel = (l: Level) => {
+    if (l === level) return;
+    setLevel(l);
+    setView('task');
+    setKiIndex(null);
+  };
 
   return (
     <div className={styles.demo}>
       <div className={styles.head}>
-        <span className={styles.badge}>Beispielaufgabe</span>
-        <span className={styles.headSub}>Analysis · {TASK.tag}</span>
         <span className={styles.live}>
           <span className={styles.pulse} />
-          Zum Ausprobieren
+          Live-Demo
         </span>
+        <span className={styles.headSub}>Analysis · gratis</span>
       </div>
 
-      <div className={styles.taskBox}>
-        <p className={styles.taskText}>{TASK.q}</p>
+      <div className={styles.levelRow} role="tablist" aria-label="Kursniveau wählen">
+        {(Object.keys(LEVELS) as Level[]).map(l => (
+          <button
+            key={l}
+            role="tab"
+            aria-selected={level === l}
+            className={`${styles.levelBtn} ${level === l ? styles.levelOn : ''}`}
+            onClick={() => switchLevel(l)}
+          >
+            {LEVELS[l].label}
+          </button>
+        ))}
+      </div>
+
+      <div className={styles.taskBox} key={`task-${level}`}>
+        <div className={styles.taskTag}>{task.tag}</div>
+        <p className={styles.taskText}>{task.q}</p>
       </div>
 
       <div className={styles.actions}>
         <button
-          className={`${styles.mini} ${showSolution ? styles.miniOn : ''}`}
-          onClick={() => setShowSolution(s => !s)}
+          className={`${styles.mini} ${view === 'solution' ? styles.miniOn : ''}`}
+          onClick={() => toggleView('solution')}
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <polyline points={showSolution ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
+            <polyline points={view === 'solution' ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
           </svg>
-          {showSolution ? 'Lösung verbergen' : 'Lösung zeigen'}
+          {view === 'solution' ? 'Lösung verbergen' : 'Lösung zeigen'}
         </button>
         {DEMO_SCENE && (
           <button className={styles.mini} onClick={() => setVideo(DEMO_SCENE)}>
@@ -73,8 +124,8 @@ export default function LandingDemo({ onRegister }: Props) {
           </button>
         )}
         <button
-          className={`${styles.mini} ${panel === 'ki' ? styles.miniOn : ''}`}
-          onClick={() => togglePanel('ki')}
+          className={`${styles.mini} ${view === 'ki' ? styles.miniOn : ''}`}
+          onClick={() => toggleView('ki')}
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
@@ -83,8 +134,8 @@ export default function LandingDemo({ onRegister }: Props) {
           KI fragen
         </button>
         <button
-          className={`${styles.mini} ${panel === 'save' ? styles.miniOn : ''}`}
-          onClick={() => togglePanel('save')}
+          className={`${styles.mini} ${view === 'save' ? styles.miniOn : ''}`}
+          onClick={() => toggleView('save')}
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
@@ -92,8 +143,8 @@ export default function LandingDemo({ onRegister }: Props) {
           Speichern
         </button>
         <button
-          className={`${styles.mini} ${panel === 'tutor' ? styles.miniOn : ''}`}
-          onClick={() => togglePanel('tutor')}
+          className={`${styles.mini} ${view === 'tutor' ? styles.miniOn : ''}`}
+          onClick={() => toggleView('tutor')}
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="8" r="3.4" />
@@ -103,12 +154,12 @@ export default function LandingDemo({ onRegister }: Props) {
         </button>
       </div>
 
-      {showSolution && (
-        <div className={styles.solution}>
+      {view === 'solution' && (
+        <div className={styles.reveal} key={`sol-${level}`}>
           <div className={styles.solTitle}>Schritt-für-Schritt-Lösung</div>
           <div className={styles.solScroll}>
-            {TASK.steps.map((step, i) => (
-              <div key={i} className={styles.step}>
+            {task.steps.map((step, i) => (
+              <div key={i} className={styles.step} style={{ animationDelay: `${i * 70}ms` }}>
                 <div className={styles.stepNum}>{i + 1}</div>
                 <div>
                   <div className={styles.stepLabel}>{step.label}</div>
@@ -116,7 +167,9 @@ export default function LandingDemo({ onRegister }: Props) {
                 </div>
               </div>
             ))}
-            <div className={styles.result}>{TASK.result}</div>
+            <div className={styles.result} style={{ animationDelay: `${task.steps.length * 70}ms` }}>
+              {task.result}
+            </div>
           </div>
           <div className={styles.note}>
             Analysis ist mit allen Aufgaben gratis. Alle drei Prüfungsgebiete mit über
@@ -125,11 +178,11 @@ export default function LandingDemo({ onRegister }: Props) {
         </div>
       )}
 
-      {panel === 'ki' && (
-        <div className={styles.panel}>
+      {view === 'ki' && (
+        <div className={styles.reveal} key={`ki-${level}`}>
           <div className={styles.panelTitle}>Frag die KI zu dieser Aufgabe</div>
           <div className={styles.chips}>
-            {KI_EXAMPLES.map((ex, i) => (
+            {current.ki.map((ex, i) => (
               <button
                 key={i}
                 className={`${styles.chip} ${kiIndex === i ? styles.chipOn : ''}`}
@@ -140,11 +193,11 @@ export default function LandingDemo({ onRegister }: Props) {
             ))}
           </div>
           {kiIndex !== null && (
-            <div className={styles.chat}>
-              <div className={styles.userBubble}>{KI_EXAMPLES[kiIndex].q}</div>
+            <div className={styles.chat} key={`chat-${kiIndex}`}>
+              <div className={styles.userBubble}>{current.ki[kiIndex].q}</div>
               <div className={styles.aiBubble}>
                 <span className={styles.exampleTag}>Beispiel-Antwort</span>
-                {KI_EXAMPLES[kiIndex].a}
+                {current.ki[kiIndex].a}
               </div>
             </div>
           )}
@@ -155,8 +208,8 @@ export default function LandingDemo({ onRegister }: Props) {
         </div>
       )}
 
-      {panel === 'save' && (
-        <div className={styles.panel}>
+      {view === 'save' && (
+        <div className={styles.reveal}>
           <div className={styles.note}>
             Mit einem kostenlosen Konto speicherst du Aufgaben und deinen Fortschritt,
             damit du später genau dort weitermachst.{' '}
@@ -165,8 +218,8 @@ export default function LandingDemo({ onRegister }: Props) {
         </div>
       )}
 
-      {panel === 'tutor' && (
-        <div className={styles.panel}>
+      {view === 'tutor' && (
+        <div className={styles.reveal}>
           <div className={styles.note}>
             Persönliche Tutoren sind bald verfügbar. Bis dahin beantwortet dir die KI
             jede Frage sofort.

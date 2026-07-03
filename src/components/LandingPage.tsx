@@ -15,28 +15,40 @@ interface Props {
   onSignOut: () => void;
 }
 
-// Gradefruit-Logo: Frucht mit Blatt und Haken. Als SVG gestochen scharf
-// in jeder Größe und automatisch passend zu Hell- und Dunkelmodus.
+// Gradefruit-Logo: Grapefruit im Querschnitt. Ein Segment ist herausgezogen,
+// wie ein Stück aus einem Tortendiagramm – Frucht und Mathematik in einem
+// Zeichen. Als flaches SVG scharf in jeder Größe, funktioniert auf hellem und
+// dunklem Grund und taugt auch als App-Icon.
 const Logo = ({ size = 30 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
+  <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
     <defs>
-      <linearGradient id="gfLogoGrad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#FF8A7A" />
-        <stop offset="1" stopColor="#D93A30" />
+      <linearGradient id="gfLogoG" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#FF8A73" />
+        <stop offset="1" stopColor="#E2382C" />
       </linearGradient>
     </defs>
-    <circle cx="15.4" cy="18" r="12.6" fill="url(#gfLogoGrad)" />
+    {/* Frucht */}
+    <circle cx="24" cy="24" r="21" fill="url(#gfLogoG)" />
+    {/* Fünf Segmente */}
+    {[0, 60, 120, 180, 240].map(a => (
+      <path
+        key={a}
+        d="M24 24 L18.55 9.8 A15.2 15.2 0 0 1 29.45 9.8 Z"
+        fill="#fff"
+        opacity="0.94"
+        transform={`rotate(${a} 24 24)`}
+      />
+    ))}
+    {/* Das herausgezogene Segment: das Stück, das du dir holst */}
     <path
-      d="M17.6 6.4 C18.8 3.4 21.8 1.9 25 2.4 C24.6 5.6 22 8 18.6 7.9 C18.2 7.9 17.8 7.4 17.6 6.4 Z"
-      fill="#17B26A"
+      d="M24 24 L18.55 9.8 A15.2 15.2 0 0 1 29.45 9.8 Z"
+      fill="#fff"
+      transform="translate(-3 -1.8) rotate(300 24 24)"
     />
-    <polyline
-      points="9.6 18.6 13.8 22.8 21.6 13.6"
-      fill="none"
-      stroke="#fff"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    {/* Blatt */}
+    <path
+      d="M30.8 5.9 C31.5 2.5 34.6 0.3 38 0.9 C37.6 4.4 35 7 31.6 7 C31.1 7 30.9 6.6 30.8 5.9 Z"
+      fill="#22B368"
     />
   </svg>
 );
@@ -49,6 +61,14 @@ const PlanFeat = ({ text }: { text: string }) => (
     {text}
   </div>
 );
+
+const USPS = [
+  'Über 130 Aufgaben im Stil des Hessen-Abis',
+  'Jede Lösung Schritt für Schritt erklärt',
+  'Kurze Erklärvideos',
+  'KI beantwortet deine Fragen',
+  'Grundkurs und Leistungskurs',
+];
 
 export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDark, onEnter, onLogin, onRegister, onOpenCheckout, onSignOut }: Props) {
   return (
@@ -104,9 +124,9 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
             <span className={styles.grad}>An einem Ort.</span>
           </h1>
           <p>
-            Prüfungsnahe Aufgaben, verständliche Schritt-für-Schritt-Lösungen, kurze
-            Erklärvideos und eine KI, die dir jeden Rechenschritt erklärt. Du hörst auf
-            zu suchen und fängst an zu verstehen.
+            Schluss mit zehn offenen Tabs und ewig langen Videos. Du übst mit Aufgaben
+            im Stil der hessischen Prüfung, siehst in jeder Lösung jeden einzelnen
+            Schritt und fragst die KI, sobald du irgendwo hängst.
           </p>
           <div className={styles.cta}>
             {isAuthed ? (
@@ -128,12 +148,29 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </div>
       </section>
 
+      {/* USP-Leiste */}
+      <div className={styles.usps}>
+        {USPS.map(t => (
+          <span key={t} className={styles.usp}>
+            <svg className={styles.uspCk} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+            {t}
+          </span>
+        ))}
+        <span className={styles.usp}>
+          <svg className={styles.uspSoon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15.5 14" />
+          </svg>
+          Persönlicher Tutor bald verfügbar
+        </span>
+      </div>
+
       {/* Subject overview */}
       <section className={styles.lsec}>
         <div className={styles.lh}>Was dich im Abi erwartet</div>
         <p className={styles.secIntro}>
-          Drei Prüfungsgebiete, aufgebaut nach dem hessischen Lehrplan. Jedes Thema gibt
-          es für Grundkurs und Leistungskurs.
+          Drei Prüfungsgebiete, aufgebaut nach dem hessischen Lehrplan.
         </p>
         <div className={styles.subjectGrid}>
           {[
@@ -168,47 +205,6 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </div>
       </section>
 
-      {/* Features */}
-      <section className={styles.lsec}>
-        <div className={styles.lh}>Was du bekommst</div>
-        <div className={styles.incl}>
-          {[
-            {
-              title: 'Über 130 Aufgaben mit Musterlösungen',
-              desc: 'Originale Übungsaufgaben im Stil der hessischen Abiturprüfung. Jede Lösung zeigt dir jeden einzelnen Schritt.',
-              color: '#F0524A',
-            },
-            {
-              title: 'Erklärvideos',
-              desc: 'Kurze, dichte Videos zu zentralen Themen. Kein Füllstoff, nur was du fürs Abi brauchst.',
-              color: '#6C63FF',
-            },
-            {
-              title: 'KI-Hilfe',
-              desc: 'Stell deine Frage auf Deutsch. Die KI erklärt dir den Weg Schritt für Schritt, nicht nur das Ergebnis.',
-              color: '#17B26A',
-            },
-            {
-              title: '1:1 Nachhilfe (bald)',
-              desc: 'Buchbare Einzelstunden mit Tutor:innen sind in Vorbereitung. Bis dahin beantwortet dir die KI jede Frage sofort.',
-              color: '#F5A623',
-            },
-          ].map(item => (
-            <div key={item.title} className={styles.irow}>
-              <div className={styles.ck} style={{ background: item.color }}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </div>
-              <div>
-                <b>{item.title}</b>
-                <span>{item.desc}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Pricing */}
       <section className={styles.lsec} id="preise">
         <div className={styles.lh}>Preise</div>
@@ -218,8 +214,8 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </p>
         <div className={styles.plans}>
           <div className={styles.plan}>
-            <div className={styles.pt} style={{ color: '#F0524A' }}>Grundkurs</div>
-            <h3>GK-Vollzugang</h3>
+            <div className={styles.planAccent} style={{ background: '#F0524A' }} />
+            <h3>Grundkurs</h3>
             <div className={styles.price}>79 €</div>
             <div className={styles.per}>einmalig, Zugang bis zur Prüfung</div>
             <div className={styles.altPrice}>oder 14,90 € pro Monat, monatlich kündbar</div>
@@ -238,8 +234,8 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
             )}
           </div>
           <div className={styles.plan}>
-            <div className={styles.pt} style={{ color: '#6C63FF' }}>Leistungskurs</div>
-            <h3>LK-Vollzugang</h3>
+            <div className={styles.planAccent} style={{ background: '#6C63FF' }} />
+            <h3>Leistungskurs</h3>
             <div className={styles.price}>99 €</div>
             <div className={styles.per}>einmalig, Zugang bis zur Prüfung</div>
             <div className={styles.altPrice}>oder 17,90 € pro Monat, monatlich kündbar</div>
