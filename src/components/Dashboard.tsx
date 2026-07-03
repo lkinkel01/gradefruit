@@ -9,9 +9,11 @@ interface Props {
 }
 
 export default function Dashboard({ onNavigate }: Props) {
-  const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
+  const { totalDone, totalLessons, topicDone, topicTotal, owned, ownedLk } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
   const open = Math.max(0, totalLessons - totalDone);
+  // Kurs-Bezeichnung richtet sich nach dem, was der Nutzer freigeschaltet hat.
+  const kurs = owned && ownedLk ? 'Grund- & Leistungskurs' : ownedLk ? 'Leistungskurs' : owned ? 'Grundkurs' : 'Grund- & Leistungskurs';
 
   const [greeting, setGreeting] = useState('Hallo');
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function Dashboard({ onNavigate }: Props) {
   return (
     <div className={styles.page}>
       <h1 className={styles.ph1}>{greeting}</h1>
-      <p className={styles.pblurb}>Dein Mathe-Abi 2027 – Hessen Grundkurs. Mach weiter, wo du aufgehört hast.</p>
+      <p className={styles.pblurb}>Dein Mathe-Abi 2027 – Hessen {kurs}. Mach weiter, wo du aufgehört hast.</p>
 
       <div className={styles.stats}>
         <div className={styles.stat}>

@@ -15,14 +15,14 @@ const COURSE_INFO = {
   gk: {
     tag: 'Mathe-Abi Hessen 2027 · Grundkurs',
     title: 'Vollzugang',
-    blurb: 'Alle Grundkurs-Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und Fragen an KI & Tutor.',
+    blurb: 'Alle Grundkurs-Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und Fragen an die KI.',
     full: '79 €',
     month: '14,90 €',
   },
   lk: {
     tag: 'Mathe-Abi Hessen 2027 · Leistungskurs',
     title: 'LK-Vollzugang',
-    blurb: 'Alle Leistungskurs-Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und Fragen an KI & Tutor.',
+    blurb: 'Alle Leistungskurs-Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und Fragen an die KI.',
     full: '99 €',
     month: '17,90 €',
   },

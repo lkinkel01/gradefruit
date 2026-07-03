@@ -110,18 +110,13 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
     const question = text.trim();
     if ((!question && !attachment) || busy) return;
 
-    // Tutor-Modus: noch kein echter Versand, freundlicher Platzhalter
+    // Tutor-Modus ist noch nicht live – ehrlich darauf hinweisen, statt einen
+    // Versand vorzutäuschen.
     if (mode === 'tutor') {
-      const label = attachment
-        ? (question ? `${question}\n${attachment.name}` : attachment.name)
-        : question;
       setMessages(prev => [
         ...prev,
-        { role: 'user', text: label },
-        { role: 'ai', text: 'Alles klar! Deine Frage ist bei deinem Tutor gelandet. Er meldet sich normalerweise innerhalb von 2 Stunden bei dir.' },
+        { role: 'ai', text: 'Persönliche Tutoren sind bald verfügbar. Solange beantwortet dir die KI deine Frage sofort – tippe dazu oben einfach auf „Sofort per KI".' },
       ]);
-      setInput('');
-      setAttachment(null);
       return;
     }
 
@@ -206,11 +201,11 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
           </button>
           <button className={mode === 'tutor' ? styles.on : ''} onClick={() => setMode('tutor')}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 19a6.5 6.5 0 0 1 13 0"/></svg>
-            An einen Tutor
+            Tutor (bald)
           </button>
         </div>
         <div className={styles.modeHint}>
-          {mode === 'ki' ? 'Sofortige Antwort von der KI – auf Deutsch, Schritt für Schritt.' : 'Schreibe deinem Tutor — er antwortet innerhalb von 2 h.'}
+          {mode === 'ki' ? 'Sofortige Antwort von der KI – auf Deutsch, Schritt für Schritt.' : 'Persönliche Tutoren kommen bald. Solange hilft dir die KI sofort weiter.'}
         </div>
 
         <div className={styles.dbody} ref={bodyRef}>
@@ -268,7 +263,7 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !busy) send(input); }}
-              placeholder={mode === 'ki' ? 'Frage eingeben …' : 'Nachricht an deinen Tutor …'}
+              placeholder={mode === 'ki' ? 'Frage eingeben …' : 'Tutor bald verfügbar …'}
               disabled={busy}
             />
             <button onClick={() => send(input)} disabled={busy} aria-label="Senden">

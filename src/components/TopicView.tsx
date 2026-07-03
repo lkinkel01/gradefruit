@@ -251,7 +251,7 @@ export default function TopicView({ topicId, owned, ownedLk, onOpenCheckout, onO
           </div>
           <p className={styles.lockText}>
             Schalte alle {topic.label}-Aufgaben{level === 'lk' ? ' im Leistungskurs' : ''} mit
-            Schritt-für-Schritt-Lösungen, Erklärvideos und Fragen an KI &amp; Tutor frei.
+            Schritt-für-Schritt-Lösungen, Erklärvideos und Fragen an die KI frei.
           </p>
           <button
             className="btn primary"
