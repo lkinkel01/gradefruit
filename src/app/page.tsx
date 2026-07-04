@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
@@ -43,9 +43,23 @@ export default function Home() {
   const [askSnippet, setAskSnippet] = useState('');
   const [notice, setNotice] = useState('');
 
-  // Wenn Nutzer eingeloggt ist und noch auf Landing: ins Dashboard
+  // Wenn Nutzer eingeloggt ist und noch auf Landing: ins Dashboard. Kommt er
+  // gerade aus dem Lernfeed (gf-open-topic), direkt ins gewünschte Thema.
+  // Das Ref merkt sich den konsumierten Sprung, damit Reacts doppelter
+  // Effekt-Lauf im Dev-Modus nicht auf das Dashboard zurückfällt.
+  const consumedJump = useRef<View | null>(null);
   useEffect(() => {
-    if (user && view === 'landing') setView('dashboard');
+    if (!user || view !== 'landing') return;
+    let target: View = 'dashboard';
+    try {
+      const jump = localStorage.getItem('gf-open-topic') ?? consumedJump.current;
+      if (jump === 'analysis' || jump === 'linalg' || jump === 'stochastik') {
+        localStorage.removeItem('gf-open-topic');
+        consumedJump.current = jump;
+        target = jump;
+      }
+    } catch { /* Speicher gesperrt */ }
+    setView(target);
   }, [user]);
 
   // Das Inline-Skript in layout.tsx hat das gespeicherte Theme schon vor dem

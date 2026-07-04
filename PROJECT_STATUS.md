@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 05: KI-Coach-Integration)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 06: Lernfeed V2)
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -60,8 +60,14 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), global aufgewertete Buttons
 - ✅ Impressum, Datenschutz
 - ✅ Dark Mode (persistiert, kein Aufblitzen beim Laden)
-- ✅ **Lernfeed** (`/feed`): vertikaler Swipe-Feed der Erklärvideos (Scroll-Snap,
-  ein Video pro Wisch), nur für eingeloggte Nutzer, Einstieg über die Sidebar
+- ✅ **Lernfeed V2** (`/feed`, „TikTok für Mathe"): volle dunkle Video-Bühne mit
+  echtem Funktionsgraphen der Szene, Overlays im Reels-Stil (Thema, Titel,
+  Beschreibung, Lernziel, geschätzte Dauer), Aktions-Leiste rechts (Üben +
+  Formeln springen per Deep-Link ins Thema [`gf-open-topic`/`gf-open-tab`],
+  KI öffnet den Coach mit Video-Kontext, Merken speichert die verknüpfte
+  Aufgabe, Teilen via System-Share/Zwischenablage, Tutor „bald"),
+  Story-Fortschritt oben („Video x von y"), „Nächstes Thema"-Hinweis,
+  Desktop als zentrierte Reels-Spalte. Nur für eingeloggte Nutzer.
 
 ## Bekannte Probleme / offen
 - 🔴 **Stripe im TEST-Modus** — echte Kunden können NICHT zahlen. Umstellung auf

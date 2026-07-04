@@ -1,82 +1,67 @@
-/* Lernfeed – vertikaler Swipe-Feed (full-screen, Scroll-Snap).
-   Nutzt Gradefruit-Design-Tokens (CSS-Variablen) + die Szenen-Farbe.
-   Bewegungen respektieren automatisch prefers-reduced-motion (globals.css). */
+/* Lernfeed V2: volle Video-Bühne, Overlays wie bei TikTok/Reels.
+   Die Bühne ist bewusst immer dunkel (unabhängig vom Theme), Overlays in Weiß.
+   Bewegungen respektieren prefers-reduced-motion (globals.css). */
 @keyframes gfFeedIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
 @keyframes gfBob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(5px); }
+  50% { transform: translateY(4px); }
 }
 
 .wrap {
   position: relative;
-  height: 100vh; /* Fallback für ältere iOS-Safari ohne dvh */
+  height: 100vh;
   height: 100dvh;
-  background: var(--canvas);
+  background: #0C0B11;
   overflow: hidden;
   animation: gfFeedIn 0.4s ease both;
 }
 
-/* Kopfbereich: Zurück-Button + Titel + kurze Einführung, liegt über dem Feed. */
-.topbar {
+/* Kopf-Overlay: zurück + Fortschritt */
+.top {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 15;
-  padding: calc(env(safe-area-inset-top, 0px) + 14px) 18px 30px;
-  background: linear-gradient(180deg, var(--canvas) 42%, transparent);
-  pointer-events: none; /* Swipe geht durch den Header hindurch ... */
-}
-.topRow {
+  top: 0; left: 0; right: 0;
+  z-index: 30;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  max-width: 460px;
-  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 14px 18px;
+  background: linear-gradient(180deg, rgba(12, 11, 17, 0.85), transparent);
+  pointer-events: none;
 }
-.intro {
-  min-width: 0;
-}
-.feedTitle {
-  font-family: 'Schibsted Grotesk', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  color: var(--ink);
-}
-.feedSub {
-  color: var(--muted);
-  font-size: 13.5px;
-  line-height: 1.35;
-  margin-top: 3px;
-}
-
 .back {
-  pointer-events: auto; /* ... nur der Button reagiert auf Tippen */
+  pointer-events: auto;
   flex-shrink: 0;
-  width: 42px;
-  height: 42px;
+  width: 38px; height: 38px;
   border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
-  color: var(--ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: none;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  transition: 0.15s;
+  transition: background 0.15s, transform 0.15s;
 }
-.back:hover {
-  border-color: var(--accent);
-  color: var(--accent-d);
+.back:hover { background: rgba(255, 255, 255, 0.2); }
+.back:active { transform: scale(0.94); }
+.progressWrap { flex: 1; padding-top: 4px; }
+.segments { display: flex; gap: 5px; }
+.segment {
+  flex: 1; height: 3px; border-radius: 99px;
+  background: rgba(255, 255, 255, 0.22);
+  transition: background 0.25s;
 }
-.back:active {
-  transform: scale(0.94);
+.segmentOn { background: #fff; }
+.counter {
+  margin-top: 7px;
+  font-size: 11.5px; font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.02em;
 }
+.topSpacer { width: 38px; flex-shrink: 0; }
 
 .feed {
   height: 100vh;
@@ -84,7 +69,7 @@
   overflow-y: auto;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  overscroll-behavior-y: contain; /* kein Pull-to-Refresh / Bounce der Seite */
+  overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -92,124 +77,216 @@
   height: 100vh;
   height: 100dvh;
   scroll-snap-align: start;
-  scroll-snap-stop: always; /* ein Video pro Wisch */
+  scroll-snap-stop: always;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  padding: 16px;
   position: relative;
 }
 
-.card {
+/* Hochkant-Rahmen: mobil volle Breite, am Desktop zentrierte Reels-Spalte */
+.frame {
   position: relative;
-  width: 100%;
-  max-width: 440px;
-  height: min(84vh, 760px);
-  height: min(84dvh, 760px);
-  border-radius: 26px;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  padding: 26px;
-  box-shadow: 0 24px 70px rgba(20, 15, 30, 0.30);
+  width: min(100vw, 480px);
+  height: 100%;
   overflow: hidden;
 }
-/* dezenter Glanz oben – wirkt hochwertiger */
-.card::after {
-  content: '';
+
+/* Video-Bühne */
+.stage {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 42%);
-  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.spacer {
-  flex: 1;
-}
-
-.badge {
-  position: relative;
-  z-index: 1;
-  align-self: flex-start;
-  background: rgba(255, 255, 255, 0.22);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  color: #fff;
-  border-radius: 999px;
-  padding: 6px 13px;
-  font-size: 12.5px;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
-.title {
-  position: relative;
-  z-index: 1;
-  font-family: 'Schibsted Grotesk', sans-serif;
-  font-size: 27px;
-  font-weight: 800;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
+.curve {
+  position: absolute;
+  inset: 12% 0 20%;
+  width: 100%;
+  height: 68%;
+  opacity: 0.9;
 }
 .func {
   position: relative;
   z-index: 1;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 15px;
-  opacity: 0.92;
-  margin-bottom: 20px;
+  font-size: clamp(17px, 4.6vw, 23px);
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+  margin-bottom: 26px;
+  padding: 0 20px;
+  text-align: center;
+  word-break: break-word;
 }
 .play {
   position: relative;
   z-index: 1;
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  background: #fff;
-  color: #15141a;
+  width: 74px; height: 74px;
+  border-radius: 50%;
   border: none;
-  border-radius: 999px;
-  padding: 13px 22px;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
-  transition: transform 0.12s, box-shadow 0.12s;
+  background: rgba(255, 255, 255, 0.96);
+  color: #15141a;
+  display: flex; align-items: center; justify-content: center;
+  padding-left: 5px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-.play:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 9px 24px rgba(0, 0, 0, 0.22);
-}
-.play:active {
-  transform: scale(0.97);
+.play:hover { transform: scale(1.06); box-shadow: 0 14px 50px rgba(0, 0, 0, 0.55); }
+.play:active { transform: scale(0.97); }
+.playHint {
+  position: relative;
+  z-index: 1;
+  margin-top: 14px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
 }
 
-.hint {
+/* Aktions-Leiste rechts (wie bei TikTok) */
+.rail {
   position: absolute;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
-  left: 0;
-  right: 0;
+  right: 10px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 168px);
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1px;
-  color: var(--muted);
-  font-size: 12.5px;
-  pointer-events: none;
+  gap: 17px;
 }
-.hint svg {
-  animation: gfBob 1.6s ease-in-out infinite;
+.railBtn, .railSoon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s;
+}
+.railBtn:hover { transform: translateY(-2px); }
+.railBtn:active { transform: scale(0.95); }
+.railIcon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.railBtn:hover .railIcon { background: rgba(255, 255, 255, 0.24); }
+.railOn { color: #FF8A73; }
+.railOn .railIcon { background: rgba(240, 82, 74, 0.32); }
+.railSoon { color: rgba(255, 255, 255, 0.55); cursor: default; }
+.railSoon .railIcon { background: rgba(255, 255, 255, 0.08); border: 1.5px dashed rgba(255, 255, 255, 0.3); }
+
+/* Info-Overlay unten links */
+.meta {
+  position: absolute;
+  left: 0; right: 74px;
+  bottom: 0;
+  z-index: 15;
+  padding: 26px 16px calc(env(safe-area-inset-bottom, 0px) + 52px);
+  background: linear-gradient(0deg, rgba(12, 11, 17, 0.9) 20%, rgba(12, 11, 17, 0.45) 65%, transparent);
+  color: #fff;
+  animation: gfFeedIn 0.4s ease both;
+}
+.chips { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+.chip {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 4px 11px;
+  border-radius: 99px;
+}
+.chipGhost {
+  font-size: 11.5px; font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.14);
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+.title {
+  font-family: 'Schibsted Grotesk', sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin-bottom: 7px;
+}
+.desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 9px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.goal {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+.goal svg { flex-shrink: 0; margin-top: 2px; color: #7BE3AE; }
+
+/* Hinweis auf das nächste Video */
+.next {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  z-index: 16;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  padding: 0 16px;
+  text-align: center;
+}
+.next svg { animation: gfBob 1.6s ease-in-out infinite; flex-shrink: 0; }
+
+.toast {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  background: rgba(255, 255, 255, 0.95);
+  color: #15141a;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 99px;
+  padding: 9px 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  animation: gfFeedIn 0.25s ease both;
 }
 
-/* Login-Gate / Ladezustand – schlicht wie der Rest der App */
+/* Login-Gate / Ladezustand */
 .gate {
   height: 100vh;
   height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--canvas);
-  color: var(--muted);
+  background: #0C0B11;
+  color: rgba(255, 255, 255, 0.7);
   font-family: inherit;
 }

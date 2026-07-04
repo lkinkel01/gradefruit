@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
@@ -77,9 +77,22 @@ export default function TopicView({ topicId, level, owned, ownedLk, onOpenChecko
 
   // Einstieg: Wer hier schon gelernt hat, landet direkt bei den Übungen.
   // Neue Lernende starten bei der Zusammenfassung. Erste offene Karte aufklappen.
+  // Das Ref merkt sich den konsumierten Wunsch-Tab (aus dem Lernfeed), damit
+  // Reacts doppelter Effekt-Lauf im Dev-Modus ihn nicht wieder verwirft.
+  const consumedTab = useRef<Tab | null>(null);
   useEffect(() => {
     const done = tasks.filter(t => isUnderstood(topicId, t.id)).length;
-    setTab(done > 0 ? 'uebungen' : 'zusammenfassung');
+    // Absprung aus dem Lernfeed: gewünschten Bereich einmalig direkt öffnen.
+    let forced: Tab | null = consumedTab.current;
+    try {
+      const t = localStorage.getItem('gf-open-tab');
+      if (t === 'zusammenfassung' || t === 'uebungen') {
+        forced = t;
+        consumedTab.current = t;
+        localStorage.removeItem('gf-open-tab');
+      }
+    } catch { /* Speicher gesperrt */ }
+    setTab(forced ?? (done > 0 ? 'uebungen' : 'zusammenfassung'));
     const firstOpen = tasks.find(t => !isUnderstood(topicId, t.id)) ?? tasks[0];
     setOpenCards(firstOpen ? new Set([firstOpen.id]) : new Set());
     setOpenSolutions(new Set());
