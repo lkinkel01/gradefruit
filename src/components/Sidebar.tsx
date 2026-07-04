@@ -78,12 +78,12 @@ export default function Sidebar({ view, owned, ownedLk, onNavigate, onOpenChecko
             <span className={styles.ti}>{item.label}</span>
           </button>
         ))}
-        {/* Lernfeed – eigener Swipe-Feed unter der Route /feed (Client-Navigation). */}
+        {/* Swipe-Ansicht – Videos im Reels-Stil unter der Route /feed. */}
         <button onClick={() => router.push('/feed')}>
           <span className={styles.icon}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3" /><polygon points="10 8.5 15 12 10 15.5" fill="currentColor" stroke="none" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3" /><polyline points="9 13.5 12 10.5 15 13.5" /><line x1="12" y1="10.5" x2="12" y2="17" /></svg>
           </span>
-          <span className={styles.ti}>Lernfeed</span>
+          <span className={styles.ti}>Swipe-Ansicht</span>
         </button>
       </nav>
 

@@ -88,6 +88,9 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
   const [seg, setSeg] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [frac, setFrac] = useState(0); // Fortschritt innerhalb des aktuellen Segments (0..1)
+  // true, wenn der Browser den automatischen Ton blockiert hat (Autoplay-Regel):
+  // das Video läuft dann stumm mit Untertiteln weiter, bis „Ton an" getippt wird.
+  const [soundBlocked, setSoundBlocked] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playToken = useRef(0);
 
@@ -112,9 +115,6 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
 
   const stopNarration = useCallback(() => {
     playToken.current++;
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
@@ -129,13 +129,6 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
     return () => stopNarration();
   }, [scene, stopNarration]);
 
-  // Stimmen vorab laden (manche Browser liefern sie erst asynchron)
-  useEffect(() => {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.getVoices();
-    }
-  }, []);
-
   // ESC schließt den Player (nur wenn es ein Schließen gibt)
   useEffect(() => {
     if (!onClose) return;
@@ -146,33 +139,30 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
 
-  const pickVoice = () => {
-    if (!('speechSynthesis' in window)) return null;
-    const voices = window.speechSynthesis.getVoices();
-    return (
-      voices.find((v) => v.lang?.toLowerCase().startsWith('de')) ||
-      voices.find((v) => v.lang?.toLowerCase().includes('de')) ||
-      null
-    );
-  };
-
-  const speakBrowser = (text: string, token: number, finish: () => void) => {
+  // Stummer Ablauf mit Untertiteln: Lesedauer aus der Textlänge schätzen.
+  // Ersetzt die frühere Roboter-Browserstimme vollständig.
+  const advanceSilently = (text: string, token: number, finish: () => void) => {
     if (token !== playToken.current) return finish();
-    if ('speechSynthesis' in window) {
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'de-DE';
-      u.rate = 0.96;
-      const v = pickVoice();
-      if (v) u.voice = v;
-      u.onend = finish;
-      u.onerror = finish;
-      window.speechSynthesis.speak(u);
-    } else {
-      setTimeout(finish, 1500);
-    }
+    const duration = Math.max(2600, text.length * 72);
+    const started = performance.now();
+    const iv = setInterval(() => {
+      if (token !== playToken.current) {
+        clearInterval(iv);
+        finish();
+        return;
+      }
+      const p = (performance.now() - started) / duration;
+      if (p >= 1) {
+        clearInterval(iv);
+        finish();
+      } else {
+        setFrac(p);
+      }
+    }, 120);
   };
 
-  // Ein Segment vorlesen: mp3 wenn vorhanden, sonst Browser-Stimme
+  // Ein Segment abspielen: mp3 mit menschlicher Stimme wenn vorhanden,
+  // sonst (oder bei blockiertem Autoplay-Ton) stumm mit Untertiteln.
   const narrate = (text: string, file: string, token: number) =>
     new Promise<void>((resolve) => {
       let done = false;
@@ -193,10 +183,17 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
             setFrac(Math.min(1, audio.currentTime / audio.duration));
           }
         };
-        audio.onerror = () => speakBrowser(text, token, finish);
-        audio.play().catch(() => speakBrowser(text, token, finish));
+        audio.onerror = () => advanceSilently(text, token, finish);
+        audio.play().then(() => {
+          if (token === playToken.current) setSoundBlocked(false);
+        }).catch(() => {
+          // Browser blockiert Ton ohne vorherige Nutzer-Geste: stumm
+          // weiterlaufen und den „Ton an"-Hinweis zeigen.
+          if (token === playToken.current) setSoundBlocked(true);
+          advanceSilently(text, token, finish);
+        });
       } else {
-        speakBrowser(text, token, finish);
+        advanceSilently(text, token, finish);
       }
     });
 
@@ -264,6 +261,12 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
     setPlaying(false);
   };
   const togglePlay = () => (playing ? pause() : play());
+  // Nutzer-Geste schaltet den Ton frei: aktuelles Segment mit Stimme neu starten.
+  const enableSound = () => {
+    setSoundBlocked(false);
+    stopNarration();
+    runFrom(seg);
+  };
   const goNext = () => {
     stopNarration();
     setPlaying(false);
@@ -290,6 +293,15 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
           {scene.topic}
         </span>
         <span className={styles.htitle}>{scene.title}</span>
+        {soundBlocked && (
+          <button className={styles.soundOn} onClick={enableSound}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
+              <path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.5 5.5a9 9 0 0 1 0 13" />
+            </svg>
+            Ton an
+          </button>
+        )}
         {onClose && (
           <button className={styles.close} onClick={onClose} aria-label="Schließen">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">

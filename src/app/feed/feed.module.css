@@ -121,36 +121,13 @@
   text-align: center;
   word-break: break-word;
 }
-.play {
-  position: relative;
-  z-index: 1;
-  width: 74px; height: 74px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.96);
-  color: #15141a;
-  display: flex; align-items: center; justify-content: center;
-  padding-left: 5px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.play:hover { transform: scale(1.06); box-shadow: 0 14px 50px rgba(0, 0, 0, 0.55); }
-.play:active { transform: scale(0.97); }
-.playHint {
-  position: relative;
-  z-index: 1;
-  margin-top: 14px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.65);
-}
 
 /* Aktions-Leiste rechts (wie bei TikTok) */
 .rail {
   position: absolute;
   right: 10px;
   bottom: calc(env(safe-area-inset-bottom, 0px) + 168px);
-  z-index: 20;
+  z-index: 26;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -244,25 +221,38 @@
 }
 .goal svg { flex-shrink: 0; margin-top: 2px; color: #7BE3AE; }
 
-/* Inline-Player: füllt den Slide-Rahmen, Wiedergabe direkt im Feed */
+/* Inline-Player: füllt den Slide-Rahmen, Wiedergabe direkt im Feed.
+   Die lokalen Token erzwingen die dunkle Optik unabhängig vom Seiten-Theme,
+   damit der Feed immer wie TikTok/Reels wirkt. */
 .playerWrap {
   position: absolute;
   inset: 0;
   z-index: 25;
   display: flex;
   flex-direction: column;
-  background: var(--surface);
+  background: #0C0B11;
+  --surface: #15141C;
+  --surface-2: #1C1B24;
+  --bg: #0C0B11;
+  --canvas: #0C0B11;
+  --ink: #F2F1F6;
+  --muted: #A7A5AF;
+  --faint: #777581;
+  --line: #2A2932;
+  --line-strong: #383743;
+  --control: #2A2932;
   animation: gfFeedIn 0.25s ease both;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-top: calc(env(safe-area-inset-top, 0px) + 58px);
+  padding-right: 60px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 34px);
 }
 
 /* Hinweis auf das nächste Video */
 .next {
   position: absolute;
   left: 0; right: 0;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
-  z-index: 16;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+  z-index: 26;
   display: flex;
   align-items: center;
   justify-content: center;

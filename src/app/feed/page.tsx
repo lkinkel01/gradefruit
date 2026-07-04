@@ -81,7 +81,6 @@ export default function FeedPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { isSaved, toggleSaved } = useProgress();
-  const [playing, setPlaying] = useState<string | null>(null);
   const [askOpen, setAskOpen] = useState(false);
   const [askCtx, setAskCtx] = useState('');
   const [askSnippet, setAskSnippet] = useState('');
@@ -94,16 +93,13 @@ export default function FeedPage() {
     if (!loading && !user) router.replace('/');
   }, [loading, user, router]);
 
-  // Aktuelles Video aus der Scroll-Position ableiten (für den Fortschritt oben).
-  // Wer weiterswipet, stoppt damit automatisch die laufende Wiedergabe.
+  // Aktuelles Video aus der Scroll-Position ableiten. Der aktive Slide spielt
+  // automatisch; wer weiterswipet, stoppt das alte Video und startet das neue.
   const onScroll = () => {
     const el = feedRef.current;
     if (!el) return;
     const i = Math.round(el.scrollTop / el.clientHeight);
-    if (i !== idx && i >= 0 && i < FEED.length) {
-      setIdx(i);
-      setPlaying(null);
-    }
+    if (i !== idx && i >= 0 && i < FEED.length) setIdx(i);
   };
 
   const openTopic = (topicId: string, tab: 'zusammenfassung' | 'uebungen') => {
@@ -135,8 +131,8 @@ export default function FeedPage() {
 
   return (
     <div className={styles.wrap}>
-      {/* Kopf-Overlay: zurück, Fortschritt, Zähler (bei Wiedergabe ausgeblendet) */}
-      <div className={styles.top} style={playing ? { display: 'none' } : undefined}>
+      {/* Kopf-Overlay: zurück, Fortschritt, Zähler */}
+      <div className={styles.top}>
         <button className={styles.back} onClick={() => router.back()} aria-label="Zurück">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
@@ -169,22 +165,15 @@ export default function FeedPage() {
                     <path d={item.path} fill="none" stroke="#ffffff" strokeOpacity="0.32" strokeWidth="3" strokeLinecap="round" />
                   </svg>
                   {scene.func && <div className={styles.func}>{scene.func}</div>}
-                  <button className={styles.play} onClick={() => setPlaying(scene.id)} aria-label={`${scene.title} abspielen`}>
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="7 4 21 12 7 20 7 4" />
-                    </svg>
-                  </button>
-                  <div className={styles.playHint}>Tippen zum Abspielen, mit Stimme</div>
                 </div>
 
-                {/* Inline-Wiedergabe: der Player läuft direkt im Slide */}
-                {playing === scene.id && (
+                {/* Der aktive Slide spielt von selbst, wie bei TikTok */}
+                {i === idx && (
                   <div className={styles.playerWrap}>
-                    <ScenePlayer scene={scene} autoPlay onClose={() => setPlaying(null)} />
+                    <ScenePlayer scene={scene} autoPlay />
                   </div>
                 )}
 
-                {playing !== scene.id && (<>
                 {/* Aktions-Leiste rechts */}
                 <aside className={styles.rail}>
                   {item.task && (
@@ -251,7 +240,9 @@ export default function FeedPage() {
                   </span>
                 </aside>
 
-                {/* Info-Overlay unten */}
+                {/* Info-Overlay unten (nur solange das Video hier nicht läuft;
+                    der Player zeigt Thema und Titel selbst) */}
+                {i !== idx && (
                 <div className={styles.meta}>
                   <div className={styles.chips}>
                     <span className={styles.chip} style={{ background: scene.color }}>{scene.topic}</span>
@@ -266,6 +257,7 @@ export default function FeedPage() {
                     {item.goal}
                   </p>
                 </div>
+                )}
 
                 {/* Nächstes Thema */}
                 {i < FEED.length - 1 ? (
@@ -278,7 +270,6 @@ export default function FeedPage() {
                 ) : (
                   <div className={styles.next}>Du bist durch! Neue Videos kommen laufend dazu.</div>
                 )}
-                </>)}
               </div>
             </section>
           );

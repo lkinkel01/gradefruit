@@ -61,6 +61,27 @@
   color: var(--ink);
 }
 
+/* „Ton an": erscheint, wenn der Browser automatischen Ton blockiert hat */
+.soundOn {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(240, 82, 74, 0.35);
+  animation: pop 0.25s ease;
+}
+.soundOn:active { transform: scale(0.96); }
+.soundOn + .close { margin-left: 0; }
+
 .close {
   margin-left: auto;
   display: grid;

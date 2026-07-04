@@ -60,7 +60,7 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), global aufgewertete Buttons
 - ✅ Impressum, Datenschutz
 - ✅ Dark Mode (persistiert, kein Aufblitzen beim Laden)
-- ✅ **Lernfeed V2** (`/feed`, „TikTok für Mathe"): volle dunkle Video-Bühne mit
+- ✅ **Swipe-Ansicht** (`/feed`, „TikTok für Mathe"; Sidebar-Eintrag heißt so): volle dunkle Video-Bühne mit
   echtem Funktionsgraphen der Szene, Overlays im Reels-Stil (Thema, Titel,
   Beschreibung, Lernziel, geschätzte Dauer), Aktions-Leiste rechts (Üben +
   Formeln springen per Deep-Link ins Thema [`gf-open-topic`/`gf-open-tab`],
@@ -68,9 +68,17 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   Aufgabe, Teilen via System-Share/Zwischenablage, Tutor „bald"),
   Story-Fortschritt oben („Video x von y"), „Nächstes Thema"-Hinweis,
   Desktop als zentrierte Reels-Spalte. Nur für eingeloggte Nutzer.
-  **Inline-Wiedergabe:** Tippen auf Play startet das Video direkt im Slide
-  (kein Modal; `ScenePlayer` aus `SceneModal.tsx` extrahiert und mit
-  `autoPlay` eingebettet; Weiterwischen oder ✕ stoppt die Wiedergabe).
+  **Autoplay wie TikTok:** der aktive Slide spielt VON SELBST (kein Klick,
+  kein Modal; `ScenePlayer` mit dunkler Token-Palette eingebettet),
+  Weiterwischen stoppt das alte und startet das neue Video. Blockiert der
+  Browser den Ton, läuft das Video stumm mit Untertiteln und zeigt einen
+  „Ton an"-Chip. **Roboterstimme komplett entfernt** (kein
+  speechSynthesis-Fallback mehr; ohne mp3 → stumm mit Untertiteln).
+- 🟠 **ElevenLabs-Kontingent leer** (95/10.000 Zeichen übrig): Szene `l1`
+  („Abstand zweier Punkte") hat nur das Intro als mp3 und läuft bis zur
+  Aufstockung stumm. Danach: `node --env-file=.env.local
+  scripts/generate-audio.mjs` ausführen und in `scenes.ts` bei `l1`
+  `hasAudio: true` setzen.
 
 ## Bekannte Probleme / offen
 - 🔴 **Stripe im TEST-Modus** — echte Kunden können NICHT zahlen. Umstellung auf
