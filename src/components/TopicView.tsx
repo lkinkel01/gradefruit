@@ -172,6 +172,12 @@ export default function TopicView({ topicId, level, owned, ownedLk, onOpenChecko
       ) : tab === 'zusammenfassung' && summary ? (
         <div className={styles.summaryWrap}>
           <p className={styles.summaryIntro}>{summary.intro}</p>
+          <p className={styles.aiHint}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 3l1.9 5.2L19 10l-5.1 1.8L12 17l-1.9-5.2L5 10l5.1-1.8z" />
+            </svg>
+            Tippe auf eine Formel und der Coach erklärt sie dir.
+          </p>
           {summary.sections.map((sec, i) => (
             <div key={sec.title} className={styles.sumCard} style={{ animationDelay: `${i * 45}ms` }}>
               <div className={styles.sumHead}>
@@ -181,7 +187,18 @@ export default function TopicView({ topicId, level, owned, ownedLk, onOpenChecko
               <p className={styles.sumText}>{sec.text}</p>
               <div className={styles.formulas}>
                 {sec.formulas.map((f, j) => (
-                  <div key={j} className={styles.formula}>{f}</div>
+                  <button
+                    key={j}
+                    className={styles.formula}
+                    title="Diese Formel vom Coach erklären lassen"
+                    onClick={() => onOpenAsk(topic.label, `Erkläre mir diese Formel aus „${sec.title}": ${f}`)}
+                  >
+                    <span className={styles.formulaText}>{f}</span>
+                    <svg className={styles.formulaAsk} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
+                      <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
+                    </svg>
+                  </button>
                 ))}
               </div>
             </div>
@@ -278,24 +295,35 @@ export default function TopicView({ topicId, level, owned, ownedLk, onOpenChecko
 
                     {openSolutions.has(task.id) && task.steps.length > 0 && (
                       <div className={styles.solution}>
-                        <div className={styles.solTitle}>Schritt-für-Schritt-Lösung</div>
+                        <div className={styles.solHead}>
+                          <div className={styles.solTitle}>Schritt-für-Schritt-Lösung</div>
+                          <span className={styles.solHint}>Tippe auf einen Schritt für mehr Erklärung</span>
+                        </div>
                         {task.steps.map((step, si) => (
-                          <div key={si} className={styles.sstep} style={{ animationDelay: `${si * 50}ms` }}>
+                          <div
+                            key={si}
+                            className={styles.sstep}
+                            style={{ animationDelay: `${si * 50}ms` }}
+                            role="button"
+                            tabIndex={0}
+                            title="Diesen Schritt vom Coach erklären lassen"
+                            onClick={() => onOpenAsk(topic.label, `Schritt ${si + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${task.q}`)}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                onOpenAsk(topic.label, `Schritt ${si + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${task.q}`);
+                              }
+                            }}
+                          >
                             <div className={styles.stepNum}>{si + 1}</div>
                             <div className={styles.stepBody}>
                               <div className={styles.stepLd}>{step.label}</div>
                               <div className={styles.stepMt}>{step.math}</div>
-                              <button
-                                className={styles.stepAsk}
-                                onClick={() => onOpenAsk(topic.label, `Schritt ${si + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${task.q}`)}
-                              >
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                                  <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
-                                  <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
-                                </svg>
-                                Diesen Schritt erklären
-                              </button>
                             </div>
+                            <svg className={styles.stepGo} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                              <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
+                              <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
+                            </svg>
                           </div>
                         ))}
                         {task.result && <div className={styles.result}>{task.result}</div>}

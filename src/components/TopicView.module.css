@@ -35,37 +35,53 @@
 
 /* Zusammenfassung */
 .summaryWrap { animation: reveal .3s ease both; }
-.summaryIntro { font-size: 14.5px; color: var(--muted); line-height: 1.6; max-width: 64ch; margin-bottom: 18px; }
+.summaryIntro { font-size: 14.5px; color: var(--muted); line-height: 1.6; max-width: 64ch; margin-bottom: 10px; }
+.aiHint {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12.5px; font-weight: 500; color: var(--accent-d);
+  background: var(--accent-soft); border-radius: 99px;
+  padding: 6px 13px; margin-bottom: 20px;
+}
 .sumCard {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: 16px; padding: 18px 20px; margin-bottom: 12px;
+  border-radius: 18px; padding: 20px 22px 18px; margin-bottom: 12px;
   animation: reveal .35s ease both;
 }
 .sumHead { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
 .sumDot { width: 8px; height: 8px; border-radius: 99px; flex-shrink: 0; }
 .sumTitle { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
-.sumText { font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
-.formulas { display: flex; flex-direction: column; gap: 6px; }
+.sumText { font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 13px; }
+.formulas { display: flex; flex-direction: column; gap: 7px; }
 .formula {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  width: 100%; text-align: left; cursor: pointer;
   font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
-  background: var(--canvas); border-radius: 9px; padding: 9px 13px;
-  line-height: 1.5; overflow-x: auto;
+  color: var(--ink);
+  background: var(--canvas); border: 1px solid transparent; border-radius: 10px;
+  padding: 10px 13px; line-height: 1.5;
+  transition: border-color .15s, background .15s;
 }
+.formula:hover { border-color: var(--accent); background: var(--accent-soft); }
+.formula:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.formulaText { overflow-x: auto; }
+.formulaAsk { flex-shrink: 0; color: var(--faint); opacity: 0; transition: opacity .15s; }
+.formula:hover .formulaAsk { opacity: 1; color: var(--accent-d); }
 .summaryFoot { display: flex; justify-content: center; margin-top: 22px; }
 
 /* Lernkarten (Akkordeon) */
-.cards { display: flex; flex-direction: column; gap: 10px; }
+.cards { display: flex; flex-direction: column; gap: 12px; }
 .card {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: 16px; overflow: hidden;
-  transition: border-color .18s ease, box-shadow .18s ease;
+  border-radius: 18px; overflow: hidden;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
 }
-.cardOpen { border-color: var(--line-strong); box-shadow: var(--shadow); }
+.card:hover { border-color: var(--line-strong); }
+.cardOpen { border-color: var(--line-strong); box-shadow: 0 1px 2px rgba(0,0,0,.03), 0 10px 32px rgba(0,0,0,.07); }
 .cardHead {
-  width: 100%; display: flex; align-items: center; gap: 12px;
+  width: 100%; display: flex; align-items: center; gap: 13px;
   background: none; border: none; cursor: pointer;
   font-family: inherit; text-align: left;
-  padding: 15px 18px;
+  padding: 17px 20px;
 }
 .cardHead:hover .cardTitle { color: var(--accent-d); }
 .cardNum {
@@ -78,9 +94,9 @@
 .cardMeta { display: flex; align-items: center; gap: 8px; color: var(--faint); }
 .chev { color: var(--faint); flex-shrink: 0; }
 
-.cardBody { padding: 2px 18px 16px; animation: reveal .28s ease both; }
-.taskQ { font-size: 15px; line-height: 1.6; margin-bottom: 13px; }
-.rowActions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cardBody { padding: 2px 20px 18px; animation: reveal .28s ease both; }
+.taskQ { font-size: 15.5px; line-height: 1.65; margin-bottom: 15px; }
+.rowActions { display: flex; gap: 9px; flex-wrap: wrap; }
 
 .mini {
   border: 1px solid var(--line-strong); background: var(--surface);
@@ -102,12 +118,22 @@
 }
 
 .solution {
-  margin-top: 14px; border-top: 1px solid var(--line);
-  padding-top: 4px; animation: reveal .28s ease both;
+  margin-top: 16px; border-top: 1px solid var(--line);
+  padding-top: 6px; animation: reveal .28s ease both;
 }
-.solTitle { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); margin: 13px 0 4px; }
-.sstep { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); animation: reveal .3s ease both; }
-.sstep:last-of-type { border-bottom: none; }
+.solHead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 13px 0 6px; }
+.solTitle { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+.solHint { font-size: 12px; color: var(--faint); }
+.sstep {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 10px; margin: 0 -10px;
+  border-radius: 12px; cursor: pointer;
+  animation: reveal .3s ease both;
+  transition: background .15s;
+}
+.sstep:hover { background: var(--surface-2); }
+.sstep:hover .stepGo { opacity: 1; color: var(--accent-d); }
+.sstep:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .stepNum {
   flex: 0 0 25px; height: 25px; border-radius: 8px;
   background: var(--accent); color: #fff;
@@ -117,13 +143,7 @@
 .stepBody { flex: 1; }
 .stepLd { font-size: 13.5px; color: var(--muted); margin-bottom: 5px; }
 .stepMt { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 500; line-height: 1.6; }
-.stepAsk {
-  margin-top: 8px; display: inline-flex; align-items: center; gap: 6px;
-  border: none; background: none; cursor: pointer; padding: 2px 0;
-  font-family: inherit; font-size: 12px; font-weight: 500;
-  color: var(--faint); transition: color .15s;
-}
-.stepAsk:hover { color: var(--accent-d); }
+.stepGo { flex-shrink: 0; margin-top: 4px; color: var(--faint); opacity: 0; transition: opacity .15s, color .15s; }
 .result {
   margin-top: 13px; padding: 13px 16px;
   border: 1px solid var(--accent-soft); background: var(--accent-soft);

@@ -189,8 +189,9 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
       <aside className={`${styles.drawer} ${open ? styles.open : ''}`} role="dialog">
         <div className={styles.dhead}>
           <button className={styles.dclose} onClick={onClose}>✕</button>
-          <div className={styles.dctx}>{ctx || 'Frage'}</div>
-          <h2>Frage stellen</h2>
+          <div className={styles.dctx}>{ctx || 'Mathe'}</div>
+          <h2>Gradefruit-Coach</h2>
+          <p className={styles.dsub}>Dein persönlicher Lernassistent</p>
           {snippet && <div className={styles.snippet}><span className={styles.snipLabel}>Aufgabe</span>{snippet.slice(0, 120)}{snippet.length > 120 ? '…' : ''}</div>}
         </div>
 
@@ -210,7 +211,36 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
 
         <div className={styles.dbody} ref={bodyRef}>
           {messages.length === 0 && !busy && (
-            <div className={styles.empty}>Stell deine erste Frage zu diesem Thema – oder lade ein Foto deiner Aufgabe/Lösung hoch.</div>
+            mode === 'ki' ? (
+              <>
+                <div className={styles.coach}>
+                  <div className={styles.coachAvatar}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 3l1.9 5.2L19 10l-5.1 1.8L12 17l-1.9-5.2L5 10l5.1-1.8z" />
+                    </svg>
+                  </div>
+                  <div className={styles.coachText}>
+                    Hi! Ich bin dein Gradefruit-Coach. Frag mich alles zu {ctx || 'Mathe'} und
+                    ich erkläre es dir Schritt für Schritt, so lange, bis es sitzt.
+                  </div>
+                </div>
+                <button className={styles.dropzone} onClick={() => fileInputRef.current?.click()} disabled={busy} type="button">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+                  </svg>
+                  <span className={styles.dropTitle}>Eigene Lösung prüfen lassen</span>
+                  <span className={styles.dropText}>
+                    Foto oder PDF hochladen (max. 4 MB). Ich gehe deine Rechnung durch,
+                    zeige dir, wo es hakt, und lobe, was schon richtig ist.
+                  </span>
+                </button>
+              </>
+            ) : (
+              <div className={styles.empty}>
+                Persönliche Tutoren sind bald verfügbar. Wechsle zu „Sofort per KI",
+                dann helfe ich dir jetzt gleich weiter.
+              </div>
+            )
           )}
           {messages.map((m, i) => {
             const showTyping = m.role === 'ai' && m.text === '' && busy && i === messages.length - 1;
@@ -222,9 +252,9 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
               </div>
             );
           })}
-          {messages.length === 0 && !busy && (
+          {messages.length === 0 && !busy && mode === 'ki' && (
             <div className={styles.presets}>
-              <div className={styles.pt}>Schnellfragen</div>
+              <div className={styles.pt}>Oder starte mit einer Frage</div>
               {PRESETS.map(p => (
                 <button key={p} className={styles.pchip} onClick={() => send(p)} disabled={busy}>{p}</button>
               ))}
@@ -266,6 +296,17 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
               placeholder={mode === 'ki' ? 'Frage eingeben …' : 'Tutor bald verfügbar …'}
               disabled={busy}
             />
+            <button
+              type="button"
+              className={styles.micBtn}
+              disabled
+              title="Spracheingabe bald verfügbar"
+              aria-label="Spracheingabe bald verfügbar"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10v1a7 7 0 0 0 14 0v-1" /><line x1="12" y1="19" x2="12" y2="22" />
+              </svg>
+            </button>
             <button onClick={() => send(input)} disabled={busy} aria-label="Senden">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
