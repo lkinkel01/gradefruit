@@ -68,6 +68,9 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   Aufgabe, Teilen via System-Share/Zwischenablage, Tutor „bald"),
   Story-Fortschritt oben („Video x von y"), „Nächstes Thema"-Hinweis,
   Desktop als zentrierte Reels-Spalte. Nur für eingeloggte Nutzer.
+  **Inline-Wiedergabe:** Tippen auf Play startet das Video direkt im Slide
+  (kein Modal; `ScenePlayer` aus `SceneModal.tsx` extrahiert und mit
+  `autoPlay` eingebettet; Weiterwischen oder ✕ stoppt die Wiedergabe).
 
 ## Bekannte Probleme / offen
 - 🔴 **Stripe im TEST-Modus** — echte Kunden können NICHT zahlen. Umstellung auf

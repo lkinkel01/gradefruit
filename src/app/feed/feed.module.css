@@ -244,6 +244,19 @@
 }
 .goal svg { flex-shrink: 0; margin-top: 2px; color: #7BE3AE; }
 
+/* Inline-Player: füllt den Slide-Rahmen, Wiedergabe direkt im Feed */
+.playerWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  animation: gfFeedIn 0.25s ease both;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* Hinweis auf das nächste Video */
 .next {
   position: absolute;

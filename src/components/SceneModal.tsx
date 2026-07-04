@@ -3,11 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Scene, SceneGraph } from '@/lib/scenes';
 import styles from './SceneModal.module.css';
 
-interface Props {
-  scene: Scene | null;
-  onClose: () => void;
-}
-
 interface Segment {
   say: string;
   reveal: number; // wie viele Schritte sichtbar sind
@@ -81,7 +76,15 @@ function buildGraph(graph: SceneGraph) {
   return { W, H, pad, d, sx, sy, x0, y0, gridX, gridY, shade };
 }
 
-export default function SceneModal({ scene, onClose }: Props) {
+interface PlayerProps {
+  scene: Scene;
+  autoPlay?: boolean; // startet die Wiedergabe direkt nach dem Einbetten (Lernfeed)
+  onClose?: () => void;
+}
+
+// Der eigentliche Player – wiederverwendbar: im Modal (Themenseiten, Videos)
+// und direkt eingebettet im Lernfeed (Inline-Wiedergabe wie bei TikTok).
+export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
   const [seg, setSeg] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [frac, setFrac] = useState(0); // Fortschritt innerhalb des aktuellen Segments (0..1)
@@ -90,7 +93,6 @@ export default function SceneModal({ scene, onClose }: Props) {
 
   // Segmente aus der Szene bauen: Intro -> jeder Schritt -> Outro
   const segments = useMemo<Segment[]>(() => {
-    if (!scene) return [];
     const segs: Segment[] = [];
     segs.push({ say: scene.intro, reveal: 0, marks: [], kind: 'intro' });
     const acc: { x: number; y: number; label: string }[] = [];
@@ -119,7 +121,7 @@ export default function SceneModal({ scene, onClose }: Props) {
     }
   }, []);
 
-  // Beim Öffnen/Schließen oder Szenenwechsel zurücksetzen
+  // Beim Szenenwechsel/Abbau zurücksetzen
   useEffect(() => {
     setSeg(0);
     setPlaying(false);
@@ -134,15 +136,15 @@ export default function SceneModal({ scene, onClose }: Props) {
     }
   }, []);
 
-  // ESC schließt den Player
+  // ESC schließt den Player (nur wenn es ein Schließen gibt)
   useEffect(() => {
-    if (!scene) return;
+    if (!onClose) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [scene, onClose]);
+  }, [onClose]);
 
   const pickVoice = () => {
     if (!('speechSynthesis' in window)) return null;
@@ -182,7 +184,7 @@ export default function SceneModal({ scene, onClose }: Props) {
           resolve();
         }
       };
-      if (scene?.hasAudio) {
+      if (scene.hasAudio) {
         const audio = new Audio(`/audio/${file}.mp3`);
         audioRef.current = audio;
         audio.onended = finish;
@@ -200,7 +202,6 @@ export default function SceneModal({ scene, onClose }: Props) {
 
   const runFrom = useCallback(
     async (start: number) => {
-      if (!scene) return;
       const token = ++playToken.current;
       setPlaying(true);
       for (let i = start; i < segments.length; i++) {
@@ -216,9 +217,15 @@ export default function SceneModal({ scene, onClose }: Props) {
     [scene, segments],
   );
 
+  // Direktstart im Lernfeed: Wiedergabe beginnt mit dem Einbetten.
+  useEffect(() => {
+    if (!autoPlay) return;
+    runFrom(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPlay, scene]);
+
   // Tastatur: Leertaste = Play/Pause, Pfeile = vor/zurück
   useEffect(() => {
-    if (!scene) return;
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement | null)?.tagName;
       if (e.key === ' ' || e.code === 'Space') {
@@ -244,9 +251,7 @@ export default function SceneModal({ scene, onClose }: Props) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [scene, playing, seg, segments.length, runFrom, stopNarration]);
-
-  if (!scene) return null;
+  }, [playing, seg, segments.length, runFrom, stopNarration]);
 
   const current = segments[seg] ?? segments[0];
   const activeStep = current.kind === 'step' ? current.reveal - 1 : -1;
@@ -279,180 +284,192 @@ export default function SceneModal({ scene, onClose }: Props) {
   };
 
   return (
-    <div className={styles.backdrop} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.head}>
-          <span className={styles.badge} style={{ background: scene.color }}>
-            {scene.topic}
-          </span>
-          <span className={styles.htitle}>{scene.title}</span>
+    <div className={styles.player}>
+      <div className={styles.head}>
+        <span className={styles.badge} style={{ background: scene.color }}>
+          {scene.topic}
+        </span>
+        <span className={styles.htitle}>{scene.title}</span>
+        {onClose && (
           <button className={styles.close} onClick={onClose} aria-label="Schließen">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-        </div>
+        )}
+      </div>
 
-        <div className={styles.body}>
-          <div className={styles.left}>
-            {scene.func && (
-              <div className={styles.func} style={{ borderColor: `${scene.color}40` }}>
-                {scene.func}
-              </div>
-            )}
-
-            <div className={styles.steps}>
-              {scene.steps.slice(0, current.reveal).map((step, i) => (
-                <div
-                  key={i}
-                  className={`${styles.step} ${i === activeStep ? styles.stepActive : styles.stepDone}`}
-                  style={
-                    i === activeStep ? { borderColor: scene.color, background: `${scene.color}12` } : undefined
-                  }
-                >
-                  <div className={styles.stepNum} style={{ background: scene.color }}>
-                    {i + 1}
-                  </div>
-                  <div className={styles.stepBody}>
-                    <div className={styles.stepTitle}>{step.title}</div>
-                    {step.math && <div className={styles.stepMath}>{step.math}</div>}
-                  </div>
-                </div>
-              ))}
+      <div className={styles.body}>
+        <div className={styles.left}>
+          {scene.func && (
+            <div className={styles.func} style={{ borderColor: `${scene.color}40` }}>
+              {scene.func}
             </div>
+          )}
 
-            {current.showResult && scene.result && (
-              <div className={styles.result} style={{ background: scene.color }}>
-                {scene.result}
+          <div className={styles.steps}>
+            {scene.steps.slice(0, current.reveal).map((step, i) => (
+              <div
+                key={i}
+                className={`${styles.step} ${i === activeStep ? styles.stepActive : styles.stepDone}`}
+                style={
+                  i === activeStep ? { borderColor: scene.color, background: `${scene.color}12` } : undefined
+                }
+              >
+                <div className={styles.stepNum} style={{ background: scene.color }}>
+                  {i + 1}
+                </div>
+                <div className={styles.stepBody}>
+                  <div className={styles.stepTitle}>{step.title}</div>
+                  {step.math && <div className={styles.stepMath}>{step.math}</div>}
+                </div>
               </div>
-            )}
+            ))}
           </div>
 
-          {g && (
-            <div className={styles.right}>
-              <svg className={styles.graph} viewBox={`0 0 ${g.W} ${g.H}`} key={scene.id}>
-                <defs>
-                  <marker id="ahead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                    <path d="M0 0 L10 5 L0 10 z" className={styles.arrowHead} />
-                  </marker>
-                </defs>
-
-                {/* Gitter */}
-                {g.gridX.map((t, i) => (
-                  <line key={`gx${i}`} x1={t.px} y1={g.pad} x2={t.px} y2={g.H - g.pad} className={styles.gridline} />
-                ))}
-                {g.gridY.map((t, i) => (
-                  <line key={`gy${i}`} x1={g.pad} y1={t.py} x2={g.W - g.pad} y2={t.py} className={styles.gridline} />
-                ))}
-
-                {/* Fläche unter der Kurve (Integral) */}
-                {g.shade && <path d={g.shade} className={styles.shade} fill={scene.color} />}
-
-                {/* Achsen mit Pfeilspitze */}
-                <line x1={g.pad} y1={g.y0} x2={g.W - g.pad} y2={g.y0} className={styles.axis} markerEnd="url(#ahead)" />
-                <line x1={g.x0} y1={g.H - g.pad} x2={g.x0} y2={g.pad} className={styles.axis} markerEnd="url(#ahead)" />
-
-                {/* Zahlen an den Achsen */}
-                {g.gridX.map((t, i) =>
-                  t.x === 0 ? null : (
-                    <text key={`lx${i}`} x={t.px} y={g.y0 + 12} className={styles.gridlabel} textAnchor="middle">
-                      {Number.isInteger(t.x) ? t.x : t.x.toFixed(1)}
-                    </text>
-                  ),
-                )}
-                {g.gridY.map((t, i) =>
-                  t.y === 0 ? null : (
-                    <text key={`ly${i}`} x={g.x0 - 6} y={t.py + 3} className={styles.gridlabel} textAnchor="end">
-                      {Number.isInteger(t.y) ? t.y : t.y.toFixed(1)}
-                    </text>
-                  ),
-                )}
-                <text x={g.W - g.pad - 2} y={g.y0 - 7} className={styles.axisLabel} textAnchor="end">
-                  x
-                </text>
-                <text x={g.x0 + 9} y={g.pad + 3} className={styles.axisLabel}>
-                  y
-                </text>
-
-                {/* Kurve */}
-                <path d={g.d} pathLength={1} className={styles.curve} stroke={scene.color} />
-
-                {/* Markierte Punkte */}
-                {current.marks.map((m, i) => (
-                  <g key={i} className={styles.markG}>
-                    <circle cx={g.sx(m.x)} cy={g.sy(m.y)} r={5} fill={scene.color} stroke="#fff" strokeWidth={2} />
-                    <text x={g.sx(m.x)} y={g.sy(m.y) - 10} className={styles.markLabel} textAnchor="middle">
-                      {m.label}
-                    </text>
-                  </g>
-                ))}
-              </svg>
+          {current.showResult && scene.result && (
+            <div className={styles.result} style={{ background: scene.color }}>
+              {scene.result}
             </div>
           )}
         </div>
 
-        <div className={styles.caption}>{current.say}</div>
+        {g && (
+          <div className={styles.right}>
+            <svg className={styles.graph} viewBox={`0 0 ${g.W} ${g.H}`} key={scene.id}>
+              <defs>
+                <marker id="ahead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0 0 L10 5 L0 10 z" className={styles.arrowHead} />
+                </marker>
+              </defs>
 
-        <div className={styles.progressbar}>
-          <div className={styles.pfill} style={{ width: `${pct}%`, background: scene.color }} />
-        </div>
-
-        <div className={styles.foot}>
-          <button className={styles.ctrl} onClick={goPrev} disabled={seg === 0} aria-label="Zurück">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="11 19 2 12 11 5 11 19" />
-              <polygon points="22 19 13 12 22 5 22 19" />
-            </svg>
-          </button>
-
-          <button className={styles.play} style={{ background: scene.color }} onClick={togglePlay}>
-            {playing ? (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
-                <rect x="6" y="5" width="4" height="14" rx="1" />
-                <rect x="14" y="5" width="4" height="14" rx="1" />
-              </svg>
-            ) : (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
-                <polygon points="6 4 20 12 6 20 6 4" />
-              </svg>
-            )}
-          </button>
-
-          <button
-            className={styles.ctrl}
-            onClick={goNext}
-            disabled={seg === segments.length - 1}
-            aria-label="Weiter"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="13 5 22 12 13 19 13 5" />
-              <polygon points="2 5 11 12 2 19 2 5" />
-            </svg>
-          </button>
-
-          <button className={styles.ctrl} onClick={restart} aria-label="Von vorne">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="1 4 1 10 7 10" />
-              <path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10" />
-            </svg>
-          </button>
-
-          <div className={styles.progress}>
-            <div className={styles.dots}>
-              {segments.map((_, i) => (
-                <span
-                  key={i}
-                  className={`${styles.dot} ${i === seg ? styles.dotOn : ''}`}
-                  style={i === seg ? { background: scene.color } : undefined}
-                />
+              {/* Gitter */}
+              {g.gridX.map((t, i) => (
+                <line key={`gx${i}`} x1={t.px} y1={g.pad} x2={t.px} y2={g.H - g.pad} className={styles.gridline} />
               ))}
-            </div>
-            <span className={styles.count}>
-              {seg + 1} / {segments.length}
-            </span>
+              {g.gridY.map((t, i) => (
+                <line key={`gy${i}`} x1={g.pad} y1={t.py} x2={g.W - g.pad} y2={t.py} className={styles.gridline} />
+              ))}
+
+              {/* Fläche unter der Kurve (Integral) */}
+              {g.shade && <path d={g.shade} className={styles.shade} fill={scene.color} />}
+
+              {/* Achsen mit Pfeilspitze */}
+              <line x1={g.pad} y1={g.y0} x2={g.W - g.pad} y2={g.y0} className={styles.axis} markerEnd="url(#ahead)" />
+              <line x1={g.x0} y1={g.H - g.pad} x2={g.x0} y2={g.pad} className={styles.axis} markerEnd="url(#ahead)" />
+
+              {/* Zahlen an den Achsen */}
+              {g.gridX.map((t, i) =>
+                t.x === 0 ? null : (
+                  <text key={`lx${i}`} x={t.px} y={g.y0 + 12} className={styles.gridlabel} textAnchor="middle">
+                    {Number.isInteger(t.x) ? t.x : t.x.toFixed(1)}
+                  </text>
+                ),
+              )}
+              {g.gridY.map((t, i) =>
+                t.y === 0 ? null : (
+                  <text key={`ly${i}`} x={g.x0 - 6} y={t.py + 3} className={styles.gridlabel} textAnchor="end">
+                    {Number.isInteger(t.y) ? t.y : t.y.toFixed(1)}
+                  </text>
+                ),
+              )}
+              <text x={g.W - g.pad - 2} y={g.y0 - 7} className={styles.axisLabel} textAnchor="end">
+                x
+              </text>
+              <text x={g.x0 + 9} y={g.pad + 3} className={styles.axisLabel}>
+                y
+              </text>
+
+              {/* Kurve */}
+              <path d={g.d} pathLength={1} className={styles.curve} stroke={scene.color} />
+
+              {/* Markierte Punkte */}
+              {current.marks.map((m, i) => (
+                <g key={i} className={styles.markG}>
+                  <circle cx={g.sx(m.x)} cy={g.sy(m.y)} r={5} fill={scene.color} stroke="#fff" strokeWidth={2} />
+                  <text x={g.sx(m.x)} y={g.sy(m.y) - 10} className={styles.markLabel} textAnchor="middle">
+                    {m.label}
+                  </text>
+                </g>
+              ))}
+            </svg>
           </div>
+        )}
+      </div>
+
+      <div className={styles.caption}>{current.say}</div>
+
+      <div className={styles.progressbar}>
+        <div className={styles.pfill} style={{ width: `${pct}%`, background: scene.color }} />
+      </div>
+
+      <div className={styles.foot}>
+        <button className={styles.ctrl} onClick={goPrev} disabled={seg === 0} aria-label="Zurück">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="11 19 2 12 11 5 11 19" />
+            <polygon points="22 19 13 12 22 5 22 19" />
+          </svg>
+        </button>
+
+        <button className={styles.play} style={{ background: scene.color }} onClick={togglePlay}>
+          {playing ? (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
+              <rect x="6" y="5" width="4" height="14" rx="1" />
+              <rect x="14" y="5" width="4" height="14" rx="1" />
+            </svg>
+          ) : (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
+              <polygon points="6 4 20 12 6 20 6 4" />
+            </svg>
+          )}
+        </button>
+
+        <button
+          className={styles.ctrl}
+          onClick={goNext}
+          disabled={seg === segments.length - 1}
+          aria-label="Weiter"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="13 5 22 12 13 19 13 5" />
+            <polygon points="2 5 11 12 2 19 2 5" />
+          </svg>
+        </button>
+
+        <button className={styles.ctrl} onClick={restart} aria-label="Von vorne">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="1 4 1 10 7 10" />
+            <path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10" />
+          </svg>
+        </button>
+
+        <div className={styles.progress}>
+          <div className={styles.dots}>
+            {segments.map((_, i) => (
+              <span
+                key={i}
+                className={`${styles.dot} ${i === seg ? styles.dotOn : ''}`}
+                style={i === seg ? { background: scene.color } : undefined}
+              />
+            ))}
+          </div>
+          <span className={styles.count}>
+            {seg + 1} / {segments.length}
+          </span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// Modal-Hülle: unverändertes Verhalten für Themenseiten, Videos und Landing.
+export default function SceneModal({ scene, onClose }: { scene: Scene | null; onClose: () => void }) {
+  if (!scene) return null;
+  return (
+    <div className={styles.backdrop} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <ScenePlayer scene={scene} onClose={onClose} />
       </div>
     </div>
   );

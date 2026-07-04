@@ -7,7 +7,7 @@ import { SCENES, Scene } from '@/lib/scenes';
 import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
 import { LINALG_TASKS } from '@/lib/linalgTasks';
 import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
-import SceneModal from '@/components/SceneModal';
+import { ScenePlayer } from '@/components/SceneModal';
 import AskDrawer from '@/components/AskDrawer';
 import styles from './feed.module.css';
 
@@ -81,7 +81,7 @@ export default function FeedPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
   const { isSaved, toggleSaved } = useProgress();
-  const [video, setVideo] = useState<Scene | null>(null);
+  const [playing, setPlaying] = useState<string | null>(null);
   const [askOpen, setAskOpen] = useState(false);
   const [askCtx, setAskCtx] = useState('');
   const [askSnippet, setAskSnippet] = useState('');
@@ -95,11 +95,15 @@ export default function FeedPage() {
   }, [loading, user, router]);
 
   // Aktuelles Video aus der Scroll-Position ableiten (für den Fortschritt oben).
+  // Wer weiterswipet, stoppt damit automatisch die laufende Wiedergabe.
   const onScroll = () => {
     const el = feedRef.current;
     if (!el) return;
     const i = Math.round(el.scrollTop / el.clientHeight);
-    if (i !== idx && i >= 0 && i < FEED.length) setIdx(i);
+    if (i !== idx && i >= 0 && i < FEED.length) {
+      setIdx(i);
+      setPlaying(null);
+    }
   };
 
   const openTopic = (topicId: string, tab: 'zusammenfassung' | 'uebungen') => {
@@ -131,8 +135,8 @@ export default function FeedPage() {
 
   return (
     <div className={styles.wrap}>
-      {/* Kopf-Overlay: zurück, Fortschritt, Zähler */}
-      <div className={styles.top}>
+      {/* Kopf-Overlay: zurück, Fortschritt, Zähler (bei Wiedergabe ausgeblendet) */}
+      <div className={styles.top} style={playing ? { display: 'none' } : undefined}>
         <button className={styles.back} onClick={() => router.back()} aria-label="Zurück">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
@@ -165,7 +169,7 @@ export default function FeedPage() {
                     <path d={item.path} fill="none" stroke="#ffffff" strokeOpacity="0.32" strokeWidth="3" strokeLinecap="round" />
                   </svg>
                   {scene.func && <div className={styles.func}>{scene.func}</div>}
-                  <button className={styles.play} onClick={() => setVideo(scene)} aria-label={`${scene.title} abspielen`}>
+                  <button className={styles.play} onClick={() => setPlaying(scene.id)} aria-label={`${scene.title} abspielen`}>
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="7 4 21 12 7 20 7 4" />
                     </svg>
@@ -173,6 +177,14 @@ export default function FeedPage() {
                   <div className={styles.playHint}>Tippen zum Abspielen, mit Stimme</div>
                 </div>
 
+                {/* Inline-Wiedergabe: der Player läuft direkt im Slide */}
+                {playing === scene.id && (
+                  <div className={styles.playerWrap}>
+                    <ScenePlayer scene={scene} autoPlay onClose={() => setPlaying(null)} />
+                  </div>
+                )}
+
+                {playing !== scene.id && (<>
                 {/* Aktions-Leiste rechts */}
                 <aside className={styles.rail}>
                   {item.task && (
@@ -266,6 +278,7 @@ export default function FeedPage() {
                 ) : (
                   <div className={styles.next}>Du bist durch! Neue Videos kommen laufend dazu.</div>
                 )}
+                </>)}
               </div>
             </section>
           );
@@ -274,7 +287,6 @@ export default function FeedPage() {
 
       {copied && <div className={styles.toast}>Link kopiert</div>}
 
-      <SceneModal scene={video} onClose={() => setVideo(null)} />
       <AskDrawer open={askOpen} ctx={askCtx} snippet={askSnippet} onClose={() => setAskOpen(false)} />
     </div>
   );

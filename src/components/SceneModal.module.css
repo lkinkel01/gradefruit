@@ -24,6 +24,18 @@
   animation: pop 0.2s ease;
 }
 
+/* Wurzel des wiederverwendbaren Players: füllt im Lernfeed den ganzen Rahmen,
+   im Modal verhält er sich wie bisher (Höhe folgt dem Inhalt). */
+.player {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--surface);
+}
+.player .foot { margin-top: auto; }
+
 /* ---------- Kopfzeile ---------- */
 .head {
   display: flex;
