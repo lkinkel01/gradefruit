@@ -55,8 +55,8 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), global aufgewertete Buttons
 - ✅ Impressum, Datenschutz
 - ✅ Dark Mode (persistiert, kein Aufblitzen beim Laden)
-- 🟡 **Lernfeed** (`/feed`, vertikaler Swipe-Feed der Erklärvideos, Login-Gate):
-  fertig gebaut + getestet, aber **noch NICHT deployt** (nur lokal)
+- ✅ **Lernfeed** (`/feed`): vertikaler Swipe-Feed der Erklärvideos (Scroll-Snap,
+  ein Video pro Wisch), nur für eingeloggte Nutzer, Einstieg über die Sidebar
 
 ## Bekannte Probleme / offen
 - 🔴 **Stripe im TEST-Modus** — echte Kunden können NICHT zahlen. Umstellung auf
@@ -70,8 +70,8 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 ## Nächste sinnvolle Schritte
 1. Safari-Dark-Mode verifizieren (Leon).
 2. **Stripe TEST → LIVE** schalten (echter Umsatz), davor AGB/Widerruf/MwSt-Ausweis.
-3. Lernfeed reviewen und deployen (liegt fertig im Arbeitsverzeichnis).
-4. Mehr Aufgaben / Themen-Tiefe; Erklärvideos an Aufgaben verknüpfen (`videoId`).
+3. Übersichts-Zähler an echte Aufgabenzahlen anpassen (statische 24/18/16 in types.ts).
+4. Mehr Aufgaben / Themen-Tiefe; weitere Erklärvideos produzieren und verknüpfen.
 5. (Optional) Inhalte server-seitig laden (Härtung der Bezahlschranke).
 
 ## Arbeitsteilung & Regeln

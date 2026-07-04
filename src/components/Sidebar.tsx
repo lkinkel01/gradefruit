@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import styles from './Sidebar.module.css';
@@ -31,6 +32,7 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function Sidebar({ view, owned, ownedLk, onNavigate, onOpenCheckout }: Props) {
+  const router = useRouter();
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
@@ -76,6 +78,13 @@ export default function Sidebar({ view, owned, ownedLk, onNavigate, onOpenChecko
             <span className={styles.ti}>{item.label}</span>
           </button>
         ))}
+        {/* Lernfeed – eigener Swipe-Feed unter der Route /feed (Client-Navigation). */}
+        <button onClick={() => router.push('/feed')}>
+          <span className={styles.icon}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3" /><polygon points="10 8.5 15 12 10 15.5" fill="currentColor" stroke="none" /></svg>
+          </span>
+          <span className={styles.ti}>Lernfeed</span>
+        </button>
       </nav>
 
       <div style={{ flex: 1 }} />

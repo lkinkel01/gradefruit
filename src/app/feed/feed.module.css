@@ -1,0 +1,215 @@
+/* Lernfeed – vertikaler Swipe-Feed (full-screen, Scroll-Snap).
+   Nutzt Gradefruit-Design-Tokens (CSS-Variablen) + die Szenen-Farbe.
+   Bewegungen respektieren automatisch prefers-reduced-motion (globals.css). */
+@keyframes gfFeedIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes gfBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+.wrap {
+  position: relative;
+  height: 100vh; /* Fallback für ältere iOS-Safari ohne dvh */
+  height: 100dvh;
+  background: var(--canvas);
+  overflow: hidden;
+  animation: gfFeedIn 0.4s ease both;
+}
+
+/* Kopfbereich: Zurück-Button + Titel + kurze Einführung, liegt über dem Feed. */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 15;
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 18px 30px;
+  background: linear-gradient(180deg, var(--canvas) 42%, transparent);
+  pointer-events: none; /* Swipe geht durch den Header hindurch ... */
+}
+.topRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 460px;
+  margin: 0 auto;
+}
+.intro {
+  min-width: 0;
+}
+.feedTitle {
+  font-family: 'Schibsted Grotesk', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.feedSub {
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.35;
+  margin-top: 3px;
+}
+
+.back {
+  pointer-events: auto; /* ... nur der Button reagiert auf Tippen */
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.back:hover {
+  border-color: var(--accent);
+  color: var(--accent-d);
+}
+.back:active {
+  transform: scale(0.94);
+}
+
+.feed {
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain; /* kein Pull-to-Refresh / Bounce der Seite */
+  -webkit-overflow-scrolling: touch;
+}
+
+.slide {
+  height: 100vh;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always; /* ein Video pro Wisch */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: min(84vh, 760px);
+  height: min(84dvh, 760px);
+  border-radius: 26px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 26px;
+  box-shadow: 0 24px 70px rgba(20, 15, 30, 0.30);
+  overflow: hidden;
+}
+/* dezenter Glanz oben – wirkt hochwertiger */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 42%);
+  pointer-events: none;
+}
+.spacer {
+  flex: 1;
+}
+
+.badge {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.title {
+  position: relative;
+  z-index: 1;
+  font-family: 'Schibsted Grotesk', sans-serif;
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.func {
+  position: relative;
+  z-index: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  opacity: 0.92;
+  margin-bottom: 20px;
+}
+.play {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: #fff;
+  color: #15141a;
+  border: none;
+  border-radius: 999px;
+  padding: 13px 22px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.play:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 9px 24px rgba(0, 0, 0, 0.22);
+}
+.play:active {
+  transform: scale(0.97);
+}
+
+.hint {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  color: var(--muted);
+  font-size: 12.5px;
+  pointer-events: none;
+}
+.hint svg {
+  animation: gfBob 1.6s ease-in-out infinite;
+}
+
+/* Login-Gate / Ladezustand – schlicht wie der Rest der App */
+.gate {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--canvas);
+  color: var(--muted);
+  font-family: inherit;
+}
