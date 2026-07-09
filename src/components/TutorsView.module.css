@@ -3,46 +3,19 @@
 .ph1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
 .pblurb { font-size: 15.5px; color: var(--muted); max-width: 60ch; margin-bottom: 20px; }
 
-.list { display: flex; flex-direction: column; gap: 12px; }
-.tutorCard {
-  display: flex; gap: 16px; align-items: center;
+/* Bald-verfügbar-Karte (ehrlicher Platzhalter statt erfundener Profile) */
+.soonCard {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px;
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 40px 28px 34px; text-align: center;
+  display: flex; flex-direction: column; align-items: center;
 }
-.tav {
-  width: 52px; height: 52px; flex: 0 0 52px; border-radius: 99px;
-  background: var(--accent); color: #fff;
+.soonBadge {
+  width: 54px; height: 54px; border-radius: 16px;
+  background: var(--accent-soft); color: var(--accent-d);
   display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 16px;
+  margin-bottom: 16px;
 }
-.tinfo { flex: 1; min-width: 0; }
-.tn { font-weight: 600; font-size: 16px; }
-.tf { font-size: 13px; color: var(--accent-d); font-weight: 500; margin-top: 1px; }
-.trow { margin: 6px 0 5px; }
-.trate { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--muted); }
-.tbio { font-size: 13px; color: var(--muted); }
-.tbook { text-align: right; flex: 0 0 auto; }
-.tprice { font-family: 'Schibsted Grotesk', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 8px; }
-.tprice small { font-size: 11px; color: var(--faint); font-weight: 400; }
-
-.bookPanel {
-  margin-top: 20px; background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow);
-}
-.bookPanel h3 { font-size: 18px; margin-bottom: 4px; }
-.sech { font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--faint); margin: 16px 0 10px; }
-.slots { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-.slot {
-  border: 1px solid var(--line-strong); background: var(--surface);
-  border-radius: 11px; padding: 9px 13px; font-family: inherit;
-  font-size: 13px; cursor: pointer; color: var(--ink);
-}
-.selSlot { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-d); font-weight: 600; }
-.demohint { font-size: 12px; color: var(--muted); background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; margin-bottom: 14px; }
-
-@media (max-width: 560px) {
-  .page { padding: 22px 18px 96px; }
-  .tutorCard { flex-wrap: wrap; }
-  .tbook { text-align: left; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .tprice { margin-bottom: 0; }
-}
+.soonTitle { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
+.soonText { font-size: 14.5px; color: var(--muted); max-width: 52ch; line-height: 1.6; margin-bottom: 14px; }
+.soonHint { font-size: 13px; color: var(--faint); max-width: 52ch; line-height: 1.55; }

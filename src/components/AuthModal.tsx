@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
 import styles from './AuthModal.module.css';
 import modalStyles from './Modal.module.css';
@@ -39,6 +39,16 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Prop
   const [loading, setLoading] = useState(false);
 
   const reset = () => { setError(''); setInfo(''); };
+
+  // Beim Öffnen dem gewünschten Modus folgen. Ohne das bliebe das Fenster im
+  // Modus des ERSTEN Öffnens hängen ("Registrieren" öffnete den Login).
+  useEffect(() => {
+    if (open) {
+      setMode(initialMode);
+      reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initialMode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

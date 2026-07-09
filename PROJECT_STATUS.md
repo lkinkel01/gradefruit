@@ -81,6 +81,9 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   `hasAudio: true` setzen.
 
 ## Bekannte Probleme / offen
+- 🟡 **Fortschritts-Zähler** („x/79 Aufgaben" in Sidebar/Übersicht) zählen die
+  DB-Tabelle `lessons` (79 Einträge), nicht die 133 echten Aufgaben aus den
+  Task-Dateien. Angleichen = kleine DB-/Kontext-Arbeit (eigener Sprint).
 - 🔴 **Stripe im TEST-Modus** — echte Kunden können NICHT zahlen. Umstellung auf
   LIVE (Live-Keys in Vercel + Live-Webhook inkl. `charge.refunded`) = **größter
   Go-Live-Schritt für echten Umsatz.**

@@ -19,7 +19,8 @@ import styles from './page.module.css';
 // Ohne Login frei zugänglich (Probezugang): Übersicht, alle Themenseiten und Konto.
 // Achtung: Inhalt bleibt pro Stufe gesperrt – nur Analysis ist gratis, der Rest
 // zeigt Gästen nur die Vorschau-Sperre mit Kauf-Hinweis.
-const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'linalg', 'stochastik', 'account', 'landing'];
+// 'tutors' ist eine reine Info-Seite (Nachhilfe „bald verfügbar") – kein Kauf nötig.
+const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors'];
 // Themen-Seiten mit eigener Bezahlschranke – Eingeloggte dürfen sie immer öffnen
 // (die Sperre pro Kursstufe steckt direkt in der Themenseite).
 const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
@@ -275,6 +276,7 @@ export default function Home() {
           view={view}
           owned={owned}
           ownedLk={ownedLk}
+          level={level}
           onNavigate={navigate}
           onOpenCheckout={() => openCheckout('gk')}
         />

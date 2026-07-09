@@ -8,6 +8,7 @@ interface Props {
   view: View;
   owned: boolean;
   ownedLk: boolean;
+  level: 'gk' | 'lk';
   onNavigate: (v: View) => void;
   onOpenCheckout: () => void;
 }
@@ -31,7 +32,7 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
-export default function Sidebar({ view, owned, ownedLk, onNavigate, onOpenCheckout }: Props) {
+export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
   const router = useRouter();
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
@@ -45,7 +46,7 @@ export default function Sidebar({ view, owned, ownedLk, onNavigate, onOpenChecko
 
       <div className={styles.course}>
         <div className={styles.courseTitle}>Mathe-Abi Hessen 2027</div>
-        <div className={styles.courseSub}>Grundkurs · {totalDone}/{totalLessons} Aufgaben</div>
+        <div className={styles.courseSub}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'} · {totalDone}/{totalLessons} Aufgaben</div>
         <div className={styles.prog}>
           <div className={styles.bar}><i style={{ width: `${pct}%` }} /></div>
           <div className={styles.progLbl}>{pct}% abgeschlossen</div>
@@ -96,7 +97,7 @@ export default function Sidebar({ view, owned, ownedLk, onNavigate, onOpenChecko
         </div>
       ) : (
         <div className={styles.unlockCard}>
-          <p>Schalte alle Aufgaben, Videos und Tutor-Buchungen frei.</p>
+          <p>Schalte alle Aufgaben, Lösungen und Erklärvideos frei.</p>
           <button className="btn primary btn sm" style={{ width: '100%', fontSize: 13 }} onClick={onOpenCheckout}>
             Vollzugang — 79 €
           </button>

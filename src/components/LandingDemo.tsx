@@ -79,10 +79,7 @@ export default function LandingDemo({ onRegister }: Props) {
   return (
     <div className={styles.demo}>
       <div className={styles.head}>
-        <span className={styles.live}>
-          <span className={styles.pulse} />
-          Live-Demo
-        </span>
+        <span className={styles.live}>Interaktive Vorschau</span>
         <span className={styles.headSub}>Analysis · gratis</span>
       </div>
 

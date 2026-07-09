@@ -118,7 +118,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroText}>
-          <div className={styles.eyebrow}>Mathe-Abi Hessen 2027 · Grundkurs und Leistungskurs</div>
+          <p className={styles.kicker}>Mathe-Abitur 2027 in Hessen · Grundkurs und Leistungskurs</p>
           <h1>
             Dein ganzes Mathe-Abi.<br />
             <span className={styles.grad}>An einem Ort.</span>
@@ -168,7 +168,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
 
       {/* Subject overview */}
       <section className={styles.lsec}>
-        <div className={styles.lh}>Was dich im Abi erwartet</div>
+        <h2 className={styles.h2}>Was dich im Abi erwartet</h2>
         <p className={styles.secIntro}>
           Drei Prüfungsgebiete, aufgebaut nach dem hessischen Lehrplan.
         </p>
@@ -207,7 +207,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
 
       {/* Pricing */}
       <section className={styles.lsec} id="preise">
-        <div className={styles.lh}>Preise</div>
+        <h2 className={styles.h2}>Preise</h2>
         <p className={styles.secIntro}>
           Wähle deinen Kurs. Beides gibt es als Einmalzahlung oder als Monatsabo,
           jederzeit kündbar. Analysis testest du vorher gratis.
