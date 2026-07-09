@@ -47,29 +47,16 @@
 .dbody { flex: 1; overflow-y: auto; padding: 8px 18px 16px; }
 .empty { text-align: center; color: var(--faint); font-size: 13.5px; padding: 24px 10px; line-height: 1.6; }
 
-/* Coach-Begrüßung im leeren Zustand */
-.coach { display: flex; gap: 11px; align-items: flex-start; padding: 14px 2px 4px; }
-.coachAvatar {
-  flex: 0 0 34px; height: 34px; border-radius: 12px;
-  background: linear-gradient(135deg, #FF8A73, #E2382C); color: #fff;
-  display: flex; align-items: center; justify-content: center;
+/* Ruhiger Einstieg: Beispielfragen erst nach Klick */
+.starter { padding: 10px 2px 0; }
+.presetsToggle {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line); background: var(--surface);
+  color: var(--muted); border-radius: 99px; padding: 7px 13px;
+  font-family: inherit; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; transition: .15s; margin-bottom: 10px;
 }
-.coachText { font-size: 13.5px; color: var(--ink); line-height: 1.55; padding-top: 2px; }
-
-/* Upload-Zone: Eigene Lösung prüfen lassen */
-.dropzone {
-  display: flex; flex-direction: column; align-items: center; text-align: center;
-  gap: 6px; width: 100%; margin: 12px 0 4px;
-  border: 1.5px dashed var(--line-strong); border-radius: 14px;
-  background: var(--surface-2); color: var(--muted);
-  padding: 18px 16px; cursor: pointer; font-family: inherit;
-  transition: border-color .15s, background .15s, color .15s;
-}
-.dropzone:hover { border-color: var(--accent); color: var(--accent-d); background: var(--accent-soft); }
-.dropzone:disabled { opacity: .6; cursor: not-allowed; }
-.dropTitle { font-size: 13.5px; font-weight: 700; color: var(--ink); }
-.dropzone:hover .dropTitle { color: var(--accent-d); }
-.dropText { font-size: 12.5px; line-height: 1.5; max-width: 34ch; }
+.presetsToggle:hover { border-color: var(--accent); color: var(--accent-d); }
 
 .msg { font-size: 14px; line-height: 1.5; padding: 11px 14px; border-radius: 14px; max-width: 92%; margin-bottom: 7px; white-space: pre-wrap; word-break: break-word; }
 .q { margin-left: auto; background: var(--accent); color: #fff; border-bottom-right-radius: 5px; }
@@ -132,11 +119,21 @@
   border: 1px solid var(--line-strong) !important; padding: 0 12px !important;
 }
 .attachBtn:hover:not(:disabled) { color: var(--accent-d) !important; border-color: var(--accent) !important; }
-/* Platzhalter für die kommende Spracheingabe */
+/* Spracheingabe: tippen, sprechen, Text landet im Eingabefeld */
 .micBtn {
-  background: transparent !important; color: var(--faint) !important;
-  border: 1.5px dashed var(--line-strong) !important; padding: 0 11px !important;
-  cursor: not-allowed !important; opacity: 1 !important;
+  background: var(--surface-2) !important; color: var(--muted) !important;
+  border: 1px solid var(--line-strong) !important; padding: 0 11px !important;
+}
+.micBtn:hover:not(:disabled) { color: var(--accent-d) !important; border-color: var(--accent) !important; }
+.micBtn:disabled { opacity: .45 !important; }
+.micOn {
+  background: var(--accent) !important; color: #fff !important;
+  border-color: var(--accent) !important;
+  animation: micPulse 1.2s infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(233, 106, 76, 0.4); }
+  50% { box-shadow: 0 0 0 7px rgba(233, 106, 76, 0); }
 }
 .askform button:disabled { opacity: .5; cursor: not-allowed; }
 .pchip:disabled { opacity: .6; cursor: not-allowed; }

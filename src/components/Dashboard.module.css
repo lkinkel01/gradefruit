@@ -3,6 +3,25 @@
 .ph1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
 .pblurb { font-size: 15.5px; color: var(--muted); max-width: 60ch; margin-bottom: 20px; }
 
+/* Prüfungs-Countdown */
+.examCard {
+  display: flex; align-items: center; gap: 18px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 16px; padding: 16px 20px; margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.examDays { display: flex; flex-direction: column; align-items: center; min-width: 86px; }
+.examNum {
+  font-family: 'Schibsted Grotesk', sans-serif;
+  font-weight: 800; font-size: 34px; line-height: 1;
+  color: var(--accent-d); letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.examLabel { font-size: 10.5px; color: var(--faint); margin-top: 4px; text-align: center; }
+.examMeta { display: flex; flex-direction: column; gap: 3px; border-left: 1px solid var(--line); padding-left: 18px; }
+.examTitle { font-size: 14px; font-weight: 650; }
+.examDate { font-size: 12.5px; color: var(--muted); }
+
 /* Kurs-Zeile: Anzeige bzw. einmalige Wahl der Kursstufe */
 .courseRow { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
 .courseLabel { font-size: 12.5px; font-weight: 600; color: var(--faint); }

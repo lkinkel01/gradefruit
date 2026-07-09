@@ -123,12 +123,7 @@ export default function TopicView({ topicId, level, owned, ownedLk, onOpenChecko
 
   return (
     <div className={styles.page}>
-      <div className={styles.thead}>
-        <span className={styles.tbadge} style={{ background: topic.color }}>{topic.badge}</span>
-        <span className={styles.levelChip}>{levelLabel}</span>
-      </div>
       <h1 className={styles.ph1}>{topic.label}</h1>
-      <p className={styles.pblurb}>Prüfungsnahe Aufgaben im Abitur-Stil, mit Zusammenfassung, Formeln und Schritt-für-Schritt-Lösungen.</p>
 
       {hasAccess && (
         <div className={styles.progressRow}>
@@ -184,13 +179,6 @@ export default function TopicView({ topicId, level, owned, ownedLk, onOpenChecko
         </div>
       ) : tab === 'zusammenfassung' && summary ? (
         <div className={styles.summaryWrap}>
-          <p className={styles.summaryIntro}>{summary.intro}</p>
-          <p className={styles.aiHint}>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 3l1.9 5.2L19 10l-5.1 1.8L12 17l-1.9-5.2L5 10l5.1-1.8z" />
-            </svg>
-            Tippe auf eine Formel und der Coach erklärt sie dir.
-          </p>
           {summary.sections.map((sec, i) => (
             <div key={sec.title} className={styles.sumCard} style={{ animationDelay: `${i * 45}ms` }}>
               <div className={styles.sumHead}>

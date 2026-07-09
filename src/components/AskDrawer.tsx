@@ -19,6 +19,17 @@ interface Attachment {
   name: string;
 }
 
+// Schmale Typen für die Web Speech API (nicht in allen TS-DOM-Libs enthalten)
+interface SpeechRec {
+  lang: string;
+  interimResults: boolean;
+  onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null;
+  onend: (() => void) | null;
+  onerror: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
 const PRESETS = [
   'Erkläre mir diesen Schritt nochmal',
   'Gibt es eine einfachere Methode?',
@@ -59,8 +70,12 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
   const [busy, setBusy] = useState(false);
   const [attachment, setAttachment] = useState<Attachment | null>(null);
   const [fileError, setFileError] = useState('');
+  const [showPresets, setShowPresets] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [voiceReady, setVoiceReady] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
+  const recRef = useRef<{ stop: () => void } | null>(null);
 
   // Beim Öffnen / Themenwechsel alles zurücksetzen
   useEffect(() => {
@@ -69,8 +84,40 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
       setAttachment(null);
       setFileError('');
       setInput('');
+      setShowPresets(false);
+    } else {
+      recRef.current?.stop();
     }
   }, [open, ctx]);
+
+  // Spracheingabe: läuft komplett im Browser (Web Speech API), kein Server.
+  useEffect(() => {
+    const w = window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown };
+    setVoiceReady(!!(w.SpeechRecognition || w.webkitSpeechRecognition));
+  }, []);
+
+  const toggleVoice = () => {
+    if (listening) {
+      recRef.current?.stop();
+      return;
+    }
+    const w = window as unknown as { SpeechRecognition?: new () => SpeechRec; webkitSpeechRecognition?: new () => SpeechRec };
+    const SR = w.SpeechRecognition ?? w.webkitSpeechRecognition;
+    if (!SR) return;
+    const rec = new SR();
+    rec.lang = 'de-DE';
+    rec.interimResults = true;
+    rec.onresult = (e) => {
+      let text = '';
+      for (let i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
+      setInput(text);
+    };
+    rec.onend = () => setListening(false);
+    rec.onerror = () => setListening(false);
+    recRef.current = rec;
+    setListening(true);
+    rec.start();
+  };
 
   // Automatisch nach unten scrollen, wenn neue Inhalte kommen
   useEffect(() => {
@@ -212,29 +259,21 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
         <div className={styles.dbody} ref={bodyRef}>
           {messages.length === 0 && !busy && (
             mode === 'ki' ? (
-              <>
-                <div className={styles.coach}>
-                  <div className={styles.coachAvatar}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 3l1.9 5.2L19 10l-5.1 1.8L12 17l-1.9-5.2L5 10l5.1-1.8z" />
-                    </svg>
-                  </div>
-                  <div className={styles.coachText}>
-                    Hi! Ich bin dein Gradefruit-Coach. Frag mich alles zu {ctx || 'Mathe'} und
-                    ich erkläre es dir Schritt für Schritt, so lange, bis es sitzt.
-                  </div>
-                </div>
-                <button className={styles.dropzone} onClick={() => fileInputRef.current?.click()} disabled={busy} type="button">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
+              <div className={styles.starter}>
+                <button className={styles.presetsToggle} onClick={() => setShowPresets(s => !s)}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <polyline points={showPresets ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
                   </svg>
-                  <span className={styles.dropTitle}>Eigene Lösung prüfen lassen</span>
-                  <span className={styles.dropText}>
-                    Foto oder PDF hochladen (max. 4 MB). Ich gehe deine Rechnung durch,
-                    zeige dir, wo es hakt, und lobe, was schon richtig ist.
-                  </span>
+                  Beispielfragen
                 </button>
-              </>
+                {showPresets && (
+                  <div className={styles.presets}>
+                    {PRESETS.map(p => (
+                      <button key={p} className={styles.pchip} onClick={() => send(p)} disabled={busy}>{p}</button>
+                    ))}
+                  </div>
+                )}
+              </div>
             ) : (
               <div className={styles.empty}>
                 Persönliche Tutoren sind bald verfügbar. Wechsle zu „Sofort per KI",
@@ -252,14 +291,6 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
               </div>
             );
           })}
-          {messages.length === 0 && !busy && mode === 'ki' && (
-            <div className={styles.presets}>
-              <div className={styles.pt}>Oder starte mit einer Frage</div>
-              {PRESETS.map(p => (
-                <button key={p} className={styles.pchip} onClick={() => send(p)} disabled={busy}>{p}</button>
-              ))}
-            </div>
-          )}
         </div>
 
         <div className={styles.dfoot}>
@@ -298,10 +329,11 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
             />
             <button
               type="button"
-              className={styles.micBtn}
-              disabled
-              title="Spracheingabe bald verfügbar"
-              aria-label="Spracheingabe bald verfügbar"
+              className={`${styles.micBtn} ${listening ? styles.micOn : ''}`}
+              onClick={toggleVoice}
+              disabled={!voiceReady || busy}
+              title={voiceReady ? (listening ? 'Aufnahme beenden' : 'Frage einsprechen') : 'Spracheingabe wird von diesem Browser nicht unterstützt'}
+              aria-label={listening ? 'Aufnahme beenden' : 'Frage einsprechen'}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="9" y="2" width="6" height="12" rx="3" /><path d="M5 10v1a7 7 0 0 0 14 0v-1" /><line x1="12" y1="19" x2="12" y2="22" />

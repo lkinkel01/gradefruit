@@ -159,7 +159,7 @@ export default function FeedPage() {
                 {/* Video-Bühne */}
                 <div
                   className={styles.stage}
-                  style={{ background: `radial-gradient(120% 90% at 50% 8%, ${scene.color}55 0%, ${scene.color}18 42%, transparent 70%), #0C0B11` }}
+                  style={{ background: `radial-gradient(120% 90% at 50% 8%, ${scene.color}55 0%, ${scene.color}18 42%, transparent 70%), #141110` }}
                 >
                   <svg className={styles.curve} viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">
                     <path d={item.path} fill="none" stroke="#ffffff" strokeOpacity="0.32" strokeWidth="3" strokeLinecap="round" />

@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 06: Lernfeed V2)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 07: Design-Reife)
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -60,6 +60,19 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), global aufgewertete Buttons
 - ✅ Impressum, Datenschutz
 - ✅ Dark Mode (persistiert, kein Aufblitzen beim Laden)
+- ✅ Design-Reife (Sprint 07, 07/2026): neues **Grapefruit-Logo**
+  (`src/components/Logo.tsx`, flache Scheibe mit Segmentlinien + gefülltem
+  Lern-Keil; `filled`-Prop 0–6 vorbereitet für Fortschritt/Level), **warme
+  Farbwelt** (Papier-Beige statt kühlem Grau, hell + dunkel + Feed),
+  zentrierter Hero („Die eine Plattform für dein Mathe-Abi"), Demo entfernt →
+  Funktions-Übersicht, „Preise"→„Kurse", Dashboard mit Namens-Begrüßung,
+  wechselnder Motivation und **Prüfungs-Countdown** (Platzhalter-Termin
+  03.05.2027 „voraussichtlich" – offiziellen Termin in `Dashboard.tsx`
+  eintragen!), Themenansicht ohne Badges/Einleitung, Zusammenfassung als
+  Karten-Raster, Sidebar-Hover-Untermenü (Zusammenfassung/Übungen), Coach
+  verschlankt (Beispielfragen hinter Klick) mit **funktionierender
+  Spracheingabe** (Web Speech API, browserseitig), „Erklärvideos" aus der
+  Navigation entfernt (Videos leben in Übungen + Swipe-Ansicht)
 - ✅ **Swipe-Ansicht** (`/feed`, „TikTok für Mathe"; Sidebar-Eintrag heißt so): volle dunkle Video-Bühne mit
   echtem Funktionsgraphen der Szene, Overlays im Reels-Stil (Thema, Titel,
   Beschreibung, Lernziel, geschätzte Dauer), Aktions-Leiste rechts (Üben +

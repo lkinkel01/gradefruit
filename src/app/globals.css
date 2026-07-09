@@ -1,34 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700;800&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
 
 :root {
-  --canvas: #F5F5F7;
+  /* Warme, natürliche Palette: Papier statt Klinik, Grapefruit statt Signalrot */
+  --canvas: #FAF6F1;
   --surface: #FFFFFF;
-  --surface-2: #FAFAFC;
-  --ink: #1D1D1F;
-  --muted: #6E6E73;
-  --faint: #A1A1A6;
-  --line: #E5E5EA;
-  --line-strong: #D6D6DB;
-  --accent: #F0524A;
-  --accent-d: #C9392F;
-  --accent-soft: #FCE9E6;
-  --green: #17B26A;
-  --green-soft: #E2F6EC;
-  --control: #ECEAF0;
-  --bubble-ai: #F0EEF3;
+  --surface-2: #FBF7F2;
+  --ink: #231F1B;
+  --muted: #71685F;
+  --faint: #A69B90;
+  --line: #EDE4DB;
+  --line-strong: #DDD1C5;
+  --accent: #E96A4C;
+  --accent-d: #C24E31;
+  --accent-soft: #FBEBE3;
+  --green: #23A468;
+  --green-soft: #E5F4EA;
+  --control: #F0E8E0;
+  --bubble-ai: #F4EDE5;
   --danger: #D92D20;
   --danger-soft: #FEF3F2;
   --danger-line: #FECDCA;
   --success: #0F7044;
   --success-line: #A7F0CC;
   --warn: #B45309;
-  --side: #16151C;
-  --side-2: #221F29;
-  --side-3: #312D3A;
-  --side-tx: #C7C4D0;
-  --side-faint: #7E7A88;
+  --side: #1C1613;
+  --side-2: #29211B;
+  --side-3: #382D25;
+  --side-tx: #D6CBC1;
+  --side-faint: #8B7E72;
   --radius: 16px;
-  --shadow: 0 1px 2px rgba(0,0,0,.03), 0 6px 20px rgba(0,0,0,.04);
+  --shadow: 0 1px 2px rgba(60,40,25,.03), 0 6px 20px rgba(60,40,25,.05);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -62,13 +63,13 @@ h1, h2, h3, h4 {
 }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn.primary {
-  background: linear-gradient(180deg, #FF6F63 0%, #EE4437 100%);
+  background: linear-gradient(180deg, #F0855F 0%, #E25A38 100%);
   color: #fff;
-  box-shadow: 0 1px 2px rgba(201,57,47,.35), 0 8px 20px rgba(240,82,74,.28);
+  box-shadow: 0 1px 2px rgba(194,78,49,.32), 0 8px 20px rgba(233,106,76,.26);
 }
 .btn.primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 3px rgba(201,57,47,.35), 0 12px 26px rgba(240,82,74,.34);
+  box-shadow: 0 2px 3px rgba(194,78,49,.32), 0 12px 26px rgba(233,106,76,.32);
 }
 .btn.primary:active { transform: translateY(0) scale(.98); }
 .btn.light { background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); }
@@ -78,21 +79,21 @@ h1, h2, h3, h4 {
 .btn.dark:hover { opacity: .9; }
 .btn.sm { padding: 9px 16px; font-size: 13.5px; }
 
-/* Dark mode */
+/* Dark mode: warmes Dunkelbraun statt kühlem Blau-Schwarz */
 body.dark {
-  --canvas: #121118;
-  --surface: #1B1A22;
-  --surface-2: #232229;
-  --ink: #F2F1F6;
-  --muted: #A7A5AF;
-  --faint: #777581;
-  --line: #2A2932;
-  --line-strong: #383743;
-  --accent-d: #FF7A6F;
-  --accent-soft: #34201E;
-  --green-soft: #16291F;
-  --control: #2A2932;
-  --bubble-ai: #262531;
+  --canvas: #171310;
+  --surface: #201B16;
+  --surface-2: #29221C;
+  --ink: #F5F0EA;
+  --muted: #B3A99D;
+  --faint: #7E7468;
+  --line: #2F2822;
+  --line-strong: #40372E;
+  --accent-d: #FF8D6B;
+  --accent-soft: #3A241B;
+  --green-soft: #1B2E22;
+  --control: #2F2822;
+  --bubble-ai: #2B241D;
   --danger: #FF6B5E;
   --danger-soft: #2A1614;
   --danger-line: #5A2620;
@@ -100,7 +101,7 @@ body.dark {
   --success-line: #1E4634;
   --warn: #F0A23B;
 }
-body.dark .topbar { background: rgba(18,17,24,.86); }
+body.dark .topbar { background: rgba(23,19,16,.86); }
 
 /* Beim Hell/Dunkel-Wechsel kurz ALLE Übergänge aus, damit die ganze Seite
    sofort und gleichzeitig umschaltet. Ohne das bleiben einzelne Flächen im

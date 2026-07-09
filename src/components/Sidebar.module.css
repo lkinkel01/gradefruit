@@ -48,6 +48,24 @@
 .snav button:hover { background: var(--side-2); color: #fff; }
 .snav button.on { background: var(--side-3); color: #fff; font-weight: 600; }
 
+/* Themen-Eintrag mit Hover-Untermenü (nur auf Geräten mit Maus) */
+.topicWrap { position: relative; }
+.flyout { display: none; }
+@media (hover: hover) and (min-width: 901px) {
+  .topicWrap:hover .flyout,
+  .flyout:hover {
+    display: flex; flex-direction: column; gap: 1px;
+    padding: 3px 0 3px 28px;
+  }
+}
+.flyItem {
+  display: block; text-align: left; width: 100%;
+  border: none; background: transparent; cursor: pointer;
+  font-family: inherit; font-size: 13px; color: var(--side-faint);
+  padding: 7px 11px; border-radius: 8px; transition: .13s;
+}
+.flyItem:hover { background: var(--side-2); color: #fff; }
+
 .cdot { width: 9px; height: 9px; border-radius: 99px; flex-shrink: 0; }
 .ti { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .icon { flex: 0 0 18px; display: flex; }

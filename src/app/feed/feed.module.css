@@ -14,7 +14,7 @@
   position: relative;
   height: 100vh;
   height: 100dvh;
-  background: #0C0B11;
+  background: #141110;
   overflow: hidden;
   animation: gfFeedIn 0.4s ease both;
 }
@@ -230,17 +230,17 @@
   z-index: 25;
   display: flex;
   flex-direction: column;
-  background: #0C0B11;
-  --surface: #15141C;
-  --surface-2: #1C1B24;
-  --bg: #0C0B11;
-  --canvas: #0C0B11;
-  --ink: #F2F1F6;
-  --muted: #A7A5AF;
-  --faint: #777581;
-  --line: #2A2932;
-  --line-strong: #383743;
-  --control: #2A2932;
+  background: #141110;
+  --surface: #1F1915;
+  --surface-2: #28211B;
+  --bg: #141110;
+  --canvas: #141110;
+  --ink: #F5F0EA;
+  --muted: #B3A99D;
+  --faint: #7E7468;
+  --line: #322A23;
+  --line-strong: #43382E;
+  --control: #322A23;
   animation: gfFeedIn 0.25s ease both;
   padding-top: calc(env(safe-area-inset-top, 0px) + 58px);
   padding-right: 60px;
@@ -289,7 +289,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0C0B11;
+  background: #141110;
   color: rgba(255, 255, 255, 0.7);
   font-family: inherit;
 }

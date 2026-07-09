@@ -2,15 +2,7 @@
 @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes reveal { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
 
-.thead { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.tbadge { font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #fff; padding: 5px 11px; border-radius: 99px; }
-.levelChip {
-  font-size: 11.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
-  color: var(--muted); border: 1px solid var(--line-strong);
-  padding: 4px 11px; border-radius: 99px; background: var(--surface);
-}
-.ph1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
-.pblurb { font-size: 15.5px; color: var(--muted); max-width: 60ch; margin-bottom: 18px; }
+.ph1 { font-size: 30px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.02em; }
 
 /* Fortschritt im Thema */
 .progressRow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
@@ -33,18 +25,15 @@
 .tabBtn:hover { color: var(--ink); }
 .tabOn { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
 
-/* Zusammenfassung */
-.summaryWrap { animation: reveal .3s ease both; }
-.summaryIntro { font-size: 14.5px; color: var(--muted); line-height: 1.6; max-width: 64ch; margin-bottom: 10px; }
-.aiHint {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-size: 12.5px; font-weight: 500; color: var(--accent-d);
-  background: var(--accent-soft); border-radius: 99px;
-  padding: 6px 13px; margin-bottom: 20px;
+/* Zusammenfassung: kleine Lernkarten im Raster, Inhalte sofort sichtbar */
+.summaryWrap {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  align-items: start;
+  animation: reveal .3s ease both;
 }
 .sumCard {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: 18px; padding: 20px 22px 18px; margin-bottom: 12px;
+  border-radius: 18px; padding: 20px 22px 18px;
   animation: reveal .35s ease both;
 }
 .sumHead { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
@@ -64,9 +53,9 @@
 .formula:hover { border-color: var(--accent); background: var(--accent-soft); }
 .formula:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .formulaText { overflow-x: auto; }
-.formulaAsk { flex-shrink: 0; color: var(--faint); opacity: 0; transition: opacity .15s; }
+.formulaAsk { flex-shrink: 0; color: var(--faint); opacity: .45; transition: opacity .15s, color .15s; }
 .formula:hover .formulaAsk { opacity: 1; color: var(--accent-d); }
-.summaryFoot { display: flex; justify-content: center; margin-top: 22px; }
+.summaryFoot { grid-column: 1 / -1; display: flex; justify-content: center; margin-top: 10px; }
 
 /* Lernkarten (Akkordeon) */
 .cards { display: flex; flex-direction: column; gap: 12px; }
@@ -181,6 +170,9 @@
 .lockCard .btn { min-width: 230px; }
 .lockHint { font-size: 12.5px; color: var(--faint); margin-top: 14px; }
 
+@media (max-width: 760px) {
+  .summaryWrap { grid-template-columns: 1fr; }
+}
 @media (max-width: 560px) {
   .page { padding: 22px 18px 96px; }
   .cardHead { padding: 13px 15px; }

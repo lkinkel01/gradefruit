@@ -1,6 +1,6 @@
 'use client';
 import styles from './LandingPage.module.css';
-import LandingDemo from './LandingDemo';
+import { Logo } from './Logo';
 
 interface Props {
   isAuthed: boolean;
@@ -15,44 +15,6 @@ interface Props {
   onSignOut: () => void;
 }
 
-// Gradefruit-Logo: Grapefruit im Querschnitt. Ein Segment ist herausgezogen,
-// wie ein Stück aus einem Tortendiagramm – Frucht und Mathematik in einem
-// Zeichen. Als flaches SVG scharf in jeder Größe, funktioniert auf hellem und
-// dunklem Grund und taugt auch als App-Icon.
-const Logo = ({ size = 30 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
-    <defs>
-      <linearGradient id="gfLogoG" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#FF8A73" />
-        <stop offset="1" stopColor="#E2382C" />
-      </linearGradient>
-    </defs>
-    {/* Frucht */}
-    <circle cx="24" cy="24" r="21" fill="url(#gfLogoG)" />
-    {/* Fünf Segmente */}
-    {[0, 60, 120, 180, 240].map(a => (
-      <path
-        key={a}
-        d="M24 24 L18.55 9.8 A15.2 15.2 0 0 1 29.45 9.8 Z"
-        fill="#fff"
-        opacity="0.94"
-        transform={`rotate(${a} 24 24)`}
-      />
-    ))}
-    {/* Das herausgezogene Segment: das Stück, das du dir holst */}
-    <path
-      d="M24 24 L18.55 9.8 A15.2 15.2 0 0 1 29.45 9.8 Z"
-      fill="#fff"
-      transform="translate(-3 -1.8) rotate(300 24 24)"
-    />
-    {/* Blatt */}
-    <path
-      d="M30.8 5.9 C31.5 2.5 34.6 0.3 38 0.9 C37.6 4.4 35 7 31.6 7 C31.1 7 30.9 6.6 30.8 5.9 Z"
-      fill="#22B368"
-    />
-  </svg>
-);
-
 const PlanFeat = ({ text }: { text: string }) => (
   <div className={styles.planFeat}>
     <svg className={styles.featCk} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -62,12 +24,46 @@ const PlanFeat = ({ text }: { text: string }) => (
   </div>
 );
 
-const USPS = [
-  'Über 130 Aufgaben im Stil des Hessen-Abis',
-  'Jede Lösung Schritt für Schritt erklärt',
-  'Kurze Erklärvideos',
-  'KI beantwortet deine Fragen',
-  'Grundkurs und Leistungskurs',
+// Die wichtigsten Funktionen, ruhig erklärt (ersetzt die frühere Demo).
+const FEATURES = [
+  {
+    title: 'Aufgaben im Abi-Stil',
+    desc: 'Über 130 Übungsaufgaben, aufgebaut wie in der hessischen Prüfung. Vom Einstieg bis zum vollen Schwierigkeitsgrad.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Lösungen, die erklären',
+    desc: 'Jede Lösung zeigt jeden einzelnen Schritt. Wenn etwas unklar bleibt, tippst du auf den Schritt und bekommst ihn erklärt.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
+        <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Erklärvideos mit Stimme',
+    desc: 'Kurze Videos zu zentralen Themen, eingebettet in die Aufgaben und als Swipe-Ansicht zum Durchschauen.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="3" /><polygon points="10 9 15 12 10 15" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Dein KI-Coach',
+    desc: 'Beantwortet Fragen zu jeder Aufgabe und prüft deine eigene Rechnung, wenn du sie als Foto oder PDF hochlädst.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <path d="M9.1 9a3 3 0 1 1 4 2.8c-.8.4-1.1 1-1.1 1.7v.5" />
+        <circle cx="12" cy="17.5" r=".6" fill="currentColor" />
+      </svg>
+    ),
+  },
 ];
 
 export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDark, onEnter, onLogin, onRegister, onOpenCheckout, onSignOut }: Props) {
@@ -115,62 +111,52 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </div>
       </nav>
 
-      {/* Hero */}
+      {/* Hero: zentriert, ruhig, eine klare Aussage */}
       <section className={styles.hero}>
-        <div className={styles.heroText}>
-          <p className={styles.kicker}>Mathe-Abitur 2027 in Hessen · Grundkurs und Leistungskurs</p>
-          <h1>
-            Dein ganzes Mathe-Abi.<br />
-            <span className={styles.grad}>An einem Ort.</span>
-          </h1>
-          <p>
-            Schluss mit zehn offenen Tabs und ewig langen Videos. Du übst mit Aufgaben
-            im Stil der hessischen Prüfung, siehst in jeder Lösung jeden einzelnen
-            Schritt und fragst die KI, sobald du irgendwo hängst.
-          </p>
-          <div className={styles.cta}>
-            {isAuthed ? (
-              <button className="btn primary" onClick={onEnter}>Weiter lernen</button>
-            ) : (
-              <button className="btn primary" onClick={onEnter}>Kostenlos ausprobieren</button>
-            )}
-            <a className="btn light" href="#preise">Preise ansehen</a>
-          </div>
-          <p className={styles.microline}>
-            {isAuthed
-              ? 'Schön, dass du wieder da bist. Mach genau da weiter, wo du aufgehört hast.'
-              : 'Analysis ist gratis. Kein Account und keine Zahlungsdaten nötig.'}
-          </p>
+        <p className={styles.kicker}>Für das Mathe-Abitur 2027 in Hessen</p>
+        <h1>
+          Die eine Plattform<br />
+          <span className={styles.grad}>für dein Mathe-Abi.</span>
+        </h1>
+        <p className={styles.sub}>
+          Aufgaben, Lösungen, Videos und ein KI-Coach, abgestimmt auf die
+          Anforderungen der Schulen in Hessen. Für Grundkurs und Leistungskurs,
+          zum Aufholen der Grundlagen genauso wie für die Bestnote.
+        </p>
+        <div className={styles.cta}>
+          {isAuthed ? (
+            <button className="btn primary" onClick={onEnter}>Weiter lernen</button>
+          ) : (
+            <button className="btn primary" onClick={onEnter}>Kostenlos testen</button>
+          )}
+          <a className="btn light" href="#kurse">Kurse ansehen</a>
         </div>
+        <p className={styles.microline}>
+          {isAuthed
+            ? 'Schön, dass du wieder da bist. Mach genau da weiter, wo du aufgehört hast.'
+            : 'Analysis ist komplett gratis. Ohne Account, ohne Zahlungsdaten.'}
+        </p>
+      </section>
 
-        <div className={styles.heroVisual}>
-          <LandingDemo onRegister={onRegister} />
+      {/* Funktionen */}
+      <section className={styles.lsec}>
+        <div className={styles.features}>
+          {FEATURES.map(f => (
+            <div key={f.title} className={styles.feature}>
+              <div className={styles.featureIcon}>{f.icon}</div>
+              <h3 className={styles.featureTitle}>{f.title}</h3>
+              <p className={styles.featureDesc}>{f.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* USP-Leiste */}
-      <div className={styles.usps}>
-        {USPS.map(t => (
-          <span key={t} className={styles.usp}>
-            <svg className={styles.uspCk} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            {t}
-          </span>
-        ))}
-        <span className={styles.usp}>
-          <svg className={styles.uspSoon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15.5 14" />
-          </svg>
-          Persönlicher Tutor bald verfügbar
-        </span>
-      </div>
-
-      {/* Subject overview */}
+      {/* Themen */}
       <section className={styles.lsec}>
         <h2 className={styles.h2}>Was dich im Abi erwartet</h2>
         <p className={styles.secIntro}>
-          Drei Prüfungsgebiete, aufgebaut nach dem hessischen Lehrplan.
+          Alle Inhalte der schriftlichen Mathe-Abiturprüfung Hessen 2027,
+          vollständig abgedeckt und nach dem Lehrplan aufgebaut.
         </p>
         <div className={styles.subjectGrid}>
           {[
@@ -205,12 +191,12 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className={styles.lsec} id="preise">
-        <h2 className={styles.h2}>Preise</h2>
+      {/* Kurse */}
+      <section className={styles.lsec} id="kurse">
+        <h2 className={styles.h2}>Kurse</h2>
         <p className={styles.secIntro}>
-          Wähle deinen Kurs. Beides gibt es als Einmalzahlung oder als Monatsabo,
-          jederzeit kündbar. Analysis testest du vorher gratis.
+          Einmal zahlen und bis zur Prüfung lernen, oder monatlich und jederzeit
+          kündbar. Analysis kannst du vorher in Ruhe kostenlos ausprobieren.
         </p>
         <div className={styles.plans}>
           <div className={styles.plan}>
@@ -223,7 +209,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
               <PlanFeat text="Alle Grundkurs-Themen und Aufgaben" />
               <PlanFeat text="Schritt-für-Schritt-Lösungen zu jeder Aufgabe" />
               <PlanFeat text="Erklärvideos zu zentralen Themen" />
-              <PlanFeat text="KI-Hilfe inklusive" />
+              <PlanFeat text="KI-Coach inklusive" />
             </div>
             {owned ? (
               <button className="btn light" style={{ marginTop: 'auto' }} disabled>Dein Zugang ist aktiv</button>
@@ -243,7 +229,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
               <PlanFeat text="Alle Leistungskurs-Themen und Aufgaben" />
               <PlanFeat text="Schritt-für-Schritt-Lösungen zu jeder Aufgabe" />
               <PlanFeat text="Erklärvideos zu zentralen Themen" />
-              <PlanFeat text="KI-Hilfe inklusive" />
+              <PlanFeat text="KI-Coach inklusive" />
             </div>
             {ownedLk ? (
               <button className="btn light" style={{ marginTop: 'auto' }} disabled>Dein Zugang ist aktiv</button>
@@ -255,7 +241,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
           </div>
         </div>
         <p className={styles.planNote}>
-          Sichere Bezahlung über Stripe. Die Wahl zwischen Einmalzahlung und Abo triffst
+          Sichere Bezahlung über Stripe. Ob Einmalzahlung oder Abo, entscheidest
           du im nächsten Schritt.
         </p>
       </section>
@@ -266,11 +252,10 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         <p>Starte kostenlos mit Analysis. Den Vollzugang holst du dir, wenn du so weit bist.</p>
         <div className={styles.cta} style={{ justifyContent: 'center' }}>
           <button className="btn primary" onClick={onEnter}>
-            {isAuthed ? 'Weiter lernen' : 'Kostenlos starten'}
+            {isAuthed ? 'Weiter lernen' : 'Kostenlos testen'}
           </button>
-          <a className="btn light" href="#preise">Preise ansehen</a>
+          <a className="btn light" href="#kurse">Kurse ansehen</a>
         </div>
-        <p className={styles.microline}>Einmalzahlung oder Monatsabo · sichere Bezahlung über Stripe</p>
       </div>
 
       <footer className={styles.foot}>

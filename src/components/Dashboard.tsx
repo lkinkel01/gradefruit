@@ -1,8 +1,23 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { View, TOPICS } from '@/lib/types';
+import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import styles from './Dashboard.module.css';
+
+// Voraussichtlicher Termin der schriftlichen Prüfung. Sobald das Hessische
+// Kultusministerium den offiziellen Termin veröffentlicht: hier eintragen
+// und das „voraussichtlich" im Label unten entfernen.
+const EXAM_DATE = new Date('2027-05-03T09:00:00');
+
+// Wechselnde Begrüßungssätze, damit die Übersicht nicht jeden Tag gleich klingt.
+const MOTIVATION = [
+  'Schön, dass du wieder da bist.',
+  'Mach weiter, wo du aufgehört hast.',
+  'Jeder gelöste Schritt bringt dich näher zur Prüfung.',
+  'Kleine Schritte, große Wirkung.',
+  'Eine Aufgabe mehr als gestern reicht schon.',
+];
 
 interface Props {
   onNavigate: (v: View) => void;
@@ -12,21 +27,42 @@ interface Props {
 }
 
 export default function Dashboard({ onNavigate, level, choosable, onChooseLevel }: Props) {
+  const { user } = useAuth();
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
   const open = Math.max(0, totalLessons - totalDone);
-  const kurs = level === 'lk' ? 'Leistungskurs' : 'Grundkurs';
 
   const [greeting, setGreeting] = useState('Hallo');
+  const [motivation, setMotivation] = useState(MOTIVATION[0]);
+  const [daysLeft, setDaysLeft] = useState<number | null>(null);
   useEffect(() => {
-    const h = new Date().getHours();
-    setGreeting(h < 11 ? 'Guten Morgen' : h < 18 ? 'Hallo' : 'Guten Abend');
+    const now = new Date();
+    const h = now.getHours();
+    setGreeting(h < 11 ? 'Guten Morgen' : h < 18 ? 'Guten Nachmittag' : 'Guten Abend');
+    // Satz wechselt mit Tag und Stunde, bleibt innerhalb einer Sitzung stabil.
+    setMotivation(MOTIVATION[(now.getDate() + h) % MOTIVATION.length]);
+    setDaysLeft(Math.max(0, Math.ceil((EXAM_DATE.getTime() - now.getTime()) / 86_400_000)));
   }, []);
+
+  const firstName = (user?.user_metadata?.full_name as string | undefined)?.trim().split(' ')[0];
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.ph1}>{greeting}</h1>
-      <p className={styles.pblurb}>Dein Mathe-Abi 2027 – Hessen {kurs}. Mach weiter, wo du aufgehört hast.</p>
+      <h1 className={styles.ph1}>{greeting}{firstName ? `, ${firstName}` : ''}</h1>
+      <p className={styles.pblurb}>{motivation}</p>
+
+      <div className={styles.examCard}>
+        <div className={styles.examDays}>
+          <span className={styles.examNum}>{daysLeft ?? '–'}</span>
+          <span className={styles.examLabel}>Tage bis zur Prüfung</span>
+        </div>
+        <div className={styles.examMeta}>
+          <span className={styles.examTitle}>Schriftliches Mathe-Abitur Hessen</span>
+          <span className={styles.examDate}>
+            {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })} · voraussichtlich
+          </span>
+        </div>
+      </div>
 
       <div className={styles.courseRow}>
         <span className={styles.courseLabel}>Dein Kurs</span>
@@ -50,7 +86,7 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
             </button>
           </div>
         ) : (
-          <span className={styles.courseBadge}>{kurs}</span>
+          <span className={styles.courseBadge}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</span>
         )}
       </div>
 
