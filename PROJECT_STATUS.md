@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 07: Design-Reife)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 08: Lernfeed V3)
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -81,7 +81,13 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   Aufgabe, Teilen via System-Share/Zwischenablage, Tutor „bald"),
   Story-Fortschritt oben („Video x von y"), „Nächstes Thema"-Hinweis,
   Desktop als zentrierte Reels-Spalte. Nur für eingeloggte Nutzer.
-  **Autoplay wie TikTok:** der aktive Slide spielt VON SELBST (kein Klick,
+  **V3 (Sprint 08): gemischte Kartentypen** – 20 Karten aus 7 Typen
+  (Erklärvideo, Formel des Tages, Zusammenfassung, Typischer Fehler,
+  Beispielaufgabe, Abi-Tipp, Motivation mit Prüfungs-Countdown), alle aus
+  echten Plattform-Daten (Aufgaben/Zusammenfassungen; Tipps/Motivation
+  kuratiert statisch), je Kartentyp eigene Aktionen in der Leiste
+  (Üben/Formeln/Erklären/Lösen/Merken/Teilen via Deep-Links + Coach).
+  **Autoplay wie TikTok:** der aktive Video-Slide spielt VON SELBST (kein Klick,
   kein Modal; `ScenePlayer` mit dunkler Token-Palette eingebettet),
   Weiterwischen stoppt das alte und startet das neue Video. Blockiert der
   Browser den Ton, läuft das Video stumm mit Untertiteln und zeigt einen
