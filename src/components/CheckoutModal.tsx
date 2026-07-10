@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import styles from './Modal.module.css';
 
@@ -33,7 +33,18 @@ export default function CheckoutModal({ open, onClose, course = 'gk' }: Props) {
   const [selected, setSelected] = useState<'full' | 'month'>('full');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  // Zustimmung zu AGB + Erlöschen des Widerrufsrechts (Pflicht bei digitalen
+  // Inhalten mit sofortiger Freischaltung, § 356 Abs. 5 BGB).
+  const [consent, setConsent] = useState(false);
   const info = COURSE_INFO[course];
+
+  // Bei jedem Öffnen frisch einwilligen lassen
+  useEffect(() => {
+    if (open) {
+      setConsent(false);
+      setError('');
+    }
+  }, [open]);
 
   async function startCheckout() {
     if (busy) return;
@@ -94,13 +105,34 @@ export default function CheckoutModal({ open, onClose, course = 'gk' }: Props) {
             <div className={styles.op}>{info.month}<small>/ Monat</small></div>
           </div>
 
+          {/* Preisangabe: falls Kleinunternehmer nach § 19 UStG, Text ersetzen durch
+              „Gemäß § 19 UStG wird keine Umsatzsteuer erhoben." */}
+          <p className={styles.vat}>Alle Preise inkl. gesetzlicher Umsatzsteuer.</p>
+
+          <label className={styles.consent}>
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={e => setConsent(e.target.checked)}
+              disabled={busy}
+            />
+            <span>
+              Ich verlange die sofortige Freischaltung des Zugangs und bestätige meine
+              Kenntnis, dass mein Widerrufsrecht mit Beginn der Bereitstellung erlischt.
+              Die <a href="/agb" target="_blank" rel="noopener">AGB</a> und die{' '}
+              <a href="/widerruf" target="_blank" rel="noopener">Widerrufsbelehrung</a> habe
+              ich gelesen.
+            </span>
+          </label>
+
           {error && <div className={styles.checkoutError}>{error}</div>}
 
           <button
             className="btn primary"
             style={{ width: '100%' }}
             onClick={startCheckout}
-            disabled={busy}
+            disabled={busy || !consent}
+            title={consent ? undefined : 'Bitte bestätige zuerst die Checkbox oben'}
           >
             {busy ? 'Einen Moment …' : 'Weiter zur sicheren Bezahlung'}
           </button>

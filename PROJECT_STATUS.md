@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 08: Lernfeed V3)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 09: Verkaufsfertig-Recht)
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -58,7 +58,10 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   Gratis-Aufgaben beider Stufen + Lösung + Video-Player; KI als markierte
   Beispiel-Antworten; Speichern/Tutor mit ehrlichen Hinweisen), Preisbereich mit
   GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), global aufgewertete Buttons
-- ✅ Impressum, Datenschutz
+- ✅ Impressum, Datenschutz, **AGB (`/agb`) + Widerrufsbelehrung (`/widerruf`)**
+  (Sprint 09; Entwürfe mit Platzhaltern, juristisch prüfen lassen!) und
+  **rechtssicherer Checkout**: „inkl. MwSt."-Ausweis + Pflicht-Checkbox
+  (Widerrufsverzicht § 356 Abs. 5 BGB, Kauf-Button erst nach Zustimmung)
 - ✅ Dark Mode (persistiert, kein Aufblitzen beim Laden)
 - ✅ Design-Reife (Sprint 07, 07/2026): neues **Grapefruit-Logo**
   (`src/components/Logo.tsx`, flache Scheibe mit Segmentlinien + gefülltem
@@ -100,6 +103,12 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   `hasAudio: true` setzen.
 
 ## Bekannte Probleme / offen
+- 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
+  rote Platzhalter (Name, Adresse, E-Mail, USt-Status §19, Zugangs-Enddatum,
+  AGB-Stand) → ausfüllen + juristisch prüfen lassen. Danach Stripe TEST→LIVE
+  (Anleitung siehe Chat/unten): Live-Preise, Live-Keys + Live-Webhook-Secret
+  in Vercel, Live-Webhook mit checkout.session.completed,
+  customer.subscription.*, charge.refunded.
 - 🟡 **Fortschritts-Zähler** („x/79 Aufgaben" in Sidebar/Übersicht) zählen die
   DB-Tabelle `lessons` (79 Einträge), nicht die 133 echten Aufgaben aus den
   Task-Dateien. Angleichen = kleine DB-/Kontext-Arbeit (eigener Sprint).

@@ -241,8 +241,8 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
           </div>
         </div>
         <p className={styles.planNote}>
-          Sichere Bezahlung über Stripe. Ob Einmalzahlung oder Abo, entscheidest
-          du im nächsten Schritt.
+          Alle Preise inkl. gesetzlicher Umsatzsteuer. Sichere Bezahlung über Stripe;
+          ob Einmalzahlung oder Abo, entscheidest du im nächsten Schritt.
         </p>
       </section>
 
@@ -272,6 +272,8 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         <div className={styles.footlinks}>
           <a href="/impressum">Impressum</a>
           <a href="/datenschutz">Datenschutz</a>
+          <a href="/agb">AGB</a>
+          <a href="/widerruf">Widerruf</a>
         </div>
         <div className={styles.footcopy}>© 2026 Gradefruit · Mathe-Abi Hessen 2027</div>
       </footer>
