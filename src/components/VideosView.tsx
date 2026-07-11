@@ -5,12 +5,12 @@ import SceneModal from './SceneModal';
 import styles from './VideosView.module.css';
 
 const VIDEOS = [
-  { id: 'v1', title: 'Ableitung – Grundregeln', sub: 'Analysis · 8 Min.', color: '#F0524A', badge: 'Analysis' },
-  { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Analysis · 11 Min.', color: '#F0524A', badge: 'Analysis' },
-  { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Analysis · 14 Min.', color: '#F0524A', badge: 'Analysis' },
-  { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Lineare Algebra · 9 Min.', color: '#6C63FF', badge: 'Lin. Algebra' },
-  { id: 'v5', title: 'Geradengleichungen', sub: 'Lineare Algebra · 12 Min.', color: '#6C63FF', badge: 'Lin. Algebra' },
-  { id: 'v6', title: 'Binomialverteilung', sub: 'Stochastik · 10 Min.', color: '#17B26A', badge: 'Stochastik' },
+  { id: 'v1', title: 'Ableitung – Grundregeln', sub: 'Analysis · 8 Min.', color: '#DE5D43', badge: 'Analysis' },
+  { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Analysis · 11 Min.', color: '#DE5D43', badge: 'Analysis' },
+  { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Analysis · 14 Min.', color: '#DE5D43', badge: 'Analysis' },
+  { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Lineare Algebra · 9 Min.', color: '#5D6BC9', badge: 'Lin. Algebra' },
+  { id: 'v5', title: 'Geradengleichungen', sub: 'Lineare Algebra · 12 Min.', color: '#5D6BC9', badge: 'Lin. Algebra' },
+  { id: 'v6', title: 'Binomialverteilung', sub: 'Stochastik · 10 Min.', color: '#2F9E68', badge: 'Stochastik' },
 ];
 
 export default function VideosView() {

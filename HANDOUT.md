@@ -18,17 +18,31 @@
    gleiches Format weiterverwenden (Ziel, nummerierte Punkte, Verbote,
    „Nach Abschluss: Typecheck, Build, Browser testen, Commit, Push").
 
-## Stand (03.07.2026, letzter Commit `c9a2898`, alles live auf gradefruit.de)
+## Stand (10.07.2026, Sprint 10 committet, alles live auf gradefruit.de)
 
-Sprints 01–09 sind abgeschlossen und deployt. Höhepunkte: warme Farbwelt +
-neues Grapefruit-Logo (`src/components/Logo.tsx`, `filled`-Prop 0–6 für
-künftige Fortschritts-Anzeigen), zentrierte Landing („Die eine Plattform für
-dein Mathe-Abi"), Lernbereich mit Zusammenfassung/Übungen + klickbaren
-Formeln/Schritten, Gradefruit-Coach mit echter Spracheingabe (Web Speech API),
-Lernfeed V3 („TikTok für Mathe": 20 Karten aus 7 Typen, Videos mit
-Autoplay + menschlicher Stimme), Dashboard mit Namens-Begrüßung und
-Prüfungs-Countdown, AGB + Widerrufsbelehrung + rechtssicherer Checkout
-(MwSt.-Ausweis, Pflicht-Checkbox nach § 356 Abs. 5 BGB).
+Sprints 01–10 sind abgeschlossen und deployt. Höhepunkte Sprint 10
+(Premium-Design + Lernsystem): Grapefruit als zentrale Fortschritts-Sprache
+(`GrapefruitProgress` in `Logo.tsx` — füllt sich proportional; Dashboard,
+Sidebar, Themen), Tinten-schwarze Premium-Buttons statt Orange-Verlauf,
+gedeckte Themenfarben, **Wiederholungssystem** mit drei Lernstufen
+(Verstanden / Wiederholen / Noch unklar — ohne DB-Änderung auf
+`understood`/`saved` kodiert) + neuer **Wiederholen-Seite** mit Filtern
+(Lernstufe × Themen) und klickbaren Dashboard-Kacheln, **Reel-Modus** statt
+„Swipe-Ansicht" (kein Menüpunkt mehr; pro Thema auf jeder Themenseite und
+gemischt von der Übersicht), einheitliche Aktionsleiste (Video · KI · Tutor)
+in Übungen und Zusammenfassung, neuer Landing-Hero („Die Prüfung kommt. Du
+wirst bereit sein.") + Sektion „Mehr als Aufgaben" (Strategien aus Studium und
+Prüfungserfahrung). Wichtige Bugfixes: Dark-Mode-Topbar (CSS-Module-Selektor
+griff nie), Video-Modal sofort sichtbar (React-Portal — Seiten-Animation hatte
+`position:fixed` eingefangen), Begrüßung nach Uhrzeit, Sidebar-Untermenü im
+aktiven Thema dauerhaft offen, Auth-Formulare ohne Placeholder.
+
+Davor (Sprints 01–09): warme Farbwelt + Grapefruit-Logo, Lernbereich mit
+Zusammenfassung/Übungen + klickbaren Formeln/Schritten, Gradefruit-Coach mit
+Spracheingabe (Web Speech API), Feed mit Autoplay + menschlicher Stimme,
+Dashboard mit Namens-Begrüßung und Prüfungs-Countdown, AGB +
+Widerrufsbelehrung + rechtssicherer Checkout (MwSt.-Ausweis, Pflicht-Checkbox
+nach § 356 Abs. 5 BGB).
 
 Details pro Feature: siehe PROJECT_STATUS.md.
 
@@ -71,7 +85,12 @@ Details pro Feature: siehe PROJECT_STATUS.md.
   (Konstante `EXAM_DATE`). Offiziellen Termin eintragen, sobald bekannt.
 - **Fortschritts-Zähler** („x/79 Aufgaben") zählen die DB-Tabelle `lessons`
   (79 Einträge), nicht die 133 echten Aufgaben — Angleichen ist ein eigener
-  kleiner Sprint (DB-Seed + ProgressContext).
+  kleiner Sprint (DB-Seed + ProgressContext). Gleiches gilt fürs neue
+  Wiederholungssystem: Lernstufen speichern nur für Aufgaben mit DB-Lektion.
+- **Sprint-11-Ideen (bewusst aufgehoben):** Lernstufen für Zusammenfassungen/
+  Formeln (braucht DB-Erweiterung), echtes Spaced-Repetition-Scheduling +
+  Interleaving auf der Wiederholen-Seite, LK-Inhalte im Reel-Modus,
+  eigenständigere Fließtext-Schrift (Inter ersetzen, Schibsted bleibt).
 - **1:1 Nachhilfe** ist ehrliche „Bald verfügbar"-Seite; Tutor-Funktionen
   überall nur als „bald" markiert — nichts vortäuschen.
 

@@ -9,7 +9,7 @@ const LABELS: Partial<Record<View, string>> = {
   linalg: 'Lineare Algebra & Geometrie',
   stochastik: 'Stochastik',
   videos: 'Erklärvideos',
-  saved: 'Gespeichert',
+  review: 'Wiederholen',
   tutors: '1:1 Nachhilfe',
   account: 'Mein Konto',
 };

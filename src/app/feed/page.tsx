@@ -1,9 +1,10 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { SCENES, Scene } from '@/lib/scenes';
+import { SUMMARIES } from '@/lib/summaries';
 import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
 import { LINALG_TASKS } from '@/lib/linalgTasks';
 import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
@@ -11,17 +12,18 @@ import { ScenePlayer } from '@/components/SceneModal';
 import AskDrawer from '@/components/AskDrawer';
 import styles from './feed.module.css';
 
-// Lernfeed V3: eine vertikale Lernoberfläche im Reels-Stil mit gemischten
-// Karten. Videos spielen automatisch; Formeln, Fehler, Aufgaben, Tipps und
-// Motivation sind ruhige Inhaltskarten mit eigenen Aktionen. Alle Inhalte
-// stammen aus den echten Daten der Plattform (Aufgaben, Zusammenfassungen).
+// Reel-Modus: Lernen im Reel-Format, direkt aus den Lerninhalten heraus.
+// Kein eigener Menüpunkt mehr – jedes Thema (und die Übersicht) öffnet den
+// Modus mit den passenden Karten (gf-feed-topic). Videos spielen automatisch;
+// Formeln, Fehler, Aufgaben, Tipps und Motivation sind ruhige Inhaltskarten
+// mit eigenen Aktionen. Alle Inhalte stammen aus den echten Plattform-Daten.
 
 type TopicId = 'analysis' | 'linalg' | 'stochastik';
 
 const TOPIC_META: Record<TopicId, { label: string; color: string }> = {
-  analysis: { label: 'Analysis', color: '#F0524A' },
-  linalg: { label: 'Lineare Algebra', color: '#6C63FF' },
-  stochastik: { label: 'Stochastik', color: '#17B26A' },
+  analysis: { label: 'Analysis', color: '#DE5D43' },
+  linalg: { label: 'Lineare Algebra', color: '#5D6BC9' },
+  stochastik: { label: 'Stochastik', color: '#2F9E68' },
 };
 
 // Gleicher (voraussichtlicher) Termin wie auf der Übersicht (Dashboard.tsx).
@@ -119,6 +121,54 @@ const aufgabe = (topicId: TopicId, taskId: string): Card => {
   return { kind: 'aufgabe', topicId, taskId, tag: t.tag, q: t.q };
 };
 
+// Themen-Feed: baut die Karten für EIN Thema dynamisch aus den echten
+// Plattform-Daten – Videos des Themas, Formeln und Kurz-Zusammenfassungen
+// aus der Formelsammlung, typische Fehler und Beispielaufgaben aus den
+// Übungen. So ist der Reel-Modus von jeder Themenseite aus erreichbar.
+function buildTopicFeed(topicId: TopicId): Card[] {
+  const sections = SUMMARIES[topicId].gk.sections;
+  const tasks = TASK_SOURCES.find(s => s.topicId === topicId)!.tasks;
+
+  const videos = Object.keys(SCENES)
+    .filter(id => linkedTask(id)?.topicId === topicId)
+    .map(video);
+  const formeln: Card[] = sections.slice(0, 3).map(sec => ({
+    kind: 'formel', topicId, sectionTitle: sec.title,
+    formula: sec.formulas[0] ?? '', note: sec.text,
+  }));
+  const zsm: Card[] = sections.slice(3, 5).map(sec => ({
+    kind: 'zusammenfassung', topicId, title: sec.title,
+    text: sec.text, formulas: sec.formulas.slice(0, 2),
+  }));
+  const fehlerCards: Card[] = tasks
+    .filter(t => t.mistakes && t.mistakes.length > 0)
+    .slice(0, 3)
+    .map(t => ({ kind: 'fehler', topicId, taskId: t.id, tag: t.tag, mistake: t.mistakes![0] }));
+  const aufgaben: Card[] = tasks
+    .filter(t => !t.videoId)
+    .slice(0, 2)
+    .map(t => ({ kind: 'aufgabe', topicId, taskId: t.id, tag: t.tag, q: t.q }));
+
+  // Ruhige Karten reihum mischen, damit sich die Typen abwechseln
+  const pools = [formeln, fehlerCards, aufgaben, zsm];
+  const others: Card[] = [];
+  for (let i = 0; others.length < formeln.length + fehlerCards.length + aufgaben.length + zsm.length; i++) {
+    const pool = pools[i % pools.length];
+    const idx = Math.floor(i / pools.length);
+    if (idx < pool.length) others.push(pool[idx]);
+  }
+
+  // Rhythmus wie im gemischten Feed: Video, dann zwei Inhaltskarten
+  const cards: Card[] = [];
+  let vi = 0, oi = 0;
+  while (vi < videos.length || oi < others.length) {
+    if (vi < videos.length) cards.push(videos[vi++]);
+    for (let k = 0; k < 2 && oi < others.length; k++) cards.push(others[oi++]);
+  }
+  cards.push({ kind: 'motivation', text: 'Stark. Das war dieses Thema im Schnelldurchlauf – jetzt in den Übungen festigen.' });
+  return cards;
+}
+
 // Formeln und Kurz-Zusammenfassungen: identisch mit src/lib/summaries.ts.
 const FEED: Card[] = [
   video('v1'),
@@ -178,23 +228,31 @@ const KIND_LABEL: Record<Card['kind'], string> = {
 export default function FeedPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { isSaved, toggleSaved } = useProgress();
+  const { statusOf, setStatus } = useProgress();
   const [askOpen, setAskOpen] = useState(false);
   const [askCtx, setAskCtx] = useState('');
   const [askSnippet, setAskSnippet] = useState('');
   const [idx, setIdx] = useState(0);
   const [copied, setCopied] = useState(false);
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
+  // Themen-Fokus: von der Themenseite gesetzt (gf-feed-topic), sonst gemischt.
+  const [topic, setTopic] = useState<TopicId | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
 
-  // Lernfeed ist nur für eingeloggte Nutzer. Gäste zur Startseite schicken.
+  // Reel-Modus ist nur für eingeloggte Nutzer. Gäste zur Startseite schicken.
   useEffect(() => {
     if (!loading && !user) router.replace('/');
   }, [loading, user, router]);
 
   useEffect(() => {
     setDaysLeft(Math.max(0, Math.ceil((EXAM_DATE.getTime() - Date.now()) / 86_400_000)));
+    try {
+      const t = localStorage.getItem('gf-feed-topic');
+      if (t === 'analysis' || t === 'linalg' || t === 'stochastik') setTopic(t);
+    } catch { /* Speicher gesperrt */ }
   }, []);
+
+  const feed = useMemo<Card[]>(() => (topic ? buildTopicFeed(topic) : FEED), [topic]);
 
   // Aktuelle Karte aus der Scroll-Position ableiten. Das aktive Video spielt
   // automatisch; wer weiterswipet, stoppt das alte und startet das nächste.
@@ -202,7 +260,7 @@ export default function FeedPage() {
     const el = feedRef.current;
     if (!el) return;
     const i = Math.round(el.scrollTop / el.clientHeight);
-    if (i !== idx && i >= 0 && i < FEED.length) setIdx(i);
+    if (i !== idx && i >= 0 && i < feed.length) setIdx(i);
   };
 
   const openTopic = (topicId: string, tab: 'zusammenfassung' | 'uebungen') => {
@@ -223,7 +281,7 @@ export default function FeedPage() {
     const url = 'https://www.gradefruit.de/feed';
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Gradefruit Lernfeed', text: 'Mathe fürs Abi, eine Karte nach der anderen.', url });
+        await navigator.share({ title: 'Gradefruit', text: 'Mathe für die Abschlussprüfung, eine Karte nach der anderen.', url });
         return;
       }
     } catch { /* Nutzer hat das Teilen abgebrochen */ }
@@ -265,25 +323,28 @@ export default function FeedPage() {
         </button>
         <div className={styles.progressWrap}>
           <div className={styles.segments}>
-            {FEED.map((_, i) => (
+            {feed.map((_, i) => (
               <span key={i} className={`${styles.segment} ${i <= idx ? styles.segmentOn : ''}`} />
             ))}
           </div>
-          <div className={styles.counter}>Karte {idx + 1} von {FEED.length} · {KIND_LABEL[FEED[idx].kind]}</div>
+          <div className={styles.counter}>
+            {topic ? `${TOPIC_META[topic].label} · ` : ''}Karte {idx + 1} von {feed.length} · {KIND_LABEL[feed[idx].kind]}
+          </div>
         </div>
         <div className={styles.topSpacer} />
       </div>
 
       <div className={styles.feed} ref={feedRef} onScroll={onScroll}>
-        {FEED.map((card, i) => {
-          const next = i < FEED.length - 1
-            ? `Als Nächstes: ${KIND_LABEL[FEED[i + 1].kind]}`
+        {feed.map((card, i) => {
+          const next = i < feed.length - 1
+            ? `Als Nächstes: ${KIND_LABEL[feed[i + 1].kind]}`
             : 'Du bist durch! Neue Karten kommen laufend dazu.';
 
           // ------------------------------ Video ------------------------------
           if (card.kind === 'video') {
             const { scene } = card;
-            const saved = card.task ? isSaved(card.task.topicId, card.task.taskId) : false;
+            // „Merken" = zum Wiederholen vormerken (Lernstufe „Wiederholen")
+            const saved = card.task ? statusOf(card.task.topicId, card.task.taskId) === 'wiederholen' : false;
             return (
               <section key={`v-${scene.id}`} className={styles.slide}>
                 <div className={styles.frame}>
@@ -307,7 +368,7 @@ export default function FeedPage() {
                     {card.task && railBtn('Üben', () => openTopic(card.task!.topicId, 'uebungen'), icons.üben)}
                     {card.task && railBtn('Formeln', () => openTopic(card.task!.topicId, 'zusammenfassung'), icons.formeln)}
                     {railBtn('KI fragen', () => ask(scene.topic, `Zum Video „${scene.title}": `), icons.ki)}
-                    {card.task && railBtn(saved ? 'Gemerkt' : 'Merken', () => toggleSaved(card.task!.topicId, card.task!.taskId), icons.merken(saved), saved)}
+                    {card.task && railBtn(saved ? 'Gemerkt' : 'Merken', () => setStatus(card.task!.topicId, card.task!.taskId, saved ? 'none' : 'wiederholen'), icons.merken(saved), saved)}
                     {railBtn('Teilen', share, icons.teilen)}
                   </aside>
 
@@ -408,7 +469,7 @@ export default function FeedPage() {
                           </div>
                         )}
                         <p className={styles.motText}>{card.text}</p>
-                        <button className={styles.cta} onClick={() => openTopic('analysis', 'uebungen')}>
+                        <button className={styles.cta} onClick={() => openTopic(topic ?? 'analysis', 'uebungen')}>
                           Jetzt üben
                         </button>
                       </>
@@ -453,7 +514,7 @@ export default function FeedPage() {
                   )}
                   {card.kind === 'motivation' && (
                     <>
-                      {railBtn('Üben', () => openTopic('analysis', 'uebungen'), icons.üben)}
+                      {railBtn('Üben', () => openTopic(topic ?? 'analysis', 'uebungen'), icons.üben)}
                       {railBtn('Teilen', share, icons.teilen)}
                     </>
                   )}

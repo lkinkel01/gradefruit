@@ -47,7 +47,7 @@ const FEATURES = [
   },
   {
     title: 'Erklärvideos mit Stimme',
-    desc: 'Kurze Videos zu zentralen Themen, eingebettet in die Aufgaben und als Swipe-Ansicht zum Durchschauen.',
+    desc: 'Kurze Videos zu zentralen Themen, eingebettet in die Aufgaben – oder im Reel-Modus, einem Lernformat wie bei TikTok.',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="5" width="18" height="14" rx="3" /><polygon points="10 9 15 12 10 15" fill="currentColor" stroke="none" />
@@ -113,15 +113,15 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
 
       {/* Hero: zentriert, ruhig, eine klare Aussage */}
       <section className={styles.hero}>
-        <p className={styles.kicker}>Für das Mathe-Abitur 2027 in Hessen</p>
+        <p className={styles.kicker}>Mathe-Abitur Hessen 2027</p>
         <h1>
-          Die eine Plattform<br />
-          <span className={styles.grad}>für dein Mathe-Abi.</span>
+          Die Prüfung kommt.<br />
+          <span className={styles.grad}>Du wirst bereit sein.</span>
         </h1>
         <p className={styles.sub}>
-          Aufgaben, Lösungen, Videos und ein KI-Coach, abgestimmt auf die
-          Anforderungen der Schulen in Hessen. Für Grundkurs und Leistungskurs,
-          zum Aufholen der Grundlagen genauso wie für die Bestnote.
+          Prüfungsnahe Aufgaben, Lösungen, die jeden Schritt erklären,
+          Erklärvideos und ein KI-Coach – abgestimmt auf die schriftliche
+          Prüfung in Hessen. Für Grundkurs und Leistungskurs.
         </p>
         <div className={styles.cta}>
           {isAuthed ? (
@@ -151,9 +151,42 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </div>
       </section>
 
+      {/* Strategien: was den Unterschied macht */}
+      <section className={styles.lsec}>
+        <h2 className={styles.h2}>Mehr als Aufgaben</h2>
+        <p className={styles.secIntro}>
+          Aufgaben rechnen kannst du überall. Gradefruit gibt dir dazu Strategien
+          aus dem Studium und aus echter Prüfungserfahrung, die im Unterricht oft
+          zu kurz kommen – kleine Dinge mit großer Wirkung in der Korrektur.
+        </p>
+        <div className={styles.stratGrid}>
+          <div className={styles.strat}>
+            <h3 className={styles.stratTitle}>Operatoren entschlüsseln</h3>
+            <p className={styles.stratDesc}>
+              „Zeigen", „Begründen", „Bestimmen" verlangen unterschiedlich viel.
+              Wer den Unterschied kennt, schreibt genau das hin, was Punkte bringt.
+            </p>
+          </div>
+          <div className={styles.strat}>
+            <h3 className={styles.stratTitle}>Punkte sichern</h3>
+            <p className={styles.stratDesc}>
+              Antwortsatz, Einheiten, sauber notierte Schritte: die Gewohnheiten,
+              die in der Korrektur zählen – bei jeder Aufgabe mitgedacht.
+            </p>
+          </div>
+          <div className={styles.strat}>
+            <h3 className={styles.stratTitle}>Wiederholen mit System</h3>
+            <p className={styles.stratDesc}>
+              Du ordnest jeden Inhalt ein: verstanden, wiederholen oder noch unklar.
+              Gradefruit hält fest, was du vor der Prüfung noch einmal sehen solltest.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Themen */}
       <section className={styles.lsec}>
-        <h2 className={styles.h2}>Was dich im Abi erwartet</h2>
+        <h2 className={styles.h2}>Was dich in der Prüfung erwartet</h2>
         <p className={styles.secIntro}>
           Alle Inhalte der schriftlichen Mathe-Abiturprüfung Hessen 2027,
           vollständig abgedeckt und nach dem Lehrplan aufgebaut.
@@ -162,17 +195,17 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
           {[
             {
               label: 'Analysis',
-              color: '#F0524A',
+              color: '#DE5D43',
               topics: ['Differenzial- & Integralrechnung', 'Kurvendiskussion', 'Exponentialfunktionen', 'Optimierungsaufgaben'],
             },
             {
               label: 'Lineare Algebra & Geometrie',
-              color: '#6C63FF',
+              color: '#5D6BC9',
               topics: ['Vektoren & Geraden', 'Ebenengleichungen', 'Lineare Gleichungssysteme', 'Abstands- & Schnittberechnungen'],
             },
             {
               label: 'Stochastik',
-              color: '#17B26A',
+              color: '#2F9E68',
               topics: ['Wahrscheinlichkeitsrechnung', 'Binomialverteilung', 'Erwartungswert & Varianz', 'Konfidenzintervalle & Hypothesentests'],
             },
           ].map(s => (
@@ -200,7 +233,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </p>
         <div className={styles.plans}>
           <div className={styles.plan}>
-            <div className={styles.planAccent} style={{ background: '#F0524A' }} />
+            <div className={styles.planAccent} style={{ background: '#DE5D43' }} />
             <h3>Grundkurs</h3>
             <div className={styles.price}>79 €</div>
             <div className={styles.per}>einmalig, Zugang bis zur Prüfung</div>
@@ -220,7 +253,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
             )}
           </div>
           <div className={styles.plan}>
-            <div className={styles.planAccent} style={{ background: '#6C63FF' }} />
+            <div className={styles.planAccent} style={{ background: '#5D6BC9' }} />
             <h3>Leistungskurs</h3>
             <div className={styles.price}>99 €</div>
             <div className={styles.per}>einmalig, Zugang bis zur Prüfung</div>
@@ -248,8 +281,8 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
 
       {/* Closing CTA */}
       <div className={styles.closing}>
-        <h2>Bereit für dein Mathe-Abi?</h2>
-        <p>Starte kostenlos mit Analysis. Den Vollzugang holst du dir, wenn du so weit bist.</p>
+        <h2>Fang einfach an.</h2>
+        <p>Analysis ist komplett kostenlos. Den vollen Kurs holst du dir, wenn du so weit bist.</p>
         <div className={styles.cta} style={{ justifyContent: 'center' }}>
           <button className="btn primary" onClick={onEnter}>
             {isAuthed ? 'Weiter lernen' : 'Kostenlos testen'}
@@ -275,7 +308,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
           <a href="/agb">AGB</a>
           <a href="/widerruf">Widerruf</a>
         </div>
-        <div className={styles.footcopy}>© 2026 Gradefruit · Mathe-Abi Hessen 2027</div>
+        <div className={styles.footcopy}>© 2026 Gradefruit · Mathe-Abitur Hessen 2027</div>
       </footer>
     </div>
   );

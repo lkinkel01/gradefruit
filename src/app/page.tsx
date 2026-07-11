@@ -9,6 +9,7 @@ import Topbar from '@/components/Topbar';
 import Dashboard from '@/components/Dashboard';
 import TopicView from '@/components/TopicView';
 import VideosView from '@/components/VideosView';
+import ReviewView from '@/components/ReviewView';
 import TutorsView from '@/components/TutorsView';
 import AccountView from '@/components/AccountView';
 import CheckoutModal from '@/components/CheckoutModal';
@@ -16,11 +17,12 @@ import AuthModal from '@/components/AuthModal';
 import AskDrawer from '@/components/AskDrawer';
 import styles from './page.module.css';
 
-// Ohne Login frei zugänglich (Probezugang): Übersicht, alle Themenseiten und Konto.
+// Ohne Kauf frei zugänglich (Probezugang): Übersicht, alle Themenseiten und Konto.
 // Achtung: Inhalt bleibt pro Stufe gesperrt – nur Analysis ist gratis, der Rest
 // zeigt Gästen nur die Vorschau-Sperre mit Kauf-Hinweis.
 // 'tutors' ist eine reine Info-Seite (Nachhilfe „bald verfügbar") – kein Kauf nötig.
-const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors'];
+// 'review' (Wiederholen) ist persönlicher Lernfortschritt – nie hinter der Bezahlschranke.
+const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors', 'review'];
 // Themen-Seiten mit eigener Bezahlschranke – Eingeloggte dürfen sie immer öffnen
 // (die Sperre pro Kursstufe steckt direkt in der Themenseite).
 const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
@@ -43,6 +45,10 @@ export default function Home() {
   const [askCtx, setAskCtx] = useState('');
   const [askSnippet, setAskSnippet] = useState('');
   const [notice, setNotice] = useState('');
+  // Zählt bei jeder Navigation hoch. TopicView liest daraufhin den gewünschten
+  // Tab (gf-open-tab) neu ein – auch wenn man schon im selben Thema ist
+  // (Sidebar-Untermenü: „Zusammenfassung"/„Übungen" im aktiven Thema).
+  const [navSignal, setNavSignal] = useState(0);
 
   // Wenn Nutzer eingeloggt ist und noch auf Landing: ins Dashboard. Kommt er
   // gerade aus dem Lernfeed (gf-open-topic), direkt ins gewünschte Thema.
@@ -176,6 +182,7 @@ export default function Home() {
     }
     setView(v);
     setNavOpen(false);
+    setNavSignal(n => n + 1);
   };
 
   const openAsk = (ctx: string, snippet: string) => {
@@ -235,6 +242,7 @@ export default function Home() {
             level={level}
             owned={owned}
             ownedLk={ownedLk}
+            navSignal={navSignal}
             onOpenCheckout={openCheckout}
             onOpenAsk={openAsk}
             onNavigate={navigate}
@@ -243,13 +251,8 @@ export default function Home() {
       case 'videos': return <VideosView />;
       case 'tutors': return <TutorsView />;
       case 'account': return <AccountView onNavigate={(v) => setView(v as View)} onOpenCheckout={openCheckout} />;
-      case 'saved':
-        return (
-          <div style={{ maxWidth: 820, margin: '0 auto', padding: '30px 26px' }}>
-            <h1 style={{ fontSize: 30, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.02em' }}>Gespeichert</h1>
-            <p style={{ color: 'var(--faint)', marginTop: 40, textAlign: 'center' }}>Noch nichts gespeichert.</p>
-          </div>
-        );
+      case 'review':
+        return <ReviewView level={level} onNavigate={navigate} />;
       default:
         return <Dashboard onNavigate={navigate} level={level} choosable={levelChoosable} onChooseLevel={chooseLevel} />;
     }

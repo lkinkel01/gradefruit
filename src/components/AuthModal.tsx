@@ -103,17 +103,26 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Prop
           <form onSubmit={handleSubmit}>
             {mode === 'register' && (
               <div className={styles.field}>
-                <label>Name</label>
-                <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Dein Name" required />
+                <label htmlFor="auth-name">Name</label>
+                <input id="auth-name" type="text" value={name} onChange={e => setName(e.target.value)} autoComplete="name" required />
               </div>
             )}
             <div className={styles.field}>
-              <label>E-Mail</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="name@beispiel.de" required />
+              <label htmlFor="auth-email">E-Mail</label>
+              <input id="auth-email" type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" required />
             </div>
             <div className={styles.field}>
-              <label>Passwort</label>
-              <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder={mode === 'register' ? 'Mindestens 6 Zeichen' : '••••••••'} required minLength={6} />
+              <label htmlFor="auth-password">Passwort</label>
+              <input
+                id="auth-password"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
+                required
+                minLength={6}
+              />
+              {mode === 'register' && <span className={styles.fieldHint}>Mindestens 6 Zeichen</span>}
             </div>
 
             {error && <div className={styles.error}>{error}</div>}

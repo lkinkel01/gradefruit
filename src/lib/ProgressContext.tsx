@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import { createClient } from './supabase';
 import { useAuth } from './AuthContext';
+import { LernStatus } from './types';
 
 const COURSE_SLUG = 'mathe-gk';
 const COURSE_SLUG_LK = 'mathe-lk';
@@ -11,6 +12,33 @@ interface ProgressState {
   saved: boolean;
 }
 
+// Drei Lernstufen auf den zwei bestehenden Bool-Spalten kodiert –
+// bewusst OHNE Datenbank-Änderung. Die vier Kombinationen bilden die
+// vier Zustände eindeutig ab:
+//   verstanden  = understood, nicht saved
+//   wiederholen = saved, nicht understood   (entspricht dem alten „Gemerkt")
+//   unklar      = beide gesetzt
+//   none        = beide leer
+function toStatus(s: ProgressState | undefined): LernStatus {
+  if (!s) return 'none';
+  if (s.understood && s.saved) return 'unklar';
+  if (s.understood) return 'verstanden';
+  if (s.saved) return 'wiederholen';
+  return 'none';
+}
+function fromStatus(status: LernStatus): ProgressState {
+  return {
+    understood: status === 'verstanden' || status === 'unklar',
+    saved: status === 'wiederholen' || status === 'unklar',
+  };
+}
+
+export interface StatusCounts {
+  verstanden: number;
+  wiederholen: number;
+  unklar: number;
+}
+
 interface ProgressCtx {
   ready: boolean;
   owned: boolean;     // Grundkurs aktiv?
@@ -18,12 +46,11 @@ interface ProgressCtx {
   plan: string | null;     // Grundkurs-Tarif
   planLk: string | null;   // Leistungskurs-Tarif
   refresh: () => Promise<void>;
-  isUnderstood: (topicSlug: string, lessonSlug: string) => boolean;
-  isSaved: (topicSlug: string, lessonSlug: string) => boolean;
-  toggleUnderstood: (topicSlug: string, lessonSlug: string) => Promise<void>;
-  toggleSaved: (topicSlug: string, lessonSlug: string) => Promise<void>;
+  statusOf: (topicSlug: string, lessonSlug: string) => LernStatus;
+  setStatus: (topicSlug: string, lessonSlug: string, status: LernStatus) => Promise<void>;
   topicDone: (topicSlug: string) => number;
   topicTotal: (topicSlug: string) => number;
+  statusCounts: StatusCounts; // über alle Themen
   totalDone: number;
   totalLessons: number;
 }
@@ -119,13 +146,12 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [user?.id]);
 
   const writeProgress = useCallback(
-    async (topicSlug: string, lessonSlug: string, patch: Partial<ProgressState>) => {
+    async (topicSlug: string, lessonSlug: string, next: ProgressState) => {
       if (!user) return;
       const id = lessonId[`${topicSlug}/${lessonSlug}`];
       if (!id) return;
 
       const current = progress[id] ?? { understood: false, saved: false };
-      const next = { ...current, ...patch };
 
       // Optimistisch sofort aktualisieren
       setProgress(p => ({ ...p, [id]: next }));
@@ -185,6 +211,13 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     setPlanLk(lkP?.plan ?? null);
   }, [user?.id, courseId, courseIdLk]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Zähler je Lernstufe über alle Themen (fürs Dashboard)
+  const statusCounts: StatusCounts = { verstanden: 0, wiederholen: 0, unklar: 0 };
+  Object.values(progress).forEach(s => {
+    const st = toStatus(s);
+    if (st !== 'none') statusCounts[st]++;
+  });
+
   const value: ProgressCtx = {
     ready,
     owned,
@@ -192,14 +225,13 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     plan,
     planLk,
     refresh,
-    isUnderstood: (t, l) => getState(t, l).understood,
-    isSaved: (t, l) => getState(t, l).saved,
-    toggleUnderstood: (t, l) => writeProgress(t, l, { understood: !getState(t, l).understood }),
-    toggleSaved: (t, l) => writeProgress(t, l, { saved: !getState(t, l).saved }),
+    statusOf: (t, l) => toStatus(getState(t, l)),
+    setStatus: (t, l, status) => writeProgress(t, l, fromStatus(status)),
     topicTotal: (t) => (lessonsByTopic[t] ?? []).length,
-    topicDone: (t) => (lessonsByTopic[t] ?? []).filter(id => progress[id]?.understood).length,
+    topicDone: (t) => (lessonsByTopic[t] ?? []).filter(id => toStatus(progress[id]) === 'verstanden').length,
+    statusCounts,
     totalLessons: Object.values(lessonsByTopic).reduce((a, ids) => a + ids.length, 0),
-    totalDone: Object.values(progress).filter(p => p.understood).length,
+    totalDone: Object.values(progress).filter(p => toStatus(p) === 'verstanden').length,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

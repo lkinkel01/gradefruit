@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Scene, SceneGraph } from '@/lib/scenes';
 import styles from './SceneModal.module.css';
 
@@ -413,7 +414,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
       <div className={styles.caption}>{current.say}</div>
 
       <div className={styles.progressbar}>
-        <div className={styles.pfill} style={{ width: `${pct}%`, background: scene.color }} />
+        <div className={styles.pfill} style={{ transform: `scaleX(${pct / 100})`, background: scene.color }} />
       </div>
 
       <div className={styles.foot}>
@@ -475,14 +476,18 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
   );
 }
 
-// Modal-Hülle: unverändertes Verhalten für Themenseiten, Videos und Landing.
+// Modal-Hülle für Themenseiten und Videos. Wird per Portal direkt an
+// document.body gehängt: Eltern-Seiten tragen eine Einstiegs-Animation
+// (transform), die sonst das position:fixed-Modal einfängt und unter den
+// sichtbaren Bereich schiebt („Video erst nach Scrollen sichtbar"-Bug).
 export default function SceneModal({ scene, onClose }: { scene: Scene | null; onClose: () => void }) {
   if (!scene) return null;
-  return (
+  return createPortal(
     <div className={styles.backdrop} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <ScenePlayer scene={scene} onClose={onClose} />
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

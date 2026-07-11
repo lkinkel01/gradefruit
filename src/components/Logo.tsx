@@ -38,3 +38,77 @@ export function Logo({ size = 28, filled = 1 }: { size?: number; filled?: number
     </svg>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Grapefruit als Fortschrittsanzeige – die zentrale Designidee der Plattform.
+// Die Frucht füllt sich Stück für Stück, exakt proportional zum Fortschritt
+// (Kreissektor ab 12 Uhr), darüber liegen die ruhigen Segmentlinien.
+// Überall einsetzbar: Gesamtfortschritt, Themenfortschritt, Lernfortschritt.
+// ---------------------------------------------------------------------------
+
+const R_FLESH = 16.6;
+
+// Kreissektor von „12 Uhr" im Uhrzeigersinn bis zum Anteil p (0..1).
+function piePath(p: number): string {
+  const a = p * Math.PI * 2;
+  const x = 24 + R_FLESH * Math.sin(a);
+  const y = 25 - R_FLESH * Math.cos(a);
+  const large = a > Math.PI ? 1 : 0;
+  return `M 24 25 L 24 ${25 - R_FLESH} A ${R_FLESH} ${R_FLESH} 0 ${large} 1 ${x.toFixed(2)} ${y.toFixed(2)} Z`;
+}
+
+interface GrapefruitProgressProps {
+  pct: number;          // 0..100
+  size?: number;
+  rind?: string;        // Farbe der Schale (Ring)
+  flesh?: string;       // Farbe des ungefüllten Fruchtfleischs
+  gap?: string;         // Farbe der Segmentlinien (Grund dahinter)
+  showLeaf?: boolean;
+}
+
+export function GrapefruitProgress({
+  pct,
+  size = 64,
+  rind = 'var(--line-strong)',
+  flesh = 'var(--control)',
+  gap = 'var(--surface)',
+  showLeaf = true,
+}: GrapefruitProgressProps) {
+  const p = Math.min(100, Math.max(0, pct)) / 100;
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      role="img"
+      aria-label={`${Math.round(p * 100)} % geschafft`}
+    >
+      {/* Schale */}
+      <circle cx="24" cy="25" r="19.4" fill="none" stroke={rind} strokeWidth="2.4" />
+      {/* Fruchtfleisch, noch leer */}
+      <circle cx="24" cy="25" r={R_FLESH} fill={flesh} />
+      {/* gefüllter Anteil */}
+      {p >= 0.999 ? (
+        <circle cx="24" cy="25" r={R_FLESH} fill="#EE7457" />
+      ) : p > 0.001 ? (
+        <path d={piePath(p)} fill="#EE7457" />
+      ) : null}
+      {/* Segmentlinien über allem */}
+      {SEGMENTS.map(a => (
+        <line
+          key={a}
+          x1="24" y1="25" x2="24" y2={25 - R_FLESH}
+          stroke={gap} strokeWidth="1.7" strokeLinecap="round"
+          transform={`rotate(${a} 24 25)`}
+        />
+      ))}
+      {/* Blatt */}
+      {showLeaf && (
+        <path
+          d="M26.8 4.4 C29.6 2.2 33.4 2.4 35.7 4.3 C34 6.9 30.5 8 27.4 7 C26.9 6.8 26.7 5.6 26.8 4.4 Z"
+          fill="#5E9E77"
+        />
+      )}
+    </svg>
+  );
+}

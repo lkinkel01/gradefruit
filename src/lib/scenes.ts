@@ -48,7 +48,7 @@ export const SCENES: Record<string, Scene> = {
     id: 'v1',
     title: 'Ableitung – Grundregeln',
     topic: 'Analysis',
-    color: '#F0524A',
+    color: '#DE5D43',
     func: 'f(x) = 3x⁴ − 5x² + 7',
     intro:
       'In diesem Video lernst du die wichtigsten Ableitungsregeln kennen. Wir leiten die Funktion f von x gleich drei x hoch vier minus fünf x Quadrat plus sieben ab. Ableiten klingt schwer, ist aber mit ein paar einfachen Regeln ganz leicht. Los geht es!',
@@ -89,7 +89,7 @@ export const SCENES: Record<string, Scene> = {
     id: 'v2',
     title: 'Extrempunkte berechnen',
     topic: 'Analysis',
-    color: '#F0524A',
+    color: '#DE5D43',
     func: 'f(x) = x³ − 3x² + 2',
     intro:
       'Lass uns gemeinsam die Extrempunkte dieser Funktion bestimmen. Gegeben ist f von x gleich x hoch drei minus drei x Quadrat plus zwei. Extrempunkte sind die Hoch- und Tiefpunkte einer Kurve – also die Stellen, an denen die Kurve ihre Richtung ändert.',
@@ -138,7 +138,7 @@ export const SCENES: Record<string, Scene> = {
     id: 'v3',
     title: 'Integralrechnung Einführung',
     topic: 'Analysis',
-    color: '#F0524A',
+    color: '#DE5D43',
     func: '∫₀² (2x + 1) dx',
     intro:
       'In diesem Video schauen wir uns die Integralrechnung an. Wir berechnen das Integral von null bis zwei über die Funktion zwei x plus eins. Ein Integral beschreibt anschaulich die Fläche zwischen dem Graphen und der x-Achse. Schauen wir uns das Schritt für Schritt an.',
@@ -185,7 +185,7 @@ export const SCENES: Record<string, Scene> = {
     id: 'v4',
     title: 'Vektoren & Skalarprodukt',
     topic: 'Lineare Algebra',
-    color: '#6C63FF',
+    color: '#5D6BC9',
     func: 'a⃗ = (3 | 4 | 0)     b⃗ = (1 | 2 | 2)',
     intro:
       'In diesem Video geht es um Vektoren und das Skalarprodukt. Gegeben sind zwei Vektoren: a mit den Komponenten drei, vier, null und b mit den Komponenten eins, zwei, zwei. Wir berechnen das Skalarprodukt und den Winkel zwischen den beiden Vektoren.',
@@ -231,7 +231,7 @@ export const SCENES: Record<string, Scene> = {
     id: 'v5',
     title: 'Geradengleichungen',
     topic: 'Lineare Algebra',
-    color: '#6C63FF',
+    color: '#5D6BC9',
     func: 'A(1 | 2 | 3)     B(3 | 6 | 7)',
     intro:
       'In diesem Video stellen wir die Gleichung einer Geraden im Raum auf. Gegeben sind zwei Punkte: A mit den Koordinaten eins, zwei, drei und B mit drei, sechs, sieben. Wir bestimmen die Geradengleichung und prüfen anschließend, ob ein weiterer Punkt auf der Geraden liegt.',
@@ -277,7 +277,7 @@ export const SCENES: Record<string, Scene> = {
     id: 'v6',
     title: 'Binomialverteilung',
     topic: 'Stochastik',
-    color: '#17B26A',
+    color: '#2F9E68',
     func: 'n = 10     p = 0,5     k = 4',
     intro:
       'In diesem Video geht es um die Binomialverteilung. Stell dir vor, du wirfst zehn Mal eine Münze. Wie wahrscheinlich ist es, dass genau vier Mal Kopf fällt? Wir haben also n gleich zehn Versuche, eine Wahrscheinlichkeit p von null Komma fünf und suchen genau k gleich vier Treffer.',
@@ -323,7 +323,7 @@ export const SCENES: Record<string, Scene> = {
     id: 'l1',
     title: 'Abstand zweier Punkte',
     topic: 'Lineare Algebra',
-    color: '#6C63FF',
+    color: '#5D6BC9',
     func: 'A(1 | 2 | 3)     B(4 | 6 | 3)',
     intro:
       'In diesem Video berechnen wir den Abstand zweier Punkte im Raum. Gegeben sind A mit den Koordinaten eins, zwei, drei und B mit vier, sechs, drei. Der Abstand ist einfach die Länge der Strecke zwischen den beiden Punkten.',

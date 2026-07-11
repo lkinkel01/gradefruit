@@ -63,7 +63,7 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
       <div className={styles.planRow}>
         <div>
           <b>{label}: Gratis-Zugang</b>
-          <p>Analysis kannst du gratis ausprobieren. Schalte den {label}-Vollzugang frei: alle Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und KI-Hilfe.</p>
+          <p>Analysis kannst du gratis ausprobieren. Der volle {label} enthält alle Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und deinen KI-Coach.</p>
         </div>
         <button className="btn primary btn sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={() => onOpenCheckout(course)}>
           {label} freischalten
@@ -82,7 +82,7 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
     ) : (
       <div className={styles.planRow}>
         <div>
-          <b>{label}: Vollzugang aktiv ✓</b>
+          <b>{label}: Zugang aktiv</b>
           <p>Du hast vollen Zugang bis zur Prüfung. Viel Erfolg beim Lernen!</p>
         </div>
       </div>
@@ -104,7 +104,7 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
         <div className={styles.sectionTitle}>Profil bearbeiten</div>
         <div className={styles.field}>
           <label>Name</label>
-          <input value={name} onChange={e => setName(e.target.value)} placeholder="Dein Name" />
+          <input value={name} onChange={e => setName(e.target.value)} />
         </div>
         <div className={styles.field}>
           <label>E-Mail</label>

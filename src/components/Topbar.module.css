@@ -1,7 +1,9 @@
 .topbar {
   position: sticky; top: 0; z-index: 20;
-  background: rgba(243,243,247,.88);
-  backdrop-filter: blur(12px);
+  /* var(--glass) statt fester Farbe: folgt dem Dark Mode zuverlässig */
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
   height: 58px; display: flex; align-items: center;
   gap: 14px; padding: 0 26px;

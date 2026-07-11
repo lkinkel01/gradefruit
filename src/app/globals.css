@@ -5,15 +5,15 @@
   --canvas: #FAF6F1;
   --surface: #FFFFFF;
   --surface-2: #FBF7F2;
-  --ink: #231F1B;
-  --muted: #71685F;
+  --ink: #211C17;
+  --muted: #6F675E;
   --faint: #A69B90;
   --line: #EDE4DB;
   --line-strong: #DDD1C5;
   --accent: #E96A4C;
   --accent-d: #C24E31;
   --accent-soft: #FBEBE3;
-  --green: #23A468;
+  --green: #2F9E68;
   --green-soft: #E5F4EA;
   --control: #F0E8E0;
   --bubble-ai: #F4EDE5;
@@ -28,8 +28,16 @@
   --side-3: #382D25;
   --side-tx: #D6CBC1;
   --side-faint: #8B7E72;
+  /* Milchglas für obere Leisten – als Variable, damit Dark Mode in
+     CSS-Modulen zuverlässig greift (globale Klassen matchen dort nicht). */
+  --glass: rgba(250, 246, 241, 0.86);
+  /* Buttons: warmes Tinten-Schwarz statt Farbverlauf – ruhiger, hochwertiger */
+  --btn-ink: #211C17;
+  --btn-ink-hover: #33291F;
+  --btn-ink-tx: #FFFFFF;
   --radius: 16px;
   --shadow: 0 1px 2px rgba(60,40,25,.03), 0 6px 20px rgba(60,40,25,.05);
+  --shadow-lg: 0 2px 4px rgba(60,40,25,.04), 0 18px 44px rgba(60,40,25,.09);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -47,7 +55,7 @@ a { color: inherit; text-decoration: none; }
 ::selection { background: var(--accent-soft); }
 h1, h2, h3, h4 {
   font-family: 'Schibsted Grotesk', sans-serif;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.022em;
 }
 
 /* Buttons */
@@ -57,27 +65,29 @@ h1, h2, h3, h4 {
   letter-spacing: -0.01em;
   border-radius: 980px; padding: 12px 22px;
   transition: transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s ease,
-    border-color .16s ease, background .16s ease, color .16s ease;
+    border-color .16s ease, background .16s ease, color .16s ease, opacity .16s ease;
   display: inline-flex; align-items: center;
   justify-content: center; gap: 9px;
 }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn.primary {
-  background: linear-gradient(180deg, #F0855F 0%, #E25A38 100%);
-  color: #fff;
-  box-shadow: 0 1px 2px rgba(194,78,49,.32), 0 8px 20px rgba(233,106,76,.26);
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+  box-shadow: 0 1px 2px rgba(30,22,15,.14), 0 8px 22px rgba(30,22,15,.12);
 }
 .btn.primary:hover {
+  background: var(--btn-ink-hover);
   transform: translateY(-1px);
-  box-shadow: 0 2px 3px rgba(194,78,49,.32), 0 12px 26px rgba(233,106,76,.32);
+  box-shadow: 0 2px 4px rgba(30,22,15,.14), 0 12px 28px rgba(30,22,15,.16);
 }
 .btn.primary:active { transform: translateY(0) scale(.98); }
 .btn.light { background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); }
-.btn.light:hover { border-color: var(--accent); color: var(--accent-d); transform: translateY(-1px); }
+.btn.light:hover { border-color: var(--faint); transform: translateY(-1px); }
 .btn.light:active { transform: translateY(0) scale(.98); }
-.btn.dark { background: #23222b; color: #fff; }
-.btn.dark:hover { opacity: .9; }
+.btn.dark { background: var(--btn-ink); color: var(--btn-ink-tx); }
+.btn.dark:hover { background: var(--btn-ink-hover); }
 .btn.sm { padding: 9px 16px; font-size: 13.5px; }
+.btn:disabled { opacity: .5; cursor: default; transform: none; }
 
 /* Dark mode: warmes Dunkelbraun statt kühlem Blau-Schwarz */
 body.dark {
@@ -100,8 +110,12 @@ body.dark {
   --success: #5FD89B;
   --success-line: #1E4634;
   --warn: #F0A23B;
+  --glass: rgba(23, 19, 16, 0.86);
+  /* Im Dunkeln invertiert: heller Button auf dunklem Grund (Apple-artig) */
+  --btn-ink: #F5F0EA;
+  --btn-ink-hover: #FFFFFF;
+  --btn-ink-tx: #211C17;
 }
-body.dark .topbar { background: rgba(23,19,16,.86); }
 
 /* Beim Hell/Dunkel-Wechsel kurz ALLE Übergänge aus, damit die ganze Seite
    sofort und gleichzeitig umschaltet. Ohne das bleiben einzelne Flächen im

@@ -13,6 +13,7 @@
   color: #fff; font-weight: 700; font-size: 18px;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
+.meta { min-width: 0; }
 .metaName { font-weight: 600; font-size: 16px; }
 .metaEmail { font-size: 13px; color: var(--muted); margin-top: 2px; }
 

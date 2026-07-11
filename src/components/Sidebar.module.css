@@ -15,22 +15,15 @@
 }
 .dot { width: 8px; height: 8px; border-radius: 99px; background: var(--accent); }
 
+/* Kurskarte: Grapefruit-Fortschritt + Kurzinfo */
 .course {
+  display: flex; align-items: center; gap: 12px;
   background: var(--side-2); border-radius: 13px;
-  padding: 13px 14px; margin-bottom: 16px;
+  padding: 12px 14px; margin-bottom: 16px;
 }
-.courseTitle { font-size: 13.5px; color: #fff; font-weight: 600; }
-.courseSub { font-size: 11.5px; color: var(--side-faint); margin-top: 1px; }
-.prog { margin-top: 11px; }
-.bar {
-  height: 7px; background: var(--side-3);
-  border-radius: 99px; overflow: hidden;
-}
-.bar i {
-  display: block; height: 100%;
-  background: var(--accent); border-radius: 99px; transition: width .5s;
-}
-.progLbl { font-size: 11px; color: var(--side-faint); margin-top: 6px; }
+.courseTx { min-width: 0; }
+.courseTitle { font-size: 13px; color: #fff; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.courseSub { font-size: 11.5px; color: var(--side-faint); margin-top: 2px; font-variant-numeric: tabular-nums; }
 
 .navsec {
   font-size: 10.5px; font-weight: 600; letter-spacing: .08em;
@@ -48,9 +41,14 @@
 .snav button:hover { background: var(--side-2); color: #fff; }
 .snav button.on { background: var(--side-3); color: #fff; font-weight: 600; }
 
-/* Themen-Eintrag mit Hover-Untermenü (nur auf Geräten mit Maus) */
+/* Themen-Eintrag mit Untermenü: im aktiven Thema dauerhaft offen,
+   auf Geräten mit Maus zusätzlich bei Hover. */
 .topicWrap { position: relative; }
 .flyout { display: none; }
+.flyoutPinned {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 3px 0 3px 28px;
+}
 @media (hover: hover) and (min-width: 901px) {
   .topicWrap:hover .flyout,
   .flyout:hover {
@@ -80,15 +78,12 @@
   background: var(--side-2); border: 1px solid var(--side-3);
   border-radius: 13px; padding: 15px; margin-top: 14px;
 }
-.unlockCard p { font-size: 12.5px; color: #E7C7CC; margin-bottom: 10px; }
-
-.ownedTag {
-  display: flex; align-items: center; gap: 8px;
-  color: #86D6AE; font-size: 12.5px; font-weight: 600;
-  padding: 10px; margin-top: 10px;
-  background: rgba(23,178,106,.13); border-radius: 11px;
+.unlockCard p { font-size: 12.5px; color: var(--side-tx); margin-bottom: 10px; line-height: 1.5; }
+/* Auf der immer-dunklen Seitenleiste braucht der Button immer helle Optik */
+.unlockCard :global(.btn.primary) {
+  background: #F5F0EA; color: #211C17; box-shadow: none;
 }
-.ownedTag svg { width: 14px; height: 14px; }
+.unlockCard :global(.btn.primary:hover) { background: #fff; }
 
 /* Handy: Seitenleiste als einschiebbares Menü */
 @media (max-width: 900px) {

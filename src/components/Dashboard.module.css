@@ -42,15 +42,22 @@
   padding: 6px 14px; border-radius: 99px;
 }
 
+/* Lernstufen-Kacheln: anklickbar, führen zur Wiederholen-Seite */
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
 .stat {
+  position: relative; text-align: left; cursor: pointer; font-family: inherit;
   background: var(--surface); border: 1px solid var(--line);
   border-radius: 14px; padding: 15px 17px;
-  transition: transform .18s ease, border-color .18s ease;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
-.stat:hover { transform: translateY(-2px); border-color: var(--line-strong); }
-.statNum { font-family: 'Schibsted Grotesk', sans-serif; font-weight: 800; font-size: 25px; letter-spacing: -0.02em; line-height: 1; }
+.stat:hover { transform: translateY(-2px); border-color: var(--line-strong); box-shadow: var(--shadow); }
+.stat:hover .statGo { opacity: 1; }
+.statNum { font-family: 'Schibsted Grotesk', sans-serif; font-weight: 800; font-size: 25px; letter-spacing: -0.02em; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
 .statLabel { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
+.statGo {
+  position: absolute; top: 16px; right: 14px;
+  color: var(--faint); opacity: 0; transition: opacity .15s;
+}
 
 .dgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .dcard {
@@ -58,32 +65,22 @@
   border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
 }
 .dcard h3 { font-size: 15px; margin-bottom: 12px; }
-.ringWrap { display: flex; align-items: center; gap: 16px; }
-.bigPct { font-family: 'Schibsted Grotesk', sans-serif; font-weight: 800; font-size: 36px; color: var(--ink); }
+.ringWrap { display: flex; align-items: center; gap: 18px; }
+.bigPct { font-family: 'Schibsted Grotesk', sans-serif; font-weight: 800; font-size: 36px; color: var(--ink); font-variant-numeric: tabular-nums; }
 .sub { font-size: 13px; color: var(--muted); }
-.contBtn { margin-top: 14px; }
+.contRow { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 16px; }
 
 .miniList { display: flex; flex-direction: column; gap: 8px; }
 .miniRow {
-  display: flex; align-items: center; gap: 11px;
+  display: flex; align-items: center; gap: 12px;
   padding: 11px 13px; border: 1px solid var(--line);
   border-radius: 12px; cursor: pointer; background: var(--surface-2);
-  transition: .14s;
+  transition: border-color .14s ease, transform .14s ease;
 }
-.miniRow:hover { border-color: var(--accent); }
-.ic {
-  width: 30px; height: 30px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; color: #fff;
-}
-.ic svg { width: 15px; height: 15px; }
+.miniRow:hover { border-color: var(--line-strong); transform: translateY(-1px); }
 .tx { flex: 1; min-width: 0; }
-.tx b { font-size: 14px; display: block; }
-.tx small { font-size: 12px; color: var(--faint); }
-.tbarRow { display: flex; align-items: center; gap: 9px; margin-top: 7px; }
-.tbarTrack { flex: 1; height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; }
-.tbarFill { height: 100%; border-radius: 99px; transition: width .45s ease; }
-.tbarRow small { font-size: 11.5px; color: var(--faint); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.tx b { font-size: 14px; display: block; letter-spacing: -0.01em; }
+.tx small { font-size: 12px; color: var(--faint); font-variant-numeric: tabular-nums; }
 
 @media (max-width: 900px) { .dgrid { grid-template-columns: 1fr; } }
 @media (max-width: 560px) {

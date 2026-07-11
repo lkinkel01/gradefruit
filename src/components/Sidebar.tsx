@@ -1,8 +1,7 @@
 'use client';
-import { useRouter } from 'next/navigation';
 import { View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
-import { Logo } from './Logo';
+import { Logo, GrapefruitProgress } from './Logo';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -20,8 +19,8 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
     icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>
   },
   {
-    id: 'saved', label: 'Gespeichert',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+    id: 'review', label: 'Wiederholen',
+    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10" /><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10" /></svg>
   },
   {
     id: 'tutors', label: '1:1 Nachhilfe',
@@ -29,14 +28,13 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
-// Sprungziel fürs Hover-Untermenü der Themen: gewünschten Tab einmalig merken
-// (TopicView liest und löscht den Schlüssel beim Öffnen).
+// Sprungziel fürs Themen-Untermenü: gewünschten Tab einmalig merken
+// (TopicView liest und löscht den Schlüssel beim Öffnen bzw. beim navSignal).
 function rememberTab(tab: 'zusammenfassung' | 'uebungen') {
   try { localStorage.setItem('gf-open-tab', tab); } catch { /* Speicher gesperrt */ }
 }
 
 export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
-  const router = useRouter();
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
@@ -48,40 +46,49 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
       </div>
 
       <div className={styles.course}>
-        <div className={styles.courseTitle}>Mathe-Abi Hessen 2027</div>
-        <div className={styles.courseSub}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'} · {totalDone}/{totalLessons} Aufgaben</div>
-        <div className={styles.prog}>
-          <div className={styles.bar}><i style={{ width: `${pct}%` }} /></div>
-          <div className={styles.progLbl}>{pct}% abgeschlossen</div>
+        <GrapefruitProgress
+          pct={pct}
+          size={38}
+          rind="var(--side-3)"
+          flesh="var(--side-3)"
+          gap="var(--side-2)"
+          showLeaf={false}
+        />
+        <div className={styles.courseTx}>
+          <div className={styles.courseTitle}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</div>
+          <div className={styles.courseSub}>{pct} % · {totalDone}/{totalLessons} Aufgaben</div>
         </div>
       </div>
 
       <div className={styles.navsec}>Themen</div>
       <nav className={styles.snav}>
-        {TOPICS.map(t => (
-          <div key={t.id} className={styles.topicWrap}>
-            <button
-              className={view === t.id ? styles.on : ''}
-              onClick={() => onNavigate(t.id)}
-            >
-              <span className={styles.cdot} style={{ background: t.color }} />
-              <span className={styles.ti}>{t.label}</span>
-              {topicTotal(t.id) > 0 && topicDone(t.id) === topicTotal(t.id)
-                ? <span className={styles.stDone}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg></span>
-                : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></span>
-              }
-            </button>
-            {/* Hover-Untermenü: direkt zu Zusammenfassung oder Übungen */}
-            <div className={styles.flyout}>
-              <button className={styles.flyItem} onClick={() => { rememberTab('zusammenfassung'); onNavigate(t.id); }}>
-                Zusammenfassung
+        {TOPICS.map(t => {
+          const active = view === t.id;
+          return (
+            <div key={t.id} className={styles.topicWrap}>
+              <button
+                className={active ? styles.on : ''}
+                onClick={() => onNavigate(t.id)}
+              >
+                <span className={styles.cdot} style={{ background: t.color }} />
+                <span className={styles.ti}>{t.label}</span>
+                {topicTotal(t.id) > 0 && topicDone(t.id) === topicTotal(t.id)
+                  ? <span className={styles.stDone}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg></span>
+                  : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></span>
+                }
               </button>
-              <button className={styles.flyItem} onClick={() => { rememberTab('uebungen'); onNavigate(t.id); }}>
-                Übungen
-              </button>
+              {/* Untermenü: im aktiven Thema dauerhaft offen, sonst bei Hover */}
+              <div className={`${styles.flyout} ${active ? styles.flyoutPinned : ''}`}>
+                <button className={styles.flyItem} onClick={() => { rememberTab('zusammenfassung'); onNavigate(t.id); }}>
+                  Zusammenfassung
+                </button>
+                <button className={styles.flyItem} onClick={() => { rememberTab('uebungen'); onNavigate(t.id); }}>
+                  Übungen
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </nav>
 
       <div className={styles.navsec} style={{ marginTop: 20 }}>Navigation</div>
@@ -92,27 +99,15 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
             <span className={styles.ti}>{item.label}</span>
           </button>
         ))}
-        {/* Swipe-Ansicht – Videos im Reels-Stil unter der Route /feed. */}
-        <button onClick={() => router.push('/feed')}>
-          <span className={styles.icon}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3" /><polyline points="9 13.5 12 10.5 15 13.5" /><line x1="12" y1="10.5" x2="12" y2="17" /></svg>
-          </span>
-          <span className={styles.ti}>Swipe-Ansicht</span>
-        </button>
       </nav>
 
       <div style={{ flex: 1 }} />
 
-      {(owned || ownedLk) ? (
-        <div className={styles.ownedTag}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
-          Vollzugang aktiv
-        </div>
-      ) : (
+      {!(owned || ownedLk) && (
         <div className={styles.unlockCard}>
-          <p>Schalte alle Aufgaben, Lösungen und Erklärvideos frei.</p>
+          <p>Alle Aufgaben, Lösungen und Erklärvideos – bis zur Prüfung.</p>
           <button className="btn primary btn sm" style={{ width: '100%', fontSize: 13 }} onClick={onOpenCheckout}>
-            Vollzugang — 79 €
+            Kurs freischalten
           </button>
         </div>
       )}

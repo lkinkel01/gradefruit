@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-03 (Sprint 09: Verkaufsfertig-Recht)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-10 (Sprint 10: Premium-Design, Wiederholungssystem, Reel-Modus)
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -51,7 +51,25 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 - ✅ Erklärvideos (ElevenLabs-Stimme + animierte Szenen)
 - ✅ Checkout-Flow (GK+LK, einmalig+Abo), Webhook (inkl. Rückerstattung →
   Zugang entziehen), Stripe-Kundenportal
-- ✅ Konto-Seite, Fortschritt (verstanden/gespeichert)
+- ✅ Konto-Seite
+- ✅ **Wiederholungssystem (Sprint 10, 07/2026):** statt „Verstanden/Gespeichert"
+  gibt es drei Lernstufen — **Verstanden / Wiederholen / Noch unklar** — als
+  Segment-Buttons unter jeder Aufgabe. Gespeichert wird OHNE DB-Änderung auf den
+  zwei bestehenden Bool-Spalten (`understood`,`saved`) kodiert: verstanden=(1,0),
+  wiederholen=(0,1), unklar=(1,1), keine=(0,0) → Logik in `ProgressContext.tsx`
+  (`statusOf`/`setStatus`). Neue **Wiederholen-Seite** (`ReviewView.tsx`, ersetzt
+  „Gespeichert"): Filter nach Lernstufe × Themen (mehrfach), sortiert
+  Unklares zuerst; Klick öffnet die Aufgabe direkt (Deep-Link `gf-open-task`).
+  Dashboard-Kacheln (Verstanden/Wiederholen/Noch unklar) sind klickbar und
+  springen mit vorgewähltem Filter dorthin (`gf-review-status`). Vorbereitet
+  für Active Recall/Spaced Repetition (Stufen = spätere Wiederhol-Intervalle).
+  Grenze: Lernstufen gibt es bisher nur für Aufgaben (DB-Tabelle `lessons`);
+  Zusammenfassungen/Formeln einzeln einordnen bräuchte neue DB-Spalten → Backlog.
+- ✅ **Grapefruit als Fortschrittssprache (Sprint 10):** `GrapefruitProgress`
+  in `Logo.tsx` (Frucht füllt sich exakt proportional, Kreissektor ab 12 Uhr,
+  Segmentlinien darüber). Eingesetzt: Dashboard-Gesamtfortschritt (ersetzt den
+  Ring), Themen-Liste, Sidebar-Kurskarte, Themenseiten-Fortschritt, Leerzustand
+  der Wiederholen-Seite.
 - ✅ Landing-Page (Sprint 02+03, 07/2026): Grapefruit-Logo (Querschnitt mit
   herausgezogenem Segment, SVG), Sticky-Nav mit Milchglas, Hero für GK+LK,
   USP-Leiste, **interaktive Produkt-Demo mit GK/LK-Umschalter** (echte
@@ -76,7 +94,13 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   verschlankt (Beispielfragen hinter Klick) mit **funktionierender
   Spracheingabe** (Web Speech API, browserseitig), „Erklärvideos" aus der
   Navigation entfernt (Videos leben in Übungen + Swipe-Ansicht)
-- ✅ **Swipe-Ansicht** (`/feed`, „TikTok für Mathe"; Sidebar-Eintrag heißt so): volle dunkle Video-Bühne mit
+- ✅ **Reel-Modus** (`/feed`; hieß bis Sprint 09 „Swipe-Ansicht", **kein eigener
+  Sidebar-Eintrag mehr**): erreichbar über den „Reel-Modus"-Button auf jeder
+  Themenseite (öffnet einen dynamisch gebauten Feed NUR dieses Themas —
+  `buildTopicFeed()` aus Videos, Formeln, Fehlern, Aufgaben, Zusammenfassungen;
+  Übergabe via `localStorage gf-feed-topic`) und über den „Reel-Modus"-Button
+  auf der Übersicht (gemischter Feed über alle Themen). „Merken" im Feed setzt
+  die Lernstufe „Wiederholen". Ursprüngliche Beschreibung: volle dunkle Video-Bühne mit
   echtem Funktionsgraphen der Szene, Overlays im Reels-Stil (Thema, Titel,
   Beschreibung, Lernziel, geschätzte Dauer), Aktions-Leiste rechts (Üben +
   Formeln springen per Deep-Link ins Thema [`gf-open-topic`/`gf-open-tab`],
@@ -102,6 +126,29 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   scripts/generate-audio.mjs` ausführen und in `scenes.ts` bei `l1`
   `hasAudio: true` setzen.
 
+- ✅ **Premium-Design (Sprint 10):** Primär-Buttons in warmem Tinten-Schwarz
+  (im Dark Mode invertiert hell, Apple-artig) statt Orange-Verlauf — Orange
+  bleibt Grapefruit/Fortschritt/Akzenten vorbehalten. Gedeckte Themenfarben
+  (`#DE5D43`/`#5D6BC9`/`#2F9E68` statt Signaltöne, überall konsistent inkl.
+  `scenes.ts`). Neue `--glass`-Variable für Milchglas-Leisten. Einheitliche
+  **Aktionsleiste „Video ansehen · KI fragen · Tutor (bald)"** an fester
+  Position in Übungen UND Zusammenfassungs-Karten („Video folgt"/„Tutor · bald"
+  ehrlich als inaktive Chips); „Lösung Schritt für Schritt" + „Eigene Lösung
+  prüfen" als eigener Bereich darüber. Landing: neuer Hero („Die Prüfung kommt.
+  Du wirst bereit sein."), neue Sektion **„Mehr als Aufgaben"** (Strategien aus
+  Studium/Prüfungserfahrung: Operatoren, Punkte sichern, Wiederholen mit System).
+- ✅ **Bugfixes (Sprint 10):** Dark Mode der oberen App-Leiste (der alte
+  `body.dark .topbar`-Selektor griff bei CSS-Modulen nie → jetzt `--glass`);
+  Video-Modal war erst nach Scrollen sichtbar (Einstiegs-Animation ließ eine
+  Identity-Transform auf `.page` zurück → `position:fixed` wurde relativ zur
+  Seite; Fix: SceneModal rendert per **React-Portal** an `document.body`);
+  Begrüßung nach Uhrzeit korrigiert (bis 12 Uhr „Guten Morgen", bis 18 Uhr
+  „Guten Tag"); Themen-Untermenü in der Sidebar bleibt im aktiven Thema
+  dauerhaft offen (Klicks wechseln den Tab auch im bereits offenen Thema —
+  `navSignal` in page.tsx); „Vollzugang aktiv"-Tag aus der Sidebar entfernt;
+  Login/Registrierung ohne Placeholder, mit Fokus-Ring und autoComplete;
+  Wiederholen-Seite ist frei zugänglich (nicht hinter der Bezahlschranke).
+
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
   rote Platzhalter (Name, Adresse, E-Mail, USt-Status §19, Zugangs-Enddatum,
@@ -121,11 +168,18 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   die Bezahlschranke härten.
 
 ## Nächste sinnvolle Schritte
-1. Safari-Dark-Mode verifizieren (Leon).
+1. Safari-Dark-Mode verifizieren (Leon) — Sprint-10-Design zusätzlich prüfen.
 2. **Stripe TEST → LIVE** schalten (echter Umsatz), davor AGB/Widerruf/MwSt-Ausweis.
-3. Übersichts-Zähler an echte Aufgabenzahlen anpassen (statische 24/18/16 in types.ts).
-4. Mehr Aufgaben / Themen-Tiefe; weitere Erklärvideos produzieren und verknüpfen.
-5. (Optional) Inhalte server-seitig laden (Härtung der Bezahlschranke).
+3. Sprint-11-Kandidaten (bewusst aufgehoben): Lernstufen auch für
+   Zusammenfassungs-Abschnitte/Formeln (braucht neue DB-Tabelle/Spalten),
+   echtes Spaced-Repetition-Scheduling (Fälligkeits-Daten) und Interleaving-
+   Mix auf der Wiederholen-Seite, LK-Karten im Reel-Modus (Feed nutzt bisher
+   GK-Inhalte), eigenständigere Fließtext-Schrift (Inter ist austauschbar,
+   Schibsted Grotesk bleibt Display).
+4. Übersichts-Zähler an echte Aufgabenzahlen angleichen (DB `lessons` = 79
+   vs. 133 Aufgaben in den Task-Dateien; eigener kleiner DB-Sprint).
+5. Mehr Aufgaben / Themen-Tiefe; weitere Erklärvideos produzieren und verknüpfen.
+6. (Optional) Inhalte server-seitig laden (Härtung der Bezahlschranke).
 
 ## Arbeitsteilung & Regeln
 - **Claude Code**: kennt Codebasis, setzt um, committet/pusht **nur auf ausdrückliche

@@ -14,7 +14,9 @@
 .modal {
   width: min(960px, 100%);
   max-height: 92vh;
-  overflow: auto;
+  /* Kein Scrollen des ganzen Fensters: Graph, Untertitel und Steuerung sind
+     sofort sichtbar, nur der Inhaltsbereich (Schritte) scrollt bei Bedarf. */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background: var(--surface);
@@ -24,14 +26,14 @@
   animation: pop 0.2s ease;
 }
 
-/* Wurzel des wiederverwendbaren Players: füllt im Lernfeed den ganzen Rahmen,
-   im Modal verhält er sich wie bisher (Höhe folgt dem Inhalt). */
+/* Wurzel des wiederverwendbaren Players: füllt im Reel-Modus den ganzen
+   Rahmen, im Modal scrollt nur der Inhaltsbereich (siehe .body). */
 .player {
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  overflow-y: auto;
+  overflow: hidden;
   background: var(--surface);
 }
 .player .foot { margin-top: auto; }
@@ -96,7 +98,7 @@
   transition: background 0.15s, color 0.15s;
 }
 .close:hover {
-  background: var(--bg);
+  background: var(--surface-2);
   color: var(--ink);
 }
 
@@ -106,11 +108,17 @@
   grid-template-columns: 1.1fr 0.9fr;
   gap: 20px;
   padding: 22px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 @media (max-width: 760px) {
   .body {
     grid-template-columns: 1fr;
   }
+  /* Mobil zuerst das Bild: der Graph gehört sofort in den Blick,
+     die Schritte folgen darunter. */
+  .right { order: -1; }
 }
 
 .left {
@@ -128,7 +136,7 @@
   padding: 10px 16px;
   border: 1.5px solid;
   border-radius: 12px;
-  background: var(--bg);
+  background: var(--surface-2);
 }
 
 .steps {
@@ -207,7 +215,7 @@
   width: 100%;
   max-width: 360px;
   height: auto;
-  background: var(--bg);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: 6px;
@@ -273,7 +281,7 @@
   margin: 0 22px;
   padding: 14px 16px;
   border-radius: 14px;
-  background: var(--bg);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   color: var(--ink);
   font-size: 15px;
@@ -290,9 +298,11 @@
   overflow: hidden;
 }
 .pfill {
+  width: 100%;
   height: 100%;
   border-radius: 999px;
-  transition: width 0.18s linear;
+  transform-origin: left center;
+  transition: transform 0.18s linear;
 }
 
 /* ---------- Steuerung ---------- */
@@ -316,7 +326,7 @@
   transition: background 0.15s, opacity 0.15s;
 }
 .ctrl:hover:not(:disabled) {
-  background: var(--bg);
+  background: var(--surface-2);
 }
 .ctrl:disabled {
   opacity: 0.35;

@@ -2,12 +2,21 @@
 @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes reveal { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
 
-.ph1 { font-size: 30px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.02em; }
+.headRow { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
+.ph1 { font-size: 30px; font-weight: 800; letter-spacing: -0.022em; }
 
-/* Fortschritt im Thema */
-.progressRow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-.progressTrack { flex: 1; max-width: 300px; height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
-.progressFill { height: 100%; border-radius: 99px; transition: width .45s ease; }
+/* Umschalter in den Reel-Modus (gleiche Inhalte im Reel-Format) */
+.reelBtn {
+  display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0;
+  border: 1px solid var(--line-strong); background: var(--surface);
+  cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--ink); padding: 9px 16px; border-radius: 99px;
+  transition: .15s;
+}
+.reelBtn:hover { border-color: var(--faint); transform: translateY(-1px); box-shadow: var(--shadow); }
+
+/* Fortschritt im Thema: kleine Grapefruit + Zähler */
+.progressRow { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
 .progressLabel { font-size: 12.5px; color: var(--faint); font-variant-numeric: tabular-nums; }
 
 /* Bereichs-Tabs: Zusammenfassung / Übungen */
@@ -85,26 +94,29 @@
 
 .cardBody { padding: 2px 20px 18px; animation: reveal .28s ease both; }
 .taskQ { font-size: 15.5px; line-height: 1.65; margin-bottom: 15px; }
-.rowActions { display: flex; gap: 9px; flex-wrap: wrap; }
+
+/* Feste Aktionsleiste (Video · KI · Tutor) – immer dieselbe Position */
+.rowActions {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--line);
+}
+/* Lösungs-Bereich: eigene Zeile über der Aktionsleiste */
+.solRow { display: flex; gap: 8px; flex-wrap: wrap; }
+.solBtn { font-weight: 600; }
 
 .mini {
   border: 1px solid var(--line-strong); background: var(--surface);
   cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500;
-  color: var(--ink); padding: 8px 13px; border-radius: 10px;
+  color: var(--ink); padding: 8px 13px; border-radius: 99px;
   transition: .15s; display: inline-flex; align-items: center; gap: 7px;
 }
-.mini:hover { border-color: var(--accent); color: var(--accent-d); }
-.miniDone { background: var(--green-soft); border-color: var(--green); color: var(--green); }
-.miniDone:hover { border-color: var(--green); color: var(--green); }
-.miniSaved { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-d); }
+.mini:hover { border-color: var(--faint); transform: translateY(-1px); }
 
-/* Vorbereiteter Platz für kommende Funktionen (Tutor) */
-.soonChip {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 12.5px; font-weight: 500; color: var(--faint);
-  border: 1px dashed var(--line-strong); border-radius: 10px;
-  padding: 8px 13px; cursor: default;
+/* Vorbereitete, ehrlich beschriftete Aktionen (Video folgt, Tutor bald) */
+.miniOff {
+  color: var(--faint); border-style: dashed; cursor: default;
 }
+.miniOff:hover { border-color: var(--line-strong); transform: none; }
 
 .solution {
   margin-top: 16px; border-top: 1px solid var(--line);
@@ -148,9 +160,32 @@
 .mistakesList { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
 .mistakesList li { font-size: 13.5px; line-height: 1.5; color: var(--ink); }
 
+/* Fuß: die drei Lernstufen (Wiederholungssystem) */
 .cardFoot {
-  display: flex; gap: 8px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+}
+.footLabel { font-size: 12.5px; color: var(--faint); }
+.statusSeg {
+  display: inline-flex; gap: 4px; padding: 4px;
+  border: 1px solid var(--line); border-radius: 99px; background: var(--surface-2);
+}
+.statusBtn {
+  border: none; background: transparent; cursor: pointer;
+  font-family: inherit; font-size: 12.5px; font-weight: 600;
+  color: var(--muted); padding: 7px 14px; border-radius: 99px;
+  transition: .15s; white-space: nowrap;
+}
+.statusBtn:hover { color: var(--ink); }
+.statusOn_verstanden { background: var(--green-soft); color: var(--success); }
+.statusOn_wiederholen { background: var(--accent-soft); color: var(--accent-d); }
+.statusOn_unklar { background: var(--control); color: var(--ink); }
+
+/* Status-Hinweis im zugeklappten Kartenkopf */
+.headStatus {
+  font-size: 11px; font-weight: 650; color: var(--faint);
+  border: 1px solid var(--line); border-radius: 99px; padding: 3px 9px;
+  white-space: nowrap;
 }
 
 .topicFoot { display: flex; justify-content: space-between; gap: 10px; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); }
