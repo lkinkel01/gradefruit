@@ -29,19 +29,19 @@ colors:
   dark-ink: "#F5F0EA"
 typography:
   display:
-    fontFamily: "Schibsted Grotesk, sans-serif"
+    fontFamily: "Bricolage Grotesque, sans-serif"
     fontSize: "clamp(40px, 6.4vw, 68px)"
     fontWeight: 800
     lineHeight: 1.04
     letterSpacing: "-0.035em"
   headline:
-    fontFamily: "Schibsted Grotesk, sans-serif"
+    fontFamily: "Bricolage Grotesque, sans-serif"
     fontSize: "30px"
     fontWeight: 800
     lineHeight: 1.2
     letterSpacing: "-0.022em"
   title:
-    fontFamily: "Schibsted Grotesk, sans-serif"
+    fontFamily: "Bricolage Grotesque, sans-serif"
     fontSize: "15px"
     fontWeight: 700
     lineHeight: 1.35
@@ -220,14 +220,18 @@ kaputt, nicht die Palette zu klein.
 
 ## 3. Typography
 
-**Display Font:** Schibsted Grotesk (sans-serif)
+**Display Font:** Bricolage Grotesque (sans-serif)
 **Body Font:** Inter (mit -apple-system-Fallback)
 **Mono Font:** JetBrains Mono — ausschließlich für Mathe (Formeln, Schritte, Ergebnisse)
 
-**Charakter:** Selbstbewusste, eng gespannte Grotesk für alles Laute; ein
-neutraler, gut lesbarer Text-Font für alles Leise; Mono als „Tafel" für
-Mathematik. Headlines dürfen groß und knapp sein (Nike-Ton), Fließtext bleibt
-zurückhaltend.
+**Charakter:** Bricolage Grotesque ist eine editoriale Grotesk mit eigenem
+Charakter (warme, leicht unregelmäßige Terminals, Ink-Traps) — sie gibt der
+Marke eine Stimme, die klar NICHT nach Default-Template klingt, und trägt von
+14 px bis 68 px. Sie ist optisch skaliert (`font-optical-sizing: auto`):
+tightes Tracking im Großen, offener im Kleinen. Inter bleibt der neutrale,
+gut lesbare Text-Font für alles Leise (Mathe-Dichte!); Mono ist die „Tafel"
+für Mathematik. Headlines dürfen groß und knapp sein (Nike-Ton), Fließtext
+bleibt zurückhaltend.
 
 ### Hierarchy
 - **Display** (800, clamp(40–68px), 1.04, −0.035em): nur Landing-Hero.
@@ -239,10 +243,11 @@ zurückhaltend.
 - **Mono** (500–600, 13–14px): Formeln, Rechenschritte, Ergebnisse —
   mit `overflow-x: auto` auf schmalen Screens, nie umbrechend zerstört.
 
-**Die Zwei-Schriften-Regel.** Es gibt genau diese drei Familien mit genau
-diesen Rollen. Keine neue Schrift ohne bewusste Marken-Entscheidung (Kandidat
-für später: Inter durch eine eigenständigere Textschrift ersetzen — Schibsted
-bleibt gesetzt). Zahlen in Zählern immer `font-variant-numeric: tabular-nums`.
+**Die Drei-Schriften-Regel.** Genau diese drei Familien mit genau diesen
+Rollen: Bricolage Grotesque (Display/alles Laute), Inter (Body/UI), JetBrains
+Mono (nur Mathe). Keine vierte Schrift. Alle Überschriften und großen Zahlen
+(Countdown, Fortschritt, Aufgaben-Nummern) tragen Bricolage. Zahlen in Zählern
+immer `font-variant-numeric: tabular-nums`.
 
 ## 4. Elevation
 

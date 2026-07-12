@@ -150,7 +150,7 @@
   margin-top: -6px;
 }
 .cTitle {
-  font-family: 'Schibsted Grotesk', sans-serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 26px;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -234,7 +234,7 @@
 .cta:active { transform: scale(0.97); }
 .motDays { display: flex; flex-direction: column; }
 .motNum {
-  font-family: 'Schibsted Grotesk', sans-serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 74px;
   font-weight: 800;
   line-height: 1;
@@ -323,7 +323,7 @@
   border-radius: 99px;
 }
 .title {
-  font-family: 'Schibsted Grotesk', sans-serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 21px;
   font-weight: 800;
   letter-spacing: -0.015em;

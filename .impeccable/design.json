@@ -80,7 +80,7 @@
       "refersTo": "card",
       "description": "Standard-Karte: weiße Fläche, feine Linie, Hover hebt sanft an.",
       "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Extrempunkte</h3><p class=\"ds-card-text\">Kandidaten liefert f′(x) = 0. Ob Hoch- oder Tiefpunkt, entscheidet die zweite Ableitung.</p></div>",
-      "css": ".ds-card { background: var(--surface, #FFFFFF); border: 1px solid var(--line, #EDE4DB); border-radius: 18px; padding: 20px 22px; max-width: 340px; transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; } .ds-card:hover { transform: translateY(-2px); border-color: var(--line-strong, #DDD1C5); box-shadow: 0 1px 2px rgba(60,40,25,.03), 0 6px 20px rgba(60,40,25,.05); } .ds-card-title { font-family: 'Schibsted Grotesk', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink, #211C17); margin: 0 0 8px; } .ds-card-text { font-family: Inter, sans-serif; font-size: 13.5px; line-height: 1.6; color: var(--muted, #6F675E); margin: 0; }"
+      "css": ".ds-card { background: var(--surface, #FFFFFF); border: 1px solid var(--line, #EDE4DB); border-radius: 18px; padding: 20px 22px; max-width: 340px; transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; } .ds-card:hover { transform: translateY(-2px); border-color: var(--line-strong, #DDD1C5); box-shadow: 0 1px 2px rgba(60,40,25,.03), 0 6px 20px rgba(60,40,25,.05); } .ds-card-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink, #211C17); margin: 0 0 8px; } .ds-card-text { font-family: Inter, sans-serif; font-size: 13.5px; line-height: 1.6; color: var(--muted, #6F675E); margin: 0; }"
     },
     {
       "name": "Eingabefeld",
@@ -121,7 +121,7 @@
     "rules": [
       { "name": "Die Eine-Stimme-Regel", "body": "Orange erscheint auf maximal ~10 % eines Screens. Primäraktionen sind Tinte, nicht Orange — die Seltenheit macht die Frucht wertvoll.", "section": "colors" },
       { "name": "Die Dark-Mode-Regel", "body": "Dark Mode entsteht ausschließlich durch CSS-Variablen unter body.dark. Globale Selektoren auf CSS-Modul-Klassen sind verboten.", "section": "colors" },
-      { "name": "Die Zwei-Schriften-Regel", "body": "Schibsted Grotesk (laut), Inter (leise), JetBrains Mono (nur Mathe). Keine neue Schrift ohne Marken-Entscheidung.", "section": "typography" },
+      { "name": "Die Zwei-Schriften-Regel", "body": "Bricolage Grotesque (laut), Inter (leise), JetBrains Mono (nur Mathe). Keine neue Schrift ohne Marken-Entscheidung.", "section": "typography" },
       { "name": "Die Antwort-Regel", "body": "Kein Schatten ohne Anlass: Flächen sind flach, bis der Nutzer mit ihnen spricht (Hover, Fokus, Öffnen).", "section": "elevation" },
       { "name": "Die Breakpoint-Regel", "body": "Genau drei Schwellen: 900px (Schublade), 760–820px (stapeln), 560px (kompakt). Keine weiteren Magic-Breakpoints.", "section": "elevation" },
       { "name": "Die Soll-das-überhaupt-animieren-Regel", "body": "Was der Nutzer hundertfach am Tag sieht, animiert kaum oder gar nicht. Je seltener und bedeutungsvoller ein Moment, desto mehr Bewegung ist erlaubt. Im Zweifel weniger.", "section": "elevation" }

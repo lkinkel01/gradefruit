@@ -10,6 +10,7 @@ import { LINALG_TASKS } from '@/lib/linalgTasks';
 import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
 import { ScenePlayer } from '@/components/SceneModal';
 import AskDrawer from '@/components/AskDrawer';
+import { GrapefruitSpinner } from '@/components/Logo';
 import { daysUntilExam } from '@/lib/exam';
 import styles from './feed.module.css';
 
@@ -291,7 +292,11 @@ export default function FeedPage() {
   };
 
   if (loading || !user) {
-    return <div className={styles.gate}>{loading ? 'Laden …' : 'Weiterleitung …'}</div>;
+    return (
+      <div className={styles.gate}>
+        <GrapefruitSpinner size={52} label={loading ? 'Reel-Modus lädt …' : 'Weiterleitung …'} />
+      </div>
+    );
   }
 
   // Wiederverwendbare Leisten-Bausteine

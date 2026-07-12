@@ -51,6 +51,42 @@ export function Logo({ size = 28, filled = 1 }: { size?: number; filled?: number
 
 const R_FLESH = 16.6;
 
+// Voller 60°-Segmentkeil ab „12 Uhr" (für Spinner & Illustrationen).
+const SLICE = 'M24 25 L24 8.4 A16.6 16.6 0 0 1 38.38 16.7 Z';
+
+// Grapefruit-Ladeanimation: die sechs Segmente leuchten reihum auf.
+// Ersetzt überall das generische „Laden …". Bei reduced-motion steht sie
+// still und zeigt eine ruhige, volle Frucht.
+export function GrapefruitSpinner({ size = 46, label }: { size?: number; label?: string }) {
+  return (
+    <div role="status" aria-live="polite" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+      <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="25" r="19.4" fill="none" stroke="var(--line-strong)" strokeWidth="2.4" />
+        <circle cx="24" cy="25" r={R_FLESH} fill="var(--control)" />
+        {SEGMENTS.map((a, i) => (
+          <path
+            key={`s${a}`}
+            className="gf-spin-seg"
+            d={SLICE}
+            fill="#EE7457"
+            transform={`rotate(${a} 24 25)`}
+            style={{ animationDelay: `${-i * 0.19}s` }}
+          />
+        ))}
+        {SEGMENTS.map(a => (
+          <line
+            key={`l${a}`}
+            x1="24" y1="25" x2="24" y2={25 - R_FLESH}
+            stroke="var(--surface)" strokeWidth="1.7" strokeLinecap="round"
+            transform={`rotate(${a} 24 25)`}
+          />
+        ))}
+      </svg>
+      {label && <span style={{ fontSize: 13.5, color: 'var(--muted)' }}>{label}</span>}
+    </div>
+  );
+}
+
 // Kreissektor von „12 Uhr" im Uhrzeigersinn bis zum Anteil p (0..1).
 function piePath(p: number): string {
   const a = p * Math.PI * 2;

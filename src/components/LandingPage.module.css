@@ -25,14 +25,17 @@
   top: -60px; left: 50%;
   transform: translateX(-50%);
   margin-left: 330px;
-  opacity: 0.32;
+  opacity: 0.3;
   pointer-events: none;
   z-index: -1;
   will-change: transform;
 }
-:global(body.dark) .heroArt { opacity: 0.2; }
-@media (max-width: 900px) {
-  .heroArt { margin-left: 120px; top: -80px; opacity: 0.16; }
+:global(body.dark) .heroArt { opacity: 0.16; }
+/* Auf schmalen Screens ein sehr dezenter Eck-Akzent, damit das Motiv nie
+   mit der Headline konkurriert. */
+@media (max-width: 820px) {
+  .heroArt { margin-left: 150px; top: -70px; opacity: 0.12; }
+  :global(body.dark) .heroArt { opacity: 0.12; }
 }
 
 /* Nav: bleibt beim Scrollen oben, mit Milchglas-Effekt */
@@ -47,7 +50,7 @@
   border-bottom: 1px solid var(--line);
 }
 .brand {
-  font-family: 'Schibsted Grotesk', sans-serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-weight: 800; font-size: 20px;
   display: flex; align-items: center; gap: 10px; cursor: pointer;
   letter-spacing: -0.02em;
@@ -61,11 +64,11 @@
 }
 .darkToggle:hover { border-color: var(--accent); color: var(--accent-d); }
 
-/* Hero: zentriert und ruhig */
+/* Hero: zentriert, ruhig, selbstbewusst */
 .hero {
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
-  padding: 92px 0 72px;
+  padding: 104px 0 80px;
 }
 .hero > * { animation: rise .55s cubic-bezier(.2,.7,.3,1) both; }
 .hero > h1 { animation-delay: .05s; }
@@ -80,10 +83,10 @@
   margin-bottom: 22px;
 }
 .hero h1 {
-  font-family: 'Schibsted Grotesk', sans-serif;
-  font-size: clamp(40px, 6.4vw, 68px);
-  font-weight: 800; line-height: 1.03;
-  margin-bottom: 22px; letter-spacing: -0.038em;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(43px, 7vw, 78px);
+  font-weight: 800; line-height: 1.0;
+  margin-bottom: 22px; letter-spacing: -0.04em;
   text-wrap: balance;
 }
 /* Hervorhebungs-Satz in solider Grapefruit-Farbe (kein Verlaufstext –
@@ -173,7 +176,7 @@
 .plan:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); border-color: var(--line-strong); }
 .planAccent { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
 .plan h3 { font-size: 20px; letter-spacing: -0.015em; }
-.price { font-family: 'Schibsted Grotesk', sans-serif; font-weight: 800; font-size: 42px; margin: 14px 0 2px; letter-spacing: -0.02em; }
+.price { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 42px; margin: 14px 0 2px; letter-spacing: -0.02em; }
 .per { font-size: 13.5px; color: var(--muted); }
 .altPrice {
   font-size: 13px; color: var(--faint);
@@ -200,7 +203,7 @@
   padding-top: 44px; border-top: 1px solid var(--line); text-align: center;
 }
 .footbrand {
-  font-family: 'Schibsted Grotesk', sans-serif; font-weight: 800; font-size: 18px;
+  font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 18px;
   display: flex; align-items: center; gap: 8px; letter-spacing: -0.02em;
 }
 .foottrust { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); }

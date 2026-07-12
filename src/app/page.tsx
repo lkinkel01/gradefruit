@@ -15,6 +15,7 @@ import AccountView from '@/components/AccountView';
 import CheckoutModal from '@/components/CheckoutModal';
 import AuthModal from '@/components/AuthModal';
 import AskDrawer from '@/components/AskDrawer';
+import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
 // Ohne Kauf frei zugänglich (Probezugang): Übersicht, alle Themenseiten und Konto.
@@ -201,8 +202,8 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: 'var(--muted)', fontFamily: 'inherit' }}>
-        Laden…
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <GrapefruitSpinner label="Einen Moment …" />
       </div>
     );
   }

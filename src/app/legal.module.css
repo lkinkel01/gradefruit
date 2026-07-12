@@ -12,7 +12,7 @@
   justify-content: space-between;
 }
 .brand {
-  font-family: 'Schibsted Grotesk', sans-serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-weight: 800;
   font-size: 20px;
   display: flex;
@@ -60,7 +60,7 @@
   margin-bottom: 18px;
 }
 .title {
-  font-family: 'Schibsted Grotesk', sans-serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 40px;
   font-weight: 800;
   letter-spacing: -0.03em;

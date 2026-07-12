@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700;800&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
 
 :root {
   /* Warme, natürliche Palette: Papier statt Klinik, Grapefruit statt Signalrot */
@@ -68,9 +68,33 @@ body {
 }
 a { color: inherit; text-decoration: none; }
 ::selection { background: var(--accent-soft); }
+
+/* ---------------------------------------------------------------------------
+   Grapefruit-Substrat: aus der Querschnitt-Geometrie abgeleitete radiale
+   Segmentlinien, die aus einer Ecke strahlen. Extrem subtil (nur --line,
+   halbe Deckkraft, weich ausmaskiert) – man spürt es mehr, als man es sieht.
+   Das ist das wiederkehrende Markenelement, das jeden Screen als Gradefruit
+   erkennbar macht, auch ohne Logo. Fix, nicht-interaktiv, hinter allem;
+   opake Karten/Sidebar decken es ab, es zeigt sich nur auf dem Papier.
+   --------------------------------------------------------------------------- */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    repeating-conic-gradient(from 6deg at 11% 6%, transparent 0 12.6deg, var(--line) 12.6deg 12.85deg);
+  -webkit-mask-image: radial-gradient(62% 58% at 11% 6%, #000 0%, transparent 68%);
+  mask-image: radial-gradient(62% 58% at 11% 6%, #000 0%, transparent 68%);
+  opacity: .55;
+}
+body.dark::before { opacity: .7; }
 h1, h2, h3, h4 {
-  font-family: 'Schibsted Grotesk', sans-serif;
+  font-family: 'Bricolage Grotesque', sans-serif;
   letter-spacing: -0.022em;
+  /* Bricolage ist optisch skaliert: enger im Großen, offener im Kleinen. */
+  font-optical-sizing: auto;
 }
 
 /* Buttons */
@@ -114,6 +138,11 @@ h1, h2, h3, h4 {
    --------------------------------------------------------------------------- */
 @keyframes gf-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes gf-pop { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+
+/* Grapefruit-Ladeanimation: die sechs Segmente leuchten reihum auf. Bei
+   reduced-motion steht sie still (Animation aus → volle Frucht). */
+@keyframes gf-spin-seg { 0%, 100% { opacity: .16; } 22% { opacity: 1; } }
+.gf-spin-seg { animation: gf-spin-seg 1.15s var(--ease-in-out) infinite; }
 
 .gf-rise { animation: gf-rise var(--dur-enter) var(--ease-out) both; }
 .gf-stagger > * { animation: gf-rise var(--dur-enter) var(--ease-out) both; }

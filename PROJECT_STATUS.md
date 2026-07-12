@@ -223,6 +223,22 @@ Probleme").
   Bewusst für später: Body-Font Inter durch eine eigenständigere Textschrift
   ersetzen (Impeccable-Hinweis; braucht Mathe-Lesbarkeits-Tests), Marketing-
   Type-Scale in DESIGN.md ergänzen, echte Gesten-Physik (Federn) im Reel-Modus.
+- ✅ **Marken-Sprint (12.07.2026, eigene Designsprache):** Gradefruit soll
+  ohne Logo erkennbar sein. **Display-Schrift Schibsted Grotesk → Bricolage
+  Grotesque** (editoriale Grotesk mit Charakter, `font-optical-sizing: auto`;
+  Inter bleibt Body, JetBrains Mono bleibt Mathe) — trägt jetzt alle
+  Überschriften und großen Zahlen; DESIGN.md/Sidecar nachgezogen
+  („Drei-Schriften-Regel"). **Grapefruit-Substrat**: aus der Querschnitt-
+  Geometrie abgeleitete radiale Segmentlinien als extrem subtiler, fixer
+  Hintergrund über der ganzen App (`body::before`, theme-fest) — das
+  wiederkehrende Markenelement. **GrapefruitSpinner** (`Logo.tsx`): die sechs
+  Segmente leuchten reihum auf, ersetzt das generische „Laden …" in App- und
+  Reel-Gate (reduced-motion → ruhige volle Frucht). Hero editorialer
+  (größere, engere Bricolage-Headline), Grapefruit-Motiv als balancierter
+  Eck-Akzent (mobil dezenter). Verifiziert in hell/dunkel + Desktop/mobil,
+  keine Konsolenfehler. Bewusst für später: Empty/Loading-States der
+  KI-Drawer, Icon-Sprache vereinheitlichen, Karten-Signaturdetail
+  (Grapefruit-Segment-Akzent), eigenständigere Body-Schrift.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
