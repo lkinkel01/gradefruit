@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# impeccable (Design-Skill): Cache/Config lokal, Token-Sidecar versioniert
+.impeccable/*
+!.impeccable/design.json
+
 # debug
 npm-debug.log*
 yarn-debug.log*

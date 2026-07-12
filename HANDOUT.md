@@ -1,9 +1,11 @@
 # HANDOUT — Übergabe für die nächste Claude-Code-Session
 
-> Zweck: Diese Datei überbrückt den Chat-Wechsel. Die neue Session liest zuerst
-> diese Datei + PROJECT_STATUS.md und kann dann nahtlos weitermachen.
-> Dauerhafte Regeln stehen in CLAUDE.md (lädt automatisch), der laufende
-> Projektstand in PROJECT_STATUS.md (auch die Übergabe an ChatGPT).
+> Zweck: Diese Datei überbrückt den Chat-Wechsel — nur Start-Anleitung und
+> nächste Schritte. Alles andere steht genau einmal woanders:
+> Regeln in [CLAUDE.md](CLAUDE.md) (lädt automatisch, enthält die
+> Dokumenten-Landkarte), Produkt in [PRODUCT.md](PRODUCT.md), Design in
+> [DESIGN.md](DESIGN.md), Stand + Historie in
+> [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
 ## So startest du die neue Session (Leon)
 
@@ -12,39 +14,18 @@
    lädt die CLAUDE.md mit allen Projektregeln automatisch.
 2. Erste Nachricht (kopierbar):
    > „Lies HANDOUT.md und PROJECT_STATUS.md. Dann mach weiter mit: [dein Ziel,
-   > z. B. Verkaufsstart-Checkliste / Sprint 10 / hier sind meine
+   > z. B. Verkaufsstart-Checkliste / Sprint 12 / hier sind meine
    > Impressums-Daten …]"
 3. Die Sprint-Prompts der letzten Sessions haben sehr gut funktioniert —
    gleiches Format weiterverwenden (Ziel, nummerierte Punkte, Verbote,
    „Nach Abschluss: Typecheck, Build, Browser testen, Commit, Push").
 
-## Stand (10.07.2026, Sprint 10 committet, alles live auf gradefruit.de)
+## Stand
 
-Sprints 01–10 sind abgeschlossen und deployt. Höhepunkte Sprint 10
-(Premium-Design + Lernsystem): Grapefruit als zentrale Fortschritts-Sprache
-(`GrapefruitProgress` in `Logo.tsx` — füllt sich proportional; Dashboard,
-Sidebar, Themen), Tinten-schwarze Premium-Buttons statt Orange-Verlauf,
-gedeckte Themenfarben, **Wiederholungssystem** mit drei Lernstufen
-(Verstanden / Wiederholen / Noch unklar — ohne DB-Änderung auf
-`understood`/`saved` kodiert) + neuer **Wiederholen-Seite** mit Filtern
-(Lernstufe × Themen) und klickbaren Dashboard-Kacheln, **Reel-Modus** statt
-„Swipe-Ansicht" (kein Menüpunkt mehr; pro Thema auf jeder Themenseite und
-gemischt von der Übersicht), einheitliche Aktionsleiste (Video · KI · Tutor)
-in Übungen und Zusammenfassung, neuer Landing-Hero („Die Prüfung kommt. Du
-wirst bereit sein.") + Sektion „Mehr als Aufgaben" (Strategien aus Studium und
-Prüfungserfahrung). Wichtige Bugfixes: Dark-Mode-Topbar (CSS-Module-Selektor
-griff nie), Video-Modal sofort sichtbar (React-Portal — Seiten-Animation hatte
-`position:fixed` eingefangen), Begrüßung nach Uhrzeit, Sidebar-Untermenü im
-aktiven Thema dauerhaft offen, Auth-Formulare ohne Placeholder.
-
-Davor (Sprints 01–09): warme Farbwelt + Grapefruit-Logo, Lernbereich mit
-Zusammenfassung/Übungen + klickbaren Formeln/Schritten, Gradefruit-Coach mit
-Spracheingabe (Web Speech API), Feed mit Autoplay + menschlicher Stimme,
-Dashboard mit Namens-Begrüßung und Prüfungs-Countdown, AGB +
-Widerrufsbelehrung + rechtssicherer Checkout (MwSt.-Ausweis, Pflicht-Checkbox
-nach § 356 Abs. 5 BGB).
-
-Details pro Feature: siehe PROJECT_STATUS.md.
+Sprints 01–10 plus Fundament-Sprint sind abgeschlossen; alles bis Sprint 10
+ist live auf gradefruit.de. Der Fundament-Sprint (PRODUCT.md, DESIGN.md,
+Doku-Konsolidierung) liegt lokal vor und wartet auf Leons Freigabe zum
+Commit. Details: PROJECT_STATUS.md → „Aktueller Stand (Kurzfassung)".
 
 ## 🔴 Nächster großer Block: Verkaufsstart (Leon + Claude gemeinsam)
 
@@ -74,45 +55,19 @@ Details pro Feature: siehe PROJECT_STATUS.md.
       erstatten → prüfen, dass der Zugang wieder entzogen wird.
    Claude verifiziert die Schritte von lokal mit (read-only Skripte).
 
-## 🟠 Kleinere offene Punkte
+## Weitere offene Punkte & Sprint-Ideen
 
-- **ElevenLabs-Kontingent leer** (95/10.000 Zeichen): Video `l1` („Abstand
-  zweier Punkte") läuft stumm mit Untertiteln. Nach Aufstockung:
-  `node --env-file=.env.local scripts/generate-audio.mjs` ausführen und in
-  `src/lib/scenes.ts` bei `l1` `hasAudio: true` setzen.
-- **Prüfungsdatum ist Platzhalter** (03.05.2027 „voraussichtlich") — steht an
-  ZWEI Stellen: `src/components/Dashboard.tsx` und `src/app/feed/page.tsx`
-  (Konstante `EXAM_DATE`). Offiziellen Termin eintragen, sobald bekannt.
-- **Fortschritts-Zähler** („x/79 Aufgaben") zählen die DB-Tabelle `lessons`
-  (79 Einträge), nicht die 133 echten Aufgaben — Angleichen ist ein eigener
-  kleiner Sprint (DB-Seed + ProgressContext). Gleiches gilt fürs neue
-  Wiederholungssystem: Lernstufen speichern nur für Aufgaben mit DB-Lektion.
-- **Sprint-11-Ideen (bewusst aufgehoben):** Lernstufen für Zusammenfassungen/
-  Formeln (braucht DB-Erweiterung), echtes Spaced-Repetition-Scheduling +
-  Interleaving auf der Wiederholen-Seite, LK-Inhalte im Reel-Modus,
-  eigenständigere Fließtext-Schrift (Inter ersetzen, Schibsted bleibt).
-- **1:1 Nachhilfe** ist ehrliche „Bald verfügbar"-Seite; Tutor-Funktionen
-  überall nur als „bald" markiert — nichts vortäuschen.
-
-## Wichtige Orte im Code
-
-- `PROJECT_STATUS.md` — Projektstand, auch Übergabe an ChatGPT (nach großen
-  Änderungen aktualisieren; Leon kopiert ihn in ChatGPT).
-- `CLAUDE.md` — dauerhafte Regeln (Sicherheit, Konventionen, Befehle).
-- Inhalte: `src/lib/*Tasks.ts` (133 Aufgaben, GK+LK), `src/lib/summaries.ts`
-  (Formelsammlungen), `src/lib/scenes.ts` (7 Videos, mp3s in `public/audio/`).
-- Feed: `src/app/feed/page.tsx` (Kartentypen-System V3).
-- Player: `SceneModal.tsx` (exportiert `ScenePlayer` für Inline-Nutzung).
-- Deep-Links: `localStorage` `gf-open-topic` / `gf-open-tab` (einmalig,
-  StrictMode-sicher via Refs konsumiert).
+Vollständig gepflegt in **PROJECT_STATUS.md** („Bekannte Probleme" und
+„Nächste sinnvolle Schritte") — dort stehen u. a. ElevenLabs-Kontingent,
+Prüfungstermin (`src/lib/exam.ts`), Zähler-Angleichung 79↔133 und die
+Sprint-Kandidaten (Spaced Repetition, LK-Reels, Content-Ausbau).
 
 ## Bewährte Arbeitsweise (Kurzfassung)
 
-- Pro Sprint: umsetzen → `./node_modules/.bin/tsc --noEmit` → `unset
-  ANTHROPIC_API_KEY && npm run build` → im Preview-Browser verifizieren →
-  gezielt `git add <dateien>` → Commit → Push (Vercel deployt automatisch).
-- UI-Tests, die Login brauchen: Wegwerf-Konto
-  `gradefruit.<zweck>.test@gmail.com` registrieren, danach per Admin-Skript
-  löschen (Muster siehe CLAUDE.md/Chat-Historie; E-Mail-Bestätigung ist aus).
-- Ehrlichkeit ist Produktprinzip: keine erfundenen Zahlen, Bewertungen,
-  Termine oder Features; „bald" klar kennzeichnen.
+- Pro Sprint: umsetzen → Verifikations-Checkliste aus CLAUDE.md (Typecheck,
+  Build, Browser hell/dunkel/mobil) → gezielt `git add <dateien>` → Commit →
+  Push nur auf Leons Ansage (Vercel deployt automatisch).
+- UI-Tests mit Login: `scripts/create-test-user.mjs <zweck>` /
+  `scripts/delete-test-user.mjs <zweck>` (siehe CLAUDE.md → Verifikation).
+- Ehrlichkeit ist Produktprinzip (PRODUCT.md): keine erfundenen Zahlen,
+  Bewertungen, Termine oder Features; „bald" klar kennzeichnen.

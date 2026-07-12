@@ -1,3 +1,6 @@
+'use client';
+import { useEffect, useRef, useState } from 'react';
+
 // Gradefruit-Logo: eine Grapefruit im Querschnitt, flach und ruhig gezeichnet.
 // Feine Segmentlinien statt Clipart-Keilen, Farben nah an der echten Frucht.
 // Ein Segment ist dezent gefüllt: der Lern-Keil. Über `filled` lassen sich
@@ -64,6 +67,41 @@ interface GrapefruitProgressProps {
   flesh?: string;       // Farbe des ungefüllten Fruchtfleischs
   gap?: string;         // Farbe der Segmentlinien (Grund dahinter)
   showLeaf?: boolean;
+  animate?: boolean;    // beim Erscheinen bis zum Zielwert füllen (Standard: an)
+}
+
+// Zählt eine 0..1-Fraktion beim Mount (und bei Wertwechsel) sanft zum Ziel –
+// ease-out über ~750ms. Bei reduced-motion sofort am Ziel. So wirkt
+// Fortschritt „verdient", ohne verspielt zu sein.
+function useFillFraction(target: number, animate: boolean): number {
+  const [frac, setFrac] = useState(animate ? 0 : target);
+  const fromRef = useRef(animate ? 0 : target);
+
+  useEffect(() => {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (!animate || reduce) {
+      setFrac(target);
+      fromRef.current = target;
+      return;
+    }
+    const from = fromRef.current;
+    const dur = 750;
+    let raf = 0;
+    let start = 0;
+    const tick = (t: number) => {
+      if (!start) start = t;
+      const e = Math.min(1, (t - start) / dur);
+      const eased = 1 - Math.pow(1 - e, 3); // ease-out-cubic
+      const v = from + (target - from) * eased;
+      setFrac(v);
+      if (e < 1) raf = requestAnimationFrame(tick);
+      else fromRef.current = target;
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target, animate]);
+
+  return frac;
 }
 
 export function GrapefruitProgress({
@@ -73,15 +111,17 @@ export function GrapefruitProgress({
   flesh = 'var(--control)',
   gap = 'var(--surface)',
   showLeaf = true,
+  animate = true,
 }: GrapefruitProgressProps) {
-  const p = Math.min(100, Math.max(0, pct)) / 100;
+  const target = Math.min(100, Math.max(0, pct)) / 100;
+  const p = useFillFraction(target, animate);
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 48 48"
       role="img"
-      aria-label={`${Math.round(p * 100)} % geschafft`}
+      aria-label={`${Math.round(target * 100)} % geschafft`}
     >
       {/* Schale */}
       <circle cx="24" cy="25" r="19.4" fill="none" stroke={rind} strokeWidth="2.4" />

@@ -1,7 +1,13 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-10 (Sprint 10: Premium-Design, Wiederholungssystem, Reel-Modus)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-11 (Fundament-Sprint: PRODUCT.md, DESIGN.md, Doku-Konsolidierung)
+>
+> Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
+> Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
+> ihrer Zeit — was später ersetzt wurde, ist markiert).
+> Produktvision & Prinzipien: [PRODUCT.md](PRODUCT.md) · Designsystem:
+> [DESIGN.md](DESIGN.md) · Entwicklungsregeln: [CLAUDE.md](CLAUDE.md).
 
 ## Was ist Gradefruit?
 Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang zu
@@ -9,6 +15,33 @@ Lernplattform fürs schriftliche Mathe-Abitur Hessen 2027. Nutzer kaufen Zugang 
 Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Erklärvideos.
 - **Live:** www.gradefruit.de (Vercel, Auto-Deploy bei jedem Push auf `main`)
 - **Repo:** github.com/lkinkel01/gradefruit (Branch `main`)
+
+## Aktueller Stand (Kurzfassung, Stand Sprint 10)
+
+**Das Produkt ist funktional komplett für den Verkaufsstart** — es fehlt nur
+der Live-Gang (Rechtstexte-Platzhalter + Stripe TEST→LIVE, siehe „Bekannte
+Probleme").
+
+- **Landing** (`/`): Hero „Die Prüfung kommt. Du wirst bereit sein.",
+  Funktions-Übersicht, Sektion „Mehr als Aufgaben" (Strategien), Themen,
+  Kurse (GK 79 €/14,90 · LK 99 €/17,90), Closing, Footer mit Rechtsseiten.
+- **Lernbereich:** 3 Themen × Zusammenfassung (Formelsammlung) | Übungen
+  (Lernkarten mit Schritt-Lösungen, typischen Fehlern); feste Aktionsleiste
+  „Video · KI fragen · Tutor (bald)"; klickbare Formeln/Schritte öffnen den
+  Coach; „Eigene Lösung prüfen" per Foto/PDF-Upload.
+- **Wiederholungssystem:** drei Lernstufen (Verstanden / Wiederholen / Noch
+  unklar) pro Aufgabe; Wiederholen-Seite mit Filtern Stufe × Themen;
+  Dashboard-Kacheln springen mit Vorauswahl dorthin.
+- **Reel-Modus** (`/feed`, nur eingeloggt): pro Thema von jeder Themenseite
+  (dynamischer Feed) oder gemischt von der Übersicht; Videos mit Autoplay
+  und ElevenLabs-Stimme; „Merken" = Lernstufe „Wiederholen".
+- **Fortschritt** überall als sich füllende **Grapefruit**
+  (`GrapefruitProgress`).
+- **Konto & Kauf:** Auth (E-Mail + Google), Checkout mit Pflicht-Checkbox
+  (§ 356 BGB) + MwSt.-Ausweis, Webhook schaltet frei (inkl. Refund-Entzug),
+  Kundenportal, Konto-Seite.
+- **Design:** warmes Papier + Tinten-Buttons, Dark Mode, mobil optimiert —
+  System dokumentiert in DESIGN.md.
 
 ## Tech Stack
 - **Next.js 16.2.9** (App Router, Turbopack) + **TypeScript**
@@ -31,7 +64,12 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 - **KI-Coach** serverseitig (`/api/ask`), Key server-only, mit Tages-/Rate-Limit.
 - **Kurse:** `mathe-gk` (79 € / 14,90 €/Mon), `mathe-lk` (99 € / 17,90 €/Mon).
 
-## Implementierte Features
+## Sprint-Historie (chronologisch, vollständig)
+
+> Jeder Eintrag beschreibt den Stand seines Sprints. Wo etwas später ersetzt
+> wurde, steht eine *(→ später …)*-Anmerkung — so bleibt die Entwicklung
+> nachvollziehbar, ohne dass die Liste dem Ist-Zustand widerspricht.
+
 - ✅ Auth (E-Mail+Passwort + Google-Login)
 - ✅ GK & LK, je 3 Themen, je ~22 Original-Aufgaben (Schritt-Lösungen, typische
   Fehler, Video-Verknüpfung)
@@ -72,9 +110,8 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   der Wiederholen-Seite.
 - ✅ Landing-Page (Sprint 02+03, 07/2026): Grapefruit-Logo (Querschnitt mit
   herausgezogenem Segment, SVG), Sticky-Nav mit Milchglas, Hero für GK+LK,
-  USP-Leiste, **interaktive Produkt-Demo mit GK/LK-Umschalter** (echte
-  Gratis-Aufgaben beider Stufen + Lösung + Video-Player; KI als markierte
-  Beispiel-Antworten; Speichern/Tutor mit ehrlichen Hinweisen), Preisbereich mit
+  USP-Leiste, **interaktive Produkt-Demo mit GK/LK-Umschalter** *(→ Demo in
+  Sprint 07 durch die Funktions-Übersicht ersetzt)*, Preisbereich mit
   GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), global aufgewertete Buttons
 - ✅ Impressum, Datenschutz, **AGB (`/agb`) + Widerrufsbelehrung (`/widerruf`)**
   (Sprint 09; Entwürfe mit Platzhaltern, juristisch prüfen lassen!) und
@@ -85,12 +122,15 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   (`src/components/Logo.tsx`, flache Scheibe mit Segmentlinien + gefülltem
   Lern-Keil; `filled`-Prop 0–6 vorbereitet für Fortschritt/Level), **warme
   Farbwelt** (Papier-Beige statt kühlem Grau, hell + dunkel + Feed),
-  zentrierter Hero („Die eine Plattform für dein Mathe-Abi"), Demo entfernt →
+  zentrierter Hero („Die eine Plattform für dein Mathe-Abi") *(→ Hero-Text in
+  Sprint 10 erneuert)*, Demo entfernt →
   Funktions-Übersicht, „Preise"→„Kurse", Dashboard mit Namens-Begrüßung,
   wechselnder Motivation und **Prüfungs-Countdown** (Platzhalter-Termin
-  03.05.2027 „voraussichtlich" – offiziellen Termin in `Dashboard.tsx`
-  eintragen!), Themenansicht ohne Badges/Einleitung, Zusammenfassung als
-  Karten-Raster, Sidebar-Hover-Untermenü (Zusammenfassung/Übungen), Coach
+  03.05.2027 „voraussichtlich" — offiziellen Termin in `src/lib/exam.ts`
+  eintragen, seit dem Fundament-Sprint die einzige Quelle),
+  Themenansicht ohne Badges/Einleitung, Zusammenfassung als
+  Karten-Raster, Sidebar-Hover-Untermenü *(→ seit Sprint 10 im aktiven Thema
+  dauerhaft offen)*, Coach
   verschlankt (Beispielfragen hinter Klick) mit **funktionierender
   Spracheingabe** (Web Speech API, browserseitig), „Erklärvideos" aus der
   Navigation entfernt (Videos leben in Übungen + Swipe-Ansicht)
@@ -148,14 +188,47 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
   `navSignal` in page.tsx); „Vollzugang aktiv"-Tag aus der Sidebar entfernt;
   Login/Registrierung ohne Placeholder, mit Fokus-Ring und autoComplete;
   Wiederholen-Seite ist frei zugänglich (nicht hinter der Bezahlschranke).
+- ✅ **Fundament-Sprint (11.07.2026, nichts Sichtbares):** Projekt auf
+  Produktionsniveau konsolidiert. Neu: **PRODUCT.md** (Vision, Zielgruppe,
+  Marke, Prinzipien, Strategie, Content-Pipeline) und **DESIGN.md**
+  (vollständiges Designsystem im Impeccable-/design.md-Format, inkl.
+  `.impeccable/design.json`-Sidecar) — beide werden vom Impeccable-Skill
+  automatisch geladen. CLAUDE.md komplett überarbeitet (Dokumenten-Landkarte,
+  Skills & Hooks, localStorage-Register, Verifikations-Checkliste),
+  README.md ersetzt (war noch das create-next-app-Template),
+  PROJECT_STATUS/HANDOUT entdoppelt. Code-Basis: `src/lib/exam.ts` als
+  einzige Quelle des Prüfungstermins (vorher doppelt in Dashboard + Feed);
+  dauerhafte Testkonto-Skripte `scripts/create-test-user.mjs` /
+  `delete-test-user.mjs`; TasteSkill über `.claude/skills/taste/` an die
+  Skill-Erkennung angebunden; `.gitignore` um Impeccable-Cache ergänzt.
+  Aufgeräumt: Ur-Prototyp nach `docs/archive/` verschoben, tote
+  create-next-app-SVGs entfernt.
+- ✅ **Premium-Sprint (12.07.2026, sichtbarer Qualitätssprung):** Motion- und
+  Design-Fundament in `globals.css` — Haus-Easing-Tokens (`--ease-out`
+  /`-in-out`/`-drawer`/`-press`, Emil: kein `ease-in`), Dauer-Tokens,
+  wiederverwendbare Entrance-Choreografie (`gf-rise`/`gf-pop`/`gf-stagger`)
+  und Scroll-Reveal (`useReveal`, reduced-motion-sicher, `--shadow-lift`).
+  **Grapefruit** füllt sich beim Erscheinen animiert bis zum Zielwert
+  (`GrapefruitProgress`, rAF ease-out, reduced-motion → sofort am Ziel) und
+  trägt jetzt als kleiner Akzentbalken den aktiven Sidebar-Eintrag; großes,
+  ruhiges Grapefruit-Motiv mit leichter Parallax hinter dem Landing-Hero.
+  Landing: Eyebrow-Pill + Section-Eyebrows, Scroll-Reveals pro Sektion,
+  Premium-Karten-Hover (Lift + weicher Schatten). Dashboard: gestaffelte
+  Entrance, prominenter Countdown, größerer Fortschritts-Ring, Press-Feedback
+  auf Kacheln/Zeilen. Topbar scroll-aware (Trennung erscheint erst beim
+  Scrollen, Apple scroll-edge). Lernbereich: Karten-Lift, animierte Tabs,
+  Press-Feedback auf Chips/Formeln/Status-Segment, warme statt kühle Schatten.
+  Buttons projektweit mit stärkerem ease-out + Active-Press. Verifiziert in
+  hell/dunkel, Desktop/mobil; Video-Modal öffnet weiterhin sofort sichtbar.
+  Bewusst für später: Body-Font Inter durch eine eigenständigere Textschrift
+  ersetzen (Impeccable-Hinweis; braucht Mathe-Lesbarkeits-Tests), Marketing-
+  Type-Scale in DESIGN.md ergänzen, echte Gesten-Physik (Federn) im Reel-Modus.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
   rote Platzhalter (Name, Adresse, E-Mail, USt-Status §19, Zugangs-Enddatum,
   AGB-Stand) → ausfüllen + juristisch prüfen lassen. Danach Stripe TEST→LIVE
-  (Anleitung siehe Chat/unten): Live-Preise, Live-Keys + Live-Webhook-Secret
-  in Vercel, Live-Webhook mit checkout.session.completed,
-  customer.subscription.*, charge.refunded.
+  — **Schritt-für-Schritt-Checkliste in [HANDOUT.md](HANDOUT.md)**.
 - 🟡 **Fortschritts-Zähler** („x/79 Aufgaben" in Sidebar/Übersicht) zählen die
   DB-Tabelle `lessons` (79 Einträge), nicht die 133 echten Aufgaben aus den
   Task-Dateien. Angleichen = kleine DB-/Kontext-Arbeit (eigener Sprint).

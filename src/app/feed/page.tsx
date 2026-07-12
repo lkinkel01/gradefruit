@@ -10,6 +10,7 @@ import { LINALG_TASKS } from '@/lib/linalgTasks';
 import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
 import { ScenePlayer } from '@/components/SceneModal';
 import AskDrawer from '@/components/AskDrawer';
+import { daysUntilExam } from '@/lib/exam';
 import styles from './feed.module.css';
 
 // Reel-Modus: Lernen im Reel-Format, direkt aus den Lerninhalten heraus.
@@ -25,9 +26,6 @@ const TOPIC_META: Record<TopicId, { label: string; color: string }> = {
   linalg: { label: 'Lineare Algebra', color: '#5D6BC9' },
   stochastik: { label: 'Stochastik', color: '#2F9E68' },
 };
-
-// Gleicher (voraussichtlicher) Termin wie auf der Übersicht (Dashboard.tsx).
-const EXAM_DATE = new Date('2027-05-03T09:00:00');
 
 // Lernziel je Video (kurz, ehrlich, selbst formuliert).
 const GOALS: Record<string, string> = {
@@ -245,7 +243,7 @@ export default function FeedPage() {
   }, [loading, user, router]);
 
   useEffect(() => {
-    setDaysLeft(Math.max(0, Math.ceil((EXAM_DATE.getTime() - Date.now()) / 86_400_000)));
+    setDaysLeft(daysUntilExam());
     try {
       const t = localStorage.getItem('gf-feed-topic');
       if (t === 'analysis' || t === 'linalg' || t === 'stochastik') setTopic(t);

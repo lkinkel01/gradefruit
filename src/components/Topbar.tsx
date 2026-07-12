@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import styles from './Topbar.module.css';
@@ -27,8 +28,18 @@ export default function Topbar({ view, dark, onToggleDark, onOpenNav, onNavigate
   const { user } = useAuth();
   const initials = user ? (user.user_metadata?.full_name || user.email || 'U').slice(0, 2).toUpperCase() : null;
 
+  // Scroll-Edge (Apple): die Leiste ist am Seitenanfang randlos und bekommt
+  // erst beim Scrollen eine feine Trennung + Schatten – schwebt über dem Inhalt.
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <div className={styles.topbar}>
+    <div className={`${styles.topbar} ${scrolled ? styles.scrolled : ''}`}>
       <button className={styles.hamb} onClick={onOpenNav} aria-label="Menü">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
           <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />

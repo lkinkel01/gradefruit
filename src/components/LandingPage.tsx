@@ -1,6 +1,14 @@
 'use client';
+import { useEffect, useRef, type ReactNode } from 'react';
 import styles from './LandingPage.module.css';
-import { Logo } from './Logo';
+import { Logo, GrapefruitProgress } from './Logo';
+import { useReveal } from '@/lib/useReveal';
+
+// Sektion, die beim Eintritt in den Viewport sanft aufsteigt (Scroll-Reveal).
+function Reveal({ children, className, id }: { children: ReactNode; className?: string; id?: string }) {
+  const ref = useReveal<HTMLElement>();
+  return <section ref={ref} className={className} id={id}>{children}</section>;
+}
 
 interface Props {
   isAuthed: boolean;
@@ -67,9 +75,34 @@ const FEATURES = [
 ];
 
 export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDark, onEnter, onLogin, onRegister, onOpenCheckout, onSignOut }: Props) {
+  // Dezente Parallax auf dem Grapefruit-Motiv hinter dem Hero: die Frucht
+  // treibt beim Scrollen minimal langsamer als die Seite. Nur transform,
+  // rAF-gedrosselt, bei reduced-motion komplett aus.
+  const artRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = artRef.current;
+    if (!el) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const y = Math.min(window.scrollY, 700);
+        el.style.transform = `translate3d(0, ${y * 0.18}px, 0)`;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+
   return (
     <div className={styles.lpage}>
       <div className={styles.bgGlow} aria-hidden="true" />
+      {/* Grapefruit-Motiv: großes, ruhiges Markenzeichen hinter dem Hero */}
+      <div className={styles.heroArt} ref={artRef} aria-hidden="true">
+        <GrapefruitProgress pct={58} size={360} rind="var(--line)" flesh="var(--surface-2)" gap="var(--canvas)" showLeaf={false} animate={false} />
+      </div>
 
       {/* Nav */}
       <nav className={styles.lnav}>
@@ -139,7 +172,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
       </section>
 
       {/* Funktionen */}
-      <section className={styles.lsec}>
+      <Reveal className={styles.lsec}>
         <div className={styles.features}>
           {FEATURES.map(f => (
             <div key={f.title} className={styles.feature}>
@@ -149,10 +182,11 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* Strategien: was den Unterschied macht */}
-      <section className={styles.lsec}>
+      <Reveal className={styles.lsec}>
+        <p className={styles.eyebrow}>Der Unterschied</p>
         <h2 className={styles.h2}>Mehr als Aufgaben</h2>
         <p className={styles.secIntro}>
           Aufgaben rechnen kannst du überall. Gradefruit gibt dir dazu Strategien
@@ -182,10 +216,11 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
             </p>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* Themen */}
-      <section className={styles.lsec}>
+      <Reveal className={styles.lsec}>
+        <p className={styles.eyebrow}>Der Stoff</p>
         <h2 className={styles.h2}>Was dich in der Prüfung erwartet</h2>
         <p className={styles.secIntro}>
           Alle Inhalte der schriftlichen Mathe-Abiturprüfung Hessen 2027,
@@ -222,10 +257,11 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
       {/* Kurse */}
-      <section className={styles.lsec} id="kurse">
+      <Reveal className={styles.lsec} id="kurse">
+        <p className={styles.eyebrow}>Zugang</p>
         <h2 className={styles.h2}>Kurse</h2>
         <p className={styles.secIntro}>
           Einmal zahlen und bis zur Prüfung lernen, oder monatlich und jederzeit
@@ -277,7 +313,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
           Alle Preise inkl. gesetzlicher Umsatzsteuer. Sichere Bezahlung über Stripe;
           ob Einmalzahlung oder Abo, entscheidest du im nächsten Schritt.
         </p>
-      </section>
+      </Reveal>
 
       {/* Closing CTA */}
       <div className={styles.closing}>

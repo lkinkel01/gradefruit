@@ -33,13 +33,24 @@
 
 .snav { display: flex; flex-direction: column; gap: 2px; }
 .snav button {
+  position: relative;
   display: flex; align-items: center; gap: 11px; text-align: left;
   border: none; background: transparent; color: var(--side-tx);
   font-family: inherit; font-size: 14px; padding: 10px 11px;
-  border-radius: 10px; cursor: pointer; transition: .13s; width: 100%;
+  border-radius: 10px; cursor: pointer; width: 100%;
+  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
 .snav button:hover { background: var(--side-2); color: #fff; }
+.snav button:active { background: var(--side-3); }
 .snav button.on { background: var(--side-3); color: #fff; font-weight: 600; }
+/* Aktiver Eintrag trägt einen kleinen Grapefruit-Balken links – das
+   Markenzeichen wandert bis in die Navigation. */
+.snav button.on::before {
+  content: ''; position: absolute; left: 3px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 17px; border-radius: 99px;
+  background: var(--accent);
+}
 
 /* Themen-Eintrag mit Untermenü: im aktiven Thema dauerhaft offen,
    auf Geräten mit Maus zusätzlich bei Hover. */
@@ -60,9 +71,11 @@
   display: block; text-align: left; width: 100%;
   border: none; background: transparent; cursor: pointer;
   font-family: inherit; font-size: 13px; color: var(--side-faint);
-  padding: 7px 11px; border-radius: 8px; transition: .13s;
+  padding: 7px 11px; border-radius: 8px;
+  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
 }
-.flyItem:hover { background: var(--side-2); color: #fff; }
+/* transform statt padding animieren (kein Layout-Thrash) */
+.flyItem:hover { background: var(--side-2); color: #fff; transform: translateX(3px); }
 
 .cdot { width: 9px; height: 9px; border-radius: 99px; flex-shrink: 0; }
 .ti { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }

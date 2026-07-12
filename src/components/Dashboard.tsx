@@ -4,13 +4,9 @@ import { useRouter } from 'next/navigation';
 import { View, TOPICS, LernStatus } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
+import { EXAM_DATE, EXAM_DATE_IS_PRELIMINARY, daysUntilExam } from '@/lib/exam';
 import { GrapefruitProgress } from './Logo';
 import styles from './Dashboard.module.css';
-
-// Voraussichtlicher Termin der schriftlichen Prüfung. Sobald das Hessische
-// Kultusministerium den offiziellen Termin veröffentlicht: hier eintragen
-// und das „voraussichtlich" im Label unten entfernen.
-const EXAM_DATE = new Date('2027-05-03T09:00:00');
 
 // Wechselnde Begrüßungssätze, damit die Übersicht nicht jeden Tag gleich klingt.
 const MOTIVATION = [
@@ -44,7 +40,7 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
     setGreeting(h < 12 ? 'Guten Morgen' : h < 18 ? 'Guten Tag' : 'Guten Abend');
     // Satz wechselt mit Tag und Stunde, bleibt innerhalb einer Sitzung stabil.
     setMotivation(MOTIVATION[(now.getDate() + h) % MOTIVATION.length]);
-    setDaysLeft(Math.max(0, Math.ceil((EXAM_DATE.getTime() - now.getTime()) / 86_400_000)));
+    setDaysLeft(daysUntilExam(now));
   }, []);
 
   const firstName = (user?.user_metadata?.full_name as string | undefined)?.trim().split(' ')[0];
@@ -67,7 +63,7 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
   ];
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} gf-stagger`}>
       <h1 className={styles.ph1}>{greeting}{firstName ? `, ${firstName}` : ''}</h1>
       <p className={styles.pblurb}>{motivation}</p>
 
@@ -79,7 +75,8 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
         <div className={styles.examMeta}>
           <span className={styles.examTitle}>Schriftliche Abschlussprüfung Mathematik · Hessen</span>
           <span className={styles.examDate}>
-            {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })} · voraussichtlich
+            {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
+            {EXAM_DATE_IS_PRELIMINARY && ' · voraussichtlich'}
           </span>
         </div>
       </div>
@@ -127,7 +124,7 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
         <div className={styles.dcard}>
           <h3>Dein Fortschritt</h3>
           <div className={styles.ringWrap}>
-            <GrapefruitProgress pct={pct} size={84} />
+            <GrapefruitProgress pct={pct} size={92} />
             <div>
               <div className={styles.bigPct}>{pct} %</div>
               <div className={styles.sub}>{totalDone} von {totalLessons} Aufgaben verstanden</div>

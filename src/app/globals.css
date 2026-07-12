@@ -38,6 +38,21 @@
   --radius: 16px;
   --shadow: 0 1px 2px rgba(60,40,25,.03), 0 6px 20px rgba(60,40,25,.05);
   --shadow-lg: 0 2px 4px rgba(60,40,25,.04), 0 18px 44px rgba(60,40,25,.09);
+  /* Angehoben: der „lift"-Schatten für Hover-Momente großer Flächen –
+     warm getönt, weich, mit dezentem Ring für Premium-Tiefe. */
+  --shadow-lift: 0 2px 6px rgba(60,40,25,.05), 0 22px 48px rgba(60,40,25,.11);
+
+  /* Haus-Easing-Kurven (Emil): eingebaute CSS-Easings sind zu schwach,
+     ease-in ist verboten. Diese drei tragen die ganze Motion-Sprache. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);      /* Enter + Interaktion: startet schnell, wirkt direkt */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* Bewegung/Morph auf dem Schirm */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);   /* iOS-Schublade */
+  --ease-press: cubic-bezier(0.2, 0.7, 0.3, 1);    /* Druck-Feedback (Buttons/Chips) */
+  /* Dauer-Stufen: unter 300ms wirkt schneller (Emil). */
+  --dur-press: 140ms;
+  --dur-hover: 180ms;
+  --dur-enter: 340ms;
+
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -64,10 +79,12 @@ h1, h2, h3, h4 {
   font-family: inherit; font-weight: 600; font-size: 15px;
   letter-spacing: -0.01em;
   border-radius: 980px; padding: 12px 22px;
-  transition: transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s ease,
-    border-color .16s ease, background .16s ease, color .16s ease, opacity .16s ease;
+  transition: transform var(--dur-press) var(--ease-press), box-shadow var(--dur-hover) ease,
+    border-color var(--dur-hover) ease, background var(--dur-hover) ease, color var(--dur-hover) ease, opacity var(--dur-hover) ease;
   display: inline-flex; align-items: center;
   justify-content: center; gap: 9px;
+  /* verhindert Sub-Pixel-Zittern beim transform-Lift */
+  will-change: transform;
 }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn.primary {
@@ -77,17 +94,45 @@ h1, h2, h3, h4 {
 }
 .btn.primary:hover {
   background: var(--btn-ink-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(30,22,15,.14), 0 12px 28px rgba(30,22,15,.16);
+  transform: translateY(-1.5px);
+  box-shadow: 0 3px 6px rgba(30,22,15,.16), 0 14px 32px rgba(30,22,15,.2);
 }
-.btn.primary:active { transform: translateY(0) scale(.98); }
+.btn.primary:active { transform: translateY(0) scale(.97); }
 .btn.light { background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); }
-.btn.light:hover { border-color: var(--faint); transform: translateY(-1px); }
-.btn.light:active { transform: translateY(0) scale(.98); }
+.btn.light:hover { border-color: var(--faint); transform: translateY(-1.5px); box-shadow: var(--shadow); }
+.btn.light:active { transform: translateY(0) scale(.97); }
 .btn.dark { background: var(--btn-ink); color: var(--btn-ink-tx); }
 .btn.dark:hover { background: var(--btn-ink-hover); }
 .btn.sm { padding: 9px 16px; font-size: 13.5px; }
-.btn:disabled { opacity: .5; cursor: default; transform: none; }
+.btn:disabled { opacity: .5; cursor: default; transform: none; box-shadow: none; }
+
+/* ---------------------------------------------------------------------------
+   Entrance-Choreografie: eine Sprache für alle Auftritte.
+   gf-rise = leises Anheben aus 8px + Fade; gf-pop = aus scale(.97) + Fade
+   (nie aus scale(0) – nichts erscheint aus dem Nichts, Emil).
+   Über .gf-stagger > * bekommen Listen automatisch einen Kaskaden-Versatz.
+   --------------------------------------------------------------------------- */
+@keyframes gf-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes gf-pop { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+
+.gf-rise { animation: gf-rise var(--dur-enter) var(--ease-out) both; }
+.gf-stagger > * { animation: gf-rise var(--dur-enter) var(--ease-out) both; }
+.gf-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.gf-stagger > *:nth-child(2) { animation-delay: 55ms; }
+.gf-stagger > *:nth-child(3) { animation-delay: 110ms; }
+.gf-stagger > *:nth-child(4) { animation-delay: 165ms; }
+.gf-stagger > *:nth-child(5) { animation-delay: 220ms; }
+.gf-stagger > *:nth-child(6) { animation-delay: 275ms; }
+
+/* Scroll-Reveal: Sektionen steigen beim Eintritt in den Viewport sanft auf.
+   JS (useReveal) setzt [data-reveal] und toggelt [data-shown]. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--dur-enter) var(--ease-out), transform var(--dur-enter) var(--ease-out);
+  will-change: transform, opacity;
+}
+[data-reveal][data-shown] { opacity: 1; transform: none; }
 
 /* Dark mode: warmes Dunkelbraun statt kühlem Blau-Schwarz */
 body.dark {
@@ -130,4 +175,7 @@ body.theme-switching *::after {
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
+  html { scroll-behavior: auto; }
+  /* Scroll-Reveal darf niemand aussperren: ohne Motion sofort sichtbar. */
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
