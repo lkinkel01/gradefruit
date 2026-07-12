@@ -81,15 +81,15 @@ components:
   button-primary:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.surface}"
-    rounded: "{rounded.pill}"
-    padding: "12px 22px"
+    rounded: "7px"
+    padding: "13px 24px"
   button-primary-hover:
     backgroundColor: "#33291F"
   button-light:
-    backgroundColor: "{colors.surface}"
+    backgroundColor: "transparent"
     textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    padding: "12px 22px"
+    rounded: "7px"
+    padding: "13px 24px"
   chip-action:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
@@ -164,6 +164,19 @@ CSS-Variablen unter `body.dark` (warmes Dunkelbraun, nie Blau-Schwarz).
 Komponenten verwenden Variablen, niemals harte Theme-Farben — und globale
 Selektoren auf CSS-Modul-Klassen sind verboten (sie greifen wegen der
 Namens-Hashes nie; das war der Topbar-Bug aus Sprint 10).
+
+**Die Editorial-Regel (Marken-Sprint).** Gradefruit soll ohne Logo erkennbar
+sein und NICHT wie ein SaaS-/KI-Template wirken. Deshalb: **Inhalt lebt auf
+dem Papier, geordnet durch Haarlinien (`.gf-rule`) und Weißraum — nicht in
+weißen Karten-Boxen.** Verboten sind: zentrierte Symmetrie als Default,
+farbig eingefärbte Headline-Wörter, Pillen-Buttons, das Icon-im-runden-Quadrat-
+Karten-Raster. Stattdessen: linksbündige, asymmetrische Kompositionen mit
+Spannung, übergroße Bricolage-Zahlen als Motiv (`.gf-index`: Countdown,
+Fortschritt, Aufgaben-/Sektions-Nummern), weit gesperrte Versal-Meta-Labels
+(`.gf-meta`), nummerierte Listen statt Karten-Raster, und die Grapefruit als
+selbstbewusstes, angeschnittenes Grafik-Element (nicht nur als Watermark).
+Karten bleiben erlaubt, wo sie einen echten Zweck haben (Kurs-Panels, Modals) —
+aber nie als Default-Container für jede Information.
 
 **Die Breakpoint-Regel.** Es gibt genau drei Schwellen: ≤900 px (Sidebar
 wird zur Schublade über `body.navopen`), ≤760/820 px (mehrspaltige Raster
@@ -269,14 +282,20 @@ nach 2014-App aussieht, ist ein Schatten zu dunkel oder zu klein.
 ## 5. Components
 
 ### Buttons
-- **Form:** Pille (980px Radius), 12px 22px Padding, 600er Gewicht, −0.01em.
+- **Form:** kantig, kleiner Radius (7px), 13px 24px Padding, 600er Gewicht,
+  −0.012em. **Keine Pillen** — die vollrunde Pille ist das klassische
+  SaaS-/KI-Template-Signal und deshalb verboten (Marken-Sprint).
 - **Primär:** Tinte auf Papier — #211C17 mit weißem Text; im Dark Mode
   invertiert (#F5F0EA mit dunklem Text). Genau EIN Primär-Button pro Screen.
   Orange ist als Button-Farbe verboten.
-- **Hover:** Aufhellen auf #33291F + `translateY(-1px)` + stärkerer Schatten.
+- **Hover:** Aufhellen auf #33291F + `translateY(-2px)` + weicher Schatten.
   **Active:** `translateY(0) scale(.98)` — jeder Button quittiert den Druck.
   **Focus:** `outline: 2px solid var(--accent); outline-offset: 2px`.
   **Disabled:** Opacity .5, keine Transforms.
+- **Light (sekundär):** transparent mit 1px `--ink`-Rand; kehrt beim Hover um
+  (Tinte füllt, Text wird Papier) — editoriales Detail statt SaaS-Glow.
+- **Zweite Aktion oft als Text-Link mit Pfeil** (`.gf-arrow`) statt zweitem
+  Button — der Pfeil wandert beim Hover 4px nach rechts.
 - **Light (sekundär):** weiße Fläche, 1px `--line-strong`-Rand; Hover hebt
   und färbt den Rand auf `--faint`.
 - **Klein (`sm`):** 9px 16px, 13.5px.

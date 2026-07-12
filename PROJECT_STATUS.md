@@ -239,6 +239,23 @@ Probleme").
   keine Konsolenfehler. Bewusst für später: Empty/Loading-States der
   KI-Drawer, Icon-Sprache vereinheitlichen, Karten-Signaturdetail
   (Grapefruit-Segment-Akzent), eigenständigere Body-Schrift.
+- ✅ **Editorial-Sprint (12.07.2026, eigene Designsprache):** Landing und
+  Dashboard **komplett neu** komponiert, weg vom SaaS-/KI-Template. Neue
+  „Editorial-Regel" in DESIGN.md: Inhalt lebt auf dem Papier, geordnet durch
+  Haarlinien (`.gf-rule`) und Weißraum statt weißer Karten-Boxen; verboten sind
+  zentrierte Symmetrie, farbige Headline-Wörter, Pillen-Buttons und das
+  Icon-Karten-Raster. Neue globale Primitive: kantige Buttons (7px statt Pille,
+  Light-Button kehrt beim Hover um), `.gf-meta` (gesperrte Versal-Labels),
+  `.gf-rule`, `.gf-index` (übergroße Bricolage-Zahlen), `.gf-arrow` (Text-Link
+  mit wanderndem Pfeil). **Landing:** asymmetrischer Hero (linksbündige
+  Riesen-Headline + Grapefruit als angeschnittenes Grafikelement), Zahlen-Reihe
+  mit Countdown, nummerierte Feature-/Themen-Listen, 3-Spalten-Strategien,
+  Kurs-Panels, Riesen-Closing. **Dashboard:** editoriales Cockpit — Countdown
+  als Anker, Fortschritt präsent, Lernstand als klickbare Zahlen-Reihe, Themen
+  als Liste. Verifiziert hell/dunkel + Desktop/mobil, tsc + Build sauber.
+  Bewusst offen: Lernbereich (TopicView) und Sidebar erben Buttons/Typo, sind
+  aber noch nicht voll editorial umgebaut (nächster Schritt); Reel-Modus,
+  Wiederholen-Seite und Konto ebenso.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten

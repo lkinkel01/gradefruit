@@ -97,38 +97,69 @@ h1, h2, h3, h4 {
   font-optical-sizing: auto;
 }
 
-/* Buttons */
+/* ---------------------------------------------------------------------------
+   Buttons: kantig und selbstbewusst statt Pille (Pillen sind das größte
+   SaaS-Template-Signal). Kleiner Radius, klare Blöcke, flacher Schatten nur
+   als Antwort auf Hover. Der Light-Button kehrt beim Hover um (Tinte füllt) –
+   ein editoriales Detail statt SaaS-Glow.
+   --------------------------------------------------------------------------- */
 .btn {
   appearance: none; border: none; cursor: pointer;
   font-family: inherit; font-weight: 600; font-size: 15px;
-  letter-spacing: -0.01em;
-  border-radius: 980px; padding: 12px 22px;
+  letter-spacing: -0.012em;
+  border-radius: 7px; padding: 13px 24px;
   transition: transform var(--dur-press) var(--ease-press), box-shadow var(--dur-hover) ease,
     border-color var(--dur-hover) ease, background var(--dur-hover) ease, color var(--dur-hover) ease, opacity var(--dur-hover) ease;
   display: inline-flex; align-items: center;
   justify-content: center; gap: 9px;
-  /* verhindert Sub-Pixel-Zittern beim transform-Lift */
   will-change: transform;
 }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.btn.primary {
-  background: var(--btn-ink);
-  color: var(--btn-ink-tx);
-  box-shadow: 0 1px 2px rgba(30,22,15,.14), 0 8px 22px rgba(30,22,15,.12);
-}
+.btn.primary { background: var(--btn-ink); color: var(--btn-ink-tx); }
 .btn.primary:hover {
   background: var(--btn-ink-hover);
-  transform: translateY(-1.5px);
-  box-shadow: 0 3px 6px rgba(30,22,15,.16), 0 14px 32px rgba(30,22,15,.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px -10px rgba(30,22,15,.55);
 }
-.btn.primary:active { transform: translateY(0) scale(.97); }
-.btn.light { background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); }
-.btn.light:hover { border-color: var(--faint); transform: translateY(-1.5px); box-shadow: var(--shadow); }
-.btn.light:active { transform: translateY(0) scale(.97); }
+.btn.primary:active { transform: translateY(0) scale(.98); }
+.btn.light { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+.btn.light:hover { background: var(--ink); color: var(--canvas); transform: translateY(-2px); }
+.btn.light:active { transform: translateY(0) scale(.98); }
 .btn.dark { background: var(--btn-ink); color: var(--btn-ink-tx); }
 .btn.dark:hover { background: var(--btn-ink-hover); }
-.btn.sm { padding: 9px 16px; font-size: 13.5px; }
+.btn.sm { padding: 10px 17px; font-size: 13.5px; border-radius: 6px; }
+.btn.big { padding: 16px 30px; font-size: 16px; }
 .btn:disabled { opacity: .5; cursor: default; transform: none; box-shadow: none; }
+
+/* ---------------------------------------------------------------------------
+   Editoriale Bausteine – die eigene Gradefruit-Sprache, global nutzbar.
+   Kein Icon-Karten-Raster, keine zentrierte Symmetrie: Inhalt lebt auf dem
+   Papier, geordnet durch übergroße Zahlen, Haarlinien und Weißraum.
+   --------------------------------------------------------------------------- */
+/* Meta-Label: kleine, weit gesperrte Versalien wie in einem Modemagazin. */
+.gf-meta {
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--faint);
+}
+/* Haarlinie als Trenner – trägt die editoriale Ordnung statt Karten-Ränder. */
+.gf-rule { height: 1px; background: var(--line-strong); border: none; width: 100%; }
+/* Übergroße Index-/Kennzahl (Bricolage) – das Zahl-als-Motiv-Element. */
+.gf-index {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800; letter-spacing: -0.04em; line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+/* Text-Link mit Pfeil – die zweite, leise Aktion (statt zweitem Pillen-Button). */
+.gf-arrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit; font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+  color: var(--ink); background: none; border: none; cursor: pointer; padding: 4px 0;
+}
+.gf-arrow svg { transition: transform var(--dur-hover) var(--ease-out); }
+.gf-arrow:hover svg { transform: translateX(4px); }
+.gf-arrow:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 /* ---------------------------------------------------------------------------
    Entrance-Choreografie: eine Sprache für alle Auftritte.
