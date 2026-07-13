@@ -28,6 +28,10 @@
 .impeccable/*
 !.impeccable/design.json
 
+# local agent runtime configuration
+/.claude/settings.local.json
+/.codex/hooks.json
+
 # debug
 npm-debug.log*
 yarn-debug.log*
