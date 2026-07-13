@@ -66,13 +66,13 @@ DESIGN.md, Zustand in PROJECT_STATUS.md. Diese Datei verweist nur.
 
 - node/npm liegen unter `/opt/homebrew/bin` → in Skripten zuerst
   `eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null;`
-- **Bash merkt sich das Verzeichnis NICHT zwischen Aufrufen.** Standard ist
-  `/Users/leonkinkel/Documents` → in **jedem** Befehl
-  `cd /Users/leonkinkel/Gradefruit`.
+- Jeder Tool-Aufruf setzt sein Arbeitsverzeichnis ausdrücklich auf den
+  Projektordner; nicht auf ein benutzerspezifisches Standardverzeichnis
+  verlassen.
 - **Typecheck:** `./node_modules/.bin/tsc --noEmit`
 - **Build:**
   ```
-  eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null; unset ANTHROPIC_API_KEY && cd /Users/leonkinkel/Gradefruit && npm run build
+  eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null; unset ANTHROPIC_API_KEY && npm run build
   ```
   (`unset ANTHROPIC_API_KEY` ist nötig, sonst bricht der Build ab.)
 - **Dev-Server:** über die Browser-Preview (`.claude/launch.json`, Config
@@ -109,9 +109,9 @@ DESIGN.md, Zustand in PROJECT_STATUS.md. Diese Datei verweist nur.
   `create-test-user.mjs`, `delete-test-user.mjs`
 - `public/audio/` — mp3s der Erklärvideos
 - `.claude/` — Settings (Impeccable-Hook), `launch.json`, Skills;
-  `.agents/skills/` — Emil-Kowalski-Skills; `skills/` + `templates/` —
-  TasteSkill; `.impeccable/` — Impeccable-Cache (ignoriert) +
-  `design.json` (Design-Token-Sidecar, versioniert)
+  `.agents/skills/` — kanonische gemeinsame Skills; `.impeccable/` —
+  Impeccable-Cache (ignoriert) + `design.json` (Design-Token-Sidecar,
+  versioniert)
 
 ## Architektur-Grundentscheidungen (die tragenden Fakten)
 
@@ -163,11 +163,12 @@ etwas falsch. Alle bewusst so getroffen — nicht „aufräumen":
   `animation-vocabulary` (Namen für Motion-Effekte), `review-animations`
   (strenger Motion-Review; nur explizit aufrufen). Bei Motion-/
   Interaktions-Arbeit den passenden Skill laden.
-- **TasteSkill** (`skills/taste/` + Prompt-Vorlagen in `templates/taste/`,
-  angebunden über `.claude/skills/taste/`): Anti-Slop-Grundregeln in 7
-  Varianten (default, soft-calm, editorial, redesign, …). Bei Konflikten
-  gilt: **DESIGN.md > Impeccable > TasteSkill.**
-- Skill-Versionen: `skills-lock.json` (Quelle: github.com/emilkowalski/skills).
+- **Offizielle Taste-Skills** (kanonisch unter `.agents/skills/`, für Claude
+  über relative Symlinks): `gpt-taste` ist der Codex-orientierte
+  Design-Craft-Skill; `redesign-existing-projects` dient Audits und
+  Redesigns bestehender Oberflächen. Nur bei konkretem Mehrwert verwenden;
+  **PRODUCT.md und DESIGN.md haben immer Vorrang.**
+- Quellen, Pins und Hashes der Skills: `skills-lock.json`.
 
 ## localStorage-Register (alle Schlüssel mit `gf-`-Präfix)
 

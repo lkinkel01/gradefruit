@@ -9,8 +9,8 @@
 
 ## So startest du die neue Session (Leon)
 
-1. Neue Claude-Code-Session **im Projektordner `/Users/leonkinkel/Gradefruit`**
-   starten (im Desktop-App den Gradefruit-Ordner als Projekt öffnen). Nur dann
+1. Neue Claude-Code-Session **im Projektordner** starten (im Desktop-App den
+   Gradefruit-Ordner als Projekt öffnen). Nur dann
    lädt die CLAUDE.md mit allen Projektregeln automatisch.
 2. Erste Nachricht (kopierbar):
    > „Lies HANDOUT.md und PROJECT_STATUS.md. Dann mach weiter mit: [dein Ziel,
