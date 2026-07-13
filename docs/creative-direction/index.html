@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gradefruit — Creative Direction</title>
+<style>
+  :root{
+    --bg:#FBFAF8; --surface:#FFFFFF; --panel:#F3F1EC;
+    --ink:#111010; --muted:#6A655E; --faint:#A49C92;
+    --line:#E8E3DC; --line-strong:#D8D1C7;
+    --accent:#EC5A34; --accent-deep:#C6421F; --flesh:#FF8B6B;
+    --good:#1F9D57; --kill:#B23A2A; --keep:#1F7A4D;
+    --shadow:0 1px 2px rgba(40,26,15,.04), 0 14px 40px rgba(40,26,15,.07);
+    --maxw:1080px;
+    --sans:"Bricolage Grotesque","Helvetica Neue",Arial,system-ui,sans-serif;
+    --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14110F; --surface:#1C1815; --panel:#241F1B;
+      --ink:#F4EFEA; --muted:#A79E94; --faint:#6F675E;
+      --line:#2A2420; --line-strong:#3A322C;
+      --accent:#FF6B44; --accent-deep:#FF8B6B; --flesh:#FF8B6B;
+      --good:#43C07E; --kill:#E8735F; --keep:#5FD08E;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 18px 44px rgba(0,0,0,.32);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14110F; --surface:#1C1815; --panel:#241F1B;
+    --ink:#F4EFEA; --muted:#A79E94; --faint:#6F675E;
+    --line:#2A2420; --line-strong:#3A322C;
+    --accent:#FF6B44; --accent-deep:#FF8B6B; --flesh:#FF8B6B;
+    --good:#43C07E; --kill:#E8735F; --keep:#5FD08E;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 18px 44px rgba(0,0,0,.32);
+  }
+  :root[data-theme="light"]{
+    --bg:#FBFAF8; --surface:#FFFFFF; --panel:#F3F1EC;
+    --ink:#111010; --muted:#6A655E; --faint:#A49C92;
+    --line:#E8E3DC; --line-strong:#D8D1C7;
+    --accent:#EC5A34; --accent-deep:#C6421F; --flesh:#FF8B6B;
+    --good:#1F9D57; --kill:#B23A2A; --keep:#1F7A4D;
+    --shadow:0 1px 2px rgba(40,26,15,.04), 0 14px 40px rgba(40,26,15,.07);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);
+    line-height:1.6;-webkit-font-smoothing:antialiased;font-size:17px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  section{padding:74px 0;border-top:1px solid var(--line)}
+  section:first-of-type{border-top:0}
+
+  h1,h2,h3,.display{font-family:var(--sans);font-weight:800;letter-spacing:-.03em;line-height:1.02}
+  h2{font-size:clamp(30px,4.6vw,52px);margin:0 0 10px;text-wrap:balance}
+  h3{font-size:22px;letter-spacing:-.02em;line-height:1.15;margin:0 0 8px}
+  p{max-width:66ch}
+  a{color:var(--accent-deep)}
+
+  .kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.02em;color:var(--muted);
+    text-transform:none;margin:0 0 18px}
+  .lead{font-size:19px;color:var(--muted);max-width:60ch}
+  .accent{color:var(--accent-deep)}
+  .strong-note{color:var(--ink);font-weight:600}
+
+  /* Top bar */
+  .topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brandmark{display:flex;align-items:center;gap:11px;font-family:var(--sans);font-weight:800;
+    letter-spacing:-.02em;font-size:18px}
+  .dot{width:20px;height:20px;border-radius:50%;position:relative;flex:0 0 auto;
+    background:
+      radial-gradient(circle at 38% 34%, #FFD9C8 0%, var(--flesh) 34%, var(--accent) 66%, var(--accent-deep) 100%);
+    box-shadow:0 0 0 2px var(--surface), 0 3px 10px rgba(236,90,52,.45)}
+  .tag{font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+  .themeToggle{font-family:var(--mono);font-size:12px;color:var(--muted);background:transparent;
+    border:1px solid var(--line-strong);border-radius:7px;padding:6px 11px;cursor:pointer}
+  .themeToggle:hover{border-color:var(--ink)}
+  .themeToggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* Hero */
+  .hero{padding:82px 0 64px}
+  .hero-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:40px;align-items:center}
+  .h1{font-family:var(--sans);font-weight:800;letter-spacing:-.045em;line-height:.94;
+    font-size:clamp(46px,8vw,96px);margin:14px 0 22px;text-wrap:balance}
+  .h1 .cut{color:var(--accent)}
+  .heroFruit{justify-self:center;width:min(260px,60vw);aspect-ratio:1;border-radius:50%;
+    position:relative;filter:drop-shadow(0 30px 60px rgba(236,90,52,.34))}
+  .heroFruit::before{content:"";position:absolute;inset:0;border-radius:50%;
+    background:
+      radial-gradient(circle at 40% 34%, #FFE7DB 0%, #FFB59B 22%, var(--flesh) 44%, var(--accent) 74%, var(--accent-deep) 100%)}
+  .heroFruit::after{content:"";position:absolute;inset:9%;border-radius:50%;
+    background:
+      repeating-conic-gradient(from 8deg, transparent 0 27deg, rgba(255,255,255,.34) 27deg 30deg);
+    -webkit-mask:radial-gradient(circle, #000 62%, transparent 63%);
+            mask:radial-gradient(circle, #000 62%, transparent 63%)}
+  .leaf{position:absolute;top:-6%;left:52%;width:20%;height:16%;background:#4E9A6E;
+    border-radius:0 60% 0 60%;transform:rotate(-18deg);z-index:2;box-shadow:0 3px 8px rgba(40,60,40,.3)}
+
+  .pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px;
+    color:var(--muted);border:1px solid var(--line-strong);border-radius:999px;padding:5px 12px}
+
+  /* Reframe band */
+  .reframe{background:var(--ink);color:var(--bg);border-radius:20px;padding:44px;margin-top:8px}
+  .reframe .from{color:#C9A99C;text-decoration:line-through;text-decoration-color:rgba(236,90,52,.7);
+    font-family:var(--sans);font-weight:700;font-size:clamp(22px,3vw,30px);letter-spacing:-.02em}
+  .reframe .to{color:var(--bg);font-family:var(--sans);font-weight:800;
+    font-size:clamp(26px,3.6vw,40px);letter-spacing:-.03em;line-height:1.05;margin-top:6px}
+  .reframe .to em{font-style:normal;color:var(--accent)}
+  .reframe p{color:#D9CEC6}
+
+  /* Keep / kill table */
+  .kk{display:grid;gap:14px;margin-top:24px}
+  .kkrow{display:grid;grid-template-columns:120px 1fr;gap:20px;padding:20px;border:1px solid var(--line);
+    border-radius:14px;background:var(--surface);box-shadow:var(--shadow)}
+  .badge{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+    padding:5px 9px;border-radius:6px;height:fit-content;font-weight:600;white-space:nowrap}
+  .badge.keep{color:var(--keep);background:color-mix(in srgb,var(--keep) 13%,transparent)}
+  .badge.kill{color:var(--kill);background:color-mix(in srgb,var(--kill) 13%,transparent)}
+  .kkrow h4{margin:0 0 4px;font-family:var(--sans);font-weight:700;font-size:17.5px;letter-spacing:-.01em}
+  .kkrow p{margin:0;color:var(--muted);font-size:15px;max-width:none}
+  .kkrow .why{color:var(--ink);font-weight:500}
+
+  /* Swatches */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:8px}
+  .sw{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--surface)}
+  .sw .chip{height:88px}
+  .sw .meta{padding:11px 13px}
+  .sw .nm{font-weight:600;font-size:14.5px}
+  .sw .hex{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase}
+  .sw .use{font-size:12.5px;color:var(--faint);margin-top:3px;line-height:1.4}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:10px}
+  .card{border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--surface);box-shadow:var(--shadow)}
+  .card h3{margin-top:0}
+  .card p{color:var(--muted);font-size:15.5px;max-width:none}
+  .card ul{margin:12px 0 0;padding-left:18px;color:var(--muted);font-size:15px}
+  .card li{margin:7px 0}
+  .card li b{color:var(--ink);font-weight:600}
+
+  /* Type specimens */
+  .spec{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--surface);margin-top:8px}
+  .spec .row{padding:22px 26px;border-top:1px solid var(--line)}
+  .spec .row:first-child{border-top:0}
+  .spec .lbl{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-bottom:10px}
+  .specDisplay{font-family:var(--sans);font-weight:800;letter-spacing:-.045em;line-height:.98;
+    font-size:clamp(34px,6vw,64px)}
+  .specImp{font-family:var(--sans);font-weight:800;letter-spacing:-.03em;font-size:clamp(24px,3.4vw,36px)}
+  .specBody{font-size:16px;color:var(--muted);max-width:62ch}
+  .specMono{font-family:var(--mono);font-size:18px;color:var(--ink);background:var(--panel);
+    padding:10px 14px;border-radius:8px;display:inline-block}
+  .killEyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--faint);text-decoration:line-through;text-decoration-color:var(--kill)}
+
+  /* Before / after */
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:16px;
+    overflow:hidden;margin-top:8px}
+  .ba > div{padding:24px}
+  .ba .before{background:var(--panel);border-right:1px solid var(--line)}
+  .ba .tagline{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    margin-bottom:14px}
+  .ba .before .tagline{color:var(--kill)}
+  .ba .after .tagline{color:var(--keep)}
+  .miniHead{font-family:var(--sans);font-weight:800;letter-spacing:-.02em;font-size:26px;line-height:1.05}
+  .miniMuted{color:var(--muted);font-size:14px;margin-top:8px}
+  .fauxEyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+  .fauxRule{height:1px;background:var(--line-strong);margin:12px 0}
+  .fauxNum{font-family:var(--sans);font-weight:800;font-size:40px;color:var(--faint);letter-spacing:-.03em}
+
+  /* Copy table */
+  .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px;margin-top:8px}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+  th,td{text-align:left;padding:14px 16px;border-top:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;color:var(--faint);text-transform:uppercase;
+    font-weight:600;border-top:0;background:var(--panel)}
+  td.old{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+  td.new{color:var(--ink);font-weight:500}
+  td .lensname{font-family:var(--sans);font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+  td .rule{color:var(--muted);font-size:14.5px}
+
+  /* Sprints */
+  .steps{display:grid;gap:12px;margin-top:8px}
+  .step{display:grid;grid-template-columns:52px 1fr;gap:18px;align-items:start;padding:20px;
+    border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+  .step .n{font-family:var(--sans);font-weight:800;font-size:28px;color:var(--accent);letter-spacing:-.03em;
+    font-variant-numeric:tabular-nums}
+  .step h4{margin:0 0 4px;font-family:var(--sans);font-weight:700;font-size:18px;letter-spacing:-.01em}
+  .step p{margin:0;color:var(--muted);font-size:15px;max-width:none}
+  .step .lever{font-size:13px;color:var(--faint);margin-top:6px}
+
+  .verdict{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+  .vitem{border:1px solid var(--line);border-radius:11px;padding:12px 16px;background:var(--surface);min-width:150px}
+  .vitem .pct{font-family:var(--sans);font-weight:800;font-size:30px;color:var(--accent);letter-spacing:-.03em}
+  .vitem .nm{font-size:13.5px;color:var(--muted)}
+
+  footer{padding:56px 0 80px;border-top:1px solid var(--line);color:var(--muted)}
+  .status{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13px;
+    color:var(--ink);border:1px solid var(--accent);border-radius:999px;padding:8px 15px}
+  .status .d{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+  .spacer{height:6px}
+  @media (max-width:760px){
+    .hero-grid{grid-template-columns:1fr;gap:26px}
+    .heroFruit{order:-1}
+    .cols,.ba{grid-template-columns:1fr}
+    .ba .before{border-right:0;border-bottom:1px solid var(--line)}
+    .kkrow{grid-template-columns:1fr;gap:10px}
+    section{padding:56px 0}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .reveal{opacity:0;transform:translateY(10px);animation:rise .7s cubic-bezier(.2,.7,.3,1) forwards}
+    @keyframes rise{to{opacity:1;transform:none}}
+  }
+</style>
+
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brandmark"><span class="dot"></span> Gradefruit</div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <span class="tag">Creative Direction · Entwurf zur Freigabe</span>
+      <button class="themeToggle" id="tt" aria-label="Hell/Dunkel umschalten">Hell / Dunkel</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:0">
+    <div class="hero-grid">
+      <div class="reveal">
+        <p class="kicker">Eine zu prüfende Richtung — Light-first, mit der Konsequenz von Nike, Peso, Apple.</p>
+        <h1 class="h1">Klarheit.<br>Schwarz auf Weiß,<br>ein Schnitt <span class="cut">Grapefruit</span>.</h1>
+        <p class="lead">Gradefruit verkauft nicht Videos, KI oder Aufgaben. Es verkauft <span class="strong-note">Ruhe, Zeit, Selbstvertrauen, Sicherheit</span> — das Gefühl „ich hab das im Griff". Die neue Sprache macht dieses Gefühl sichtbar: ein heller, klarer Raum, in dem immer nur eine Sache vor dir liegt.</p>
+        <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
+          <span class="pill">Ø ~70&nbsp;% neu gedacht</span>
+          <span class="pill">Entwurf · nicht im Produkt umgesetzt</span>
+        </div>
+      </div>
+      <div class="heroFruit reveal" aria-hidden="true"><span class="leaf"></span></div>
+    </div>
+  </section>
+
+  <!-- REFRAME -->
+  <section>
+    <p class="kicker">Der Dreh, aus dem alles folgt</p>
+    <h2>Vom Countdown zur Kontrolle.</h2>
+    <p class="lead">Das lauteste Element im heutigen Produkt ist ein tickender Countdown zur gefürchteten Prüfung — in der einen kostbaren Grapefruit-Farbe. Das verkauft die Angst, nicht die Ruhe. Wir drehen die Emotion um.</p>
+    <div class="reframe">
+      <div class="from">„Die Prüfung kommt. Noch 295 Tage."</div>
+      <div class="to">„Du hast das im Griff. <em>Heute ein Stück mehr.</em>"</div>
+      <p style="margin-top:18px;max-width:64ch">Systemregel: <b style="color:#fff">Die Zahl, die wächst, ist laut. Die Zahl, die schrumpft, ist ein Flüstern.</b> Fortschritt wird der Held (die sich füllende Grapefruit). Der Termin wird eine kleine, ruhige Randnotiz — nie der „emotionale Anker".</p>
+    </div>
+  </section>
+
+  <!-- KEEP / KILL -->
+  <section>
+    <p class="kicker">Damit die Richtung ehrlich ist</p>
+    <h2>Übernommen, verworfen — und warum.</h2>
+    <p class="lead">Nichts wird aus Prinzip weggeworfen. Was trägt, bleibt. Was das Produkt generisch macht, fliegt — mit Grund.</p>
+
+    <div class="kk">
+      <div class="kkrow"><span class="badge kill">Verworfen</span><div><h4>Die „Editorial-Regel" als Pflicht</h4><p>Gesperrte Versal-Labels über jeder Sektion, `01/02/03`-Nummern, drei Haarlinien-Spalten, keine Bildwelt. <span class="why">Warum: Genau diese Grammatik ist der KI-Editorial-Reflex von 2026 — als Regel in DESIGN.md zwingt sie jeden neuen Screen in den Tell.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge kill">Verworfen</span><div><h4>Countdown als „emotionaler Anker"</h4><p>Der größte Text auf Landing und Dashboard zählt runter auf die Prüfung. <span class="why">Warum: Ein Angst-Auslöser als Aufmacher widerspricht dem Kernversprechen Ruhe/Sicherheit direkt.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge kill">Verworfen</span><div><h4>Beige-Grund + flache Clipart-Frucht</h4><p>Warmes Beige + Terrakotta liest sich als Wellness/Smoothie; die flache Vektor-Frucht macht fünf Jobs und ist das einzige „Bild". <span class="why">Warum: Falscher Kulturraum für Peso/LFDY/TikTok — und der 2026-KI-Default.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge kill">Verworfen</span><div><h4>Fade-up beim Scrollen (überall)</h4><p>Jede Sektion steigt gleich ein. <span class="why">Warum: Der weltweit meist-erkannte „das wurde generiert"-Fingerabdruck.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge kill">Verworfen</span><div><h4>„KI" auf jedem Atom + Roboter-Chatbot</h4><p>„KI fragen" an jeder Formel/Zeile; Coach mit Roboter-Icon, Tipp-Punkten, orangen Chat-Blasen. <span class="why">Warum: PRODUCT.md will einen <i>stillen</i> Coach. So wirkt das Produkt wie ein API-Wrapper.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge kill">Verworfen</span><div><h4>„Übersicht"-Dashboard + Karten-Raster</h4><p>Home als Statistik-Konsole; Lernbereich als 2-Spalten-Boxen; Konto als Settings-Panel. <span class="why">Warum: Genau der „Dashboard-SaaS", den die Anti-Referenzen verbieten.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge keep">Übernommen</span><div><h4>Grapefruit = Fortschritt (die Idee)</h4><p>Die sich füllende Frucht als eine, wiedererkennbare Fortschrittsgeste. <span class="why">Warum: Marke und Funktion sind dasselbe — das ist stark. Nur die <i>flache</i> Ausführung wird zum echten Objekt mit Gewicht.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge keep">Übernommen</span><div><h4>Selbst-Einordnung (Verstanden / Wiederholen / Unklar)</h4><p>Der Nutzer ordnet selbst ein — Training, nicht Benotung. <span class="why">Warum: Das ist das Herz des Produkts. Es bekommt nur eine eigene, verdiente Optik statt Formular-Pille.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge keep">Übernommen</span><div><h4>Der Reel-Modus (als Konzept)</h4><p>Lernen im Vollbild, gewischt, mit echter Stimme. <span class="why">Warum: Die audience-nativste Fläche. Sie braucht echte Gesten-Physik und darf dich nicht aus dem Flow werfen.</span></p></div></div>
+
+      <div class="kkrow"><span class="badge keep">Übernommen</span><div><h4>Bricolage Grotesque (Display) + Ehrlichkeits-Prinzip</h4><p>Die charaktervolle Display-Schrift und „bald heißt bald, keine Attrappen". <span class="why">Warum: Beides ist echt und eigenständig. Falsch war der <i>Gebrauch</i> der Schrift (Riesen-Zahl als Gerüst), nicht die Schrift.</span></p></div></div>
+    </div>
+  </section>
+
+  <!-- COLOR -->
+  <section>
+    <p class="kicker">Farb-DNA</p>
+    <h2>Hell, klar, starkes Schwarz — ein präziser Schnitt Grapefruit.</h2>
+    <p class="lead">Nicht Beige, nicht Braun, nicht klinisch-weiß. Ein warmes, helles Weiß als Bühne, echtes starkes Schwarz für Typo, und die Grapefruit als <b>die einzige</b> laute Stimme — kostbar, weil selten (≤&nbsp;10&nbsp;% pro Screen). Die Akzentfarbe wird gegenüber heute geschärft (präziser, selbstbewusster).</p>
+
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#FBFAF8;border-bottom:1px solid var(--line)"></div><div class="meta"><div class="nm">Weiß, warm</div><div class="hex">#FBFAF8</div><div class="use">Bühne. Heller & klarer als das alte Beige #FAF6F1 — geringere Sättigung, kein Clay.</div></div></div>
+      <div class="sw"><div class="chip" style="background:#111010"></div><div class="meta"><div class="nm">Schwarz, warm</div><div class="hex">#111010</div><div class="use">Typo & Primäraktion. Echtes starkes Schwarz statt weichem Braun-Grau.</div></div></div>
+      <div class="sw"><div class="chip" style="background:#F3F1EC;border-bottom:1px solid var(--line)"></div><div class="meta"><div class="nm">Warme Fläche</div><div class="hex">#F3F1EC</div><div class="use">Sekundärfläche, sparsam. Wärme kommt von hier, nicht von der Bühne.</div></div></div>
+      <div class="sw"><div class="chip" style="background:#EC5A34"></div><div class="meta"><div class="nm">Grapefruit</div><div class="hex">#EC5A34</div><div class="use">DIE Akzentfarbe, geschärft. Fortschritt, aktive Zustände, Highlights. Nie als Button-Fläche.</div></div></div>
+      <div class="sw"><div class="chip" style="background:#FF8B6B"></div><div class="meta"><div class="nm">Fleisch / Koralle</div><div class="hex">#FF8B6B</div><div class="use">Neu: das Pink-Koralle des Fruchtfleischs. Gibt der Frucht Tiefe — kein „zweites Terrakotta".</div></div></div>
+      <div class="sw"><div class="chip" style="background:#1F9D57"></div><div class="meta"><div class="nm">Verstanden-Grün</div><div class="hex">#1F9D57</div><div class="use">Semantisch, nicht dekorativ. Getrennt von der Akzentfarbe.</div></div></div>
+    </div>
+
+    <div class="cols" style="margin-top:22px">
+      <div class="card">
+        <h3>Die Eine-Stimme-Regel bleibt — endlich eingehalten</h3>
+        <p>Orange erscheint auf ≤ 10 % eines Screens und gehört <b>der Frucht</b>, nie den Buttons oder Chat-Blasen (der Coach verletzt das heute). Primäraktion = Schwarz auf Weiß.</p>
+        <ul>
+          <li><b>Themenfarbe Analysis</b> (#DE5D43) wird klar von der Marken-Grapefruit getrennt — heute verschmelzen sie.</li>
+          <li><b>Amber-Warnbox</b> bei „Typische Fehler" fällt weg — sie bringt eine vierte Farbe und Schul-/SaaS-Ton.</li>
+          <li><b>Farbe = Ort</b> (von Spotify): jedes Thema tönt seinen Raum minimal, damit „wo bin ich?" ohne Text beantwortet ist.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Dark Mode: aus Hell übersetzt, gleichwertig</h3>
+        <p>Kein separat erfundenes Theme. Dieselben Rollen, warm ins Dunkle übersetzt — warmes Fast-Schwarz (nie Blau-Schwarz), die Grapefruit glüht etwas heller. <span class="strong-note">Schalte oben rechts „Hell / Dunkel" um — dieses Board ist selbst der Beweis.</span></p>
+        <div class="swatches" style="grid-template-columns:1fr 1fr;margin-top:14px">
+          <div class="sw"><div class="chip" style="background:#14110F"></div><div class="meta"><div class="nm">Bühne, dunkel</div><div class="hex">#14110F</div></div></div>
+          <div class="sw"><div class="chip" style="background:#FF6B44"></div><div class="meta"><div class="nm">Grapefruit, dunkel</div><div class="hex">#FF6B44</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPE -->
+  <section>
+    <p class="kicker">Typografie-DNA</p>
+    <h2>Typo als Haltung, nicht als Deko-Gerüst.</h2>
+    <p class="lead">Bricolage Grotesque bleibt die Display-Stimme — groß, eng, imperativ (Nike-Ton). Falsch war der Gebrauch: die Riesen-Zahl als Gerüst und das gesperrte Versal-Label über jeder Sektion. Beides fällt als System-Element weg.</p>
+
+    <div class="spec">
+      <div class="row">
+        <div class="lbl">Display — Bricolage Grotesque, 800, eng — nur für laute, seltene Momente</div>
+        <div class="specDisplay">Du packst das.</div>
+      </div>
+      <div class="row">
+        <div class="lbl">Imperativ statt Feature-Liste — der Coach, der es drauf hatte</div>
+        <div class="specImp">Heute drei Aufgaben. Los.</div>
+      </div>
+      <div class="row">
+        <div class="lbl">Body — distinktere, mathe-lesbare Grotesk (Inter wird ersetzt — laut Projekt selbst „austauschbar")</div>
+        <div class="specBody">Jede Lösung zeigt jeden Schritt. Hakt es, tippst du drauf — und der Coach erklärt es dir, sofort, in normalem Deutsch. Kein Fachchinesisch, kein Schulbuch.</div>
+      </div>
+      <div class="row">
+        <div class="lbl">Mathe — Mono, die „Tafel"</div>
+        <span class="specMono">f′(x₀) = 0  →  Extrempunkt-Kandidat</span>
+      </div>
+      <div class="row">
+        <div class="lbl">Was wegfällt: das gesperrte Versal-Eyebrow über jeder Sektion</div>
+        <div class="killEyebrow">Was du bekommst · Der Unterschied · Der Stoff · Zugang</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPOSITION -->
+  <section>
+    <p class="kicker">Editorial-Komposition</p>
+    <h2>Eine Idee pro Blick. Viel Luft. Starkes Schwarz.</h2>
+    <p class="lead">Editorial heißt hier <b>nicht</b> Magazin-Grammatik (Eyebrow + Nummer + Haarlinie), sondern die Konsequenz von Nike/Peso/Apple: eine dominante Sache, großzügiger Weißraum, selbstbewusste Typo, asymmetrisch aber ruhig. Komposition organisiert sich um den <b>einen nächsten Schritt</b>, nicht um ein Raster gleicher Kacheln.</p>
+
+    <div class="ba">
+      <div class="before">
+        <div class="tagline">Verworfen — heute</div>
+        <div class="fauxEyebrow">Was du bekommst</div>
+        <div class="fauxRule"></div>
+        <div style="display:flex;gap:14px;align-items:baseline">
+          <span class="fauxNum">01</span>
+          <div><div style="font-family:var(--sans);font-weight:700;font-size:19px">Üb genau das, was drankommt</div>
+          <div class="miniMuted">Eyebrow + Nummer + Haarlinie + Spalte — auf jeder Sektion wiederholt.</div></div>
+        </div>
+      </div>
+      <div class="after">
+        <div class="tagline">Neu — die Richtung</div>
+        <div class="miniHead">Üb genau das,<br>was drankommt.</div>
+        <div class="miniMuted">Große schwarze Headline, viel Luft, keine Deko-Marker. Die Struktur trägt der Rhythmus, nicht das Label.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAV / IA -->
+  <section>
+    <p class="kicker">Informationsarchitektur & Navigation</p>
+    <h2>„Heute" statt „Übersicht". Eine Tür, nicht die ganze Karte.</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>Das Werkzeug entscheidet</h3>
+        <p>Das Zuhause zeigt <b>einen</b> berechneten nächsten Schritt („Heute dran: die 4 Aufgaben, die du als ‚nochmal' markiert hast"), nicht fünf konkurrierende Zahlen. Die Daten dafür existieren längst. Alles Weitere klappt darunter auf.</p>
+        <ul>
+          <li><b>Mobile-first</b>: das Handy ist das einzige Gerät der Zielgruppe. Eher Bottom-Fokus als Desktop-Icon-Leiste.</li>
+          <li><b>Nie aus der Fläche werfen</b> (Linear): der Reel katapultiert dich heute ins Dashboard — künftig öffnen Aktionen als Sheet über dem Reel.</li>
+          <li><b>Status bleibt auf dem Handy sichtbar</b> — heute verschwindet er auf der Wiederholen-Seite (ein Bug im Kernversprechen).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Button- & Karten-Sprache</h3>
+        <ul>
+          <li><b>Genau eine Primäraktion</b> pro Screen (Apple) — Schwarz auf Weiß. Orange nie als Button.</li>
+          <li><b>Labels = Nutzen/Verb</b>, nie „KI": „Erklär mir das", nicht „KI fragen".</li>
+          <li><b>Karten nur für echte Objekte</b> (eine Aufgabe, ein Kurs). Der Lernbereich hört auf, ein Boxen-Raster zu sein; die Formelsammlung wird fließende Referenz.</li>
+          <li><b>Zweitaktion als Text-Link</b> mit wanderndem Pfeil — kein zweiter Button.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMAGERY -->
+  <section>
+    <p class="kicker">Bildwelt & Held-Objekt</p>
+    <h2>Die Frucht wird ein Objekt mit Gewicht.</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>Vom Icon zum gerenderten Objekt</h3>
+        <p>Der Hero wird eine <b>echte, gerenderte Grapefruit</b> mit Licht, Fleisch-Textur, Schnitt, angeschnitten aus dem Rand — glühend im hellen Raum. Das ist das „eine Held-Objekt mit Gewicht" (Nike/Peso). Die flache Marke bleibt nur als winziges Logo/Gauge.</p>
+        <ul>
+          <li><b>Keine Stock-Fotos</b> lächelnder Schüler am Laptop — das ist cringe und generisch.</li>
+          <li><b>Ein teilbares „Drop"-Objekt</b>: ein typografisches Poster im Merch-Look (Frucht + selbst erarbeitete Zahl), das Einzige, was der Teilen-Button ausgibt — designt, damit Posten <b>diszipliniert</b> aussehen lässt.</li>
+        </ul>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px">
+        <div class="heroFruit" style="width:180px;filter:drop-shadow(0 22px 44px rgba(236,90,52,.4))" aria-hidden="true"><span class="leaf"></span></div>
+        <p style="text-align:center;font-size:14px">Richtung, nicht Endergebnis: Tiefe, warmes Licht, echtes Objekt — statt flacher Vektorscheibe.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOTION -->
+  <section>
+    <p class="kicker">Motion-DNA</p>
+    <h2>Bewegung wird gehortet — für den einen verdienten Moment.</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>Was wegfällt</h3>
+        <p>Uniformes Fade-up pro Sektion (der „generiert"-Fingerabdruck). Inhalt ist einfach da — ruhig, souverän. Und: die eine eigene Bewegung wird heute als Tapete auf jeden Mount verschwendet.</p>
+      </div>
+      <div class="card">
+        <h3>Was bleibt & neu wird</h3>
+        <ul>
+          <li><b>Der eine Moment</b>: „verstanden" → ein Grapefruit-Segment springt über die Grenze, mit echter Feder-Physik. Die Belohnung. Sonst steht die Frucht still.</li>
+          <li><b>Alles Häufige = sofort</b> (Linear: Latenz liest sich als Schwierigkeit). Keine Lade-Spinner auf Lokalem.</li>
+          <li><b>Reel</b>: echte Gesten-Physik (Feder/Velocity, unterbrechbar) — DESIGN.md fordert das bereits, es ist nur nicht eingelöst.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- COPY -->
+  <section>
+    <p class="kicker">Copywriting</p>
+    <h2>Coach, nicht Kummerkasten.</h2>
+    <p class="lead">Die Stimme setzt deine Kompetenz voraus. Sie benennt die Angst nie, um sie zu streicheln, und senkt nie die Latte, um dich zu schützen — genau das bestätigt dem 18-Jährigen die Angst, es sei zu viel für ihn.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Heute (weg)</th><th>Neu (die Richtung)</th></tr></thead>
+        <tbody>
+          <tr><td class="old">„Kein Kraftakt nötig. Ein Stück pro Tag reicht völlig."</td><td class="new">„Heute drei Aufgaben. Danach kannst du eine mehr."</td></tr>
+          <tr><td class="old">„295 Tage bis zur Prüfung · voraussichtlich"</td><td class="new">„Du bist bei 40 %. In deinem Tempo reicht das locker."</td></tr>
+          <tr><td class="old">„KI fragen"</td><td class="new">„Erklär mir das"</td></tr>
+          <tr><td class="old">„Alle Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und KI." (Feature-Liste)</td><td class="new">„Ab jetzt ist alles für dein Mathe-Abi an einem Ort." (Nutzen zuerst)</td></tr>
+          <tr><td class="old">„Viel Erfolg beim Lernen!"</td><td class="new">„Du bist drin — bis zur Prüfung."</td></tr>
+          <tr><td class="old">„Lernen im TikTok-Takt … wenn du keine Lust auf Lesen hast"</td><td class="new">Den Reel einfach <i>sein</i> — die Referenz nie benennen (Peso: zeig das Format, nenn es nie).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- REFERENCE -> RULE -->
+  <section>
+    <p class="kicker">Referenz → Regel</p>
+    <h2>Nicht die Optik. Die Konsequenz.</h2>
+    <p class="lead">Jede Referenzmarke wird in eine konkrete Gradefruit-Regel übersetzt — nicht in einen Look. Keine Moodboard-Floskeln.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Referenz</th><th>Konkrete Gradefruit-Regel</th></tr></thead>
+        <tbody>
+          <tr><td><span class="lensname">Apple</span></td><td><span class="rule">Genau eine Primäraktion pro Screen; Bewegung gehortet für seltene, bedeutungsvolle Momente; Perfektion in Details, die niemand bewusst bemerkt.</span></td></tr>
+          <tr><td><span class="lensname">Nike</span></td><td><span class="rule">Der Rekord, nicht die Restzeit — die wachsende Zahl ist laut, der Countdown ein Flüstern. Imperative Stimme, die den Athleten voraussetzt.</span></td></tr>
+          <tr><td><span class="lensname">Peso / LFDY</span></td><td><span class="rule">Zeig das Format, nenn nie die Referenz (kein „TikTok-Takt"). Baue das eine Objekt, das man teilen will. Starkes Schwarz/Weiß + eine Farbe, null Anbiederung.</span></td></tr>
+          <tr><td><span class="lensname">Spotify</span></td><td><span class="rule">Farbe = Ort: jedes Thema tönt seinen Raum. Wrapped-Denken: dieselben Zahlen als persönlicher, teilbarer Spiegel statt als Statistik-Kachel.</span></td></tr>
+          <tr><td><span class="lensname">Arc</span></td><td><span class="rule">Öffne auf einer Fortsetzung, nicht auf einer Übersicht. Ruhe entsteht durch Weglassen — die anxiety-Kur ist Subtraktion, nicht mehr Panels.</span></td></tr>
+          <tr><td><span class="lensname">Linear</span></td><td><span class="rule">Das Werkzeug entscheidet den nächsten Schritt. Nie aus der Fläche werfen. Geschwindigkeit ist das Versprechen — Latenz liest sich als Schwierigkeit.</span></td></tr>
+          <tr><td><span class="lensname">Lacoste</span></td><td><span class="rule">Eine ikonische Marke (die Frucht) trägt alles — ruhiges Premium ohne Luxus-Klischee. Sorgfalt, nicht Gold.</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PLAN -->
+  <section>
+    <p class="kicker">Umsetzungsplan</p>
+    <h2>Erst das Fundament, dann die Flächen nach Hebelwirkung.</h2>
+    <p class="lead">Dein Prinzip — Konsistenz vor vielen Dateien. Deshalb baut jeder Sprint auf derselben, festgeschriebenen Basis auf. Reihenfolge:</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><div><h4>Fundament (System-DNA)</h4><p>Neue Tokens (helle Palette, geschärfte Grapefruit, Themen getrennt), Editorial-Kit entmachten, Fade-up ersetzen, gerendertes Hero-Frucht-Objekt, Eyebrow raus, WCAG fixen.</p><div class="lever">Unsichtbar, aber alles erbt es. Höchster Hebel.</div></div></div>
+      <div class="step"><span class="n">2</span><div><h4>Landing</h4><p>Neuer Hero mit Held-Objekt, neue Erzählung, Countdown raus als Aufmacher, echte Bildwelt, das Drop-Poster.</p><div class="lever">Erster Eindruck — „warum hab ich das nicht früher gefunden".</div></div></div>
+      <div class="step"><span class="n">3</span><div><h4>Das Zuhause: „Heute"</h4><p>Ein berechneter nächster Schritt, Countdown geflüstert, eine Held-Zahl (verdienter Fortschritt), echter Erst-Start-Zustand.</p><div class="lever">Der tägliche emotionale Anker.</div></div></div>
+      <div class="step"><span class="n">4</span><div><h4>Lernkern + Coach</h4><p>Karten-Raster killen, „KI" von den Atomen nehmen, Coach als Person, „prüf deine Lösung" zum Held-Moment, „verstanden" als verdiente Schluss-Geste.</p><div class="lever">Hier muss „fühlt sich nicht wie Schule an" wahr werden.</div></div></div>
+      <div class="step"><span class="n">5</span><div><h4>Der Reel</h4><p>Echte Gesten-Physik, nicht aus dem Flow werfen, volle Triage im Reel, Museums-Labels weg, teilbares Drop-Objekt.</p><div class="lever">Die stärkste Wiederkomm-/Wachstums-Waffe.</div></div></div>
+      <div class="step"><span class="n">6</span><div><h4>Vertrauen & Kauf</h4><p>Checkout als Schwelle statt Formular, Konto auf „Papier", Wiederholen als Trainingsset statt Filter-Anlage.</p><div class="lever">Wo Eltern zahlen und Vertrauen entsteht.</div></div></div>
+    </div>
+
+    <div class="verdict">
+      <div class="vitem"><div class="pct">75%</div><div class="nm">Landing</div></div>
+      <div class="vitem"><div class="pct">65%</div><div class="nm">Dashboard → Heute</div></div>
+      <div class="vitem"><div class="pct">60%</div><div class="nm">Vertrauen & Kauf</div></div>
+      <div class="vitem"><div class="pct">62%</div><div class="nm">System-DNA</div></div>
+      <div class="vitem"><div class="pct">55%</div><div class="nm">Lernkern + Coach</div></div>
+      <div class="vitem"><div class="pct">55%</div><div class="nm">Reel</div></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="status"><span class="d"></span> Warte auf deine Freigabe. Erst dann Sprint&nbsp;1.</span>
+    <p style="margin-top:18px;font-size:14.5px">Erst nach deiner ausdrücklichen Freigabe kann diese Richtung in DESIGN.md &amp; PRODUCT.md übernommen werden. Dieser Entwurf selbst verändert keinen Produktcode.</p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var btn=document.getElementById('tt');
+    if(!btn)return;
+    btn.addEventListener('click',function(){
+      var r=document.documentElement;
+      var cur=r.getAttribute('data-theme');
+      if(!cur){cur=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
+      r.setAttribute('data-theme',cur==='dark'?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>
