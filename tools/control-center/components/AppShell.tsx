@@ -8,7 +8,7 @@ const NAVIGATION = [
   { href: "/tasks", label: "Meine Aufgaben", icon: "tasks" },
   { href: "/ideas", label: "Ideen", icon: "ideas" },
   { href: "/milestones", label: "Milestones", icon: "milestones" },
-  { href: "/links", label: "Seiten & Apps", icon: "links" },
+  { href: "/links", label: "Links", icon: "links" },
 ] as const;
 
 function NavigationIcon({ icon }: { icon: typeof NAVIGATION[number]["icon"] }) {

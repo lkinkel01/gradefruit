@@ -9,7 +9,7 @@ const AREAS = [
   { href: "/tasks", title: "Meine Aufgaben", count: "tasks" },
   { href: "/ideas", title: "Ideen", count: "ideas" },
   { href: "/milestones", title: "Milestones" },
-  { href: "/links", title: "Seiten & Apps" },
+  { href: "/links", title: "Links" },
 ] as const;
 
 function formatDateTime(date: Date): string {

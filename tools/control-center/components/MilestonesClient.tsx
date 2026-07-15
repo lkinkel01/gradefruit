@@ -103,14 +103,14 @@ export function MilestonesClient() {
 
   return (
     <div className="workspace-page milestones-page">
-      <div className="page-toolbar align-right">
+      <div className="page-toolbar section-toolbar">
+        <h1 id="milestones-title">Milestones</h1>
         <ModeToolbar mode={mode} onModeChange={changeMode} addLabel="Milestone hinzufügen" onAdd={addMilestone} />
       </div>
       <Notice message={notice} />
       <Notice message={error} error />
 
       <section className="workspace-section" aria-labelledby="milestones-title">
-        <h1 id="milestones-title">Milestones</h1>
         {milestones.length ? (
           <div className="record-list">
             {milestones.map((item, index) => {

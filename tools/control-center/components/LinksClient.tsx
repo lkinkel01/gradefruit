@@ -10,8 +10,8 @@ import { WorkspaceModal } from "./WorkspaceModal";
 import { EmptyState, Field, Loading, Notice } from "./ui";
 
 const GROUPS: Array<{ id: WorkspaceLinkGroup; label: string }> = [
-  { id: "project", label: "Mein Projekt" },
-  { id: "external", label: "Externe Dienste" },
+  { id: "project", label: "Intern" },
+  { id: "external", label: "Extern" },
 ];
 
 export function LinksClient() {
@@ -89,7 +89,8 @@ export function LinksClient() {
 
   return (
     <div className="workspace-page links-page">
-      <div className="page-toolbar align-right">
+      <div className="page-toolbar section-toolbar">
+        <h1 id="links-title">Links</h1>
         <ModeToolbar mode={mode} onModeChange={changeMode} addLabel="Link hinzufügen" onAdd={addLink} />
       </div>
       <Notice message={notice} />
@@ -99,7 +100,7 @@ export function LinksClient() {
         const links = sorted.filter((link) => link.group === group.id);
         return (
           <section className="workspace-section link-section" key={group.id} aria-labelledby={`links-${group.id}`}>
-            <h1 id={`links-${group.id}`}>{group.label}</h1>
+            <h2 id={`links-${group.id}`}>{group.label}</h2>
             {links.length ? (
               <div className="link-list">
                 {links.map((link, index) => (
@@ -126,7 +127,7 @@ export function LinksClient() {
                       <div className="record-management link-management">
                         <span><strong className="record-title">{link.name}</strong>{link.description ? <small>{link.description}</small> : null}</span>
                         {mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => setDraft({ ...link })}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteLink(link)}>Löschen</button></span> : null}
-                        {mode === "reorder" ? <label className="group-move"><span>Bereich</span><select value={link.group} onChange={(event) => void moveToGroup(link, event.target.value as WorkspaceLinkGroup)}><option value="project">Mein Projekt</option><option value="external">Externe Dienste</option></select></label> : null}
+                        {mode === "reorder" ? <label className="group-move"><span>Bereich</span><select value={link.group} onChange={(event) => void moveToGroup(link, event.target.value as WorkspaceLinkGroup)}><option value="project">Intern</option><option value="external">Extern</option></select></label> : null}
                       </div>
                     )}
                   </article>
@@ -143,7 +144,7 @@ export function LinksClient() {
             <Field label="Name" className="full"><input required maxLength={100} value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} /></Field>
             <Field label="Kurze Beschreibung" className="full"><input maxLength={500} value={draft.description ?? ""} onChange={(event) => setDraft({ ...draft, description: event.target.value })} /></Field>
             <Field label="URL" className="full"><input type="url" value={draft.url} onChange={(event) => setDraft({ ...draft, url: event.target.value })} /></Field>
-            <Field label="Bereich"><select value={draft.group} onChange={(event) => setDraft({ ...draft, group: event.target.value as WorkspaceLinkGroup })}><option value="project">Mein Projekt</option><option value="external">Externe Dienste</option></select></Field>
+            <Field label="Bereich"><select value={draft.group} onChange={(event) => setDraft({ ...draft, group: event.target.value as WorkspaceLinkGroup })}><option value="project">Intern</option><option value="external">Extern</option></select></Field>
             <div className="detail-form-actions full">
               <button className="button" type="submit" disabled={busy}>Speichern</button>
               <button className="button secondary" type="button" onClick={() => setDraft(null)}>Abbrechen</button>

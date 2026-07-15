@@ -115,14 +115,14 @@ export function IdeasClient() {
 
   return (
     <div className="workspace-page">
-      <div className="page-toolbar align-right">
+      <div className="page-toolbar section-toolbar">
+        <h1 id="ideas-title">Ideen</h1>
         <ModeToolbar mode={mode} onModeChange={changeMode} addLabel="Idee hinzufügen" onAdd={addIdea} />
       </div>
       <Notice message={notice} />
       <Notice message={error} error />
 
       <section className="workspace-section" aria-labelledby="ideas-title">
-        <h1 id="ideas-title">Ideen</h1>
         {sorted.length ? (
           <div className="record-list" aria-label="Ideen">
             {sorted.map((idea, index) => {
