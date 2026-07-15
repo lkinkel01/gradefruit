@@ -13,9 +13,14 @@
 # testing
 /coverage
 
+# private local Gradefruit Workspace backup data
+/.control-center/
+
 # next.js
 /.next/
 /out/
+/tools/control-center/.next/
+/tools/control-center/node_modules/
 
 # production
 /build
@@ -40,6 +45,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!/tools/control-center/.env.example
 
 # vercel
 .vercel
