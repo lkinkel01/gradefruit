@@ -135,7 +135,10 @@ export function MilestonesClient() {
                       {isExpanded ? <div className="record-detail"><p className="preserve-lines">{item.shortDescription || "Noch keine Beschreibung eingetragen."}</p><div className="record-actions"><button className="button secondary small" type="button" onClick={() => { changeMode("edit"); setEditing({ kind: "milestone", item: { ...item } }); }}>Bearbeiten</button></div></div> : null}
                     </>
                   ) : (
-                    <div className="record-management"><span className="record-title">{item.title}</span>{mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => setEditing({ kind: "milestone", item: { ...item } })}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteEdit({ kind: "milestone", item })}>Löschen</button></span> : null}</div>
+                    <div className="record-management">
+                      {mode === "edit" ? <button className="record-edit-trigger record-title" type="button" onClick={() => setEditing({ kind: "milestone", item: { ...item } })} aria-label={`Milestone „${item.title}“ bearbeiten`} title="Milestone öffnen">{item.title}</button> : <span className="record-title">{item.title}</span>}
+                      {mode === "edit" ? <span className="management-actions"><button className="text-button danger-text" type="button" onClick={() => void deleteEdit({ kind: "milestone", item })}>Löschen</button></span> : null}
+                    </div>
                   )}
                 </article>
               );
@@ -159,8 +162,8 @@ export function MilestonesClient() {
                 onDrop={(event) => drop(event, "vision", item.id)}
               >
                 {mode === "reorder" ? <SortHandle label="Visionseintrag" canMoveUp={index > 0} canMoveDown={index < vision.length - 1} onMoveUp={() => moveBy("vision", item.id, -1)} onMoveDown={() => moveBy("vision", item.id, 1)} /> : null}
-                <p>{item.text}</p>
-                {mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => setEditing({ kind: "vision", item: { ...item } })}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteEdit({ kind: "vision", item })}>Löschen</button></span> : null}
+                {mode === "edit" ? <button className="record-edit-trigger vision-edit-trigger" type="button" onClick={() => setEditing({ kind: "vision", item: { ...item } })} aria-label="Visionseintrag bearbeiten" title="Vision öffnen">{item.text}</button> : <p>{item.text}</p>}
+                {mode === "edit" ? <span className="management-actions"><button className="text-button danger-text" type="button" onClick={() => void deleteEdit({ kind: "vision", item })}>Löschen</button></span> : null}
               </article>
             ))}
           </div>

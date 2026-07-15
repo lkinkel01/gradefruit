@@ -15,6 +15,7 @@ const STATUS_ORDER: Record<WorkspaceTaskStatus, number> = { offen: 0, später: 1
 const PRIORITY_ORDER: Record<WorkspacePriority, number> = { "sehr-hoch": 0, hoch: 1, mittel: 2, niedrig: 3 };
 type StatusFilter = WorkspaceTaskStatus | "alle";
 type PriorityFilter = WorkspacePriority | "alle";
+type InlineTaskDraft = Partial<Pick<WorkspaceTask, "status" | "priority">>;
 
 function sortTasks(tasks: WorkspaceTask[]): WorkspaceTask[] {
   return [...tasks].sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status]
@@ -36,6 +37,7 @@ export function WorkClient() {
   const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>("alle");
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [inlineDrafts, setInlineDrafts] = useState<Record<string, InlineTaskDraft>>({});
 
   const sorted = useMemo(() => sortTasks(workspace?.tasks ?? []), [workspace]);
   const filtered = sorted
@@ -105,6 +107,28 @@ export function WorkClient() {
     await save({ ...visible, tasks: visible.tasks.map((item) => item.id === task.id ? completed : item) }, "Aufgabe erledigt.");
   }
 
+  async function updateTaskClassification(task: WorkspaceTask, changes: InlineTaskDraft) {
+    if (!visible || busy) return;
+    const current = visible.tasks.find((item) => item.id === task.id) ?? task;
+    const next = { ...current, ...changes };
+    const movedGroup = !sameGroup(current, next);
+    const order = movedGroup
+      ? Math.max(-1, ...visible.tasks.filter((item) => sameGroup(item, next) && item.id !== task.id).map((item) => item.order)) + 1
+      : current.order;
+    const updated = { ...next, order, updatedAt: new Date().toISOString() };
+
+    setInlineDrafts((drafts) => ({ ...drafts, [task.id]: { ...drafts[task.id], ...changes } }));
+    await save(
+      { ...visible, tasks: visible.tasks.map((item) => item.id === task.id ? updated : item) },
+      changes.status ? "Status gespeichert." : "Priorität gespeichert.",
+    );
+    setInlineDrafts((drafts) => {
+      const nextDrafts = { ...drafts };
+      delete nextDrafts[task.id];
+      return nextDrafts;
+    });
+  }
+
   async function copyPrompt(task: WorkspaceTask) {
     if (!task.agentPrompt) return;
     try {
@@ -147,8 +171,9 @@ export function WorkClient() {
 
   return (
     <div className="workspace-page">
-      <header className="page-heading">
+      <header className="page-heading page-title-block">
         <h1>Meine Aufgaben</h1>
+        <span className="page-count" aria-live="polite">{filtered.length} {filtered.length === 1 ? "Aufgabe" : "Aufgaben"}</span>
       </header>
       <div className="page-toolbar task-toolbar">
         <div className="compact-filters">
@@ -173,12 +198,13 @@ export function WorkClient() {
       {filtered.length ? (
         <div className="record-list" aria-label="Aufgaben">
           {filtered.map((task) => {
+            const inlineTask = { ...task, ...inlineDrafts[task.id] };
             const isExpanded = expanded.has(task.id);
             const group = sorted.filter((item) => sameGroup(item, task));
             const groupIndex = group.findIndex((item) => item.id === task.id);
             return (
               <article
-                className={`record task-record status-${task.status} mode-${mode}`}
+                className={`record task-record status-${inlineTask.status} mode-${mode}`}
                 key={task.id}
                 draggable={mode === "reorder" && !busy}
                 onDragStart={(event) => { if (mode === "reorder") { setDraggedId(task.id); event.dataTransfer.effectAllowed = "move"; } }}
@@ -223,9 +249,38 @@ export function WorkClient() {
                   </>
                 ) : (
                   <div className="record-management">
-                    <span className="record-title">{task.title}</span>
-                    <span className="task-meta"><span className="status-label"><i aria-hidden="true" />{STATUS_LABELS[task.status]}</span><span className={`priority-label priority-${task.priority}`}>{PRIORITY_LABELS[task.priority]}</span></span>
-                    {mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => editTask(task)}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteTask(task)}>Löschen</button></span> : null}
+                    {mode === "edit" ? (
+                      <button className="record-edit-trigger record-title" type="button" onClick={() => editTask(task)} aria-label={`Inhalt von „${task.title}“ bearbeiten`} title="Aufgabe öffnen">
+                        {task.title}
+                      </button>
+                    ) : <span className="record-title">{task.title}</span>}
+                    {mode === "edit" ? (
+                      <span className="inline-task-controls">
+                        <label>
+                          <span className="visually-hidden">Status von {task.title}</span>
+                          <select
+                            className={`task-inline-select task-inline-status status-${inlineTask.status}`}
+                            value={inlineTask.status}
+                            disabled={busy}
+                            onChange={(event) => void updateTaskClassification(task, { status: event.target.value as WorkspaceTaskStatus })}
+                          >
+                            {Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}
+                          </select>
+                        </label>
+                        <label>
+                          <span className="visually-hidden">Priorität von {task.title}</span>
+                          <select
+                            className={`task-inline-select task-inline-priority priority-${inlineTask.priority}`}
+                            value={inlineTask.priority}
+                            disabled={busy}
+                            onChange={(event) => void updateTaskClassification(task, { priority: event.target.value as WorkspacePriority })}
+                          >
+                            {Object.entries(PRIORITY_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}
+                          </select>
+                        </label>
+                      </span>
+                    ) : <span className="task-meta"><span className="status-label"><i aria-hidden="true" />{STATUS_LABELS[task.status]}</span><span className={`priority-label priority-${task.priority}`}>{PRIORITY_LABELS[task.priority]}</span></span>}
+                    {mode === "edit" ? <span className="management-actions"><button className="text-button danger-text" type="button" onClick={() => void deleteTask(task)}>Löschen</button></span> : null}
                   </div>
                 )}
               </article>

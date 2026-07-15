@@ -125,8 +125,12 @@ export function LinksClient() {
                       )
                     ) : (
                       <div className="record-management link-management">
-                        <span><strong className="record-title">{link.name}</strong>{link.description ? <small>{link.description}</small> : null}</span>
-                        {mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => setDraft({ ...link })}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteLink(link)}>Löschen</button></span> : null}
+                        {mode === "edit" ? (
+                          <button className="record-edit-trigger link-edit-trigger" type="button" onClick={() => setDraft({ ...link })} aria-label={`Link „${link.name}“ bearbeiten`} title="Link öffnen">
+                            <strong className="record-title">{link.name}</strong>{link.description ? <small>{link.description}</small> : null}
+                          </button>
+                        ) : <span><strong className="record-title">{link.name}</strong>{link.description ? <small>{link.description}</small> : null}</span>}
+                        {mode === "edit" ? <span className="management-actions"><button className="text-button danger-text" type="button" onClick={() => void deleteLink(link)}>Löschen</button></span> : null}
                         {mode === "reorder" ? <label className="group-move"><span>Bereich</span><select value={link.group} onChange={(event) => void moveToGroup(link, event.target.value as WorkspaceLinkGroup)}><option value="project">Intern</option><option value="external">Extern</option></select></label> : null}
                       </div>
                     )}

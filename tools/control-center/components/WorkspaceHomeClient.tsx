@@ -6,8 +6,8 @@ import { useWorkspace } from "@/lib/use-workspace";
 import { Loading, Notice } from "./ui";
 
 const AREAS = [
-  { href: "/tasks", title: "Meine Aufgaben", count: "tasks" },
-  { href: "/ideas", title: "Ideen", count: "ideas" },
+  { href: "/tasks", title: "Meine Aufgaben" },
+  { href: "/ideas", title: "Ideen" },
   { href: "/milestones", title: "Milestones" },
   { href: "/links", title: "Links" },
 ] as const;
@@ -32,8 +32,6 @@ function formatDateTime(date: Date): string {
 export function WorkspaceHomeClient() {
   const { workspace, error } = useWorkspace();
   const [now, setNow] = useState<Date | null>(null);
-  const openTasks = workspace?.tasks.filter((task) => task.status !== "erledigt").length ?? 0;
-  const ideaCount = workspace?.ideas.length ?? 0;
 
   useEffect(() => {
     const updateClock = () => setNow(new Date());
@@ -51,16 +49,12 @@ export function WorkspaceHomeClient() {
       <Notice message={error} error />
       {!workspace ? <Loading /> : (
         <nav className="home-menu" aria-label="Workspace-Bereiche">
-          {AREAS.map((area) => {
-            const count = "count" in area ? area.count === "tasks" ? openTasks : ideaCount : null;
-            return (
-              <Link href={area.href} key={area.href} className="home-menu-item">
-                <strong>{area.title}</strong>
-                {count !== null ? <span>{count}</span> : null}
-                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg>
-              </Link>
-            );
-          })}
+          {AREAS.map((area) => (
+            <Link href={area.href} key={area.href} className="home-menu-item">
+              <strong>{area.title}</strong>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg>
+            </Link>
+          ))}
         </nav>
       )}
     </div>

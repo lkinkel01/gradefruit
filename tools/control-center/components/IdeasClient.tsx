@@ -116,7 +116,10 @@ export function IdeasClient() {
   return (
     <div className="workspace-page">
       <div className="page-toolbar section-toolbar">
-        <h1 id="ideas-title">Ideen</h1>
+        <div className="page-title-block">
+          <h1 id="ideas-title">Ideen</h1>
+          <span className="page-count">{sorted.length} {sorted.length === 1 ? "Idee" : "Ideen"}</span>
+        </div>
         <ModeToolbar mode={mode} onModeChange={changeMode} addLabel="Idee hinzufügen" onAdd={addIdea} />
       </div>
       <Notice message={notice} />
@@ -160,8 +163,10 @@ export function IdeasClient() {
                     </>
                   ) : (
                     <div className="record-management">
-                      <span className="record-title">{idea.title}</span>
-                      {mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => setDraft({ ...idea })}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteIdea(idea)}>Löschen</button></span> : null}
+                      {mode === "edit" ? (
+                        <button className="record-edit-trigger record-title" type="button" onClick={() => setDraft({ ...idea })} aria-label={`Idee „${idea.title}“ bearbeiten`} title="Idee öffnen">{idea.title}</button>
+                      ) : <span className="record-title">{idea.title}</span>}
+                      {mode === "edit" ? <span className="management-actions"><button className="text-button danger-text" type="button" onClick={() => void deleteIdea(idea)}>Löschen</button></span> : null}
                     </div>
                   )}
                 </article>
