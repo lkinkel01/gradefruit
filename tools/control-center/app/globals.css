@@ -181,13 +181,11 @@ p { text-wrap: pretty; }
 .home-menu-item strong { min-width: 0; font-size: 21px; line-height: 1.2; letter-spacing: -.025em; overflow-wrap: anywhere; }
 .home-menu-item > span { color: var(--muted); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .home-menu-item svg { width: 22px; height: 22px; fill: none; stroke: var(--subtle); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; transition: stroke 170ms cubic-bezier(.2,.7,.3,1), transform 170ms cubic-bezier(.2,.7,.3,1); }
-.import-link { width: fit-content; margin: 22px 0 0 auto; color: var(--muted); display: block; font-size: 12px; text-underline-offset: 3px; }
-
-.login-panel, .import-panel { width: min(100%, 560px); margin: clamp(24px, 8vh, 90px) auto 0; }
+.login-panel { width: min(100%, 560px); margin: clamp(24px, 8vh, 90px) auto 0; }
 .login-heading { margin-bottom: 28px; }
 .login-heading .eyebrow { margin-bottom: 8px; color: var(--accent-strong); font-size: 11px; font-weight: 760; letter-spacing: .09em; text-transform: uppercase; }
-.login-heading h1, .import-panel h1 { margin-bottom: 9px; font-size: clamp(28px, 5vw, 38px); line-height: 1.1; letter-spacing: -.04em; }
-.login-heading > p:last-child, .import-panel > p { color: var(--muted); }
+.login-heading h1 { margin-bottom: 9px; font-size: clamp(28px, 5vw, 38px); line-height: 1.1; letter-spacing: -.04em; }
+.login-heading > p:last-child { color: var(--muted); }
 .login-form { display: grid; gap: 18px; }
 .login-form .button { justify-self: start; min-width: 120px; }
 .totp-setup { padding: 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); display: grid; justify-items: center; gap: 14px; }
@@ -195,16 +193,6 @@ p { text-wrap: pretty; }
 .totp-setup details { width: 100%; color: var(--muted); font-size: 12px; }
 .totp-setup code { display: block; margin-top: 8px; padding: 10px; border-radius: 6px; background: var(--surface-soft); color: var(--ink); overflow-wrap: anywhere; user-select: all; }
 .totp-input { max-width: 220px; font-size: 22px; font-weight: 700; letter-spacing: .24em; font-variant-numeric: tabular-nums; }
-.file-picker { width: fit-content; min-height: 42px; padding: 10px 16px; border: 1px solid var(--ink); border-radius: 7px; background: var(--ink); color: var(--canvas); display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; cursor: pointer; }
-.file-picker input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-.selected-file { margin: 12px 0; color: var(--muted); font-size: 12px; }
-.import-preview { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line-strong); }
-.import-preview h2 { font-size: 20px; }
-.import-preview ul { margin: 0 0 20px; padding: 0; list-style: none; border-bottom: 1px solid var(--line); }
-.import-preview li { min-height: 52px; padding: 10px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 16px; }
-.import-preview li strong, .import-preview li small { font-size: 12px; }
-.import-preview li small { color: var(--muted); }
-
 .page-toolbar {
   min-height: 68px;
   margin-bottom: 24px;
@@ -478,8 +466,6 @@ body.modal-open { overflow: hidden; }
   .record-actions { align-items: stretch; flex-direction: column; }
   .record-actions .button, .record-actions .text-button { width: 100%; }
   .logout-button { padding-inline: 5px; }
-  .import-preview li { grid-template-columns: minmax(0, 1fr) auto; gap: 5px 12px; }
-  .import-preview li small { grid-column: 1 / -1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

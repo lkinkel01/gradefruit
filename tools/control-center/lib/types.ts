@@ -76,15 +76,3 @@ export interface IdeaConversionInput {
   status: WorkspaceTaskStatus;
   priority: WorkspacePriority;
 }
-
-export type ImportKind = "tasks" | "ideas" | "milestones" | "vision" | "links";
-
-export interface WorkspaceImportPreview {
-  counts: Record<ImportKind, { new: number; duplicates: number }>;
-  totalNew: number;
-  totalDuplicates: number;
-}
-
-export interface WorkspaceImportResult extends WorkspaceImportPreview {
-  imported: Record<ImportKind, number>;
-}

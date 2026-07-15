@@ -33,7 +33,6 @@ export function WorkspaceHomeClient() {
       </header>
       <Notice message={error} error />
       {!workspace ? <Loading /> : (
-        <>
         <nav className="home-menu" aria-label="Workspace-Bereiche">
           {AREAS.map((area) => {
             const count = "count" in area ? area.count === "tasks" ? openTasks : ideaCount : null;
@@ -46,8 +45,6 @@ export function WorkspaceHomeClient() {
             );
           })}
         </nav>
-        <Link className="import-link" href="/import">Bestehende lokale Daten importieren</Link>
-        </>
       )}
     </div>
   );

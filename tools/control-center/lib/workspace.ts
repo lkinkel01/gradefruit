@@ -10,10 +10,7 @@ import {
   type IdeaConversionInput,
   type WorkspaceAgent,
   type WorkspaceData,
-  type WorkspaceLink,
-  type WorkspacePriority,
   type WorkspaceRemoval,
-  type WorkspaceTaskStatus,
   type WorkspaceVisibleData,
 } from "./types";
 import { enumValue, identifier, integer, record, safeUrl, text, ValidationError } from "./validation";
@@ -201,29 +198,4 @@ export async function convertIdeaToTask(client: Client, value: unknown): Promise
   });
   databaseError(error, "Die Idee konnte nicht umgewandelt werden und bleibt erhalten.");
   return readWorkspace(client);
-}
-
-export function mapImportStatus(value: unknown): WorkspaceTaskStatus {
-  const status = String(value ?? "").toLocaleLowerCase("de-DE");
-  if (["abgeschlossen", "erledigt", "done"].includes(status)) return "erledigt";
-  if (["vertagt", "verworfen", "später", "later"].includes(status)) return "später";
-  return "offen";
-}
-
-export function mapImportPriority(value: unknown): WorkspacePriority {
-  const priority = String(value ?? "").toLocaleLowerCase("de-DE");
-  if (["kritisch", "sehr-hoch", "sehr hoch", "very_high"].includes(priority)) return "sehr-hoch";
-  if (priority === "hoch" || priority === "high") return "hoch";
-  if (priority === "niedrig" || priority === "low") return "niedrig";
-  return "mittel";
-}
-
-export function mapImportAgent(value: unknown): WorkspaceAgent {
-  if (value === "Claude Code" || value === "claude") return "Claude Code";
-  if (value === "Codex" || value === "codex") return "Codex";
-  return "offen";
-}
-
-export function isDuplicateLink(a: WorkspaceLink, b: WorkspaceLink): boolean {
-  return a.name.toLocaleLowerCase("de-DE") === b.name.toLocaleLowerCase("de-DE") && a.url === b.url;
 }

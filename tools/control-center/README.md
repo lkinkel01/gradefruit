@@ -22,9 +22,9 @@ werden; ein komplexer Offline-Modus ist nicht enthalten.
 
 Die aktiven Workspace-Daten liegen im separaten Supabase-Postgres-Projekt. Die
 bisherigen lokalen Dateien unter `.control-center/` bleiben ignoriert und als
-Backup erhalten. Über „Bestehende lokale Daten importieren“ kann
-`.control-center/workspace.json` einmalig mit Vorschau und
-Duplikaterkennung übernommen werden. Die Importdatei wird nicht verändert.
+Backup erhalten. Die einmalige Übernahme der bestehenden lokalen Daten ist
+abgeschlossen; der Workspace wird jetzt direkt über die gemeinsamen
+Supabase-Daten gepflegt.
 
 Es findet keine automatische Synchronisation mit Claude, Codex oder ChatGPT
 statt. Zugangsdaten gehören nur in lokale beziehungsweise Vercel-
