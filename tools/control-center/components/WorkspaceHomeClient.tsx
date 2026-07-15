@@ -1,15 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useWorkspace } from "@/lib/use-workspace";
 import { Loading, Notice } from "./ui";
-
-const MOTIVATION = [
-  "Ein klarer nächster Schritt reicht.",
-  "Heute zählt, was du wirklich voranbringst.",
-  "Mach es einfach. Dann mach es besser.",
-  "Konzentriere dich auf das, was jetzt wichtig ist.",
-];
 
 const AREAS = [
   { href: "/tasks", title: "Meine Aufgaben", count: "tasks" },
@@ -18,18 +12,41 @@ const AREAS = [
   { href: "/links", title: "Seiten & Apps" },
 ] as const;
 
+function formatDateTime(date: Date): string {
+  const dateText = new Intl.DateTimeFormat("de-DE", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/Berlin",
+  }).format(date);
+  const timeText = new Intl.DateTimeFormat("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Berlin",
+  }).format(date);
+  const capitalizedDate = dateText.charAt(0).toLocaleUpperCase("de-DE") + dateText.slice(1);
+  return `${capitalizedDate} · ${timeText} Uhr`;
+}
+
 export function WorkspaceHomeClient() {
   const { workspace, error } = useWorkspace();
-  const day = Number(new Intl.DateTimeFormat("de-DE", { day: "numeric", timeZone: "Europe/Berlin" }).format(new Date()));
-  const motivation = MOTIVATION[day % MOTIVATION.length];
+  const [now, setNow] = useState<Date | null>(null);
   const openTasks = workspace?.tasks.filter((task) => task.status !== "erledigt").length ?? 0;
   const ideaCount = workspace?.ideas.length ?? 0;
+
+  useEffect(() => {
+    const updateClock = () => setNow(new Date());
+    updateClock();
+    const interval = window.setInterval(updateClock, 30_000);
+    return () => window.clearInterval(interval);
+  }, []);
 
   return (
     <div className="home-page">
       <header className="home-heading">
-        <h1>Willkommen zurück, Leon.</h1>
-        <p>{motivation}</p>
+        <h1>Willkommen zurück Leon.</h1>
+        <time dateTime={now?.toISOString()}>{now ? formatDateTime(now) : "Datum und Uhrzeit werden geladen …"}</time>
       </header>
       <Notice message={error} error />
       {!workspace ? <Loading /> : (

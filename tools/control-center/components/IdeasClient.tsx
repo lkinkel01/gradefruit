@@ -115,6 +115,9 @@ export function IdeasClient() {
 
   return (
     <div className="workspace-page">
+      <header className="page-heading">
+        <h1>Ideen</h1>
+      </header>
       <div className="page-toolbar align-right">
         <ModeToolbar mode={mode} onModeChange={changeMode} addLabel="Idee hinzufügen" onAdd={addIdea} />
       </div>
@@ -144,7 +147,10 @@ export function IdeasClient() {
                     </button>
                     {isExpanded ? (
                       <div className="record-detail">
-                        <p className="preserve-lines idea-copy">{idea.idea || "Noch kein Text eingetragen."}</p>
+                        <section className="idea-detail-section">
+                          <h2>Idee</h2>
+                          <p className="preserve-lines idea-copy">{idea.idea || "Noch kein Text eingetragen."}</p>
+                        </section>
                         <div className="record-actions">
                           <button className="button secondary small" type="button" onClick={() => { changeMode("edit"); setDraft({ ...idea }); }}>Bearbeiten</button>
                           <button className="button secondary small" type="button" onClick={() => beginConversion(idea)}>Zu Aufgabe umwandeln</button>

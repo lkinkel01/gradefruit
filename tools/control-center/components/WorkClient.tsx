@@ -147,6 +147,9 @@ export function WorkClient() {
 
   return (
     <div className="workspace-page">
+      <header className="page-heading">
+        <h1>Meine Aufgaben</h1>
+      </header>
       <div className="page-toolbar task-toolbar">
         <div className="compact-filters">
           <Field label="Status">
@@ -196,13 +199,20 @@ export function WorkClient() {
                     </button>
                     {isExpanded ? (
                       <div className="record-detail">
-                        <dl className="task-detail-grid">
-                          <div><dt>Status</dt><dd>{STATUS_LABELS[task.status]}</dd></div>
-                          <div><dt>Priorität</dt><dd>{PRIORITY_LABELS[task.priority]}</dd></div>
-                          <div className="full"><dt>To-do</dt><dd className="preserve-lines">{task.todo || "Noch nicht eingetragen."}</dd></div>
-                          <div className="full"><dt>Definition of Done</dt><dd className="preserve-lines">{task.definitionOfDone || "Noch nicht eingetragen."}</dd></div>
-                          <div className="full"><dt>Prompt für Claude oder Codex</dt><dd className="prompt-preview preserve-lines">{task.agentPrompt || "Noch nicht eingetragen."}</dd></div>
-                        </dl>
+                        <div className="task-detail-sections">
+                          <section className="task-detail-section">
+                            <h2>To-do</h2>
+                            <p className="preserve-lines">{task.todo || "Noch nicht eingetragen."}</p>
+                          </section>
+                          <section className="task-detail-section">
+                            <h2>Definition of Done</h2>
+                            <p className="preserve-lines">{task.definitionOfDone || "Noch nicht eingetragen."}</p>
+                          </section>
+                          <section className="task-detail-section">
+                            <h2>Prompt</h2>
+                            <div className="prompt-preview preserve-lines">{task.agentPrompt || "Noch nicht eingetragen."}</div>
+                          </section>
+                        </div>
                         <div className="record-actions">
                           <button className="button secondary small" type="button" onClick={() => { changeMode("edit"); editTask(task); }}>Bearbeiten</button>
                           <button className="button secondary small" type="button" disabled={!task.agentPrompt} onClick={() => void copyPrompt(task)}>{copiedId === task.id ? "Kopiert" : "Prompt kopieren"}</button>
@@ -232,7 +242,7 @@ export function WorkClient() {
             <Field label="Priorität"><select value={draft.priority} onChange={(event) => setDraft({ ...draft, priority: event.target.value as WorkspacePriority })}>{Object.entries(PRIORITY_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></Field>
             <Field label="To-do" className="full"><textarea rows={7} value={draft.todo} onChange={(event) => setDraft({ ...draft, todo: event.target.value })} /></Field>
             <Field label="Definition of Done" hint="Wann ist diese Aufgabe wirklich erledigt?" className="full"><textarea rows={5} value={draft.definitionOfDone} onChange={(event) => setDraft({ ...draft, definitionOfDone: event.target.value })} /></Field>
-            <Field label="Prompt für Claude oder Codex" className="full"><textarea className="prompt-field" rows={10} value={draft.agentPrompt} onChange={(event) => setDraft({ ...draft, agentPrompt: event.target.value })} /></Field>
+            <Field label="Prompt" className="full"><textarea className="prompt-field" rows={10} value={draft.agentPrompt} onChange={(event) => setDraft({ ...draft, agentPrompt: event.target.value })} /></Field>
             <Field label="Bevorzugter Agent"><select value={draft.preferredAgent} onChange={(event) => setDraft({ ...draft, preferredAgent: event.target.value as WorkspaceTask["preferredAgent"] })}><option value="offen">Offen</option><option value="Claude Code">Claude Code</option><option value="Codex">Codex</option></select></Field>
             <div className="detail-form-actions full">
               <button className="button" type="submit" disabled={busy}>Speichern</button>
