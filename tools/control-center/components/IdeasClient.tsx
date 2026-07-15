@@ -115,61 +115,61 @@ export function IdeasClient() {
 
   return (
     <div className="workspace-page">
-      <header className="page-heading">
-        <h1>Ideen</h1>
-      </header>
       <div className="page-toolbar align-right">
         <ModeToolbar mode={mode} onModeChange={changeMode} addLabel="Idee hinzufügen" onAdd={addIdea} />
       </div>
       <Notice message={notice} />
       <Notice message={error} error />
 
-      {sorted.length ? (
-        <div className="record-list" aria-label="Ideen">
-          {sorted.map((idea, index) => {
-            const isExpanded = expanded.has(idea.id);
-            return (
-              <article
-                className={`record idea-record mode-${mode}`}
-                key={idea.id}
-                draggable={mode === "reorder" && !busy}
-                onDragStart={(event) => { if (mode === "reorder") { setDraggedId(idea.id); event.dataTransfer.effectAllowed = "move"; } }}
-                onDragEnd={() => setDraggedId(null)}
-                onDragOver={(event) => { if (mode === "reorder" && draggedId) event.preventDefault(); }}
-                onDrop={(event) => drop(event, idea)}
-              >
-                {mode === "reorder" ? <SortHandle label={idea.title} canMoveUp={index > 0} canMoveDown={index < sorted.length - 1} onMoveUp={() => moveBy(idea, -1)} onMoveDown={() => moveBy(idea, 1)} /> : null}
-                {mode === "normal" ? (
-                  <>
-                    <button className="record-summary" type="button" onClick={() => toggleIdea(idea.id)} aria-expanded={isExpanded}>
-                      <span className="record-title">{idea.title}</span>
-                      <Disclosure expanded={isExpanded} />
-                    </button>
-                    {isExpanded ? (
-                      <div className="record-detail">
-                        <section className="idea-detail-section">
-                          <h2>Idee</h2>
-                          <p className="preserve-lines idea-copy">{idea.idea || "Noch kein Text eingetragen."}</p>
-                        </section>
-                        <div className="record-actions">
-                          <button className="button secondary small" type="button" onClick={() => { changeMode("edit"); setDraft({ ...idea }); }}>Bearbeiten</button>
-                          <button className="button secondary small" type="button" onClick={() => beginConversion(idea)}>Zu Aufgabe umwandeln</button>
-                          <button className="text-button danger-text" type="button" onClick={() => void deleteIdea(idea)}>Löschen</button>
+      <section className="workspace-section" aria-labelledby="ideas-title">
+        <h1 id="ideas-title">Ideen</h1>
+        {sorted.length ? (
+          <div className="record-list" aria-label="Ideen">
+            {sorted.map((idea, index) => {
+              const isExpanded = expanded.has(idea.id);
+              return (
+                <article
+                  className={`record idea-record mode-${mode}`}
+                  key={idea.id}
+                  draggable={mode === "reorder" && !busy}
+                  onDragStart={(event) => { if (mode === "reorder") { setDraggedId(idea.id); event.dataTransfer.effectAllowed = "move"; } }}
+                  onDragEnd={() => setDraggedId(null)}
+                  onDragOver={(event) => { if (mode === "reorder" && draggedId) event.preventDefault(); }}
+                  onDrop={(event) => drop(event, idea)}
+                >
+                  {mode === "reorder" ? <SortHandle label={idea.title} canMoveUp={index > 0} canMoveDown={index < sorted.length - 1} onMoveUp={() => moveBy(idea, -1)} onMoveDown={() => moveBy(idea, 1)} /> : null}
+                  {mode === "normal" ? (
+                    <>
+                      <button className="record-summary" type="button" onClick={() => toggleIdea(idea.id)} aria-expanded={isExpanded}>
+                        <span className="record-title">{idea.title}</span>
+                        <Disclosure expanded={isExpanded} />
+                      </button>
+                      {isExpanded ? (
+                        <div className="record-detail">
+                          <section className="idea-detail-section">
+                            <h2>Idee</h2>
+                            <p className="preserve-lines idea-copy">{idea.idea || "Noch kein Text eingetragen."}</p>
+                          </section>
+                          <div className="record-actions">
+                            <button className="button secondary small" type="button" onClick={() => { changeMode("edit"); setDraft({ ...idea }); }}>Bearbeiten</button>
+                            <button className="button secondary small" type="button" onClick={() => beginConversion(idea)}>Als Aufgabe formulieren</button>
+                            <button className="text-button danger-text" type="button" onClick={() => void deleteIdea(idea)}>Löschen</button>
+                          </div>
                         </div>
-                      </div>
-                    ) : null}
-                  </>
-                ) : (
-                  <div className="record-management">
-                    <span className="record-title">{idea.title}</span>
-                    {mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => setDraft({ ...idea })}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteIdea(idea)}>Löschen</button></span> : null}
-                  </div>
-                )}
-              </article>
-            );
-          })}
-        </div>
-      ) : <EmptyState>Noch keine Ideen gespeichert.</EmptyState>}
+                      ) : null}
+                    </>
+                  ) : (
+                    <div className="record-management">
+                      <span className="record-title">{idea.title}</span>
+                      {mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => setDraft({ ...idea })}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteIdea(idea)}>Löschen</button></span> : null}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        ) : <EmptyState>Noch keine Ideen gespeichert.</EmptyState>}
+      </section>
 
       {draft ? (
         <WorkspaceModal title={workspace.ideas.some((idea) => idea.id === draft.id) ? "Idee bearbeiten" : "Idee hinzufügen"} onClose={() => setDraft(null)}>
@@ -186,14 +186,14 @@ export function IdeasClient() {
       ) : null}
 
       {conversion ? (
-        <WorkspaceModal title="Zu Aufgabe umwandeln" onClose={() => setConversion(null)}>
+        <WorkspaceModal title="Als Aufgabe formulieren" onClose={() => setConversion(null)}>
           <form className="detail-form" onSubmit={(event) => void confirmConversion(event)}>
             <Field label="Titel" className="full"><input required maxLength={180} value={conversion.title} onChange={(event) => setConversion({ ...conversion, title: event.target.value })} /></Field>
             <Field label="Status"><select value={conversion.status} onChange={(event) => setConversion({ ...conversion, status: event.target.value as WorkspaceTaskStatus })}>{Object.entries(STATUS_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></Field>
             <Field label="Priorität"><select value={conversion.priority} onChange={(event) => setConversion({ ...conversion, priority: event.target.value as WorkspacePriority })}>{Object.entries(PRIORITY_LABELS).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></Field>
             <div className="conversion-preview full"><strong>To-do</strong><p className="preserve-lines">{conversion.idea.idea || "Kein Ideentext vorhanden."}</p></div>
             <div className="detail-form-actions full">
-              <button className="button" type="submit" disabled={busy}>Umwandeln</button>
+              <button className="button" type="submit" disabled={busy}>Aufgabe erstellen</button>
               <button className="button secondary" type="button" onClick={() => setConversion(null)}>Abbrechen</button>
             </div>
           </form>

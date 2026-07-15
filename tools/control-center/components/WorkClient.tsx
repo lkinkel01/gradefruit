@@ -194,7 +194,7 @@ export function WorkClient() {
                   <>
                     <button className="record-summary" type="button" onClick={() => toggleTask(task.id)} aria-expanded={isExpanded}>
                       <span className="record-title">{task.title}</span>
-                      <span className="task-meta"><span className="status-label"><i aria-hidden="true" />{STATUS_LABELS[task.status]}</span><span>{PRIORITY_LABELS[task.priority]}</span></span>
+                      <span className="task-meta"><span className="status-label"><i aria-hidden="true" />{STATUS_LABELS[task.status]}</span><span className={`priority-label priority-${task.priority}`}>{PRIORITY_LABELS[task.priority]}</span></span>
                       <Disclosure expanded={isExpanded} />
                     </button>
                     {isExpanded ? (
@@ -224,7 +224,7 @@ export function WorkClient() {
                 ) : (
                   <div className="record-management">
                     <span className="record-title">{task.title}</span>
-                    <span className="task-meta"><span>{STATUS_LABELS[task.status]}</span><span>{PRIORITY_LABELS[task.priority]}</span></span>
+                    <span className="task-meta"><span className="status-label"><i aria-hidden="true" />{STATUS_LABELS[task.status]}</span><span className={`priority-label priority-${task.priority}`}>{PRIORITY_LABELS[task.priority]}</span></span>
                     {mode === "edit" ? <span className="management-actions"><button className="text-button" type="button" onClick={() => editTask(task)}>Bearbeiten</button><button className="text-button danger-text" type="button" onClick={() => void deleteTask(task)}>Löschen</button></span> : null}
                   </div>
                 )}

@@ -5,11 +5,24 @@ import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 const NAVIGATION = [
-  { href: "/tasks", label: "Meine Aufgaben" },
-  { href: "/ideas", label: "Ideen" },
-  { href: "/milestones", label: "Milestones" },
-  { href: "/links", label: "Seiten & Apps" },
+  { href: "/tasks", label: "Meine Aufgaben", icon: "tasks" },
+  { href: "/ideas", label: "Ideen", icon: "ideas" },
+  { href: "/milestones", label: "Milestones", icon: "milestones" },
+  { href: "/links", label: "Seiten & Apps", icon: "links" },
 ] as const;
+
+function NavigationIcon({ icon }: { icon: typeof NAVIGATION[number]["icon"] }) {
+  if (icon === "tasks") {
+    return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 6h11M8 12h11M8 18h11" /><path d="m3.5 6 1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2" /></svg>;
+  }
+  if (icon === "ideas") {
+    return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4" /><path d="M8.2 15.5A7 7 0 1 1 15.8 15.5c-.9.6-1.3 1.2-1.3 2h-5c0-.8-.4-1.4-1.3-2Z" /></svg>;
+  }
+  if (icon === "milestones") {
+    return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 20V5M5 6h11l-2.5 3L16 12H5" /><path d="m8.5 16 2 2 4-4" /></svg>;
+  }
+  return <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5" /><rect x="14" y="4" width="6" height="6" rx="1.5" /><rect x="4" y="14" width="6" height="6" rx="1.5" /><rect x="14" y="14" width="6" height="6" rx="1.5" /></svg>;
+}
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -33,7 +46,8 @@ export function AppShell({ children }: { children: ReactNode }) {
               const active = pathname === item.href;
               return (
                 <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={active ? "active" : undefined}>
-                  {item.label}
+                  <span className="navigation-icon"><NavigationIcon icon={item.icon} /></span>
+                  <span className="navigation-label">{item.label}</span>
                 </Link>
               );
             })}
