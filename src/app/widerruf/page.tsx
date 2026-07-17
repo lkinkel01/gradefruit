@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { BrandMark } from '@/components/BrandMark';
 import styles from '../legal.module.css';
 
 export const metadata: Metadata = {
@@ -15,7 +16,7 @@ export default function WiderrufPage() {
     <div className={styles.page}>
       <nav className={styles.nav}>
         <Link href="/" className={styles.brand}>
-          <span className={styles.dot} />
+          <BrandMark size={25} />
           Gradefruit
         </Link>
         <Link href="/" className={styles.back}>

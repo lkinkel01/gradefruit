@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import styles from './LandingPage.module.css';
+import { BrandMark } from './BrandMark';
 import { Logo } from './Logo';
 import { daysUntilExam } from '@/lib/exam';
 
@@ -11,6 +12,38 @@ const Arrow = () => (
     <polyline points="12 5 19 12 12 19" />
   </svg>
 );
+
+const DocumentIcon = () => (
+  <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M7 3h7l4 4v14H7z" />
+    <path d="M14 3v5h4M10 12h5M10 16h5" />
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="5" y="10" width="14" height="10" rx="2" />
+    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+  </svg>
+);
+
+const ShareIcon = () => (
+  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="5" r="2.5" />
+    <circle cx="6" cy="12" r="2.5" />
+    <circle cx="18" cy="19" r="2.5" />
+    <path d="m8.3 10.8 7.4-4.5M8.3 13.2l7.4 4.5" />
+  </svg>
+);
+
+const LANDING_NAV_ITEMS = [
+  { id: 'system', label: 'System' },
+  { id: 'coach', label: 'Coach' },
+  { id: 'lernweise', label: 'Lernweise' },
+  { id: 'kurse', label: 'Kurse' },
+] as const;
+
+type LandingSectionId = (typeof LANDING_NAV_ITEMS)[number]['id'];
 
 interface Props {
   isAuthed: boolean;
@@ -169,11 +202,11 @@ const FAQS = [
   },
   {
     question: 'Kann ich eigene Unterlagen nutzen?',
-    answer: 'Du kannst deinen eigenen Lösungsweg als Foto oder PDF hochladen und mit dem Coach besprechen. Eine allgemeine Bibliothek für eigene Lernunterlagen gibt es derzeit nicht.',
+    answer: 'Aktuell kannst du deinen eigenen Lösungsweg als Foto oder PDF hochladen und mit dem Coach besprechen. Eine persönliche Bibliothek für weitere Lernunterlagen ist als nächste Ausbaustufe geplant.',
   },
   {
     question: 'Gibt es eine Community?',
-    answer: 'Nein. Gradefruit konzentriert sich bewusst auf deinen eigenen Lernweg und deine Prüfung. Öffentliche Feeds, Kommentare oder Follower gibt es nicht.',
+    answer: 'Noch nicht. Freiwilliges Teilen, Likes, Kommentare und Follows sind als spätere Ebene geplant. Private Inhalte sollen dabei standardmäßig privat bleiben.',
   },
   {
     question: 'Welche Bundesländer werden unterstützt?',
@@ -194,6 +227,9 @@ export default function LandingPage({
   onSignOut,
 }: Props) {
   const [days, setDays] = useState<number | null>(null);
+  const [activeSection, setActiveSection] = useState<LandingSectionId | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [navScrolled, setNavScrolled] = useState(false);
   const fruitRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -223,6 +259,63 @@ export default function LandingPage({
       el.style.transform = '';
     };
   }, []);
+
+  useEffect(() => {
+    const sectionElements = LANDING_NAV_ITEMS
+      .map(item => document.getElementById(item.id))
+      .filter((element): element is HTMLElement => Boolean(element));
+
+    const onScroll = () => {
+      setNavScrolled(window.scrollY > 18);
+      if (window.scrollY < 260) setActiveSection(null);
+    };
+
+    const observer = new IntersectionObserver(
+      entries => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible && window.scrollY >= 260) {
+          setActiveSection(visible.target.id as LandingSectionId);
+        }
+      },
+      { rootMargin: '-14% 0px -68% 0px', threshold: [0, 0.2, 0.45] },
+    );
+
+    sectionElements.forEach(element => observer.observe(element));
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileNavOpen(false);
+    };
+    const desktopQuery = window.matchMedia('(min-width: 981px)');
+    const onDesktop = (event: MediaQueryListEvent) => {
+      if (event.matches) setMobileNavOpen(false);
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    desktopQuery.addEventListener('change', onDesktop);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      desktopQuery.removeEventListener('change', onDesktop);
+    };
+  }, [mobileNavOpen]);
+
+  const chooseSection = (id: LandingSectionId) => {
+    setActiveSection(id);
+    setMobileNavOpen(false);
+  };
 
   const plan = (
     label: string,
@@ -257,12 +350,28 @@ export default function LandingPage({
     <div className={styles.lpage}>
       <a className={styles.skipLink} href="#main-content">Zum Inhalt</a>
 
-      <nav className={styles.nav} aria-label="Hauptnavigation">
-        <button type="button" className={styles.brand} onClick={onEnter}>
-          <Logo size={26} />
-          <span>Gradefruit</span>
-        </button>
-        <div className={styles.navRight}>
+      <nav className={`${styles.nav} ${navScrolled ? styles.navScrolled : ''}`} aria-label="Hauptnavigation">
+        <div className={styles.navBar}>
+          <button type="button" className={styles.brand} onClick={onEnter}>
+            <BrandMark size={28} />
+            <span>Gradefruit</span>
+          </button>
+
+          <div className={styles.navCenter} aria-label="Bereiche der Startseite">
+            {LANDING_NAV_ITEMS.map(item => (
+              <a
+                aria-current={activeSection === item.id ? 'location' : undefined}
+                className={activeSection === item.id ? styles.navSectionActive : styles.navSection}
+                href={`#${item.id}`}
+                key={item.id}
+                onClick={() => chooseSection(item.id)}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+
+          <div className={styles.navRight}>
           <button className={styles.iconBtn} onClick={onToggleDark} aria-label={dark ? 'Hellmodus aktivieren' : 'Dunkelmodus aktivieren'}>
             {dark ? (
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
@@ -282,17 +391,58 @@ export default function LandingPage({
               </svg>
             )}
           </button>
-          {isAuthed ? (
-            <>
-              <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-              <button className="btn primary sm" onClick={onEnter}>Weiter lernen</button>
-            </>
-          ) : (
-            <>
-              <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
-              <button className="btn primary sm" onClick={onRegister}>Registrieren</button>
-            </>
-          )}
+            <div className={styles.desktopAccount}>
+              {isAuthed ? (
+                <>
+                  <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
+                  <button className="btn primary sm" onClick={onEnter}>Weiter lernen</button>
+                </>
+              ) : (
+                <>
+                  <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
+                  <button className="btn primary sm" onClick={onRegister}>Registrieren</button>
+                </>
+              )}
+            </div>
+            <button
+              aria-controls="mobile-landing-navigation"
+              aria-expanded={mobileNavOpen}
+              aria-label={mobileNavOpen ? 'Menü schließen' : 'Menü öffnen'}
+              className={`${styles.iconBtn} ${styles.menuBtn}`}
+              onClick={() => setMobileNavOpen(open => !open)}
+              type="button"
+            >
+              <span className={styles.menuIcon} aria-hidden="true"><i /><i /></span>
+            </button>
+          </div>
+        </div>
+
+        <div className={styles.mobileNav} hidden={!mobileNavOpen} id="mobile-landing-navigation">
+          <div className={styles.mobileSections}>
+            {LANDING_NAV_ITEMS.map(item => (
+              <a
+                aria-current={activeSection === item.id ? 'location' : undefined}
+                href={`#${item.id}`}
+                key={item.id}
+                onClick={() => chooseSection(item.id)}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+          <div className={styles.mobileAccount}>
+            {isAuthed ? (
+              <>
+                <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
+                <button className="btn primary sm" onClick={onEnter}>Weiter lernen</button>
+              </>
+            ) : (
+              <>
+                <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
+                <button className="btn primary sm" onClick={onRegister}>Registrieren</button>
+              </>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -366,7 +516,7 @@ export default function LandingPage({
           </div>
         </section>
 
-        <section className={`${styles.section} ${styles.coachSection}`}>
+        <section className={`${styles.section} ${styles.coachSection}`} id="coach">
           <div className={styles.coachCopy}>
             <p className={styles.sectionName}>KI-Unterstützung im richtigen Moment</p>
             <h2>Frag dort,<br />wo es hakt.</h2>
@@ -396,7 +546,7 @@ export default function LandingPage({
           </div>
         </section>
 
-        <section className={styles.section}>
+        <section className={styles.section} id="lernweise">
           <div className={styles.sectionIntro}>
             <h2>Nicht nur lesen.<br />Wirklich lernen.</h2>
             <p>Die Methoden sind kurz erklärt. Was noch nicht fertig ist, wird auch nicht als fertig verkauft.</p>
@@ -438,6 +588,77 @@ export default function LandingPage({
               <strong>Tiefpunkt prüfen</strong>
               <p>Die Steigung ist null. Jetzt entscheidet das Vorzeichen von f″(x).</p>
             </div>
+          </div>
+        </section>
+
+        <section className={styles.section} id="bibliothek">
+          <div className={styles.libraryIntro}>
+            <div>
+              <p className={styles.sectionName}>Ausblick · noch nicht verfügbar</p>
+              <h2>Deine Lernbibliothek wächst mit dir.</h2>
+            </div>
+            <div className={styles.libraryPromise}>
+              <p>
+                Geplant ist ein Ort für deine Zusammenfassungen,
+                Formelsammlungen, Aufgaben und Lösungen. Der Coach arbeitet mit
+                deinen Unterlagen. Du entscheidest, was privat bleibt.
+              </p>
+              <a className="gf-arrow" href="#kurse">Gradefruit heute entdecken <Arrow /></a>
+            </div>
+          </div>
+
+          <div className={styles.libraryStage} aria-label="Konzept für eine zukünftige private Lernbibliothek mit freiwillig geteilten Inhalten">
+            <div className={styles.privateLibrary}>
+              <div className={styles.libraryHeader}>
+                <div>
+                  <Logo size={30} />
+                  <strong>Deine Bibliothek</strong>
+                </div>
+                <span><LockIcon /> Privat</span>
+              </div>
+              <div className={styles.libraryFiles}>
+                <div><DocumentIcon /><span><strong>Analysis zusammengefasst</strong><small>Zusammenfassung</small></span><em>Nur du</em></div>
+                <div><DocumentIcon /><span><strong>Formeln für die Prüfung</strong><small>Formelsammlung</small></span><em>Nur du</em></div>
+                <div><DocumentIcon /><span><strong>Eigene Aufgaben und Lösungen</strong><small>Sammlung</small></span><em>Nur du</em></div>
+              </div>
+            </div>
+
+            <div className={styles.libraryConnection} aria-hidden="true">
+              <span />
+              <div>
+                <Logo size={38} />
+                <strong>Mit dem Coach verstehen</strong>
+                <small>auf Basis deiner Inhalte</small>
+              </div>
+              <span />
+            </div>
+
+            <div className={styles.communityLibrary}>
+              <div className={styles.libraryHeader}>
+                <div>
+                  <ShareIcon />
+                  <strong>Freiwillig geteilt</strong>
+                </div>
+                <span>Öffentlich</span>
+              </div>
+              <div className={styles.sharedMaterial}>
+                <span>Stochastik · Zusammenfassung</span>
+                <strong>Hypothesentests kompakt erklärt</strong>
+                <p>Ein hilfreicher Inhalt aus der Community. Sichtbar, weil er bewusst geteilt wurde.</p>
+              </div>
+              <div className={styles.communitySignals} aria-label="Geplante Community-Funktionen">
+                <span>Entdecken</span>
+                <span>Gefällt mir</span>
+                <span>Kommentieren</span>
+                <span>Folgen</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.libraryPrinciples}>
+            <div><strong>Privat als Standard</strong><span>Nichts wird ohne deine Freigabe öffentlich.</span></div>
+            <div><strong>Teilen bleibt freiwillig</strong><span>Du wählst einzelne Inhalte, nie deine ganze Bibliothek.</span></div>
+            <div><strong>Hilfreiches wird sichtbar</strong><span>Reaktionen und Kommentare sollen Orientierung geben.</span></div>
           </div>
         </section>
 
@@ -517,7 +738,7 @@ export default function LandingPage({
 
       <footer className={styles.footer}>
         <div className={styles.footerBrand}>
-          <Logo size={22} />
+            <BrandMark size={23} />
           <span>Gradefruit</span>
           <small>Sichere Zahlung über Stripe · SSL-verschlüsselt</small>
         </div>

@@ -1,111 +1,146 @@
 .sidebar {
-  background: var(--side);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 14px;
+  border-right: 1px solid rgba(255,255,255,.055);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(233,106,76,.13), transparent 28%),
+    var(--side);
   color: var(--side-tx);
-  position: sticky; top: 0; height: 100vh;
-  display: flex; flex-direction: column;
-  padding: 20px 14px; overflow-y: auto;
 }
 
 .brand {
+  appearance: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 8px 18px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 800; font-size: 18px; color: #fff;
-  display: flex; align-items: center; gap: 9px;
-  cursor: pointer; padding: 4px 8px 16px;
-  letter-spacing: -0.02em;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  text-align: left;
 }
-.dot { width: 8px; height: 8px; border-radius: 99px; background: var(--accent); }
+.brand svg { color: var(--accent); transition: transform var(--dur-hover) var(--ease-out); }
+.brand:hover svg { transform: rotate(8deg); }
 
-/* Kurskarte: Grapefruit-Fortschritt + Kurzinfo */
 .course {
-  display: flex; align-items: center; gap: 12px;
-  background: var(--side-2); border-radius: 13px;
-  padding: 12px 14px; margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 4px 16px;
+  padding: 13px 6px 15px;
+  border-top: 1px solid var(--side-3);
+  border-bottom: 1px solid var(--side-3);
 }
 .courseTx { min-width: 0; }
-.courseTitle { font-size: 13px; color: #fff; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.courseSub { font-size: 11.5px; color: var(--side-faint); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.courseTitle { overflow: hidden; color: #fff; font-size: 13px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.courseSub { margin-top: 2px; color: var(--side-faint); font-size: 11.5px; font-variant-numeric: tabular-nums; }
 
 .navsec {
-  font-size: 10.5px; font-weight: 600; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--side-faint);
-  margin: 14px 8px 8px;
+  margin: 11px 9px 7px;
+  color: var(--side-faint);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: .13em;
+  text-transform: uppercase;
 }
-
+.navsecGap { margin-top: 20px; }
 .snav { display: flex; flex-direction: column; gap: 2px; }
 .snav button {
   position: relative;
-  display: flex; align-items: center; gap: 11px; text-align: left;
-  border: none; background: transparent; color: var(--side-tx);
-  font-family: inherit; font-size: 14px; padding: 10px 11px;
-  border-radius: 10px; cursor: pointer; width: 100%;
-  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 11px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--side-tx);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  transition: background-color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
-.snav button:hover { background: var(--side-2); color: #fff; }
-.snav button:active { background: var(--side-3); }
-.snav button.on { background: var(--side-3); color: #fff; font-weight: 600; }
-/* Aktiver Eintrag trägt einen kleinen Grapefruit-Balken links – das
-   Markenzeichen wandert bis in die Navigation. */
+.snav button:hover { border-color: rgba(255,255,255,.05); background: rgba(255,255,255,.055); color: #fff; }
+.snav button:active { transform: scale(.985); }
+.snav button.on { border-color: rgba(255,255,255,.07); background: rgba(255,255,255,.085); color: #fff; font-weight: 600; }
 .snav button.on::before {
-  content: ''; position: absolute; left: 3px; top: 50%;
-  transform: translateY(-50%);
-  width: 3px; height: 17px; border-radius: 99px;
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 2px;
+  height: 18px;
+  border-radius: 2px;
   background: var(--accent);
+  transform: translateY(-50%);
 }
-
-/* Themen-Eintrag mit Untermenü: im aktiven Thema dauerhaft offen,
-   auf Geräten mit Maus zusätzlich bei Hover. */
 .topicWrap { position: relative; }
 .flyout { display: none; }
-.flyoutPinned {
-  display: flex; flex-direction: column; gap: 1px;
-  padding: 3px 0 3px 28px;
-}
+.flyoutPinned { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 4px 28px; }
 @media (hover: hover) and (min-width: 901px) {
-  .topicWrap:hover .flyout,
-  .flyout:hover {
-    display: flex; flex-direction: column; gap: 1px;
-    padding: 3px 0 3px 28px;
-  }
+  .topicWrap:hover .flyout, .flyout:hover { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 4px 28px; }
 }
 .flyItem {
-  display: block; text-align: left; width: 100%;
-  border: none; background: transparent; cursor: pointer;
-  font-family: inherit; font-size: 13px; color: var(--side-faint);
-  padding: 7px 11px; border-radius: 8px;
-  transition: background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--side-faint);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
 }
-/* transform statt padding animieren (kein Layout-Thrash) */
-.flyItem:hover { background: var(--side-2); color: #fff; transform: translateX(3px); }
-
-.cdot { width: 9px; height: 9px; border-radius: 99px; flex-shrink: 0; }
-.ti { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.flyItem:hover { background: rgba(255,255,255,.055); color: #fff; transform: translateX(3px); }
+.cdot { width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; }
+.ti { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .icon { flex: 0 0 18px; display: flex; }
 .icon svg { width: 15px; height: 15px; }
-
-.stDone { width: 18px; height: 18px; border-radius: 99px; background: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.stDone { width: 18px; height: 18px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--green); }
 .stDone svg { width: 11px; height: 11px; }
 .stLock { display: flex; align-items: center; }
 .stLock svg { width: 13px; height: 13px; stroke: var(--side-faint); }
-
+.spacer { flex: 1; min-height: 22px; }
 .unlockCard {
-  background: var(--side-2); border: 1px solid var(--side-3);
-  border-radius: 13px; padding: 15px; margin-top: 14px;
+  margin: 14px 4px 0;
+  padding: 16px 5px 4px;
+  border-top: 1px solid var(--side-3);
 }
-.unlockCard p { font-size: 12.5px; color: var(--side-tx); margin-bottom: 10px; line-height: 1.5; }
-/* Auf der immer-dunklen Seitenleiste braucht der Button immer helle Optik */
-.unlockCard :global(.btn.primary) {
-  background: #F5F0EA; color: #211C17; box-shadow: none;
-}
+.unlockCard p { margin-bottom: 11px; color: var(--side-tx); font-size: 12.5px; line-height: 1.5; }
+.unlockCard :global(.btn.primary) { width: 100%; background: #F5F0EA; color: #211C17; box-shadow: none; font-size: 13px; }
 .unlockCard :global(.btn.primary:hover) { background: #fff; }
 
-/* Handy: Seitenleiste als einschiebbares Menü */
 @media (max-width: 900px) {
   .sidebar {
-    position: fixed; top: 0; left: 0; bottom: 0; height: 100%;
-    width: 272px; max-width: 84vw; z-index: 100;
-    transform: translateX(-100%);
-    transition: transform .28s cubic-bezier(.2, .8, .2, 1);
-    box-shadow: 6px 0 40px rgba(0, 0, 0, .36);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    width: 272px;
+    max-width: 84vw;
+    height: 100%;
+    border-right: 1px solid rgba(255,255,255,.08);
+    border-radius: 0 18px 18px 0;
+    box-shadow: 12px 0 54px rgba(0,0,0,.34);
+    transform: translateX(-105%);
+    transition: transform 280ms var(--ease-drawer);
   }
   :global(body.navopen) .sidebar { transform: translateX(0); }
 }

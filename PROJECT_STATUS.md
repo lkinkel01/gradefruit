@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-17 (Premium-Landing)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-17 (Premium-Designsystem)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -42,7 +42,8 @@ Probleme").
   (§ 356 BGB) + MwSt.-Ausweis, Webhook schaltet frei (inkl. Refund-Entzug),
   Kundenportal, Konto-Seite.
 - **Design:** warmes Papier + Tinten-Buttons, Dark Mode, mobil optimiert —
-  System dokumentiert in DESIGN.md.
+  eigenständiges Grapefruit-Zeichen, schwebende Glas-Navigation und ein
+  durchgängiges editoriales Flächen- und Interaktionssystem.
 
 ## Tech Stack
 - **Next.js 16.2.9** (App Router, Turbopack) + **TypeScript**
@@ -267,6 +268,18 @@ Probleme").
   Materialbibliothek wird nicht behauptet. Motion ist gezielt, reduziert und
   `prefers-reduced-motion`-sicher. Verifiziert in Hell/Dunkel, Desktop/375 px,
   inklusive Login, Registrierung, Kurs-Einstieg, Theme-Wechsel und Ankern.
+- ✅ **Premium-Designsystem in der gesamten Website (17.07.2026):** Neues
+  eigenständiges, monochromes Grapefruit-Zeichen für Navigation, Favicon,
+  App-Icon und Rechtstexte. Die Landing-Navigation ist als dezente, funktionale
+  Liquid-Glass-Leiste umgesetzt; Desktop und Mobile besitzen dieselbe klare
+  Hierarchie und sichtbare Fokus-/Aktivzustände. Produktnavigation,
+  Themenseiten, Wiederholen, Konto, Erklärvideos, Nachhilfe-Platzhalter,
+  Coach-Drawer, Auth, Checkout und Video-Modal wurden auf eine gemeinsame
+  Sprache aus Papierflächen, Haarlinien, wenigen Radien und zurückhaltender
+  Tiefe gebracht. Das Dashboard behält seine bereits passende editoriale
+  Komposition, der Reel-Modus seine bewusst eigenständige dunkle Bühne.
+  Die Landing zeigt die geplante persönliche Lernbibliothek und Community
+  ausdrücklich als Ausblick, klar getrennt von heute verfügbaren Funktionen.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten

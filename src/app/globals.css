@@ -34,6 +34,10 @@
   /* Milchglas für obere Leisten – als Variable, damit Dark Mode in
      CSS-Modulen zuverlässig greift (globale Klassen matchen dort nicht). */
   --glass: rgba(250, 246, 241, 0.86);
+  --glass-strong: rgba(255, 255, 255, 0.72);
+  --glass-line: rgba(221, 209, 197, 0.82);
+  --nav-shadow-soft: rgba(60, 40, 25, 0.055);
+  --nav-shadow-strong: rgba(60, 40, 25, 0.095);
   /* Buttons: warmes Tinten-Schwarz statt Farbverlauf – ruhiger, hochwertiger */
   --btn-ink: #211C17;
   --btn-ink-hover: #33291F;
@@ -44,6 +48,7 @@
   /* Angehoben: der „lift"-Schatten für Hover-Momente großer Flächen –
      warm getönt, weich, mit dezentem Ring für Premium-Tiefe. */
   --shadow-lift: 0 2px 6px rgba(60,40,25,.05), 0 22px 48px rgba(60,40,25,.11);
+  --shadow-float: 0 1px 0 rgba(255,255,255,.7) inset, 0 18px 44px rgba(60,40,25,.09);
 
   /* Haus-Easing-Kurven (Emil): eingebaute CSS-Easings sind zu schwach,
      ease-in ist verboten. Diese drei tragen die ganze Motion-Sprache. */
@@ -65,12 +70,19 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--canvas);
   color: var(--ink);
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   line-height: 1.55;
   transition: background-color .35s ease, color .35s ease;
 }
 a { color: inherit; text-decoration: none; }
 ::selection { background: var(--accent-soft); }
+button, input, textarea, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+:where(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
 /* ---------------------------------------------------------------------------
    Grapefruit-Substrat: aus der Querschnitt-Geometrie abgeleitete radiale
@@ -216,6 +228,11 @@ body.dark {
   --success-line: #1E4634;
   --warn: #F0A23B;
   --glass: rgba(23, 19, 16, 0.86);
+  --glass-strong: rgba(32, 27, 22, 0.74);
+  --glass-line: rgba(64, 55, 46, 0.86);
+  --nav-shadow-soft: rgba(0, 0, 0, 0.22);
+  --nav-shadow-strong: rgba(0, 0, 0, 0.34);
+  --shadow-float: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px rgba(0,0,0,.28);
   /* Im Dunkeln invertiert: heller Button auf dunklem Grund (Apple-artig) */
   --btn-ink: #F5F0EA;
   --btn-ink-hover: #FFFFFF;

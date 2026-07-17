@@ -1,22 +1,21 @@
-.page { max-width: 820px; margin: 0 auto; padding: 30px 26px 90px; animation: fade .26s ease both; }
+.page { max-width: 860px; margin: 0 auto; padding: 42px 34px 100px; animation: fade var(--dur-enter) var(--ease-out) both; }
 @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes reveal { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
 
-.headRow { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
-.ph1 { font-size: 30px; font-weight: 800; letter-spacing: -0.022em; }
+.headRow { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.ph1 { font-size: 34px; font-weight: 800; letter-spacing: -0.035em; }
 
 /* Umschalter in den Reel-Modus (gleiche Inhalte im Reel-Format) */
 .reelBtn {
   display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0;
   border: 1px solid var(--line-strong); background: var(--surface);
   cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600;
-  color: var(--ink); padding: 9px 16px; border-radius: 99px;
-  transition: .15s;
+  color: var(--ink); padding: 9px 14px; border-radius: 7px;
 }
 .reelBtn {
   transition: transform var(--dur-press) var(--ease-press), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
 }
-.reelBtn:hover { border-color: var(--faint); transform: translateY(-1px); box-shadow: var(--shadow); }
+.reelBtn:hover { border-color: var(--ink); transform: translateY(-1px); }
 .reelBtn:active { transform: translateY(0) scale(.97); }
 .reelBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -27,14 +26,13 @@
 /* Bereichs-Tabs: Zusammenfassung / Übungen */
 .tabs {
   display: inline-flex; gap: 4px; margin-bottom: 20px;
-  padding: 4px; border: 1px solid var(--line); border-radius: 12px;
+  padding: 3px; border: 1px solid var(--line); border-radius: 8px;
   background: var(--surface-2);
 }
 .tabBtn {
   border: none; background: transparent;
   cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 600;
-  color: var(--muted); padding: 8px 18px; border-radius: 9px;
-  transition: .15s;
+  color: var(--muted); padding: 8px 18px; border-radius: 5px;
 }
 .tabBtn { transition: color var(--dur-hover) var(--ease-out), background var(--dur-hover) var(--ease-out); }
 .tabBtn:hover { color: var(--ink); }
@@ -42,13 +40,13 @@
 
 /* Zusammenfassung: kleine Lernkarten im Raster, Inhalte sofort sichtbar */
 .summaryWrap {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
   align-items: start;
   animation: reveal .3s ease both;
 }
 .sumCard {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: 18px; padding: 20px 22px 18px;
+  border-radius: 11px; padding: 20px 22px 18px;
   animation: reveal .35s ease both;
 }
 .sumHead { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
@@ -74,15 +72,15 @@
 .summaryFoot { grid-column: 1 / -1; display: flex; justify-content: center; margin-top: 10px; }
 
 /* Lernkarten (Akkordeon) */
-.cards { display: flex; flex-direction: column; gap: 12px; }
+.cards { display: flex; flex-direction: column; gap: 9px; }
 .card {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: 18px; overflow: hidden;
+  border-radius: 11px; overflow: hidden;
   transition: border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
 }
 /* Geschlossene Karte hebt beim Hover leicht an; offene Karte bleibt ruhig. */
-.card:not(.cardOpen):hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow); }
-.cardOpen { border-color: var(--line-strong); box-shadow: var(--shadow-lift); }
+.card:not(.cardOpen):hover { border-color: var(--line-strong); transform: translateY(-1px); }
+.cardOpen { border-color: var(--line-strong); box-shadow: 0 12px 32px rgba(60,40,25,.07); }
 .cardHead {
   width: 100%; display: flex; align-items: center; gap: 13px;
   background: none; border: none; cursor: pointer;
@@ -115,7 +113,7 @@
 .mini {
   border: 1px solid var(--line-strong); background: var(--surface);
   cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500;
-  color: var(--ink); padding: 8px 13px; border-radius: 99px;
+  color: var(--ink); padding: 8px 13px; border-radius: 7px;
   display: inline-flex; align-items: center; gap: 7px;
   transition: transform var(--dur-press) var(--ease-press), border-color var(--dur-hover) var(--ease-out), background var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
@@ -139,9 +137,9 @@
 .sstep {
   display: flex; gap: 12px; align-items: flex-start;
   padding: 12px 10px; margin: 0 -10px;
-  border-radius: 12px; cursor: pointer;
+  border-radius: 8px; cursor: pointer;
   animation: reveal .3s ease both;
-  transition: background .15s;
+  transition: background-color var(--dur-hover) var(--ease-out);
 }
 .sstep:hover { background: var(--surface-2); }
 .sstep:hover .stepGo { opacity: 1; color: var(--accent-d); }
@@ -179,12 +177,12 @@
 .footLabel { font-size: 12.5px; color: var(--faint); }
 .statusSeg {
   display: inline-flex; gap: 4px; padding: 4px;
-  border: 1px solid var(--line); border-radius: 99px; background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2);
 }
 .statusBtn {
   border: none; background: transparent; cursor: pointer;
   font-family: inherit; font-size: 12.5px; font-weight: 600;
-  color: var(--muted); padding: 7px 14px; border-radius: 99px;
+  color: var(--muted); padding: 7px 14px; border-radius: 5px;
   white-space: nowrap;
   transition: color var(--dur-hover) var(--ease-out), background var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
@@ -206,7 +204,7 @@
 
 .lockCard {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); box-shadow: var(--shadow);
+  border-radius: 12px; box-shadow: var(--shadow-lg);
   padding: 38px 28px 32px; text-align: center;
   display: flex; flex-direction: column; align-items: center;
 }
@@ -223,7 +221,9 @@
   .summaryWrap { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
-  .page { padding: 22px 18px 96px; }
+  .page { padding: 30px 18px 96px; }
+  .headRow { align-items: flex-start; }
+  .ph1 { font-size: 29px; }
   .cardHead { padding: 13px 15px; }
   .cardBody { padding: 2px 15px 14px; }
   .lockCard { padding: 30px 20px 26px; }

@@ -202,7 +202,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <div className={styles.loading}>
         <GrapefruitSpinner label="Einen Moment …" />
       </div>
     );
@@ -262,16 +262,7 @@ export default function Home() {
   return (
     <>
       {notice && (
-        <div
-          role="status"
-          style={{
-            position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)',
-            zIndex: 200, background: 'var(--surface)', color: 'var(--ink)',
-            border: '1px solid var(--line)', boxShadow: '0 10px 30px rgba(20,15,30,.18)',
-            borderRadius: 12, padding: '12px 18px', fontSize: 14, maxWidth: '92vw',
-            textAlign: 'center', lineHeight: 1.45,
-          }}
-        >
+        <div role="status" className={styles.notice}>
           {notice}
         </div>
       )}

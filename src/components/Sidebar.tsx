@@ -1,7 +1,8 @@
 'use client';
 import { View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
-import { Logo, GrapefruitProgress } from './Logo';
+import { BrandMark } from './BrandMark';
+import { GrapefruitProgress } from './Logo';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -40,10 +41,10 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.brand} onClick={() => onNavigate('landing')}>
-        <Logo size={24} />
+      <button className={styles.brand} onClick={() => onNavigate('landing')} aria-label="Zur Gradefruit Startseite">
+        <BrandMark size={24} />
         Gradefruit
-      </div>
+      </button>
 
       <div className={styles.course}>
         <GrapefruitProgress
@@ -91,7 +92,7 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
         })}
       </nav>
 
-      <div className={styles.navsec} style={{ marginTop: 20 }}>Navigation</div>
+      <div className={`${styles.navsec} ${styles.navsecGap}`}>Navigation</div>
       <nav className={styles.snav}>
         {NAV_ITEMS.map(item => (
           <button key={item.id} className={view === item.id ? styles.on : ''} onClick={() => onNavigate(item.id)}>
@@ -101,12 +102,12 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
         ))}
       </nav>
 
-      <div style={{ flex: 1 }} />
+      <div className={styles.spacer} />
 
       {!(owned || ownedLk) && (
         <div className={styles.unlockCard}>
           <p>Alle Aufgaben, Lösungen und Erklärvideos – bis zur Prüfung.</p>
-          <button className="btn primary btn sm" style={{ width: '100%', fontSize: 13 }} onClick={onOpenCheckout}>
+          <button className="btn primary btn sm" onClick={onOpenCheckout}>
             Kurs freischalten
           </button>
         </div>
