@@ -5,14 +5,15 @@ import { Logo, GrapefruitProgress } from './Logo';
 import { useReveal } from '@/lib/useReveal';
 import { daysUntilExam } from '@/lib/exam';
 
-// Editoriale Sektion, die beim Eintritt in den Viewport aufsteigt.
+// Sektion mit inhaltsspezifischer Reveal-Choreografie aus dem CSS-Modul.
 function Reveal({ children, className, id }: { children: ReactNode; className?: string; id?: string }) {
   const ref = useReveal<HTMLElement>();
-  return <section ref={ref} className={className} id={id}>{children}</section>;
+  const classes = className ? `${styles.reveal} ${className}` : styles.reveal;
+  return <section ref={ref} className={classes} id={id}>{children}</section>;
 }
 
 const Arrow = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
   </svg>
 );
@@ -30,19 +31,109 @@ interface Props {
   onSignOut: () => void;
 }
 
-// Was drin ist – als editoriale, nummerierte Liste (keine Icon-Karten).
-const FEATURES = [
-  { n: '01', title: 'Aufgaben im Abi-Stil', desc: 'Über 130 Übungsaufgaben, aufgebaut wie in der hessischen Prüfung — vom Einstieg bis zum vollen Schwierigkeitsgrad.' },
-  { n: '02', title: 'Lösungen, die erklären', desc: 'Jede Lösung zeigt jeden Schritt. Bleibt etwas unklar, tippst du den Schritt an und der Coach erklärt ihn dir.' },
-  { n: '03', title: 'Erklärvideos mit Stimme', desc: 'Kurze Videos zu zentralen Themen — eingebettet in die Aufgaben oder im Reel-Modus, dem Lernformat im TikTok-Takt.' },
-  { n: '04', title: 'Dein KI-Coach', desc: 'Beantwortet Fragen zu jeder Aufgabe und prüft deine eigene Rechnung, wenn du sie als Foto oder PDF hochlädst.' },
+const WHY_POINTS = [
+  {
+    title: 'Du weißt, wo du stehst.',
+    desc: 'Dein Lernstatus zeigt, was sitzt und was du noch einmal sehen solltest.',
+  },
+  {
+    title: 'Du bleibst nicht an Fragen hängen.',
+    desc: 'Der Coach kennt die Aufgabe, Formel oder Lösung, an der du gerade arbeitest.',
+  },
+  {
+    title: 'Unsicheres kommt zurück.',
+    desc: 'Du ordnest selbst ein, was verstanden, zu wiederholen oder noch unklar ist.',
+  },
+  {
+    title: 'Dein eigener Rechenweg zählt.',
+    desc: 'Lade deine Lösung als Foto oder PDF hoch und kläre genau deinen Ansatz.',
+  },
+  {
+    title: 'Alles zielt auf dieselbe Prüfung.',
+    desc: 'Grundkurs oder Leistungskurs. Mathe-Abitur Hessen 2027.',
+  },
 ];
 
-const STRATS = [
-  { k: 'Operatoren', title: 'Operatoren entschlüsseln', desc: '„Zeigen", „Begründen", „Bestimmen" verlangen unterschiedlich viel. Wer den Unterschied kennt, schreibt genau das hin, was Punkte bringt.' },
-  { k: 'Handwerk', title: 'Punkte sichern', desc: 'Antwortsatz, Einheiten, sauber notierte Schritte — die Gewohnheiten, die in der Korrektur zählen, bei jeder Aufgabe mitgedacht.' },
-  { k: 'System', title: 'Wiederholen mit System', desc: 'Du ordnest jeden Inhalt ein: verstanden, wiederholen oder noch unklar. Gradefruit hält fest, was du vor der Prüfung nochmal sehen solltest.' },
+type MethodIconName = 'recall' | 'spacing' | 'errors' | 'adaptive' | 'interleaving';
+
+const LEARNING_METHODS: Array<{
+  icon: MethodIconName;
+  title: string;
+  desc: string;
+  available: boolean;
+}> = [
+  {
+    icon: 'recall',
+    title: 'Active Recall',
+    desc: 'Erst selbst lösen. Dann prüfen, was wirklich sitzt.',
+    available: true,
+  },
+  {
+    icon: 'errors',
+    title: 'Fehleranalyse',
+    desc: 'Den falschen Schritt finden und direkt mit dem KI-Coach klären.',
+    available: true,
+  },
+  {
+    icon: 'spacing',
+    title: 'Spaced Repetition',
+    desc: 'Wiederholen, bevor Wissen verloren geht.',
+    available: false,
+  },
+  {
+    icon: 'adaptive',
+    title: 'Adaptive Aufgaben',
+    desc: 'Aufgaben sollen sich an deinem Lernstand orientieren.',
+    available: false,
+  },
+  {
+    icon: 'interleaving',
+    title: 'Interleaving',
+    desc: 'Gemischte Themen trainieren, den richtigen Ansatz selbst zu erkennen.',
+    available: false,
+  },
 ];
+
+function MethodIcon({ name }: { name: MethodIconName }) {
+  return (
+    <svg className={styles.methodIcon} aria-hidden="true" focusable="false" viewBox="0 0 40 40" fill="none">
+      {name === 'recall' && (
+        <>
+          <path d="M12 12a12 12 0 1 1-2.4 13.8" />
+          <path d="M12 6v6h6" />
+        </>
+      )}
+      {name === 'spacing' && (
+        <>
+          <path d="M7 20h26" />
+          <circle cx="8" cy="20" r="3" />
+          <circle cx="19" cy="20" r="3" />
+          <circle cx="32" cy="20" r="3" />
+        </>
+      )}
+      {name === 'errors' && (
+        <>
+          <circle cx="20" cy="20" r="13" />
+          <path d="m15 15 10 10m0-10L15 25" />
+        </>
+      )}
+      {name === 'adaptive' && (
+        <>
+          <path d="M7 20h7c7 0 7-9 14-9h5" />
+          <path d="M14 20c7 0 7 9 14 9h5" />
+          <path d="m30 8 3 3-3 3m0 12 3 3-3 3" />
+        </>
+      )}
+      {name === 'interleaving' && (
+        <>
+          <path d="M7 11h5c11 0 5 18 16 18h5" />
+          <path d="M7 29h5c11 0 5-18 16-18h5" />
+          <path d="m30 8 3 3-3 3m0 12 3 3-3 3" />
+        </>
+      )}
+    </svg>
+  );
+}
 
 const SUBJECTS = [
   { n: '01', label: 'Analysis', color: '#DE5D43', topics: 'Differenzial- & Integralrechnung · Kurvendiskussion · Exponentialfunktionen · Optimierung' },
@@ -65,18 +156,24 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
     setDays(daysUntilExam());
     const el = fruitRef.current;
     if (!el) return;
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const canParallax = window.matchMedia?.('(min-width: 901px) and (prefers-reduced-motion: no-preference)');
+    if (!canParallax?.matches) return;
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
         const y = Math.min(window.scrollY, 800);
-        el.style.transform = `translate3d(0, ${y * -0.06}px, 0) rotate(${y * 0.01}deg)`;
+        el.style.transform = `translate3d(0, calc(-50% - ${y * 0.035}px), 0) rotate(${y * 0.004}deg)`;
       });
     };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf); };
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+      el.style.transform = '';
+    };
   }, []);
 
   const plan = (label: string, price: string, per: string, course: 'gk' | 'lk', color: string, hasIt: boolean) => (
@@ -104,10 +201,10 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
     <div className={styles.lpage}>
       {/* Nav */}
       <nav className={styles.nav}>
-        <div className={styles.brand} onClick={onEnter}>
+        <button type="button" className={styles.brand} onClick={onEnter}>
           <Logo size={26} />
           <span>Gradefruit</span>
-        </div>
+        </button>
         <div className={styles.navRight}>
           <button className={styles.iconBtn} onClick={onToggleDark} aria-label={dark ? 'Hellmodus' : 'Dunkelmodus'}>
             {dark ? (
@@ -142,21 +239,23 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         <div className={styles.heroLeft}>
           <p className="gf-meta">Mathe-Abitur · Hessen · 2027</p>
           <h1 className={styles.headline}>
-            Die Prüfung<br />kommt.<br />Du wirst bereit.
+            <span>Ein System</span>
+            <span>für genau deine</span>
+            <span>Prüfung.</span>
           </h1>
           <p className={styles.lead}>
-            Prüfungsnahe Aufgaben, Lösungen, die jeden Schritt erklären,
-            Erklärvideos und ein KI-Coach — abgestimmt auf die schriftliche
-            Prüfung in Hessen.
+            Strukturierte Kurse, dein persönlicher Lernstand, gezielte Wiederholung
+            und der KI-Coach greifen an einem Ort ineinander. Für das Mathe-Abitur
+            Hessen 2027.
           </p>
           <div className={styles.heroCta}>
             <button className="btn primary big" onClick={onEnter}>
               {isAuthed ? 'Weiter lernen' : 'Kostenlos testen'}
             </button>
-            <a className="gf-arrow" href="#kurse">Kurse ansehen <Arrow /></a>
+            <a className="gf-arrow" href="#entdecken">Gradefruit entdecken <Arrow /></a>
           </div>
           <p className={styles.reassure}>
-            {isAuthed ? 'Mach genau da weiter, wo du aufgehört hast.' : 'Analysis ist komplett gratis. Ohne Account, ohne Zahlungsdaten.'}
+            {isAuthed ? 'Mach genau da weiter, wo du aufgehört hast.' : 'Analysis kostenlos. Ohne Account. Ohne Zahlungsdaten.'}
           </p>
         </div>
         <div className={styles.heroRight} aria-hidden="true">
@@ -184,41 +283,70 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         ))}
       </div>
 
-      {/* Was drin ist – nummerierte editoriale Liste */}
-      <Reveal className={styles.sec}>
+      {/* Warum Gradefruit – das zusammenhängende System statt einzelner Features */}
+      <Reveal className={styles.sec} id="entdecken">
         <div className={styles.secHead}>
-          <p className="gf-meta">Was drin ist</p>
-          <h2 className={styles.h2}>Alles für<br />genau deine Prüfung.</h2>
+          <p className="gf-meta">Warum Gradefruit?</p>
+          <h2 className={styles.h2}>Mehr als Inhalte.<br />Ein System, das zusammenhängt.</h2>
+          <p className={styles.secLead}>
+            Gradefruit hält deinen Lernstand, offene Fragen und Wiederholungen
+            an einem Ort zusammen.
+          </p>
         </div>
-        <div className={styles.list}>
-          {FEATURES.map(f => (
-            <div key={f.n} className={styles.row}>
-              <span className={styles.rowIndex}>{f.n}</span>
-              <h3 className={styles.rowTitle}>{f.title}</h3>
-              <p className={styles.rowDesc}>{f.desc}</p>
+        <div className={styles.whyFrame}>
+          <div
+            className={styles.whyVisual}
+            role="img"
+            aria-label="Lernen, verstehen, einordnen und wiederholen greifen in Gradefruit ineinander."
+          >
+            <div className={styles.systemLoop} aria-hidden="true">
+              <svg className={styles.systemOrbit} viewBox="0 0 320 320" fill="none">
+                <circle cx="160" cy="160" r="112" />
+                <path d="m258 103 14 2-4 13" />
+              </svg>
+              <span className={`${styles.systemWord} ${styles.systemWordTop}`}>Lernen</span>
+              <span className={`${styles.systemWord} ${styles.systemWordRight}`}>Verstehen</span>
+              <span className={`${styles.systemWord} ${styles.systemWordBottom}`}>Einordnen</span>
+              <span className={`${styles.systemWord} ${styles.systemWordLeft}`}>Wiederholen</span>
+              <div className={styles.systemCenter}>
+                <Logo size={72} />
+                <span>Ein System</span>
+              </div>
             </div>
-          ))}
+          </div>
+          <div className={styles.whyPoints}>
+            {WHY_POINTS.map(point => (
+              <article key={point.title} className={styles.whyPoint}>
+                <h3>{point.title}</h3>
+                <p>{point.desc}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </Reveal>
 
-      {/* Der Unterschied – Strategien */}
+      {/* Lernmethoden – vorhandene und kommende Funktionen klar getrennt */}
       <Reveal className={styles.sec}>
         <div className={styles.secHead}>
-          <p className="gf-meta">Der Unterschied</p>
-          <h2 className={styles.h2}>Mehr als<br />Aufgaben rechnen.</h2>
+          <p className="gf-meta">Lernmethoden</p>
+          <h2 className={styles.h2}>Üben. Verstehen.<br />Gezielt zurückkommen.</h2>
           <p className={styles.secLead}>
-            Aufgaben rechnen kannst du überall. Gradefruit gibt dir die Strategien
-            aus Studium und echter Prüfungserfahrung dazu — kleine Dinge mit großer
-            Wirkung in der Korrektur.
+            Gradefruit verbindet aktives Lösen, deinen Lernstatus und direkte Hilfe.
           </p>
         </div>
-        <div className={styles.stratRow}>
-          {STRATS.map(s => (
-            <div key={s.title} className={styles.strat}>
-              <p className="gf-meta">{s.k}</p>
-              <h3 className={styles.stratTitle}>{s.title}</h3>
-              <p className={styles.stratDesc}>{s.desc}</p>
-            </div>
+        <div className={styles.methodList}>
+          {LEARNING_METHODS.map(method => (
+            <article
+              key={method.title}
+              className={method.available ? styles.methodRow : `${styles.methodRow} ${styles.methodPlanned}`}
+            >
+              <MethodIcon name={method.icon} />
+              <h3 className={styles.methodTitle}>{method.title}</h3>
+              <p className={styles.methodDesc}>{method.desc}</p>
+              <span className={`${styles.methodStatus} ${method.available ? styles.methodStatusLive : styles.methodStatusPlanned}`}>
+                {method.available ? 'Im Produkt' : 'In Vorbereitung'}
+              </span>
+            </article>
           ))}
         </div>
       </Reveal>

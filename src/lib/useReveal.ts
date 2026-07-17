@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 
 // Scroll-Reveal: hängt [data-reveal] an das Element und toggelt [data-shown],
 // sobald es in den Viewport kommt (einmalig). Die eigentliche Bewegung macht
-// CSS ([data-reveal] in globals.css). Ohne IntersectionObserver oder bei
+// CSS im jeweiligen Ziel-Stylesheet. Ohne IntersectionObserver oder bei
 // reduced-motion ist der Inhalt sofort sichtbar — es bleibt nie etwas
 // unsichtbar hängen.
 export function useReveal<T extends HTMLElement = HTMLDivElement>(margin = '-12% 0px') {
