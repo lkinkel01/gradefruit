@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import styles from './Modal.module.css';
 
@@ -29,6 +29,11 @@ const COURSE_INFO = {
 } as const;
 
 export default function CheckoutModal({ open, onClose, course = 'gk' }: Props) {
+  if (!open) return null;
+  return <CheckoutDialog onClose={onClose} course={course} />;
+}
+
+function CheckoutDialog({ onClose, course }: { onClose: () => void; course: 'gk' | 'lk' }) {
   const { session } = useAuth();
   const [selected, setSelected] = useState<'full' | 'month'>('full');
   const [busy, setBusy] = useState(false);
@@ -37,14 +42,6 @@ export default function CheckoutModal({ open, onClose, course = 'gk' }: Props) {
   // Inhalten mit sofortiger Freischaltung, § 356 Abs. 5 BGB).
   const [consent, setConsent] = useState(false);
   const info = COURSE_INFO[course];
-
-  // Bei jedem Öffnen frisch einwilligen lassen
-  useEffect(() => {
-    if (open) {
-      setConsent(false);
-      setError('');
-    }
-  }, [open]);
 
   async function startCheckout() {
     if (busy) return;
@@ -79,12 +76,12 @@ export default function CheckoutModal({ open, onClose, course = 'gk' }: Props) {
 
   return (
     <>
-      <div className={`${styles.scrim} ${open ? styles.open : ''}`} onClick={busy ? undefined : onClose} />
-      <div className={`${styles.modal} ${open ? styles.open : ''}`} role="dialog">
+      <div className={`${styles.scrim} ${styles.open}`} onClick={busy ? undefined : onClose} />
+      <div className={`${styles.modal} ${styles.open}`} role="dialog" aria-modal="true" aria-labelledby="checkout-title">
         <div className={styles.mhead}>
           <button className={styles.mclose} onClick={onClose} disabled={busy}>✕</button>
           <div className={styles.ptag}>{info.tag}</div>
-          <h2>{info.title}</h2>
+          <h2 id="checkout-title">{info.title}</h2>
           <p>{info.blurb}</p>
         </div>
         <div className={styles.mbody}>
