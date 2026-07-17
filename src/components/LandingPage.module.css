@@ -172,6 +172,117 @@
 }
 .whyPoint p { font-size: 15px; color: var(--muted); line-height: 1.55; max-width: 48ch; }
 
+/* Coach: ein konkretes Lernobjekt statt einer abstrakten KI-Feature-Karte. */
+.featureSplit {
+  display: grid; grid-template-columns: minmax(0, .88fr) minmax(360px, 1.12fr);
+  border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong);
+}
+.featureCopy { padding: 54px 48px 54px 0; }
+.capabilityList { list-style: none; margin-top: 38px; }
+.capabilityList li {
+  display: grid; gap: 5px; padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.capabilityList li:last-child { border-bottom: 1px solid var(--line); }
+.capabilityList strong {
+  color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 16px; letter-spacing: -0.015em;
+}
+.capabilityList span { color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+.coachStage {
+  display: grid; place-items: center; padding: 48px;
+  background: var(--surface-2); border-left: 1px solid var(--line-strong);
+}
+.coachShell {
+  width: min(100%, 500px); padding: 26px;
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+.coachContext { display: flex; flex-direction: column; gap: 11px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.coachContext span { color: var(--muted); font-size: 12.5px; font-weight: 600; }
+.coachContext strong {
+  color: var(--ink); font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(19px, 2.4vw, 28px); font-weight: 600; letter-spacing: -0.02em;
+}
+.coachQuestion {
+  width: fit-content; max-width: 88%; margin: 24px 0 18px auto; padding: 12px 15px;
+  color: var(--ink); background: var(--control); border-radius: 12px 12px 3px 12px;
+  font-size: 14px; line-height: 1.45;
+}
+.coachAnswer {
+  display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start;
+  padding: 17px; background: var(--bubble-ai); border-radius: 3px 12px 12px 12px;
+}
+.coachAnswer p { color: var(--ink); font-size: 14.5px; line-height: 1.58; }
+.coachHint { display: block; margin-top: 14px; color: var(--faint); font-size: 11.5px; text-align: right; }
+
+/* Visuelles Lernen: große Bühne mit einer echten mathematischen Darstellung. */
+.visualFrame {
+  display: grid; grid-template-columns: minmax(0, .72fr) minmax(440px, 1.28fr);
+  min-height: 530px; overflow: hidden;
+  border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong);
+}
+.visualCopy { display: flex; flex-direction: column; justify-content: center; padding: 56px 48px 56px 0; }
+.visualNote { margin-top: 28px; color: var(--ink); font-size: 14px; font-weight: 600; }
+.visualStage {
+  display: grid; grid-template-rows: minmax(0, 1fr) auto; align-items: center;
+  padding: 36px 42px 30px; color: var(--accent-d);
+  background: var(--surface-2); border-left: 1px solid var(--line-strong);
+}
+.graph { width: 100%; height: auto; overflow: visible; }
+.graphGrid { stroke: var(--line); stroke-width: 1; }
+.graphAxis { stroke: var(--line-strong); stroke-width: 1.5; }
+.graphCurve { fill: none; stroke: currentColor; stroke-width: 4; stroke-linecap: round; }
+.graphTangent { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.graphPoint { fill: var(--surface); stroke: currentColor; stroke-width: 4; }
+.graphCaption { display: grid; grid-template-columns: auto 1fr; gap: 4px 18px; padding-top: 22px; border-top: 1px solid var(--line-strong); }
+.graphCaption span { grid-row: 1 / 3; color: var(--accent-d); font-size: 12px; font-weight: 700; }
+.graphCaption strong {
+  color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 21px; letter-spacing: -0.02em;
+}
+.graphCaption p { color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+/* Vertrauen: klare Herkunft und bewusster Fokus, ohne erfundene Social Proofs. */
+.trustFrame {
+  display: grid; grid-template-columns: minmax(0, .88fr) minmax(380px, 1.12fr);
+  border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong);
+}
+.trustStory { padding: 54px 48px 54px 0; }
+.trustFacts { border-left: 1px solid var(--line-strong); }
+.trustItem { display: flex; flex-direction: column; justify-content: center; gap: 9px; min-height: 148px; padding: 28px 0 28px 40px; }
+.trustItem + .trustItem { border-top: 1px solid var(--line-strong); }
+.trustItem strong {
+  color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 21px; letter-spacing: -0.02em;
+}
+.trustItem span { color: var(--muted); font-size: 14.5px; line-height: 1.55; max-width: 48ch; }
+
+/* FAQ: native Details-Elemente bleiben ohne JavaScript vollständig bedienbar. */
+.faqLayout { display: grid; grid-template-columns: .7fr 1.3fr; gap: 64px; align-items: start; }
+.faqIntro { position: sticky; top: 112px; }
+.faqList { border-top: 1px solid var(--line-strong); }
+.faqItem { border-bottom: 1px solid var(--line-strong); }
+.faqItem summary {
+  list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  min-height: 82px; padding: 20px 0; cursor: pointer;
+  color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 19px; font-weight: 700; letter-spacing: -0.015em;
+}
+.faqItem summary::-webkit-details-marker { display: none; }
+.faqPlus { position: relative; width: 18px; height: 18px; flex: 0 0 auto; }
+.faqPlus::before, .faqPlus::after {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  width: 16px; height: 1.5px; background: var(--ink);
+  transform: translate(-50%, -50%);
+  transition: transform var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
+}
+.faqPlus::after { transform: translate(-50%, -50%) rotate(90deg); }
+.faqItem[open] .faqPlus::after { transform: translate(-50%, -50%) rotate(0deg); }
+.faqItem[open] summary { color: var(--accent-d); }
+.faqItem p { max-width: 62ch; padding: 0 46px 24px 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+.faqItem summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 7px; }
+
 /* Editoriale nummerierte Themen-Liste */
 .list { display: flex; flex-direction: column; }
 .subjectRow {
@@ -321,6 +432,7 @@
   .brand:hover { color: var(--accent-d); transform: translateY(-1px); }
   .iconBtn:hover { background: var(--control); border-color: var(--ink); transform: scale(1.04); }
   .navLink:hover { color: var(--accent-d); transform: translateY(-1px); }
+  .faqItem summary:hover { color: var(--accent-d); }
   .footLinks a:hover { color: var(--accent-d); }
 }
 
@@ -350,6 +462,17 @@
   .whyFrame { grid-template-columns: 1fr; }
   .whyVisual { min-height: 420px; border-right: none; border-bottom: 1px solid var(--line-strong); }
   .whyPoint { padding: 24px 0; }
+  .featureSplit, .visualFrame, .trustFrame { grid-template-columns: 1fr; }
+  .featureCopy, .visualCopy, .trustStory { padding: 46px 0; }
+  .coachStage, .visualStage, .trustFacts {
+    border-left: none; border-top: 1px solid var(--line-strong);
+  }
+  .coachStage { padding: 42px; }
+  .visualFrame { min-height: 0; }
+  .visualStage { min-height: 470px; }
+  .trustItem { min-height: 0; padding: 25px 0; }
+  .faqLayout { grid-template-columns: 1fr; gap: 34px; }
+  .faqIntro { position: static; }
   .subjectRow { grid-template-columns: 56px 1fr; gap: 8px 18px; padding: 24px 0; }
   .rowDesc { grid-column: 2; }
   .methodRow { grid-template-columns: 48px 1fr auto; gap: 10px 18px; }
@@ -374,4 +497,12 @@
   .systemCenter { width: 132px; }
   .systemCenter :global(svg) { width: 62px; height: 62px; }
   .systemWord { font-size: 11.5px; }
+  .coachStage { padding: 24px 14px; }
+  .coachShell { padding: 20px; }
+  .coachQuestion { max-width: 94%; }
+  .visualStage { min-height: 390px; padding: 24px 14px; }
+  .graphCaption { grid-template-columns: 1fr; gap: 5px; }
+  .graphCaption span { grid-row: auto; }
+  .faqItem summary { min-height: 74px; font-size: 17px; }
+  .faqItem p { padding-right: 24px; }
 }

@@ -148,16 +148,43 @@ const PLAN_FEATS = [
   'KI-Coach inklusive',
 ];
 
+const FAQS = [
+  {
+    question: 'Für wen ist Gradefruit?',
+    answer: 'Für Schüler:innen im Grundkurs oder Leistungskurs, die 2027 ihr schriftliches Mathe-Abitur in Hessen schreiben.',
+  },
+  {
+    question: 'Was unterscheidet Gradefruit von anderen Lernplattformen?',
+    answer: 'Gradefruit ist nicht für jedes Fach und jede Prüfung gebaut. Lernstand, Wiederholung, Aufgaben, Lösungen und Coach greifen für genau ein Ziel ineinander: das Mathe-Abitur Hessen 2027.',
+  },
+  {
+    question: 'Wie funktioniert der Gradefruit-Coach?',
+    answer: 'Der Coach kennt die Aufgabe, Formel oder Lösung, die du gerade ansiehst. So kannst du direkt an der Stelle fragen, an der du nicht weiterkommst.',
+  },
+  {
+    question: 'Welche Inhalte gibt es?',
+    answer: 'Prüfungsnahe Aufgaben, Schritt-für-Schritt-Lösungen, Formelsammlungen und Erklärvideos für Analysis, lineare Algebra und Stochastik.',
+  },
+  {
+    question: 'Kann ich eigene Unterlagen nutzen?',
+    answer: 'Du kannst deinen eigenen Lösungsweg als Foto oder PDF hochladen und mit dem Coach besprechen. Eine allgemeine Bibliothek für eigene Lernunterlagen gibt es derzeit nicht.',
+  },
+  {
+    question: 'Welche Bundesländer werden unterstützt?',
+    answer: 'Aktuell konzentriert sich Gradefruit vollständig auf Hessen und den Abiturjahrgang 2027.',
+  },
+];
+
 export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDark, onEnter, onLogin, onRegister, onOpenCheckout, onSignOut }: Props) {
   const [days, setDays] = useState<number | null>(null);
   const fruitRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setDays(daysUntilExam());
+    const daysRaf = requestAnimationFrame(() => setDays(daysUntilExam()));
     const el = fruitRef.current;
-    if (!el) return;
+    if (!el) return () => cancelAnimationFrame(daysRaf);
     const canParallax = window.matchMedia?.('(min-width: 901px) and (prefers-reduced-motion: no-preference)');
-    if (!canParallax?.matches) return;
+    if (!canParallax?.matches) return () => cancelAnimationFrame(daysRaf);
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
@@ -170,6 +197,7 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => {
+      cancelAnimationFrame(daysRaf);
       window.removeEventListener('scroll', onScroll);
       if (raf) cancelAnimationFrame(raf);
       el.style.transform = '';
@@ -272,9 +300,9 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
           <span className="gf-meta">Tage bis zur Prüfung</span>
         </div>
         {[
-          { v: '130+', l: 'Aufgaben im Abi-Stil' },
+          { v: '130+', l: 'Prüfungsnahe Aufgaben' },
           { v: '3', l: 'Prüfungsgebiete, komplett' },
-          { v: '∞', l: 'Fragen an den KI-Coach' },
+          { v: '2', l: 'Kursarten: GK und LK' },
         ].map(s => (
           <div key={s.l} className={styles.statItem}>
             <span className="gf-index">{s.v}</span>
@@ -325,6 +353,48 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </div>
       </Reveal>
 
+      {/* Coach – kontextbezogene Hilfe als eigener Produktvorteil */}
+      <Reveal className={styles.sec}>
+        <div className={styles.featureSplit}>
+          <div className={styles.featureCopy}>
+            <p className="gf-meta">Gradefruit-Coach</p>
+            <h2 className={styles.h2}>Du fragst genau dort,<br />wo es hakt.</h2>
+            <p className={styles.secLead}>
+              Der Coach kennt die Aufgabe, Formel oder Lösung vor dir. Du musst
+              den Zusammenhang nicht jedes Mal neu erklären.
+            </p>
+            <ul className={styles.capabilityList}>
+              <li>
+                <strong>Schritte verstehen</strong>
+                <span>Tippe auf eine Formel oder einen Rechenschritt und frag direkt nach.</span>
+              </li>
+              <li>
+                <strong>Fehler klären</strong>
+                <span>Finde heraus, an welcher Stelle dein Ansatz falsch abgebogen ist.</span>
+              </li>
+              <li>
+                <strong>Eigene Lösung prüfen</strong>
+                <span>Lade deinen Rechenweg als Foto oder PDF hoch.</span>
+              </li>
+            </ul>
+          </div>
+          <div className={styles.coachStage} aria-label="Beispiel für eine Frage an den Gradefruit-Coach">
+            <div className={styles.coachShell}>
+              <div className={styles.coachContext}>
+                <span>Analysis · Extremstellen</span>
+                <strong>f′(x) = 3x² − 3</strong>
+              </div>
+              <div className={styles.coachQuestion}>Warum setze ich die Ableitung gleich null?</div>
+              <div className={styles.coachAnswer}>
+                <Logo size={28} />
+                <p>Weil du Stellen suchst, an denen die Steigung null ist. Danach prüfst du, ob dort wirklich ein Hoch- oder Tiefpunkt liegt.</p>
+              </div>
+              <span className={styles.coachHint}>Die Antwort bleibt bei deiner Aufgabe.</span>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+
       {/* Lernmethoden – vorhandene und kommende Funktionen klar getrennt */}
       <Reveal className={styles.sec}>
         <div className={styles.secHead}>
@@ -351,6 +421,35 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
         </div>
       </Reveal>
 
+      {/* Visuelles Lernen – echte Produktdarstellung statt weiterer Feature-Karten */}
+      <Reveal className={styles.sec}>
+        <div className={styles.visualFrame}>
+          <div className={styles.visualCopy}>
+            <p className="gf-meta">Visuelles Lernen</p>
+            <h2 className={styles.h2}>Mathe wird sichtbar.</h2>
+            <p className={styles.secLead}>
+              Erklärvideos verbinden Stimme, Animation und Rechenweg. Danach
+              gehst du direkt in die passende Aufgabe.
+            </p>
+            <p className={styles.visualNote}>Klassisch ansehen oder im Reel-Modus weiterlernen.</p>
+          </div>
+          <div className={styles.visualStage} aria-label="Visualisierung einer Funktionsanalyse">
+            <svg className={styles.graph} viewBox="0 0 520 320" role="img" aria-label="Kurve mit markiertem Tiefpunkt und Tangente">
+              <path className={styles.graphGrid} d="M40 56H492M40 112H492M40 168H492M40 224H492M40 280H492M96 32V292M176 32V292M256 32V292M336 32V292M416 32V292" />
+              <path className={styles.graphAxis} d="M40 168H492M256 32V292" />
+              <path className={styles.graphCurve} d="M48 76C108 86 138 140 180 198C217 249 253 252 290 197C333 132 370 77 482 73" />
+              <path className={styles.graphTangent} d="M150 226H342" />
+              <circle className={styles.graphPoint} cx="256" cy="224" r="7" />
+            </svg>
+            <div className={styles.graphCaption}>
+              <span>Schritt 03</span>
+              <strong>Tiefpunkt prüfen</strong>
+              <p>Die Steigung ist null. Jetzt entscheidet das Vorzeichen von f″(x).</p>
+            </div>
+          </div>
+        </div>
+      </Reveal>
+
       {/* Der Stoff – Themen als editoriale Liste */}
       <Reveal className={styles.sec}>
         <div className={styles.secHead}>
@@ -365,6 +464,34 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
               <p className={styles.rowDesc}>{s.topics}</p>
             </div>
           ))}
+        </div>
+      </Reveal>
+
+      {/* Vertrauen und Fokus – nur Aussagen, die das heutige Produkt einlöst */}
+      <Reveal className={styles.sec}>
+        <div className={styles.trustFrame}>
+          <div className={styles.trustStory}>
+            <p className="gf-meta">Aus Erfahrung entwickelt</p>
+            <h2 className={styles.h2}>Für genau diese<br />Prüfung gebaut.</h2>
+            <p className={styles.secLead}>
+              Gradefruit entstand aus eigener Abitur- und Studienerfahrung.
+              Mit dem Fokus auf die Stellen, an denen Vorbereitung oft unklar wird.
+            </p>
+          </div>
+          <div className={styles.trustFacts}>
+            <article className={styles.trustItem}>
+              <strong>Hessen</strong>
+              <span>Kein allgemeiner Lehrplan. Der Fokus liegt auf den Anforderungen deines Bundeslands.</span>
+            </article>
+            <article className={styles.trustItem}>
+              <strong>Grundkurs und Leistungskurs</strong>
+              <span>Getrennte Inhalte und Zugänge für deine Kursart.</span>
+            </article>
+            <article className={styles.trustItem}>
+              <strong>Schülerstimmen folgen nach dem Start</strong>
+              <span>Wir veröffentlichen nur echte Rückmeldungen. Keine Platzhalter, keine erfundenen Sterne.</span>
+            </article>
+          </div>
         </div>
       </Reveal>
 
@@ -383,9 +510,30 @@ export default function LandingPage({ isAuthed, owned, ownedLk, dark, onToggleDa
           {plan('Leistungskurs', '99 €', 'einmalig · oder 17,90 €/Monat', 'lk', '#5D6BC9', ownedLk)}
         </div>
         <p className={styles.planNote}>
-          Alle Preise inkl. gesetzlicher Umsatzsteuer. Sichere Bezahlung über Stripe —
-          ob Einmalzahlung oder Abo, entscheidest du im nächsten Schritt.
+          Alle Preise inkl. gesetzlicher Umsatzsteuer. Sichere Bezahlung über Stripe.
+          Ob Einmalzahlung oder Abo, entscheidest du im nächsten Schritt.
         </p>
+      </Reveal>
+
+      {/* FAQ – kompakt und nativ bedienbar */}
+      <Reveal className={styles.sec}>
+        <div className={styles.faqLayout}>
+          <div className={styles.faqIntro}>
+            <p className="gf-meta">Fragen</p>
+            <h2 className={styles.h2}>Kurz erklärt.</h2>
+          </div>
+          <div className={styles.faqList}>
+            {FAQS.map(item => (
+              <details key={item.question} className={styles.faqItem}>
+                <summary>
+                  <span>{item.question}</span>
+                  <span className={styles.faqPlus} aria-hidden="true" />
+                </summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
       </Reveal>
 
       {/* Closing */}
