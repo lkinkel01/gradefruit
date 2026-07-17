@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-11 (Fundament-Sprint: PRODUCT.md, DESIGN.md, Doku-Konsolidierung)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-17 (Premium-Landing)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -22,9 +22,10 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 der Live-Gang (Rechtstexte-Platzhalter + Stripe TEST→LIVE, siehe „Bekannte
 Probleme").
 
-- **Landing** (`/`): Hero „Die Prüfung kommt. Du wirst bereit sein.",
-  Funktions-Übersicht, Sektion „Mehr als Aufgaben" (Strategien), Themen,
-  Kurse (GK 79 €/14,90 · LK 99 €/17,90), Closing, Footer mit Rechtsseiten.
+- **Landing** (`/`): Premium-Einstieg „Alles für dein Mathe-Abitur. Ein
+  System.", geführter Lernweg, kontextueller Coach, Lernmethoden mit klarer
+  Trennung zwischen vorhanden und geplant, visuelles Lernen, Hessen-/GK-/LK-
+  Fokus, Kurse (GK 79 €/14,90 · LK 99 €/17,90), FAQ und Closing.
 - **Lernbereich:** 3 Themen × Zusammenfassung (Formelsammlung) | Übungen
   (Lernkarten mit Schritt-Lösungen, typischen Fehlern); feste Aktionsleiste
   „Video · KI fragen · Tutor (bald)"; klickbare Formeln/Schritte öffnen den
@@ -256,6 +257,16 @@ Probleme").
   Bewusst offen: Lernbereich (TopicView) und Sidebar erben Buttons/Typo, sind
   aber noch nicht voll editorial umgebaut (nächster Schritt); Reel-Modus,
   Wiederholen-Seite und Konto ebenso.
+- ✅ **Premium-Landing (17.07.2026):** Die öffentliche Startseite wurde als
+  zusammenhängende Produktgeschichte neu aufgebaut: klarer System-Hero,
+  persönlicher Lernstand und Wiederholung, Gradefruit-Coach, Lernmethoden,
+  audiovisuelle Erklärungen, Hessen-/GK-/LK-Fokus, Vertrauensbereich, Preise,
+  FAQ und Abschluss-CTA. Reale Produktfunktionen sind von geplanten Methoden
+  sichtbar getrennt; Spaced Repetition, adaptive Aufgaben und Interleaving
+  heißen ausdrücklich „In Vorbereitung". Eine Community oder allgemeine
+  Materialbibliothek wird nicht behauptet. Motion ist gezielt, reduziert und
+  `prefers-reduced-motion`-sicher. Verifiziert in Hell/Dunkel, Desktop/375 px,
+  inklusive Login, Registrierung, Kurs-Einstieg, Theme-Wechsel und Ankern.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
