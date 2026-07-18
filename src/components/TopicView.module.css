@@ -37,20 +37,13 @@
 .tabBtn { transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out); }
 .tabOn { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-control); }
 
-/* Zusammenfassung: kleine Lernkarten im Raster, Inhalte sofort sichtbar */
+/* Zusammenfassungen folgen derselben ruhigen Akkordeon-Logik wie Übungen. */
 .summaryWrap {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-  align-items: start;
+  display: flex; flex-direction: column; gap: 9px;
   animation: contentReveal var(--dur-enter) var(--ease-out) both;
 }
-.sumCard {
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius-card); padding: 20px 22px 18px;
-}
-.sumHead { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
-.sumDot { width: 8px; height: 8px; border-radius: var(--radius-pill); flex-shrink: 0; }
-.sumTitle { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
-.sumText { font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 13px; }
+.summaryIntro { margin-bottom: 14px; color: var(--muted); font-size: 14.5px; line-height: 1.65; }
+.summaryDetails { padding-top: 16px; animation: contentReveal var(--dur-enter) var(--ease-out) both; }
 .formulas { display: flex; flex-direction: column; gap: 7px; }
 .formula {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -65,14 +58,15 @@
 .formula:active { transform: scale(.99); }
 .formula:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .formulaText { overflow-x: auto; }
-.formulaAsk { flex-shrink: 0; color: var(--faint); opacity: .45; transition: opacity .15s, color .15s; }
-.summaryFoot { grid-column: 1 / -1; display: flex; justify-content: center; margin-top: 10px; }
+.formula svg { flex-shrink: 0; color: var(--faint); opacity: .55; }
+.summaryFoot { display: flex; justify-content: center; margin-top: 10px; }
 
 /* Lernkarten (Akkordeon) */
 .cards { display: flex; flex-direction: column; gap: 9px; }
 .card {
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius-card); overflow: hidden;
+  scroll-margin-top: 84px;
   transition: border-color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
 }
 /* Geschlossene Karte hebt beim Hover leicht an; offene Karte bleibt ruhig. */
@@ -95,7 +89,23 @@
 .chev { color: var(--faint); flex-shrink: 0; }
 
 .cardBody { padding: 2px 20px 18px; animation: contentReveal var(--dur-enter) var(--ease-out) both; }
-.taskQ { font-size: 15.5px; line-height: 1.65; margin-bottom: 15px; }
+.taskBlock {
+  margin-bottom: 14px;
+  padding: 16px 17px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-control);
+  background: var(--surface-2);
+}
+.taskLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--accent-d);
+  font-size: 11.5px;
+  font-weight: 750;
+  letter-spacing: .035em;
+}
+.taskQ { font-size: 15.5px; line-height: 1.65; }
 
 /* Feste Aktionsleiste (Video · KI · Tutor) – immer dieselbe Position */
 .rowActions {
@@ -105,6 +115,8 @@
 /* Lösungs-Bereich: eigene Zeile über der Aktionsleiste */
 .solRow { display: flex; gap: 8px; flex-wrap: wrap; }
 .solBtn { font-weight: 600; }
+.solutionStage { animation: contentReveal var(--dur-enter) var(--ease-out) both; }
+.checkOwn { margin-top: 14px; }
 
 .mini {
   border: 1px solid var(--line-strong); background: var(--surface);
@@ -116,10 +128,11 @@
 }
 .mini:active { transform: translateY(0) scale(.98); }
 .mini:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-/* Vorbereitete, ehrlich beschriftete Aktionen (Video folgt, Tutor bald) */
-.miniOff {
-  color: var(--faint); border-style: dashed; cursor: default;
+.mini:disabled {
+  border-color: var(--line);
+  background: var(--surface-2);
+  color: var(--faint);
+  cursor: not-allowed;
 }
 
 .solution {
@@ -136,6 +149,7 @@
   transition: background-color var(--dur-hover) var(--ease-out);
 }
 .sstep:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.sstep > svg { flex-shrink: 0; margin-top: 4px; color: var(--faint); }
 .stepNum {
   flex: 0 0 25px; height: 25px; border-radius: var(--radius-control);
   background: var(--accent); color: var(--accent-tx);
@@ -213,24 +227,22 @@
   .reelBtn:hover { border-color: var(--ink); transform: translateY(-1px); }
   .tabBtn:hover { color: var(--ink); }
   .formula:hover { border-color: var(--accent); background: var(--accent-soft); }
-  .formula:hover .formulaAsk { opacity: 1; color: var(--accent-d); }
+  .formula:hover svg { opacity: 1; color: var(--accent-d); }
   .card:not(.cardOpen):hover { border-color: var(--line-strong); transform: translateY(-1px); }
   .cardHead:hover .cardTitle { color: var(--accent-d); }
   .mini:hover { border-color: var(--faint); transform: translateY(-1px); }
-  .miniOff:hover { border-color: var(--line-strong); transform: none; }
+  .mini:disabled:hover { border-color: var(--line); transform: none; }
   .sstep:hover { background: var(--surface-2); }
   .sstep:hover .stepGo { opacity: 1; color: var(--accent-d); }
   .statusBtn:hover { color: var(--ink); }
 }
 
-@media (max-width: 760px) {
-  .summaryWrap { grid-template-columns: 1fr; }
-}
 @media (max-width: 560px) {
   .page { --page-top: 30px; --page-bottom: 96px; }
   .headRow { align-items: flex-start; }
   .cardHead { padding: 13px 15px; }
   .cardBody { padding: 2px 15px 14px; }
+  .taskBlock { padding: 14px; }
   .lockCard { padding: 30px 20px 26px; }
   .stepMt, .result, .formula { overflow-x: auto; }
   .progressTrack { max-width: none; }

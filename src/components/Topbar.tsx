@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { MenuIcon, MoonIcon, SunIcon } from './UiIcons';
@@ -23,6 +23,7 @@ const TAB_LABELS = { zusammenfassung: 'Zusammenfassung', uebungen: 'Übungen' } 
 interface Props {
   view: View;
   topicTab: 'zusammenfassung' | 'uebungen';
+  topicSection: string | null;
   dark: boolean;
   onToggleDark: () => void;
   onOpenNav: () => void;
@@ -30,27 +31,44 @@ interface Props {
   onOpenAuth: () => void;
 }
 
-export default function Topbar({ view, topicTab, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
+export default function Topbar({ view, topicTab, topicSection, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
   const { user } = useAuth();
   const initials = user ? (user.user_metadata?.full_name || user.email || 'U').slice(0, 2).toUpperCase() : null;
 
-  // Scroll-Edge (Apple): die Leiste ist am Seitenanfang randlos und bekommt
-  // erst beim Scrollen eine feine Trennung + Schatten – schwebt über dem Inhalt.
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 4);
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const nextY = Math.max(0, window.scrollY);
+        const delta = nextY - lastScrollY.current;
+        setScrolled(nextY > 12);
+        setHidden(nextY > 96 && delta > 3);
+        if (nextY < 20 || delta < -3) setHidden(false);
+        lastScrollY.current = nextY;
+      });
+    };
+
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
-    <div className={`${styles.topbar} ${scrolled ? styles.scrolled : ''}`}>
+    <div className={`${styles.topbar} ${scrolled ? styles.scrolled : ''} ${hidden ? styles.hidden : ''}`}>
       <button type="button" className={styles.hamb} onClick={onOpenNav} aria-label="Menü">
         <MenuIcon size={20} />
       </button>
       <nav className={styles.crumbs} aria-label="Brotkrumen-Navigation">
-        <button type="button" className={styles.crumbLink} onClick={() => onNavigate('landing')} aria-label="Zur Gradefruit Startseite">
+        <button type="button" className={styles.crumbLink} onClick={() => onNavigate('dashboard')} aria-label="Zur Übersicht">
           Gradefruit
         </button>
         <span className={styles.sep} aria-hidden="true">›</span>
@@ -60,7 +78,15 @@ export default function Topbar({ view, topicTab, dark, onToggleDark, onOpenNav, 
               {LABELS[view]}
             </button>
             <span className={styles.sep} aria-hidden="true">›</span>
-            <span className={styles.here} aria-current="page">{TAB_LABELS[topicTab]}</span>
+            {topicSection && topicTab === 'zusammenfassung' ? (
+              <>
+                <span className={`${styles.crumbLevel} ${styles.crumbMid}`}>{TAB_LABELS[topicTab]}</span>
+                <span className={styles.sep} aria-hidden="true">›</span>
+                <span className={styles.here} aria-current="page">{topicSection}</span>
+              </>
+            ) : (
+              <span className={styles.here} aria-current="page">{TAB_LABELS[topicTab]}</span>
+            )}
           </>
         ) : (
           <span className={styles.here} aria-current="page">{LABELS[view] ?? view}</span>

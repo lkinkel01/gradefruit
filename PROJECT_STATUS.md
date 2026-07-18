@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-18 (Premium-Designsystem)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-18 (Lernnavigation und Inhaltsansichten)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -26,10 +26,11 @@ Probleme").
   System.", geführter Lernweg, kontextueller Coach, Lernmethoden mit klarer
   Trennung zwischen vorhanden und geplant, visuelles Lernen, Hessen-/GK-/LK-
   Fokus, Kurse (GK 79 €/14,90 · LK 99 €/17,90), FAQ und Closing.
-- **Lernbereich:** 3 Themen × Zusammenfassung (Formelsammlung) | Übungen
-  (Lernkarten mit Schritt-Lösungen, typischen Fehlern); feste Aktionsleiste
-  „Video · KI fragen · Tutor (bald)"; klickbare Formeln/Schritte öffnen den
-  Coach; „Eigene Lösung prüfen" per Foto/PDF-Upload.
+- **Lernbereich:** 3 Themen × Zusammenfassung | Übungen in einer gemeinsamen
+  einspaltigen Akkordeon-Logik. Zusammenfassungsabschnitte sind direkt über
+  Sidebar und Breadcrumb erreichbar. Lernhilfen und Status erscheinen erst
+  nach dem bewussten Öffnen des Inhalts; klickbare Formeln/Schritte öffnen den
+  Coach, „Eigene Lösung prüfen" nutzt den vorhandenen Foto/PDF-Upload.
 - **Wiederholungssystem:** drei Lernstufen (Verstanden / Wiederholen / Noch
   unklar) pro Aufgabe; Wiederholen-Seite mit Filtern Stufe × Themen;
   Dashboard-Kacheln springen mit Vorauswahl dorthin.
@@ -43,8 +44,8 @@ Probleme").
   Kundenportal, Konto-Seite.
 - **Design:** modernes Weiß, tiefes Schwarz und eine Grapefruit-Akzentfarbe,
   Dark Mode, mobil optimiert — eigenständiges Grapefruit-Zeichen, schwebende
-  Glas-Navigation und ein durchgängiges editoriales Flächen-, Icon- und
-  Interaktionssystem.
+  Glas-Navigation mit richtungsabhängigem Ein-/Ausblenden und ein
+  durchgängiges editoriales Flächen-, Icon- und Interaktionssystem.
 
 ## Tech Stack
 - **Next.js 16.2.9** (App Router, Turbopack) + **TypeScript**
@@ -73,6 +74,14 @@ Probleme").
 > wurde, steht eine *(→ später …)*-Anmerkung — so bleibt die Entwicklung
 > nachvollziehbar, ohne dass die Liste dem Ist-Zustand widerspricht.
 
+- ✅ **Lernnavigation und Inhaltsansichten (18.07.2026):** Landing-Visual
+  zentriert; transparente Liquid-Glass-Navigation verschwindet beim
+  Herunterscrollen und kehrt beim Hochscrollen zurück. Produkt-Breadcrumb und
+  Sidebar führen „Gradefruit" zur Übersicht. Zusammenfassungen besitzen eine
+  dritte, anklickbare Navigationsebene; Übungen und Zusammenfassungen zeigen
+  Aufgabe beziehungsweise Einleitung zuerst und blenden Lösung, Lernhilfen
+  sowie Lernstatus erst auf Wunsch ein. Dashboard-Countdown mit Kalender-Icon,
+  kompaktere Fortschrittszahl. Desktop, 390 px, Light und Dark geprüft.
 - ✅ Auth (E-Mail+Passwort + Google-Login)
 - ✅ GK & LK, je 3 Themen, je ~22 Original-Aufgaben (Schritt-Lösungen, typische
   Fehler, Video-Verknüpfung)

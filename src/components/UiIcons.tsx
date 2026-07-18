@@ -87,3 +87,41 @@ export function ReelIcon({ size = 18 }: { size?: number }) {
 export function CheckIcon({ size = 18 }: { size?: number }) {
   return <UiIcon size={size}><path d="m5 12 4.5 4.5L19 7" /></UiIcon>;
 }
+
+export function CalendarIcon({ size = 18 }: { size?: number }) {
+  return (
+    <UiIcon size={size}>
+      <rect x="3.5" y="5" width="17" height="15.5" rx="2.5" />
+      <path d="M8 3v4M16 3v4M3.5 10h17" />
+    </UiIcon>
+  );
+}
+
+export function PlayIcon({ size = 18 }: { size?: number }) {
+  return <UiIcon size={size}><path d="m9 7 8 5-8 5Z" /></UiIcon>;
+}
+
+export function QuestionIcon({ size = 18 }: { size?: number }) {
+  return (
+    <UiIcon size={size}>
+      <path d="M9.2 9a3 3 0 1 1 4 2.8c-.8.4-1.2 1-1.2 1.7v.5" />
+      <circle cx="12" cy="18" r=".7" fill="currentColor" stroke="none" />
+    </UiIcon>
+  );
+}
+
+export function UploadIcon({ size = 18 }: { size?: number }) {
+  return (
+    <UiIcon size={size}>
+      <path d="M12 16V4M7.5 8.5 12 4l4.5 4.5M4 15v4.5h16V15" />
+    </UiIcon>
+  );
+}
+
+export function ChevronIcon({ direction = 'down', size = 18 }: { direction?: 'down' | 'up'; size?: number }) {
+  return (
+    <UiIcon size={size}>
+      <path d={direction === 'up' ? 'm6 15 6-6 6 6' : 'm6 9 6 6 6-6'} />
+    </UiIcon>
+  );
+}

@@ -1,6 +1,7 @@
 'use client';
 import { View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
+import { SUMMARIES } from '@/lib/summaries';
 import { BrandMark } from './BrandMark';
 import { GrapefruitProgress } from './Logo';
 import { CheckIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
@@ -9,6 +10,7 @@ import styles from './Sidebar.module.css';
 interface Props {
   view: View;
   topicTab: 'zusammenfassung' | 'uebungen';
+  topicSection: string | null;
   owned: boolean;
   ownedLk: boolean;
   level: 'gk' | 'lk';
@@ -37,13 +39,20 @@ function rememberTab(tab: 'zusammenfassung' | 'uebungen') {
   try { localStorage.setItem('gf-open-tab', tab); } catch { /* Speicher gesperrt */ }
 }
 
-export default function Sidebar({ view, topicTab, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
+function rememberSummary(title: string) {
+  try {
+    localStorage.setItem('gf-open-tab', 'zusammenfassung');
+    localStorage.setItem('gf-open-summary', title);
+  } catch { /* Speicher gesperrt */ }
+}
+
+export default function Sidebar({ view, topicTab, topicSection, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
   return (
     <aside className={styles.sidebar}>
-      <button className={styles.brand} onClick={() => onNavigate('landing')} aria-label="Zur Gradefruit Startseite">
+      <button className={styles.brand} onClick={() => onNavigate('dashboard')} aria-label="Zur Übersicht">
         <BrandMark size={24} />
         Gradefruit
       </button>
@@ -64,11 +73,14 @@ export default function Sidebar({ view, topicTab, owned, ownedLk, level, onNavig
       <nav className={styles.snav}>
         {TOPICS.map(t => {
           const active = view === t.id;
+          const sections = SUMMARIES[t.id as 'analysis' | 'linalg' | 'stochastik'][level].sections;
+          const summaryActive = active && topicTab === 'zusammenfassung';
+          const exercisesActive = active && topicTab === 'uebungen';
           return (
             <div key={t.id} className={styles.topicWrap}>
               <button
                 className={active ? styles.on : ''}
-                aria-current={active ? 'page' : undefined}
+                aria-expanded={active}
                 onClick={() => onNavigate(t.id)}
               >
                 <span className={styles.cdot} style={{ background: t.color }} />
@@ -81,19 +93,37 @@ export default function Sidebar({ view, topicTab, owned, ownedLk, level, onNavig
               {/* Untermenü: im aktiven Thema dauerhaft offen, sonst bei Hover.
                   Der aktive Tab wird markiert (Punkt + Gewicht, nicht nur Farbe). */}
               <div className={`${styles.flyout} ${active ? styles.flyoutPinned : ''}`}>
-                {(['zusammenfassung', 'uebungen'] as const).map(tabId => {
-                  const tabActive = active && topicTab === tabId;
-                  return (
-                    <button
-                      key={tabId}
-                      className={`${styles.flyItem} ${tabActive ? styles.flyOn : ''}`}
-                      aria-current={tabActive ? 'page' : undefined}
-                      onClick={() => { rememberTab(tabId); onNavigate(t.id); }}
-                    >
-                      {tabId === 'zusammenfassung' ? 'Zusammenfassung' : 'Übungen'}
-                    </button>
-                  );
-                })}
+                <button
+                  className={`${styles.flyItem} ${summaryActive && !topicSection ? styles.flyOn : ''} ${summaryActive && topicSection ? styles.flyParentOn : ''}`}
+                  aria-current={summaryActive && !topicSection ? 'page' : undefined}
+                  onClick={() => { rememberTab('zusammenfassung'); onNavigate(t.id); }}
+                >
+                  Zusammenfassung
+                </button>
+                {summaryActive && (
+                  <div className={styles.sectionList} aria-label={`Themen in ${t.label}`}>
+                    {sections.map(section => {
+                      const sectionActive = topicSection === section.title;
+                      return (
+                        <button
+                          key={section.title}
+                          className={`${styles.sectionItem} ${sectionActive ? styles.sectionOn : ''}`}
+                          aria-current={sectionActive ? 'page' : undefined}
+                          onClick={() => { rememberSummary(section.title); onNavigate(t.id); }}
+                        >
+                          {section.title}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                <button
+                  className={`${styles.flyItem} ${exercisesActive ? styles.flyOn : ''}`}
+                  aria-current={exercisesActive ? 'page' : undefined}
+                  onClick={() => { rememberTab('uebungen'); onNavigate(t.id); }}
+                >
+                  Übungen
+                </button>
               </div>
             </div>
           );

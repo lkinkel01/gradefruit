@@ -53,6 +53,7 @@ export default function Home() {
   // Aktiver Tab der geöffneten Themenseite — gemeldet von TopicView, damit
   // Breadcrumb (Topbar) und Sidebar-Untermenü denselben Standort zeigen.
   const [topicTab, setTopicTab] = useState<'zusammenfassung' | 'uebungen'>('zusammenfassung');
+  const [topicSection, setTopicSection] = useState<string | null>(null);
 
   // Deep-Link aus dem Reel-Modus (gf-open-topic): einmalig beim Start
   // konsumieren und ins gewünschte Thema springen. Es gibt KEINEN
@@ -206,6 +207,7 @@ export default function Home() {
     // Zurücksetzen würde dabei die Scrollposition der vorherigen Ansicht
     // erhalten bleiben und der neue Seitenkopf könnte unter der Topbar liegen.
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    if (!TOPIC_VIEWS.includes(v)) setTopicSection(null);
     setView(v);
     setNavOpen(false);
     setNavSignal(n => n + 1);
@@ -273,6 +275,7 @@ export default function Home() {
             onOpenAsk={openAsk}
             onNavigate={navigate}
             onTabChange={setTopicTab}
+            onSectionChange={setTopicSection}
           />
         );
       case 'videos': return <VideosView />;
@@ -296,6 +299,7 @@ export default function Home() {
         <Sidebar
           view={view}
           topicTab={topicTab}
+          topicSection={topicSection}
           owned={owned}
           ownedLk={ownedLk}
           level={level}
@@ -306,6 +310,7 @@ export default function Home() {
           <Topbar
             view={view}
             topicTab={topicTab}
+            topicSection={topicSection}
             dark={dark}
             onToggleDark={() => setTheme(!dark)}
             onOpenNav={() => setNavOpen(n => !n)}

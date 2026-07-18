@@ -9,15 +9,31 @@
   align-items: center;
   gap: 12px;
   padding: 0 10px 0 16px;
-  border: 1px solid var(--glass-line);
+  border: 1px solid transparent;
   border-radius: var(--radius-panel);
-  background: var(--glass-strong);
-  -webkit-backdrop-filter: blur(20px) saturate(145%);
-  backdrop-filter: blur(20px) saturate(145%);
-  box-shadow: 0 1px 0 rgba(255,255,255,.45) inset;
-  transition: border-color var(--dur-enter) var(--ease-out);
+  background: transparent;
+  box-shadow: none;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--dur-enter) var(--ease-out),
+    transform var(--dur-enter) var(--ease-out),
+    border-color var(--dur-hover) var(--ease-out),
+    background-color var(--dur-hover) var(--ease-out),
+    box-shadow var(--dur-hover) var(--ease-out);
+  will-change: transform, opacity;
 }
-.scrolled { box-shadow: var(--shadow-float); }
+.scrolled {
+  border-color: var(--glass-line);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(155%);
+  backdrop-filter: blur(24px) saturate(155%);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 54%, transparent) inset, var(--shadow-float);
+}
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, calc(-100% - 28px), 0);
+}
 
 .hamb {
   display: none;
@@ -44,6 +60,13 @@
 }
 .sep { flex-shrink: 0; color: var(--line-strong); }
 .here { overflow: hidden; color: var(--ink); font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.crumbLevel {
+  overflow: hidden;
+  color: var(--muted);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .crumbLink {
   flex-shrink: 0;
   max-width: 100%;
@@ -129,10 +152,27 @@
      bekommt Ellipsis, „Gradefruit" und die aktuelle Seite bleiben lesbar. */
   .crumbs { gap: 5px; font-size: 12.5px; }
   .crumbLink { font-size: 12.5px; }
-  .crumbMid { max-width: 26vw; }
-  .here { max-width: 34vw; }
+  /* Auf kleinen Displays bleibt der sichere Rückweg plus aktueller Ort.
+     Die vollständige Hierarchie steht weiterhin in der geöffneten Sidebar. */
+  .crumbMid { display: none; }
+  .sep:has(+ .crumbMid) { display: none; }
+  .here {
+    display: -webkit-box;
+    flex: 1;
+    max-width: none;
+    overflow: hidden;
+    line-height: 1.15;
+    text-overflow: clip;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
 }
 
 @media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
-  .topbar { background: var(--surface); }
+  .scrolled { background: var(--surface); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topbar { transition-duration: 0.01ms; }
 }

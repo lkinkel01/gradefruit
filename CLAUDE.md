@@ -178,6 +178,8 @@ etwas falsch. Alle bewusst so getroffen — nicht „aufräumen":
 | `gf-open-topic` | Deep-Link: Thema beim nächsten `/`-Besuch öffnen | einmalig, wird konsumiert |
 | `gf-open-tab` | Deep-Link: Tab (`zusammenfassung`/`uebungen`) | einmalig, wird konsumiert |
 | `gf-open-task` | Deep-Link: Aufgabe aufklappen + hinscrollen | einmalig, wird konsumiert |
+| `gf-open-summary` | Deep-Link: Abschnitt einer Zusammenfassung aufklappen + hinscrollen | einmalig, wird konsumiert |
+| `gf-summary-status` | Lokaler Lernstatus für Zusammenfassungsabschnitte | dauerhaft, bis ein serverseitiges Datenmodell ergänzt wird |
 | `gf-feed-topic` | Reel-Modus: Themen-Fokus für `/feed` | bleibt bis überschrieben |
 | `gf-review-status` | Wiederholen-Seite: vorgewählter Stufen-Filter | einmalig, wird konsumiert |
 

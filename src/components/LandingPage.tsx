@@ -230,7 +230,9 @@ export default function LandingPage({
   const [activeSection, setActiveSection] = useState<LandingSectionId | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
   const fruitRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const daysRaf = requestAnimationFrame(() => setDays(daysUntilExam()));
@@ -246,7 +248,7 @@ export default function LandingPage({
       raf = requestAnimationFrame(() => {
         raf = 0;
         const y = Math.min(window.scrollY, 760);
-        el.style.transform = `translate3d(0, calc(-50% - ${y * 0.025}px), 0) rotate(${y * 0.003}deg)`;
+        el.style.transform = `translate3d(-50%, calc(-50% - ${y * 0.025}px), 0) rotate(${y * 0.003}deg)`;
       });
     };
 
@@ -266,8 +268,13 @@ export default function LandingPage({
       .filter((element): element is HTMLElement => Boolean(element));
 
     const onScroll = () => {
-      setNavScrolled(window.scrollY > 18);
-      if (window.scrollY < 260) setActiveSection(null);
+      const nextY = Math.max(0, window.scrollY);
+      const delta = nextY - lastScrollY.current;
+      setNavScrolled(nextY > 18);
+      setNavHidden(!mobileNavOpen && nextY > 96 && delta > 3);
+      if (nextY < 20 || delta < -3) setNavHidden(false);
+      if (nextY < 260) setActiveSection(null);
+      lastScrollY.current = nextY;
     };
 
     const observer = new IntersectionObserver(
@@ -291,7 +298,7 @@ export default function LandingPage({
       observer.disconnect();
       window.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, [mobileNavOpen]);
 
   useEffect(() => {
     if (!mobileNavOpen) return;
@@ -358,7 +365,10 @@ export default function LandingPage({
     <div className={styles.lpage}>
       <a className={styles.skipLink} href="#main-content">Zum Inhalt</a>
 
-      <nav className={`${styles.nav} ${navScrolled ? styles.navScrolled : ''}`} aria-label="Hauptnavigation">
+      <nav
+        className={`${styles.nav} ${navScrolled ? styles.navScrolled : ''} ${navHidden ? styles.navHidden : ''}`}
+        aria-label="Hauptnavigation"
+      >
         <div className={styles.navBar}>
           <button type="button" className={styles.brand} onClick={scrollToTop} aria-label="Zur Gradefruit Startseite">
             <BrandMark size={28} />
@@ -417,7 +427,10 @@ export default function LandingPage({
               aria-expanded={mobileNavOpen}
               aria-label={mobileNavOpen ? 'Menü schließen' : 'Menü öffnen'}
               className={`${styles.iconBtn} ${styles.menuBtn}`}
-              onClick={() => setMobileNavOpen(open => !open)}
+              onClick={() => {
+                setNavHidden(false);
+                setMobileNavOpen(open => !open);
+              }}
               type="button"
             >
               <span className={styles.menuIcon} aria-hidden="true"><i /><i /></span>

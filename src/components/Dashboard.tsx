@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { EXAM_DATE, EXAM_DATE_IS_PRELIMINARY, daysUntilExam } from '@/lib/exam';
 import { GrapefruitProgress } from './Logo';
-import { ArrowRightIcon, ReelIcon } from './UiIcons';
+import { ArrowRightIcon, CalendarIcon, ReelIcon } from './UiIcons';
 import styles from './Dashboard.module.css';
 
 interface Props {
@@ -63,6 +63,7 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
       {/* Prüfungstermin — ruhige Info-Zeile, kein dominanter Anker mehr */}
       <div className={styles.countdown}>
         <p className={styles.cdLine}>
+          <span className={styles.cdIcon} aria-hidden="true"><CalendarIcon size={18} /></span>
           <span className={styles.cdDays}>{daysLeft ?? '—'}</span>
           <span className={styles.cdLabel}>Tage bis zur Prüfung</span>
         </p>

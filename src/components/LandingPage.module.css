@@ -39,15 +39,19 @@
   min-height: 58px;
   margin-top: 12px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--line-strong) 72%, transparent);
+  border: 1px solid transparent;
   border-radius: var(--radius-panel);
-  background: var(--glass);
-  background: color-mix(in srgb, var(--canvas) 70%, transparent);
-  -webkit-backdrop-filter: blur(24px) saturate(145%);
-  backdrop-filter: blur(24px) saturate(145%);
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 66%, transparent), 0 10px 34px var(--nav-shadow-soft);
+  background: transparent;
+  box-shadow: none;
   isolation: isolate;
-  transition: background-color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--dur-enter) var(--ease-out),
+    transform var(--dur-enter) var(--ease-out),
+    background-color var(--dur-hover) var(--ease-out),
+    border-color var(--dur-hover) var(--ease-out),
+    box-shadow var(--dur-hover) var(--ease-out);
+  will-change: transform, opacity;
 }
 
 .nav::before {
@@ -57,13 +61,23 @@
   border-radius: inherit;
   background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 38%, transparent), transparent 62%);
   content: '';
+  opacity: 0;
   pointer-events: none;
+  transition: opacity var(--dur-hover) var(--ease-out);
 }
 
 .navScrolled {
   border-color: color-mix(in srgb, var(--line-strong) 88%, transparent);
-  background: color-mix(in srgb, var(--canvas) 83%, transparent);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(155%);
+  backdrop-filter: blur(24px) saturate(155%);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 72%, transparent), 0 16px 44px var(--nav-shadow-strong);
+}
+.navScrolled::before { opacity: 1; }
+.navHidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, calc(-100% - 28px), 0);
 }
 
 .navBar {
@@ -317,7 +331,7 @@
 }
 
 .heroFruit :global(svg) {
-  width: min(36vw, 460px);
+  width: min(27vw, 336px);
   height: auto;
 }
 
@@ -972,7 +986,7 @@
   .heroCopy { max-width: 680px; }
   .heroVisual { position: absolute; top: 20px; right: -130px; width: 390px; min-height: 390px; opacity: .22; }
   .orbitRing { width: 360px; }
-  .heroFruit :global(svg) { width: 330px; }
+  .heroFruit :global(svg) { width: 246px; }
 
   .sectionIntro,
   .libraryIntro,
