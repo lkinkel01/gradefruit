@@ -6,15 +6,16 @@ import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { EXAM_DATE, EXAM_DATE_IS_PRELIMINARY, daysUntilExam } from '@/lib/exam';
 import { GrapefruitProgress } from './Logo';
+import { ArrowRightIcon, ReelIcon } from './UiIcons';
 import styles from './Dashboard.module.css';
 
 // Wechselnde Begrüßungssätze, damit die Übersicht nicht jeden Tag gleich klingt.
 const MOTIVATION = [
-  'Weiter da, wo du aufgehört hast.',
-  'Konstanz schlägt Kraftakt. Ein Stück pro Tag reicht.',
-  'Jede eingeordnete Aufgabe bringt dich der Prüfung näher.',
-  'Wiederhol zuerst, was unklar war. Der Rest kommt von selbst.',
-  'Du musst nicht alles können. Nur heute etwas mehr als gestern.',
+  'Mach dort weiter, wo du aufgehört hast.',
+  'Ein klarer Schritt reicht für heute.',
+  'Jede gelöste Aufgabe macht deinen Stand klarer.',
+  'Beginne mit dem, was noch unklar ist.',
+  'Nimm dir genau eine Aufgabe vor.',
 ];
 
 interface Props {
@@ -34,11 +35,14 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
   const [motivation, setMotivation] = useState(MOTIVATION[0]);
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
   useEffect(() => {
-    const now = new Date();
-    const h = now.getHours();
-    setGreeting(h < 12 ? 'Guten Morgen' : h < 18 ? 'Guten Tag' : 'Guten Abend');
-    setMotivation(MOTIVATION[(now.getDate() + h) % MOTIVATION.length]);
-    setDaysLeft(daysUntilExam(now));
+    const frame = requestAnimationFrame(() => {
+      const now = new Date();
+      const h = now.getHours();
+      setGreeting(h < 12 ? 'Guten Morgen' : h < 18 ? 'Guten Tag' : 'Guten Abend');
+      setMotivation(MOTIVATION[(now.getDate() + h) % MOTIVATION.length]);
+      setDaysLeft(daysUntilExam(now));
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const firstName = (user?.user_metadata?.full_name as string | undefined)?.trim().split(' ')[0];
@@ -103,7 +107,7 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
           <div className={styles.actions}>
             <button className="btn primary" onClick={() => onNavigate('analysis')}>Weiterlernen</button>
             <button className="btn light" onClick={openReels}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="3" width="14" height="18" rx="3" /><polyline points="9.5 12.5 12 10 14.5 12.5" /><line x1="12" y1="10" x2="12" y2="15.5" /></svg>
+              <ReelIcon size={14} />
               Reel-Modus
             </button>
           </div>
@@ -117,7 +121,7 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
           <button key={t.status} className={styles.stat} onClick={() => openReview(t.status)}>
             <span className={`gf-index ${styles.statNum}`}>{t.num}</span>
             <span className={styles.statLabel}>{t.label}</span>
-            <svg className={styles.statGo} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+            <span className={styles.statGo}><ArrowRightIcon size={15} /></span>
           </button>
         ))}
       </div>
@@ -129,10 +133,10 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
           const tp = topicTotal(t.id) > 0 ? Math.round((topicDone(t.id) / topicTotal(t.id)) * 100) : 0;
           return (
             <button key={t.id} className={styles.topicRow} onClick={() => onNavigate(t.id)}>
-              <GrapefruitProgress pct={tp} size={40} showLeaf={false} />
+              <GrapefruitProgress pct={tp} size={40} />
               <span className={styles.topicName}>{t.label}</span>
               <span className={styles.topicCount}>{topicDone(t.id)}/{topicTotal(t.id)} verstanden</span>
-              <svg className={styles.topicGo} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+              <span className={styles.topicGo}><ArrowRightIcon size={16} /></span>
             </button>
           );
         })}

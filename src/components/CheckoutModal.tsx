@@ -79,28 +79,32 @@ function CheckoutDialog({ onClose, course }: { onClose: () => void; course: 'gk'
       <div className={`${styles.scrim} ${styles.open}`} onClick={busy ? undefined : onClose} />
       <div className={`${styles.modal} ${styles.open}`} role="dialog" aria-modal="true" aria-labelledby="checkout-title">
         <div className={styles.mhead}>
-          <button className={styles.mclose} onClick={onClose} disabled={busy}>✕</button>
+          <button type="button" className={styles.mclose} onClick={onClose} disabled={busy} aria-label="Dialog schließen">✕</button>
           <div className={styles.ptag}>{info.tag}</div>
           <h2 id="checkout-title">{info.title}</h2>
           <p>{info.blurb}</p>
         </div>
         <div className={styles.mbody}>
-          <div
+          <button
+            type="button"
+            aria-pressed={selected === 'full'}
             className={`${styles.opt} ${selected === 'full' ? styles.sel : ''}`}
             onClick={() => setSelected('full')}
           >
             <div className={styles.radio} />
             <div className={styles.ox}><b>Komplettkurs</b><small>einmalig · Zugang bis zur Prüfung</small></div>
             <div className={styles.op}>{info.full}</div>
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
+            aria-pressed={selected === 'month'}
             className={`${styles.opt} ${selected === 'month' ? styles.sel : ''}`}
             onClick={() => setSelected('month')}
           >
             <div className={styles.radio} />
             <div className={styles.ox}><b>Monatlich</b><small>monatlich kündbar</small></div>
             <div className={styles.op}>{info.month}<small>/ Monat</small></div>
-          </div>
+          </button>
 
           {/* Preisangabe: falls Kleinunternehmer nach § 19 UStG, Text ersetzen durch
               „Gemäß § 19 UStG wird keine Umsatzsteuer erhoben." */}

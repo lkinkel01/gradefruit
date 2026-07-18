@@ -48,7 +48,7 @@ export default function AgbPage() {
           <Ph>[Vollständiger Name]</Ph>, <Ph>[Straße und Hausnummer]</Ph>, <Ph>[PLZ Ort]</Ph>,
           Deutschland (siehe auch <Link href="/impressum">Impressum</Link>)
         </p>
-        <p>und den Nutzerinnen und Nutzern der Plattform (nachfolgend „du").</p>
+        <p>und den Nutzerinnen und Nutzern der Plattform (nachfolgend „du“).</p>
       </div>
 
       <div className={styles.section}>
@@ -94,7 +94,7 @@ export default function AgbPage() {
           Es gelten die zum Zeitpunkt der Bestellung auf der Website angezeigten Preise. Alle
           Preise sind Endpreise in Euro
           {' '}<Ph>[inkl. gesetzlicher Umsatzsteuer — ODER bei Kleinunternehmern: „Gemäß § 19
-          UStG wird keine Umsatzsteuer erhoben und ausgewiesen."]</Ph>.
+          UStG wird keine Umsatzsteuer erhoben und ausgewiesen.“]</Ph>.
         </p>
         <p>
           Die Zahlung erfolgt über den Zahlungsdienstleister Stripe. Wir speichern oder sehen
@@ -113,7 +113,7 @@ export default function AgbPage() {
           <strong>Monatsabo:</strong> Das Abo verlängert sich monatlich automatisch und ist
           jederzeit zum Ende des laufenden Abrechnungsmonats kündbar. Die Kündigung ist ohne
           Angabe von Gründen über das Stripe-Kundenportal möglich (erreichbar im Bereich „Mein
-          Konto") oder per E-Mail an <Ph>[E-Mail-Adresse]</Ph>.
+          Konto“) oder per E-Mail an <Ph>[E-Mail-Adresse]</Ph>.
         </p>
       </div>
 

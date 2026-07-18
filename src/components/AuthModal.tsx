@@ -43,11 +43,16 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Prop
   // Beim Öffnen dem gewünschten Modus folgen. Ohne das bliebe das Fenster im
   // Modus des ERSTEN Öffnens hängen ("Registrieren" öffnete den Login).
   useEffect(() => {
+    let frame = 0;
     if (open) {
-      setMode(initialMode);
-      reset();
+      frame = requestAnimationFrame(() => {
+        setMode(initialMode);
+        reset();
+      });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, [open, initialMode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,11 +90,11 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Prop
   return (
     <>
       <div className={`${modalStyles.scrim} ${modalStyles.open}`} onClick={onClose} />
-      <div className={`${modalStyles.modal} ${modalStyles.open}`} role="dialog" aria-modal="true">
+      <div className={`${modalStyles.modal} ${modalStyles.open}`} role="dialog" aria-modal="true" aria-labelledby="auth-title">
         <div className={modalStyles.mhead}>
-          <button className={modalStyles.mclose} onClick={onClose}>✕</button>
+          <button type="button" className={modalStyles.mclose} onClick={onClose} aria-label="Dialog schließen">✕</button>
           <div className={modalStyles.ptag}>Gradefruit · Mathe-Abi Hessen 2027</div>
-          <h2>{mode === 'login' ? 'Anmelden' : 'Registrieren'}</h2>
+          <h2 id="auth-title">{mode === 'login' ? 'Anmelden' : 'Registrieren'}</h2>
           <p>{mode === 'login' ? 'Mit deinem Konto einloggen.' : 'Konto erstellen und loslegen.'}</p>
         </div>
         <div className={modalStyles.mbody}>

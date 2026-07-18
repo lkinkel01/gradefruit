@@ -5,18 +5,13 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
-@keyframes gfBob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(4px); }
-}
-
 .wrap {
   position: relative;
   height: 100vh;
   height: 100dvh;
-  background: #141110;
+  background: #050505;
   overflow: hidden;
-  animation: gfFeedIn 0.4s ease both;
+  animation: gfFeedIn 240ms var(--ease-out) both;
 }
 
 /* Kopf-Overlay: zurück + Fortschritt */
@@ -28,13 +23,13 @@
   align-items: flex-start;
   gap: 12px;
   padding: calc(env(safe-area-inset-top, 0px) + 12px) 14px 18px;
-  background: linear-gradient(180deg, rgba(12, 11, 17, 0.85), transparent);
+  background: linear-gradient(180deg, rgba(5, 5, 5, 0.88), transparent);
   pointer-events: none;
 }
 .back {
   pointer-events: auto;
   flex-shrink: 0;
-  width: 38px; height: 38px;
+  width: 44px; height: 44px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.12);
   -webkit-backdrop-filter: blur(8px);
@@ -43,16 +38,15 @@
   color: #fff;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  transition: background 0.15s, transform 0.15s;
+  transition: background-color var(--dur-press) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
-.back:hover { background: rgba(255, 255, 255, 0.2); }
 .back:active { transform: scale(0.94); }
 .progressWrap { flex: 1; padding-top: 4px; }
 .segments { display: flex; gap: 5px; }
 .segment {
-  flex: 1; height: 3px; border-radius: 99px;
+  flex: 1; height: 3px; border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.22);
-  transition: background 0.25s;
+  transition: background-color var(--dur-enter) var(--ease-out);
 }
 .segmentOn { background: #fff; }
 .counter {
@@ -61,7 +55,7 @@
   color: rgba(255, 255, 255, 0.75);
   letter-spacing: 0.02em;
 }
-.topSpacer { width: 38px; flex-shrink: 0; }
+.topSpacer { width: 44px; flex-shrink: 0; }
 
 .feed {
   height: 100vh;
@@ -132,16 +126,16 @@
   gap: 14px;
   width: 100%;
   padding: 0 74px 0 22px;
-  animation: gfFeedIn 0.35s ease both;
+  animation: gfFeedIn 240ms var(--ease-out) both;
 }
 .typeChip {
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #fff;
+  color: #050505;
   padding: 5px 12px;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
 }
 .topicTag {
   font-size: 12px;
@@ -179,7 +173,7 @@
   white-space: pre-line;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   padding: 18px 20px;
   width: 100%;
   overflow-x: auto;
@@ -192,7 +186,7 @@
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px;
+  border-radius: var(--radius-control);
   padding: 11px 15px;
   overflow-x: auto;
 }
@@ -202,17 +196,17 @@
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   padding: 18px 20px;
   width: 100%;
 }
 .fehlerIcon, .tippIcon {
   width: 52px; height: 52px;
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   display: flex; align-items: center; justify-content: center;
 }
-.fehlerIcon { background: rgba(240, 82, 74, 0.22); color: #FFB0A6; }
-.tippIcon { background: rgba(245, 166, 35, 0.2); color: #FFD48A; }
+.fehlerIcon { background: var(--danger-soft); color: var(--danger); }
+.tippIcon { background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); }
 .cta {
   display: inline-flex;
   align-items: center;
@@ -220,17 +214,16 @@
   border: none;
   cursor: pointer;
   background: #fff;
-  color: #1d1712;
+  color: #050505;
   font-family: inherit;
   font-size: 15px;
   font-weight: 700;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   padding: 13px 24px;
   margin-top: 4px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   transition: transform 0.15s;
 }
-.cta:hover { transform: translateY(-1px); }
 .cta:active { transform: scale(0.97); }
 .motDays { display: flex; flex-direction: column; }
 .motNum {
@@ -278,7 +271,6 @@
   padding: 0;
   transition: transform 0.15s;
 }
-.railBtn:hover { transform: translateY(-2px); }
 .railBtn:active { transform: scale(0.95); }
 .railIcon {
   width: 44px; height: 44px;
@@ -287,11 +279,10 @@
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
-  transition: background 0.15s;
+  transition: background-color var(--dur-press) var(--ease-out);
 }
-.railBtn:hover .railIcon { background: rgba(255, 255, 255, 0.24); }
-.railOn { color: #FF8A73; }
-.railOn .railIcon { background: rgba(240, 82, 74, 0.32); }
+.railOn { color: #FF8A70; }
+.railOn .railIcon { background: rgba(242, 107, 74, 0.32); }
 .railSoon { color: rgba(255, 255, 255, 0.55); cursor: default; }
 .railSoon .railIcon { background: rgba(255, 255, 255, 0.08); border: 1.5px dashed rgba(255, 255, 255, 0.3); }
 
@@ -302,25 +293,25 @@
   bottom: 0;
   z-index: 15;
   padding: 26px 16px calc(env(safe-area-inset-bottom, 0px) + 52px);
-  background: linear-gradient(0deg, rgba(12, 11, 17, 0.9) 20%, rgba(12, 11, 17, 0.45) 65%, transparent);
+  background: linear-gradient(0deg, rgba(5, 5, 5, 0.92) 20%, rgba(5, 5, 5, 0.48) 65%, transparent);
   color: #fff;
-  animation: gfFeedIn 0.4s ease both;
+  animation: gfFeedIn 240ms var(--ease-out) both;
 }
 .chips { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
 .chip {
   font-size: 11px; font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #fff;
+  color: #050505;
   padding: 4px 11px;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
 }
 .chipGhost {
   font-size: 11.5px; font-weight: 600;
   color: rgba(255, 255, 255, 0.8);
   background: rgba(255, 255, 255, 0.14);
   padding: 4px 10px;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
 }
 .title {
   font-family: 'Bricolage Grotesque', sans-serif;
@@ -348,7 +339,7 @@
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
 }
-.goal svg { flex-shrink: 0; margin-top: 2px; color: #7BE3AE; }
+.goal svg { flex-shrink: 0; margin-top: 2px; color: var(--success); }
 
 /* Inline-Player: füllt den Slide-Rahmen, Wiedergabe direkt im Feed.
    Die lokalen Token erzwingen die dunkle Optik unabhängig vom Seiten-Theme,
@@ -359,18 +350,18 @@
   z-index: 25;
   display: flex;
   flex-direction: column;
-  background: #141110;
-  --surface: #1F1915;
-  --surface-2: #28211B;
-  --bg: #141110;
-  --canvas: #141110;
-  --ink: #F5F0EA;
-  --muted: #B3A99D;
-  --faint: #7E7468;
-  --line: #322A23;
-  --line-strong: #43382E;
-  --control: #322A23;
-  animation: gfFeedIn 0.25s ease both;
+  background: #050505;
+  --surface: #0D0D0F;
+  --surface-2: #171719;
+  --bg: #050505;
+  --canvas: #050505;
+  --ink: #F8F8F9;
+  --muted: #B6B6BD;
+  --faint: #92939B;
+  --line: #252527;
+  --line-strong: #38383C;
+  --control: #1C1C1F;
+  animation: gfFeedIn 240ms var(--ease-out) both;
   padding-top: calc(env(safe-area-inset-top, 0px) + 58px);
   padding-right: 60px;
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 34px);
@@ -393,7 +384,7 @@
   padding: 0 16px;
   text-align: center;
 }
-.next svg { animation: gfBob 1.6s ease-in-out infinite; flex-shrink: 0; }
+.next svg { flex-shrink: 0; }
 
 .toast {
   position: fixed;
@@ -402,13 +393,13 @@
   transform: translateX(-50%);
   z-index: 60;
   background: rgba(255, 255, 255, 0.95);
-  color: #15141a;
+  color: #050505;
   font-size: 13px;
   font-weight: 600;
-  border-radius: 99px;
+  border-radius: var(--radius-pill);
   padding: 9px 18px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  animation: gfFeedIn 0.25s ease both;
+  animation: gfFeedIn 200ms var(--ease-out) both;
 }
 
 /* Login-Gate / Ladezustand */
@@ -418,7 +409,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #141110;
+  background: #050505;
   color: rgba(255, 255, 255, 0.7);
   font-family: inherit;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .back:hover { background: rgba(255, 255, 255, 0.2); }
+  .cta:hover { transform: translateY(-1px); }
+  .railBtn:hover { transform: translateY(-1px); }
+  .railBtn:hover .railIcon { background: rgba(255, 255, 255, 0.24); }
 }

@@ -31,21 +31,21 @@ interface Task {
 const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; gk: Task[]; lk: Task[] }> = {
   analysis: {
     label: 'Analysis',
-    color: '#DE5D43',
+    color: '#F26B4A',
     badge: 'Pflichtbereich',
     gk: ANALYSIS_TASKS,
     lk: ANALYSIS_LK_TASKS,
   },
   linalg: {
     label: 'Lineare Algebra & Geometrie',
-    color: '#5D6BC9',
+    color: '#F26B4A',
     badge: 'Wahlbereich',
     gk: LINALG_TASKS,
     lk: LINALG_LK_TASKS,
   },
   stochastik: {
     label: 'Stochastik',
-    color: '#2F9E68',
+    color: '#F26B4A',
     badge: 'Pflichtbereich',
     gk: STOCHASTIK_TASKS,
     lk: STOCHASTIK_LK_TASKS,
@@ -135,7 +135,8 @@ export default function TopicView({ topicId, level, owned, ownedLk, navSignal, o
   const toggleCard = (id: string) => {
     setOpenCards(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };
@@ -143,7 +144,8 @@ export default function TopicView({ topicId, level, owned, ownedLk, navSignal, o
   const toggleSolution = (id: string) => {
     setOpenSolutions(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };
@@ -205,7 +207,7 @@ export default function TopicView({ topicId, level, owned, ownedLk, navSignal, o
 
       {hasAccess && (
         <div className={styles.progressRow}>
-          <GrapefruitProgress pct={tasks.length ? (doneCount / tasks.length) * 100 : 0} size={26} showLeaf={false} />
+          <GrapefruitProgress pct={tasks.length ? (doneCount / tasks.length) * 100 : 0} size={26} />
           <span className={styles.progressLabel}>{doneCount} von {tasks.length} verstanden</span>
         </div>
       )}
@@ -232,7 +234,7 @@ export default function TopicView({ topicId, level, owned, ownedLk, navSignal, o
       {!hasAccess ? (
         <div className={styles.lockCard}>
           <div className={styles.lockBadge} style={{ background: topic.color }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
           </div>
@@ -295,7 +297,7 @@ export default function TopicView({ topicId, level, owned, ownedLk, navSignal, o
                 <button className={styles.cardHead} onClick={() => toggleCard(task.id)} aria-expanded={open}>
                   <span className={`${styles.cardNum} ${done ? styles.cardNumDone : ''}`} style={done ? undefined : { background: topic.color }}>
                     {done ? (
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
                     ) : (
@@ -312,7 +314,7 @@ export default function TopicView({ topicId, level, owned, ownedLk, navSignal, o
                     {status === 'wiederholen' && <span className={styles.headStatus}>Wiederholen</span>}
                     {status === 'unklar' && <span className={styles.headStatus}>Noch unklar</span>}
                   </span>
-                  <svg className={styles.chev} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                  <svg className={styles.chev} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <polyline points={open ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
                   </svg>
                 </button>

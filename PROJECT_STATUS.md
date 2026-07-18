@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-17 (Premium-Designsystem)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-18 (Premium-Designsystem)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -41,9 +41,10 @@ Probleme").
 - **Konto & Kauf:** Auth (E-Mail + Google), Checkout mit Pflicht-Checkbox
   (§ 356 BGB) + MwSt.-Ausweis, Webhook schaltet frei (inkl. Refund-Entzug),
   Kundenportal, Konto-Seite.
-- **Design:** warmes Papier + Tinten-Buttons, Dark Mode, mobil optimiert —
-  eigenständiges Grapefruit-Zeichen, schwebende Glas-Navigation und ein
-  durchgängiges editoriales Flächen- und Interaktionssystem.
+- **Design:** modernes Weiß, tiefes Schwarz und eine Grapefruit-Akzentfarbe,
+  Dark Mode, mobil optimiert — eigenständiges Grapefruit-Zeichen, schwebende
+  Glas-Navigation und ein durchgängiges editoriales Flächen-, Icon- und
+  Interaktionssystem.
 
 ## Tech Stack
 - **Next.js 16.2.9** (App Router, Turbopack) + **TypeScript**
@@ -280,6 +281,16 @@ Probleme").
   Komposition, der Reel-Modus seine bewusst eigenständige dunkle Bühne.
   Die Landing zeigt die geplante persönliche Lernbibliothek und Community
   ausdrücklich als Ausblick, klar getrennt von heute verfügbaren Funktionen.
+- ✅ **Plattformweiter Design-Finish (18.07.2026):** Landing und Lernprodukt
+  nutzen jetzt konsequent modernes Weiß, tiefes Schwarz und genau eine
+  Grapefruit-Akzentfarbe; zusätzliche Markenfarben wurden entfernt.
+  Wiederverwendbare System-Icons ersetzen gemischte Symbolstile. Dashboard,
+  Themen, Wiederholen, Coach, Videos, Nachhilfe, Konto, Feed, Auth, Checkout,
+  Modals und Rechtstexte teilen dieselben Radien, Linien, Fokuszustände,
+  Schatten und reduzierten Bewegungsmuster. Das Grapefruit-Zeichen ist in
+  Navigation, Fortschritt, Favicon und App-Icon geometrisch konsistent.
+  TypeScript, ESLint und Produktions-Build sind sauber; visuell geprüft in
+  Hell/Dunkel sowie Desktop und 390-Pixel-Ansicht.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten

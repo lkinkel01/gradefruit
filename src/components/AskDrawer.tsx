@@ -79,21 +79,30 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
 
   // Beim Öffnen / Themenwechsel alles zurücksetzen
   useEffect(() => {
+    let frame = 0;
     if (open) {
-      setMessages([]);
-      setAttachment(null);
-      setFileError('');
-      setInput('');
-      setShowPresets(false);
+      frame = requestAnimationFrame(() => {
+        setMessages([]);
+        setAttachment(null);
+        setFileError('');
+        setInput('');
+        setShowPresets(false);
+      });
     } else {
       recRef.current?.stop();
     }
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, [open, ctx]);
 
   // Spracheingabe: läuft komplett im Browser (Web Speech API), kein Server.
   useEffect(() => {
     const w = window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown };
-    setVoiceReady(!!(w.SpeechRecognition || w.webkitSpeechRecognition));
+    const frame = requestAnimationFrame(() => {
+      setVoiceReady(!!(w.SpeechRecognition || w.webkitSpeechRecognition));
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const toggleVoice = () => {
@@ -233,11 +242,16 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
   return (
     <>
       <div className={`${styles.scrim} ${open ? styles.open : ''}`} onClick={onClose} />
-      <aside className={`${styles.drawer} ${open ? styles.open : ''}`} role="dialog">
+      <aside
+        aria-labelledby="coach-title"
+        aria-modal="true"
+        className={`${styles.drawer} ${open ? styles.open : ''}`}
+        role="dialog"
+      >
         <div className={styles.dhead}>
-          <button className={styles.dclose} onClick={onClose}>✕</button>
+          <button type="button" className={styles.dclose} onClick={onClose} aria-label="Coach schließen">✕</button>
           <div className={styles.dctx}>{ctx || 'Mathe'}</div>
-          <h2>Gradefruit-Coach</h2>
+          <h2 id="coach-title">Gradefruit-Coach</h2>
           <p className={styles.dsub}>Dein persönlicher Lernassistent</p>
           {snippet && <div className={styles.snippet}><span className={styles.snipLabel}>Aufgabe</span>{snippet.slice(0, 120)}{snippet.length > 120 ? '…' : ''}</div>}
         </div>
@@ -253,7 +267,7 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
           </button>
         </div>
         <div className={styles.modeHint}>
-          {mode === 'ki' ? 'Sofortige Antwort von der KI – auf Deutsch, Schritt für Schritt.' : 'Persönliche Tutoren kommen bald. Solange hilft dir die KI sofort weiter.'}
+          {mode === 'ki' ? 'Sofortige Antwort auf Deutsch, Schritt für Schritt.' : 'Persönliche Tutoren kommen bald. Solange hilft dir die KI sofort weiter.'}
         </div>
 
         <div className={styles.dbody} ref={bodyRef}>
@@ -276,7 +290,7 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
               </div>
             ) : (
               <div className={styles.empty}>
-                Persönliche Tutoren sind bald verfügbar. Wechsle zu „Sofort per KI",
+                Persönliche Tutoren sind bald verfügbar. Wechsle zu „Sofort per KI“,
                 dann helfe ich dir jetzt gleich weiter.
               </div>
             )
@@ -340,7 +354,7 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
               </svg>
             </button>
             <button onClick={() => send(input)} disabled={busy} aria-label="Senden">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
         </div>

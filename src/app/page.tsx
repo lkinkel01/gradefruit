@@ -68,17 +68,23 @@ export default function Home() {
       }
     } catch { /* Speicher gesperrt */ }
     setView(target);
-  }, [user]);
+  }, [user, view]);
 
   // Das Inline-Skript in layout.tsx hat das gespeicherte Theme schon vor dem
   // ersten Rendern als Body-Klasse gesetzt (kein Aufblitzen). React gleicht
   // seinen Zustand hier einmalig daran an.
   useEffect(() => {
-    setDark(document.body.classList.contains('dark'));
+    const initialDark = document.body.classList.contains('dark');
+    let initialLevel: 'gk' | 'lk' | null = null;
     try {
       const l = localStorage.getItem('gf-level');
-      if (l === 'gk' || l === 'lk') setPrefLevel(l);
+      if (l === 'gk' || l === 'lk') initialLevel = l;
     } catch { /* Speicher gesperrt */ }
+    const frame = requestAnimationFrame(() => {
+      setDark(initialDark);
+      if (initialLevel) setPrefLevel(initialLevel);
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   // Besitzt jemand genau einen Kurs, zählt der Kauf. Sonst die eigene Wahl.
@@ -114,6 +120,7 @@ export default function Home() {
 
   // Rückkehr von der Stripe-Bezahlseite auswerten (?checkout=success|cancel)
   useEffect(() => {
+    let frame = 0;
     const params = new URLSearchParams(window.location.search);
     const c = params.get('checkout');
     if (!c) return;
@@ -122,8 +129,10 @@ export default function Home() {
 
     if (c === 'success') {
       const PENDING = 'Zahlung erfolgreich! Dein Vollzugang wird freigeschaltet …';
-      setNotice(PENDING);
-      setView('dashboard');
+      frame = requestAnimationFrame(() => {
+        setNotice(PENDING);
+        setView('dashboard');
+      });
       // Der Webhook schaltet frei – wir fragen den Status ein paar Mal nach.
       let tries = 0;
       void refresh();
@@ -139,13 +148,15 @@ export default function Home() {
             : prev,
         );
       }, 13000);
-      return () => { clearInterval(iv); clearTimeout(fallback); };
+      return () => { cancelAnimationFrame(frame); clearInterval(iv); clearTimeout(fallback); };
     }
 
     if (c === 'cancel') {
-      setNotice('Bezahlung abgebrochen – kein Problem, du kannst es jederzeit erneut versuchen.');
+      frame = requestAnimationFrame(() => {
+        setNotice('Bezahlung abgebrochen. Du kannst es jederzeit erneut versuchen.');
+      });
       const t = setTimeout(() => setNotice(''), 6000);
-      return () => clearTimeout(t);
+      return () => { cancelAnimationFrame(frame); clearTimeout(t); };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -153,9 +164,11 @@ export default function Home() {
   // Sobald der Zugang wirklich aktiv ist, Erfolg bestätigen
   useEffect(() => {
     if ((owned || ownedLk) && notice.startsWith('Zahlung erfolgreich')) {
-      setNotice('✓ Vollzugang ist jetzt aktiv. Viel Erfolg beim Lernen!');
+      const start = setTimeout(() => {
+        setNotice('✓ Vollzugang ist jetzt aktiv. Viel Erfolg beim Lernen!');
+      }, 0);
       const t = setTimeout(() => setNotice(''), 5000);
-      return () => clearTimeout(t);
+      return () => { clearTimeout(start); clearTimeout(t); };
     }
   }, [owned, ownedLk, notice]);
 

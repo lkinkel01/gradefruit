@@ -1,6 +1,5 @@
-.page { max-width: 860px; margin: 0 auto; padding: 42px 34px 100px; animation: fade var(--dur-enter) var(--ease-out) both; }
-@keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.ph1 { margin-bottom: 7px; font-size: 34px; font-weight: 800; letter-spacing: -.035em; }
+.page { max-width: var(--page-max); margin: 0 auto; padding: var(--page-top) var(--page-gutter) var(--page-bottom); }
+.ph1 { margin-bottom: 7px; font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -.035em; }
 .pblurb { max-width: 60ch; margin-bottom: 26px; color: var(--muted); font-size: 15px; }
 .soonCard {
   display: flex;
@@ -10,8 +9,8 @@
   border-top: 1px solid var(--line-strong);
   border-bottom: 1px solid var(--line-strong);
 }
-.soonBadge { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-d); }
+.soonBadge { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; border-radius: var(--radius-card); background: var(--accent-soft); color: var(--accent-d); }
 .soonTitle { margin-bottom: 8px; font-size: 21px; font-weight: 800; letter-spacing: -.02em; }
 .soonText { max-width: 52ch; margin-bottom: 14px; color: var(--muted); font-size: 14.5px; line-height: 1.6; }
 .soonHint { max-width: 52ch; color: var(--faint); font-size: 13px; line-height: 1.55; }
-@media (max-width: 560px) { .page { padding: 30px 18px 96px; } .ph1 { font-size: 29px; } }
+@media (max-width: 560px) { .page { --page-top: 30px; --page-bottom: 96px; } }

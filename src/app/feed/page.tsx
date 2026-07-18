@@ -23,9 +23,9 @@ import styles from './feed.module.css';
 type TopicId = 'analysis' | 'linalg' | 'stochastik';
 
 const TOPIC_META: Record<TopicId, { label: string; color: string }> = {
-  analysis: { label: 'Analysis', color: '#DE5D43' },
-  linalg: { label: 'Lineare Algebra', color: '#5D6BC9' },
-  stochastik: { label: 'Stochastik', color: '#2F9E68' },
+  analysis: { label: 'Analysis', color: '#F26B4A' },
+  linalg: { label: 'Lineare Algebra', color: '#F26B4A' },
+  stochastik: { label: 'Stochastik', color: '#F26B4A' },
 };
 
 // Lernziel je Video (kurz, ehrlich, selbst formuliert).
@@ -244,11 +244,16 @@ export default function FeedPage() {
   }, [loading, user, router]);
 
   useEffect(() => {
-    setDaysLeft(daysUntilExam());
+    let storedTopic: TopicId | null = null;
     try {
       const t = localStorage.getItem('gf-feed-topic');
-      if (t === 'analysis' || t === 'linalg' || t === 'stochastik') setTopic(t);
+      if (t === 'analysis' || t === 'linalg' || t === 'stochastik') storedTopic = t;
     } catch { /* Speicher gesperrt */ }
+    const frame = requestAnimationFrame(() => {
+      setDaysLeft(daysUntilExam());
+      if (storedTopic) setTopic(storedTopic);
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const feed = useMemo<Card[]>(() => (topic ? buildTopicFeed(topic) : FEED), [topic]);
@@ -320,7 +325,7 @@ export default function FeedPage() {
       {/* Kopf-Overlay: zurück, Fortschritt, Zähler */}
       <div className={styles.top}>
         <button className={styles.back} onClick={() => router.back()} aria-label="Zurück">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />
           </svg>
         </button>
@@ -353,7 +358,7 @@ export default function FeedPage() {
                 <div className={styles.frame}>
                   <div
                     className={styles.stage}
-                    style={{ background: `radial-gradient(120% 90% at 50% 8%, ${scene.color}55 0%, ${scene.color}18 42%, transparent 70%), #141110` }}
+                    style={{ background: '#050505' }}
                   >
                     <svg className={styles.curve} viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">
                       <path d={card.path} fill="none" stroke="#ffffff" strokeOpacity="0.32" strokeWidth="3" strokeLinecap="round" />
@@ -394,7 +399,7 @@ export default function FeedPage() {
 
           // --------------------------- Inhaltskarten ---------------------------
           const meta = 'topicId' in card ? TOPIC_META[card.topicId] : null;
-          const accent = meta?.color ?? '#EE7457';
+          const accent = meta?.color ?? '#F26B4A';
           const label = KIND_LABEL[card.kind];
 
           return (
@@ -402,7 +407,7 @@ export default function FeedPage() {
               <div className={styles.frame}>
                 <div
                   className={styles.stage}
-                  style={{ background: `radial-gradient(120% 90% at 50% 10%, ${accent}44 0%, ${accent}14 45%, transparent 72%), #141110` }}
+                  style={{ background: '#050505' }}
                 >
                   <div className={styles.content}>
                     <span className={styles.typeChip} style={{ background: accent }}>{label}</span>
@@ -431,7 +436,7 @@ export default function FeedPage() {
                     {card.kind === 'fehler' && (
                       <>
                         <div className={styles.fehlerIcon}>
-                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                             <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
                           </svg>
                         </div>

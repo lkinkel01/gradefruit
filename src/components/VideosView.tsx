@@ -5,12 +5,12 @@ import SceneModal from './SceneModal';
 import styles from './VideosView.module.css';
 
 const VIDEOS = [
-  { id: 'v1', title: 'Ableitung – Grundregeln', sub: 'Analysis · 8 Min.', color: '#DE5D43', badge: 'Analysis' },
-  { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Analysis · 11 Min.', color: '#DE5D43', badge: 'Analysis' },
-  { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Analysis · 14 Min.', color: '#DE5D43', badge: 'Analysis' },
-  { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Lineare Algebra · 9 Min.', color: '#5D6BC9', badge: 'Lin. Algebra' },
-  { id: 'v5', title: 'Geradengleichungen', sub: 'Lineare Algebra · 12 Min.', color: '#5D6BC9', badge: 'Lin. Algebra' },
-  { id: 'v6', title: 'Binomialverteilung', sub: 'Stochastik · 10 Min.', color: '#2F9E68', badge: 'Stochastik' },
+  { id: 'v1', title: 'Ableitung – Grundregeln', sub: 'Analysis · 8 Min.', color: '#F26B4A', badge: 'Analysis' },
+  { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Analysis · 11 Min.', color: '#F26B4A', badge: 'Analysis' },
+  { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Analysis · 14 Min.', color: '#F26B4A', badge: 'Analysis' },
+  { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Lineare Algebra · 9 Min.', color: '#F26B4A', badge: 'Lin. Algebra' },
+  { id: 'v5', title: 'Geradengleichungen', sub: 'Lineare Algebra · 12 Min.', color: '#F26B4A', badge: 'Lin. Algebra' },
+  { id: 'v6', title: 'Binomialverteilung', sub: 'Stochastik · 10 Min.', color: '#F26B4A', badge: 'Stochastik' },
 ];
 
 export default function VideosView() {
@@ -35,11 +35,11 @@ export default function VideosView() {
         const ready = !!SCENES[v.id];
         return (
           <button key={v.id} className={styles.vcard} onClick={() => openVideo(v.id)}>
-            <div className={styles.vthumb} style={{ background: `linear-gradient(135deg, ${v.color}cc, ${v.color}66)` }}>
+            <div className={styles.vthumb} style={{ background: v.color }}>
               <div className={styles.vbadge}>{v.badge}</div>
               <div className={styles.vplay}>
                 <span>
-                  <svg viewBox="0 0 24 24" fill="#15141A"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 </span>
               </div>
             </div>

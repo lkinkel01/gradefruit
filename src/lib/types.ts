@@ -10,9 +10,9 @@ export interface Topic {
 
 /* Gedeckte, warme Themenfarben – ruhiger als die früheren Signaltöne. */
 export const TOPICS: Topic[] = [
-  { id: 'analysis', label: 'Analysis', color: '#DE5D43', tasks: 24, done: 8 },
-  { id: 'linalg', label: 'Lineare Algebra & Geometrie', color: '#5D6BC9', tasks: 18, done: 3 },
-  { id: 'stochastik', label: 'Stochastik', color: '#2F9E68', tasks: 16, done: 0 },
+  { id: 'analysis', label: 'Analysis', color: '#F26B4A', tasks: 24, done: 8 },
+  { id: 'linalg', label: 'Lineare Algebra & Geometrie', color: '#F26B4A', tasks: 18, done: 3 },
+  { id: 'stochastik', label: 'Stochastik', color: '#F26B4A', tasks: 16, done: 0 },
 ];
 
 /* Lernstatus des Wiederholungssystems: bewusst nur drei einfache Stufen.

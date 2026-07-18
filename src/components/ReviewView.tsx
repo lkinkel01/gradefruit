@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { View, TOPICS, LernStatus, STATUS_LABEL } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { GrapefruitProgress } from './Logo';
+import { ArrowRightIcon } from './UiIcons';
 import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
 import { LINALG_TASKS } from '@/lib/linalgTasks';
 import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
@@ -40,19 +41,24 @@ export default function ReviewView({ level, onNavigate }: Props) {
 
   // Sprung vom Dashboard: gewünschte Lernstufe vorwählen (einmalig).
   useEffect(() => {
+    let frame = 0;
     try {
       const s = localStorage.getItem('gf-review-status');
       if (s === 'verstanden' || s === 'wiederholen' || s === 'unklar') {
-        setStatusFilter(s);
         localStorage.removeItem('gf-review-status');
+        frame = requestAnimationFrame(() => setStatusFilter(s));
       }
     } catch { /* Speicher gesperrt */ }
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   const toggleTopic = (id: TopicId) => {
     setTopicFilter(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };
@@ -88,8 +94,8 @@ export default function ReviewView({ level, onNavigate }: Props) {
     <div className={styles.page}>
       <h1 className={styles.ph1}>Wiederholen</h1>
       <p className={styles.blurb}>
-        Alles, was du beim Lernen eingeordnet hast, an einem Ort. Nimm dir zuerst
-        vor, was noch unklar ist – dann, was du wiederholen wolltest.
+        Alle eingeordneten Aufgaben an einem Ort. Beginne mit dem, was noch
+        unklar ist.
       </p>
 
       {/* Lernstufe */}
@@ -135,9 +141,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
                 <span className={styles.itemQ}>{task.q}</span>
               </span>
               <span className={`${styles.status} ${styles[`st_${status}`]}`}>{STATUS_LABEL[status as Exclude<LernStatus, 'none'>]}</span>
-              <svg className={styles.itemGo} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
+              <span className={styles.itemGo}><ArrowRightIcon size={15} /></span>
             </button>
           ))}
         </div>
@@ -153,8 +157,8 @@ export default function ReviewView({ level, onNavigate }: Props) {
             <>
               <div className={styles.emptyTitle}>Noch nichts eingeordnet</div>
               <p className={styles.emptyText}>
-                Beim Üben kannst du jede Aufgabe als „Verstanden", „Wiederholen"
-                oder „Noch unklar" einordnen. Hier findest du sie dann wieder.
+                Beim Üben kannst du jede Aufgabe als „Verstanden“, „Wiederholen“
+                oder „Noch unklar“ einordnen. Hier findest du sie dann wieder.
               </p>
               <button className="btn primary" onClick={() => onNavigate('analysis')}>Jetzt lernen</button>
             </>

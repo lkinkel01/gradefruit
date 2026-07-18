@@ -16,7 +16,8 @@
   left: 10px;
   z-index: 60;
   padding: 10px 14px;
-  border-radius: 7px;
+  min-height: 44px;
+  border-radius: var(--radius-control);
   background: var(--ink);
   color: var(--canvas);
   font-size: 13px;
@@ -39,14 +40,14 @@
   margin-top: 12px;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, var(--line-strong) 72%, transparent);
-  border-radius: 18px;
+  border-radius: var(--radius-panel);
   background: var(--glass);
   background: color-mix(in srgb, var(--canvas) 70%, transparent);
   -webkit-backdrop-filter: blur(24px) saturate(145%);
   backdrop-filter: blur(24px) saturate(145%);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 66%, transparent), 0 10px 34px var(--nav-shadow-soft);
   isolation: isolate;
-  transition: background-color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+  transition: background-color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
 }
 
 .nav::before {
@@ -99,6 +100,8 @@
   transition: color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
 
+.brand :global(svg) { color: var(--accent); }
+
 .navCenter {
   display: flex;
   align-items: center;
@@ -106,7 +109,7 @@
   gap: 2px;
   padding: 3px;
   border: 1px solid color-mix(in srgb, var(--line) 66%, transparent);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   background: color-mix(in srgb, var(--surface) 28%, transparent);
 }
 
@@ -114,7 +117,7 @@
 .navSectionActive {
   min-height: 34px;
   padding: 8px 12px;
-  border-radius: 9px;
+  border-radius: var(--radius-control);
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
@@ -145,13 +148,16 @@
   place-items: center;
   flex: 0 0 auto;
   border: 1px solid color-mix(in srgb, var(--line-strong) 76%, transparent);
-  border-radius: 11px;
+  border-radius: var(--radius-control);
   background: color-mix(in srgb, var(--surface) 38%, transparent);
   color: var(--ink);
   transition: transform var(--dur-press) var(--ease-press), border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
 }
 
 .navLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   padding: 8px 12px;
   background: transparent;
   color: var(--ink);
@@ -165,7 +171,7 @@
 .iconBtn:active,
 .navLink:active,
 .navSection:active,
-.navSectionActive:active { transform: scale(.96); }
+.navSectionActive:active { transform: scale(.98); }
 
 .brand:focus-visible,
 .iconBtn:focus-visible,
@@ -193,15 +199,17 @@
   height: 1.5px;
   border-radius: 2px;
   background: currentColor;
-  transition: transform var(--dur-hover) var(--ease-out), top var(--dur-hover) var(--ease-out);
+  top: 6.5px;
+  transition: transform var(--dur-hover) var(--ease-out);
 }
 
-.menuIcon i:first-child { top: 3px; }
-.menuIcon i:last-child { top: 10px; }
-.menuBtn[aria-expanded='true'] .menuIcon i:first-child { top: 6.5px; transform: rotate(45deg); }
-.menuBtn[aria-expanded='true'] .menuIcon i:last-child { top: 6.5px; transform: rotate(-45deg); }
+.menuIcon i:first-child { transform: translateY(-3.5px); }
+.menuIcon i:last-child { transform: translateY(3.5px); }
+.menuBtn[aria-expanded='true'] .menuIcon i:first-child { transform: rotate(45deg); }
+.menuBtn[aria-expanded='true'] .menuIcon i:last-child { transform: rotate(-45deg); }
 
 .mobileNav { display: none; }
+.mobileNav[hidden] { display: none; }
 
 .section[id] { scroll-margin-top: 96px; }
 
@@ -517,10 +525,10 @@
   width: min(100%, 500px);
   padding: 26px;
   border: 1px solid var(--line-strong);
-  border-radius: 16px;
+  border-radius: var(--radius-card);
   background: var(--surface);
   box-shadow: var(--shadow);
-  transition: transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
+  transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
 }
 
 .coachContext { display: flex; flex-direction: column; gap: 11px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
@@ -571,7 +579,7 @@
   height: 38px;
   color: var(--accent-d);
   stroke: currentColor;
-  stroke-width: 1.7;
+  stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -718,7 +726,7 @@
 .sharedMaterial > p { max-width: 42ch; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
 
 .communitySignals { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
-.communitySignals span { padding: 7px 9px; border: 1px solid var(--line-strong); border-radius: 7px; color: var(--muted); font-size: 11.5px; font-weight: 600; }
+.communitySignals span { padding: 7px 9px; border: 1px solid var(--line-strong); border-radius: var(--radius-control); color: var(--muted); font-size: 11.5px; font-weight: 600; }
 
 .libraryPrinciples {
   display: grid;
@@ -776,9 +784,9 @@
   flex-direction: column;
   padding: 32px;
   border: 1px solid var(--line-strong);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   background: var(--surface);
-  transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+  transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
 }
 
 .planHeading { display: flex; align-items: center; gap: 12px; }
@@ -820,7 +828,7 @@
 }
 
 .faqItem summary::-webkit-details-marker { display: none; }
-.faqItem summary:focus-visible { border-radius: 7px; outline: 2px solid var(--accent); outline-offset: 4px; }
+.faqItem summary:focus-visible { border-radius: var(--radius-control); outline: 2px solid var(--accent); outline-offset: 4px; }
 .faqItem[open] summary { color: var(--accent-d); }
 .faqItem p { max-width: 62ch; padding: 0 46px 24px 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
 
@@ -867,6 +875,7 @@
 .footerBrand small { padding-left: 8px; color: var(--faint); font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 400; }
 .footerLinks { display: flex; gap: 22px; }
 .footerLinks a { color: var(--muted); font-size: 13px; transition: color var(--dur-hover) var(--ease-out); }
+.footerLinks a { display: inline-flex; min-height: 44px; align-items: center; }
 .footer > p { grid-column: 1 / -1; color: var(--faint); font-size: 12.5px; }
 
 /* Interaktion bleibt sparsam und funktioniert auf Touch ohne Hover-Fallen. */
@@ -878,10 +887,10 @@
 
   .navSection:hover,
   .navSectionActive:hover { background: color-mix(in srgb, var(--accent-soft) 70%, transparent); color: var(--ink); }
-  .iconBtn:hover { border-color: color-mix(in srgb, var(--ink) 52%, transparent); background: color-mix(in srgb, var(--surface) 72%, transparent); transform: scale(1.04); }
-  .coachShell:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
-  .methodRow:hover { transform: translateX(4px); }
-  .plan:hover { border-color: var(--ink); box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .iconBtn:hover { border-color: color-mix(in srgb, var(--ink) 52%, transparent); background: color-mix(in srgb, var(--surface) 72%, transparent); transform: scale(1.02); }
+  .coachShell:hover { border-color: var(--accent); box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
+  .methodRow:hover { transform: translateX(2px); }
+  .plan:hover { border-color: var(--ink); box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
 }
 
 /* Scrollgebundene Bewegung ist nur progressive Dekoration. Der Inhalt ist
@@ -937,7 +946,7 @@
     display: grid;
     min-height: 44px;
     place-items: center;
-    border-radius: 9px;
+    border-radius: var(--radius-control);
     color: var(--muted);
     font-size: 13px;
     font-weight: 650;
@@ -1020,10 +1029,11 @@
 
 @media (max-width: 560px) {
   .lpage { padding: 0 18px 28px; }
-  .nav { top: 8px; margin-top: 8px; border-radius: 16px; }
+  .nav { top: 8px; margin-top: 8px; border-radius: var(--radius-panel); }
   .navBar { min-height: 56px; padding: 6px; }
-  .brand { min-height: 40px; padding-left: 7px; font-size: 18px; }
+  .brand { min-height: 44px; padding-left: 7px; font-size: 18px; }
   .brand :global(svg) { width: 25px; height: 25px; }
+  .iconBtn { width: 44px; height: 44px; }
   .navRight { gap: 5px; }
   .mobileNav { grid-template-columns: 1fr; gap: 10px; padding: 10px; }
   .mobileSections { grid-template-columns: repeat(2, 1fr); }
@@ -1036,7 +1046,7 @@
   .lead { font-size: 16px; }
   .heroActions { align-items: stretch; flex-direction: column; gap: 14px; }
   .heroActions :global(.btn) { width: 100%; }
-  .heroVisual { right: -170px; opacity: .17; }
+  .heroVisual { display: none; }
 
   .proofStrip { grid-template-columns: 1fr; padding: 14px 0; }
   .proofStrip > div,

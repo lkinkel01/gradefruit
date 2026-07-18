@@ -1,38 +1,34 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-11T01:12:38Z",
+  "generatedAt": "2026-07-17T00:00:00Z",
   "title": "Design System: Gradefruit",
   "extensions": {
     "colorMeta": {
-      "grapefruit": { "role": "primary", "displayName": "Grapefruit", "canonical": "#E96A4C", "tonalRamp": ["#4A1D10", "#7A3018", "#A84226", "#C24E31", "#E96A4C", "#F0906F", "#F7B79E", "#FBEBE3"] },
-      "fruit-flesh": { "role": "primary", "displayName": "Fruchtfleisch", "canonical": "#EE7457", "tonalRamp": ["#4E2114", "#7E351E", "#B04A2C", "#D25E3F", "#EE7457", "#F39678", "#F8BCA4", "#FCE8DF"] },
-      "ink": { "role": "neutral", "displayName": "Tinte", "canonical": "#211C17", "tonalRamp": ["#12100D", "#211C17", "#33291F", "#4A3E33", "#6F675E", "#A69B90", "#DDD1C5", "#F5F0EA"] },
-      "paper": { "role": "neutral", "displayName": "Papier", "canonical": "#FAF6F1", "tonalRamp": ["#171310", "#29221C", "#40372E", "#7E7468", "#B3A99D", "#EDE4DB", "#FBF7F2", "#FAF6F1"] },
-      "success-green": { "role": "secondary", "displayName": "Stochastik-Grün", "canonical": "#2F9E68", "tonalRamp": ["#0C2A1C", "#14452E", "#1D6141", "#267D54", "#2F9E68", "#5FBB8B", "#9AD8B8", "#E5F4EA"] },
-      "topic-analysis": { "role": "secondary", "displayName": "Analysis-Terrakotta", "canonical": "#DE5D43", "tonalRamp": ["#43180F", "#6F2818", "#9C3A24", "#BD4B32", "#DE5D43", "#E7846F", "#F0B0A0", "#F9E2DB"] },
-      "topic-linalg": { "role": "secondary", "displayName": "LinAlg-Indigo", "canonical": "#5D6BC9", "tonalRamp": ["#191D3D", "#2A3166", "#3C468F", "#4C58AC", "#5D6BC9", "#8490D8", "#B2BAE8", "#E6E9F7"] },
-      "side-espresso": { "role": "neutral", "displayName": "Espresso (Sidebar)", "canonical": "#1C1613", "tonalRamp": ["#120E0B", "#1C1613", "#29211B", "#382D25", "#54463A", "#8B7E72", "#B8ACA0", "#D6CBC1"] }
+      "grapefruit": { "role": "primary", "displayName": "Grapefruit", "canonical": "#F26B4A", "tonalRamp": ["#2B1510", "#6F2718", "#92301E", "#B93820", "#F26B4A", "#FF8A70", "#FFB7A4", "#FFF0EC"] },
+      "black": { "role": "neutral", "displayName": "Schwarz", "canonical": "#050505", "tonalRamp": ["#050505", "#111113", "#27272A", "#5F6067", "#6E7078", "#D3D3D8", "#F0F0F2", "#FFFFFF"] },
+      "canvas": { "role": "neutral", "displayName": "Canvas", "canonical": "#F7F7F8", "tonalRamp": ["#050505", "#0D0D0F", "#171719", "#38383C", "#92939B", "#D3D3D8", "#F0F0F2", "#F7F7F8"] },
+      "success": { "role": "semantic", "displayName": "Erfolg", "canonical": "#198754", "tonalRamp": ["#092A1B", "#0E472D", "#12613D", "#167549", "#198754", "#52AB7D", "#9DD5B7", "#EAF7F0"] },
+      "danger": { "role": "semantic", "displayName": "Fehler", "canonical": "#C62828", "tonalRamp": ["#3A0A0A", "#671111", "#8E1B1B", "#A92222", "#C62828", "#E26767", "#F2ADAD", "#FDEDED"] }
     },
     "typographyMeta": {
       "display": { "displayName": "Display", "purpose": "Nur Landing-Hero. Groß, knapp, selbstbewusst (Nike-Ton)." },
-      "headline": { "displayName": "Headline", "purpose": "Seiten-H1 in der App (30px, mobil 25px)." },
+      "headline": { "displayName": "Headline", "purpose": "Seiten-H1 in der App (29–34px, responsiv)." },
       "title": { "displayName": "Title", "purpose": "Karten- und Abschnittstitel." },
       "body": { "displayName": "Body", "purpose": "Fließtext und Aufgabenstellungen (Inter)." },
-      "label": { "displayName": "Label", "purpose": "UPPERCASE-Rubriken (Navigation, Lösungs-Überschriften)." },
+      "label": { "displayName": "Label", "purpose": "Ruhige Rubriken und Metadaten in natürlicher Schreibweise." },
       "mono": { "displayName": "Mono", "purpose": "Ausschließlich Mathematik: Formeln, Schritte, Ergebnisse (JetBrains Mono)." }
     },
     "shadows": [
-      { "name": "shadow", "value": "0 1px 2px rgba(60,40,25,.03), 0 6px 20px rgba(60,40,25,.05)", "purpose": "Ruhe-Schatten größerer Karten; warm getönt, nie blaugrau." },
-      { "name": "shadow-lg", "value": "0 2px 4px rgba(60,40,25,.04), 0 18px 44px rgba(60,40,25,.09)", "purpose": "Hover-Anhebung großer Karten." },
-      { "name": "shadow-btn-ink", "value": "0 1px 2px rgba(30,22,15,.14), 0 8px 22px rgba(30,22,15,.12)", "purpose": "Primär-Button (Tinte); verstärkt sich beim Hover." },
-      { "name": "shadow-overlay", "value": "0 24px 70px rgba(20,15,30,.34)", "purpose": "Modals und Player über Scrim." }
+      { "name": "shadow-control", "value": "0 1px 2px rgba(0,0,0,.08)", "purpose": "Nur ausgewählte Tabs und Segment-Controls." },
+      { "name": "shadow-card-hover", "value": "0 2px 6px rgba(0,0,0,.045), 0 18px 38px rgba(0,0,0,.09)", "purpose": "Hover oder geöffneter Zustand klickbarer Karten." },
+      { "name": "shadow-panel", "value": "0 28px 80px rgba(0,0,0,.26)", "purpose": "Modals, Player und Schubladen über Scrim." }
     ],
     "motion": [
-      { "name": "register-1-state", "value": "CSS-Transitions, 150–350ms, transform/opacity/Farbe", "purpose": "Zustandsübergänge (99% des Produkts): Hover, Öffnen, Tab-Wechsel. Ausgang schneller als Eingang." },
+      { "name": "register-1-state", "value": "CSS-Transitions, 140–260ms, transform/opacity/Farbe", "purpose": "Zustandsübergänge: Hover, Öffnen und Tab-Wechsel. Ausgang schneller als Eingang." },
       { "name": "register-2-gesture", "value": "Federn/WAAPI, keine feste Dauer", "purpose": "Nur der Reel-Modus (/feed): 1:1 am Finger, unterbrechbar, velocity-bewusst. Keine festen CSS-Keyframes." },
       { "name": "ease-press", "value": "cubic-bezier(0.2, 0.7, 0.3, 1)", "purpose": "Haus-Kurve für Buttons/Chips: Hover-Lift und Active-Press, ~160ms. Eingebautes ease-in ist verboten." },
       { "name": "ease-drawer", "value": "cubic-bezier(0.2, 0.8, 0.2, 1)", "purpose": "Mobile Sidebar-Schublade, 280ms." },
-      { "name": "duration-reveal", "value": "260ms–350ms", "purpose": "Seiten-/Karten-Einstiege: translateY(6–7px) + Fade ab scale(.95), Listen gestaffelt mit 45–50ms." },
+      { "name": "duration-reveal", "value": "200ms–260ms", "purpose": "Seltene Ansichtswechsel: kleine Verschiebung plus Fade, ohne orchestrierte Stagger-Sequenzen." },
       { "name": "rule-properties", "value": "nur transform, opacity, Farben", "purpose": "Nie width/height/padding animieren, nie transition: all, nie aus scale(0). prefers-reduced-motion schaltet global ab." }
     ],
     "breakpoints": [
@@ -46,17 +42,17 @@
       "name": "Primär-Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Die eine Primäraktion pro Screen: Tinten-Pille, im Dark Mode invertiert hell.",
+      "description": "Die eine Primäraktion pro Screen: kompakter schwarzer Button, im Dark Mode invertiert hell.",
       "html": "<button class=\"ds-btn-primary\">Weiterlernen</button>",
-      "css": ".ds-btn-primary { background: var(--btn-ink, #211C17); color: var(--btn-ink-tx, #FFFFFF); font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; border: none; border-radius: 980px; padding: 12px 22px; cursor: pointer; box-shadow: 0 1px 2px rgba(30,22,15,.14), 0 8px 22px rgba(30,22,15,.12); transition: transform 160ms cubic-bezier(.2,.7,.3,1), box-shadow 160ms ease, background 160ms ease; } .ds-btn-primary:hover { background: #33291F; transform: translateY(-1px); box-shadow: 0 2px 4px rgba(30,22,15,.14), 0 12px 28px rgba(30,22,15,.16); } .ds-btn-primary:active { transform: translateY(0) scale(.98); } .ds-btn-primary:focus-visible { outline: 2px solid #E96A4C; outline-offset: 2px; }"
+      "css": ".ds-btn-primary { background: var(--btn-ink, #050505); color: var(--btn-ink-tx, #FFFFFF); font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; border: none; border-radius: 8px; padding: 12px 22px; cursor: pointer; transition: transform 160ms cubic-bezier(.2,.7,.3,1), box-shadow 160ms ease, background 160ms ease; } .ds-btn-primary:hover { background: #1A1A1C; transform: translateY(-1px); box-shadow: 0 10px 24px -12px rgba(0,0,0,.52); } .ds-btn-primary:active { transform: translateY(0) scale(.98); } .ds-btn-primary:focus-visible { outline: 2px solid #F26B4A; outline-offset: 2px; }"
     },
     {
       "name": "Light-Button",
       "kind": "button",
       "refersTo": "button-light",
-      "description": "Sekundäraktion: weiße Pille mit feinem Rand.",
+      "description": "Sekundäraktion: weiße Fläche mit schwarzem Rand und kleinem Radius.",
       "html": "<button class=\"ds-btn-light\">Kurse ansehen</button>",
-      "css": ".ds-btn-light { background: var(--surface, #FFFFFF); color: var(--ink, #211C17); font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; border: 1px solid var(--line-strong, #DDD1C5); border-radius: 980px; padding: 12px 22px; cursor: pointer; transition: transform 160ms cubic-bezier(.2,.7,.3,1), border-color 160ms ease; } .ds-btn-light:hover { border-color: var(--faint, #A69B90); transform: translateY(-1px); } .ds-btn-light:active { transform: translateY(0) scale(.98); } .ds-btn-light:focus-visible { outline: 2px solid #E96A4C; outline-offset: 2px; }"
+      "css": ".ds-btn-light { background: var(--surface, #FFFFFF); color: var(--ink, #050505); font-family: Inter, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; border: 1px solid var(--ink, #050505); border-radius: 8px; padding: 12px 22px; cursor: pointer; transition: transform 160ms cubic-bezier(.2,.7,.3,1), color 160ms ease, background 160ms ease; } .ds-btn-light:hover { color: #FFFFFF; background: #050505; transform: translateY(-1px); } .ds-btn-light:active { transform: translateY(0) scale(.98); } .ds-btn-light:focus-visible { outline: 2px solid #F26B4A; outline-offset: 2px; }"
     },
     {
       "name": "Aktions-Chip",
@@ -64,7 +60,7 @@
       "refersTo": "chip-action",
       "description": "Feste Aktionsleiste in Lernkarten (Video ansehen · KI fragen).",
       "html": "<button class=\"ds-chip\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><polygon points=\"6 4 20 12 6 20 6 4\"/></svg>Video ansehen</button>",
-      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 7px; background: var(--surface, #FFFFFF); color: var(--ink, #211C17); font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; border: 1px solid var(--line-strong, #DDD1C5); border-radius: 99px; padding: 8px 13px; cursor: pointer; transition: transform 150ms cubic-bezier(.2,.7,.3,1), border-color 150ms ease; } .ds-chip:hover { border-color: var(--faint, #A69B90); transform: translateY(-1px); } .ds-chip:focus-visible { outline: 2px solid #E96A4C; outline-offset: 2px; }"
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 7px; background: var(--surface, #FFFFFF); color: var(--ink, #050505); font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; border: 1px solid var(--line-strong, #D3D3D8); border-radius: 8px; padding: 8px 13px; cursor: pointer; transition: transform 150ms cubic-bezier(.2,.7,.3,1), border-color 150ms ease; } .ds-chip:hover { border-color: var(--faint, #6E7078); transform: translateY(-1px); } .ds-chip:focus-visible { outline: 2px solid #F26B4A; outline-offset: 2px; }"
     },
     {
       "name": "Bald-Chip",
@@ -72,7 +68,7 @@
       "refersTo": "chip-action",
       "description": "Ehrlicher Platzhalter für kommende Funktionen: gestrichelt, nicht klickbar.",
       "html": "<span class=\"ds-chip-soon\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><circle cx=\"12\" cy=\"8\" r=\"3.4\"/><path d=\"M5.5 19a6.5 6.5 0 0 1 13 0\"/></svg>Tutor · bald</span>",
-      "css": ".ds-chip-soon { display: inline-flex; align-items: center; gap: 7px; background: var(--surface, #FFFFFF); color: var(--faint, #A69B90); font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; border: 1px dashed var(--line-strong, #DDD1C5); border-radius: 99px; padding: 8px 13px; cursor: default; }"
+      "css": ".ds-chip-soon { display: inline-flex; align-items: center; gap: 7px; background: var(--surface, #FFFFFF); color: var(--faint, #6E7078); font-family: Inter, sans-serif; font-size: 13px; font-weight: 500; border: 1px dashed var(--line-strong, #D3D3D8); border-radius: 8px; padding: 8px 13px; cursor: default; }"
     },
     {
       "name": "Lernkarte",
@@ -80,15 +76,15 @@
       "refersTo": "card",
       "description": "Standard-Karte: weiße Fläche, feine Linie, Hover hebt sanft an.",
       "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Extrempunkte</h3><p class=\"ds-card-text\">Kandidaten liefert f′(x) = 0. Ob Hoch- oder Tiefpunkt, entscheidet die zweite Ableitung.</p></div>",
-      "css": ".ds-card { background: var(--surface, #FFFFFF); border: 1px solid var(--line, #EDE4DB); border-radius: 18px; padding: 20px 22px; max-width: 340px; transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; } .ds-card:hover { transform: translateY(-2px); border-color: var(--line-strong, #DDD1C5); box-shadow: 0 1px 2px rgba(60,40,25,.03), 0 6px 20px rgba(60,40,25,.05); } .ds-card-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink, #211C17); margin: 0 0 8px; } .ds-card-text { font-family: Inter, sans-serif; font-size: 13.5px; line-height: 1.6; color: var(--muted, #6F675E); margin: 0; }"
+      "css": ".ds-card { background: var(--surface, #FFFFFF); border: 1px solid var(--line, #E6E6E9); border-radius: 14px; padding: 20px 22px; max-width: 340px; transition: transform 180ms cubic-bezier(.2,.7,.3,1), border-color 180ms ease, box-shadow 180ms ease; } .ds-card:hover { transform: translateY(-1px); border-color: var(--line-strong, #D3D3D8); box-shadow: 0 2px 6px rgba(0,0,0,.045), 0 18px 38px rgba(0,0,0,.09); } .ds-card-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink, #050505); margin: 0 0 8px; } .ds-card-text { font-family: Inter, sans-serif; font-size: 13.5px; line-height: 1.6; color: var(--muted, #5F6067); margin: 0; }"
     },
     {
       "name": "Eingabefeld",
       "kind": "input",
       "refersTo": "input",
-      "description": "Label über dem Feld (nie Placeholder), Fokus mit Tinten-Rand und weichem Ring.",
+      "description": "Label über dem Feld (nie Placeholder), Fokus mit schwarzem Rand und weichem Ring.",
       "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">E-Mail</span><input class=\"ds-input\" type=\"email\" /></label>",
-      "css": ".ds-field { display: block; max-width: 300px; } .ds-field-label { display: block; font-family: Inter, sans-serif; font-size: 13px; font-weight: 600; color: var(--muted, #6F675E); margin-bottom: 6px; } .ds-input { width: 100%; background: var(--surface, #FFFFFF); color: var(--ink, #211C17); font-family: Inter, sans-serif; font-size: 15px; border: 1.5px solid var(--line-strong, #DDD1C5); border-radius: 12px; padding: 12px 15px; outline: none; transition: border-color 150ms ease, box-shadow 150ms ease; } .ds-input:hover { border-color: var(--faint, #A69B90); } .ds-input:focus { border-color: var(--ink, #211C17); box-shadow: 0 0 0 3px var(--control, #F0E8E0); }"
+      "css": ".ds-field { display: block; max-width: 300px; } .ds-field-label { display: block; font-family: Inter, sans-serif; font-size: 13px; font-weight: 600; color: var(--muted, #5F6067); margin-bottom: 6px; } .ds-input { width: 100%; background: var(--surface, #FFFFFF); color: var(--ink, #050505); font-family: Inter, sans-serif; font-size: 15px; border: 1px solid var(--line-strong, #D3D3D8); border-radius: 8px; padding: 12px 15px; outline: none; transition: border-color 150ms ease, box-shadow 150ms ease; } .ds-input:hover { border-color: var(--faint, #6E7078); } .ds-input:focus { border-color: var(--ink, #050505); box-shadow: 0 0 0 3px var(--control, #ECECEF); }"
     },
     {
       "name": "Lernstufen-Segment",
@@ -96,41 +92,44 @@
       "refersTo": "chip-action",
       "description": "Das Herz des Wiederholungssystems: Verstanden / Wiederholen / Noch unklar.",
       "html": "<div class=\"ds-seg\"><button class=\"ds-seg-btn ds-seg-on-verstanden\">Verstanden</button><button class=\"ds-seg-btn\">Wiederholen</button><button class=\"ds-seg-btn\">Noch unklar</button></div>",
-      "css": ".ds-seg { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line, #EDE4DB); border-radius: 99px; background: var(--surface-2, #FBF7F2); } .ds-seg-btn { border: none; background: transparent; cursor: pointer; font-family: Inter, sans-serif; font-size: 12.5px; font-weight: 600; color: var(--muted, #6F675E); padding: 7px 14px; border-radius: 99px; transition: color 150ms ease, background 150ms ease; white-space: nowrap; } .ds-seg-btn:hover { color: var(--ink, #211C17); } .ds-seg-on-verstanden { background: var(--green-soft, #E5F4EA); color: var(--success, #0F7044); }"
+      "css": ".ds-seg { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line, #E6E6E9); border-radius: 8px; background: var(--surface-2, #F0F0F2); } .ds-seg-btn { border: none; background: transparent; cursor: pointer; font-family: Inter, sans-serif; font-size: 12.5px; font-weight: 600; color: var(--muted, #5F6067); padding: 7px 14px; border-radius: 8px; transition: color 150ms ease, background 150ms ease; white-space: nowrap; } .ds-seg-btn:hover { color: var(--ink, #050505); } .ds-seg-on-verstanden { background: var(--green-soft, #EAF7F0); color: var(--success, #147A49); }"
     },
     {
       "name": "GrapefruitProgress",
       "kind": "custom",
       "refersTo": "card",
-      "description": "Signature-Komponente: Fortschritt als sich füllende Grapefruit (hier 40 %). Fortschritt wird ausschließlich so erzählt.",
-      "html": "<svg class=\"ds-grapefruit\" width=\"84\" height=\"84\" viewBox=\"0 0 48 48\" role=\"img\" aria-label=\"40 % geschafft\"><circle cx=\"24\" cy=\"25\" r=\"19.4\" fill=\"none\" stroke=\"#DDD1C5\" stroke-width=\"2.4\"/><circle cx=\"24\" cy=\"25\" r=\"16.6\" fill=\"#F0E8E0\"/><path d=\"M 24 25 L 24 8.4 A 16.6 16.6 0 1 1 39.79 30.13 Z\" fill=\"#EE7457\" transform=\"rotate(0 24 25)\" /><g stroke=\"#FFFFFF\" stroke-width=\"1.7\" stroke-linecap=\"round\"><line x1=\"24\" y1=\"25\" x2=\"24\" y2=\"8.4\"/><line x1=\"24\" y1=\"25\" x2=\"38.4\" y2=\"16.7\"/><line x1=\"24\" y1=\"25\" x2=\"38.4\" y2=\"33.3\"/><line x1=\"24\" y1=\"25\" x2=\"24\" y2=\"41.6\"/><line x1=\"24\" y1=\"25\" x2=\"9.6\" y2=\"33.3\"/><line x1=\"24\" y1=\"25\" x2=\"9.6\" y2=\"16.7\"/></g><path d=\"M26.8 4.4 C29.6 2.2 33.4 2.4 35.7 4.3 C34 6.9 30.5 8 27.4 7 C26.9 6.8 26.7 5.6 26.8 4.4 Z\" fill=\"#5E9E77\"/></svg>",
+      "description": "Signature-Komponente: Die Grapefruit-Geometrie bleibt einfarbig; ein Tonwert derselben Farbe füllt den Fortschritt.",
+      "html": "<svg class=\"ds-grapefruit\" width=\"84\" height=\"84\" viewBox=\"0 0 48 48\" role=\"img\" aria-label=\"40 % geschafft\"><circle cx=\"24\" cy=\"25\" r=\"17.25\" fill=\"#F0F0F2\" stroke=\"#050505\" stroke-width=\"2\"/><path d=\"M24 25 L24 7.75 A17.25 17.25 0 0 1 34.14 38.96 Z\" fill=\"#F26B4A\"/><g stroke=\"#FFFFFF\" stroke-width=\"1.5\" stroke-linecap=\"round\"><line x1=\"24\" y1=\"25\" x2=\"24\" y2=\"9.8\"/><line x1=\"24\" y1=\"25\" x2=\"37.16\" y2=\"17.4\"/><line x1=\"24\" y1=\"25\" x2=\"37.16\" y2=\"32.6\"/><line x1=\"24\" y1=\"25\" x2=\"24\" y2=\"40.2\"/><line x1=\"24\" y1=\"25\" x2=\"10.84\" y2=\"32.6\"/><line x1=\"24\" y1=\"25\" x2=\"10.84\" y2=\"17.4\"/></g><circle cx=\"24\" cy=\"25\" r=\"1.6\" fill=\"#FFFFFF\"/><path d=\"M27.5 7.2 C30.5 4.6 34.5 4.6 37 6.6 C34.8 9.5 31.2 10.3 27.9 9.3 Z\" fill=\"#F26B4A\"/></svg>",
       "css": ".ds-grapefruit { display: block; }"
     }
   ],
   "narrative": {
-    "northStar": "Frucht auf Papier",
-    "overview": "Gradefruit sieht aus wie Tinte auf warmem Papier — und mittendrin lebt eine Frucht. Die Fläche ist ruhiges Papier-Beige, die Schrift warmes Tinten-Schwarz, und die einzige laute Stimme ist die Grapefruit: als Logo, als Fortschritt, als Akzent. Das System verweigert sich der klassischen Lernplattform, dem Dashboard-SaaS und dem typischen KI-Produkt; es orientiert sich an Apple (Zurückhaltung), Nike (Selbstbewusstsein) und Peso/LFDY (reduzierte Street-Ästhetik der Zielgruppe). Bewegung ist Feedback, nie Dekoration.",
+    "northStar": "Schwarz. Weiß. Grapefruit.",
+    "overview": "Gradefruit verbindet echtes Schwarz, ein ruhiges neutrales Weiß und genau eine Grapefruit-Akzentfarbe. Das Grapefruit-Symbol ist zugleich Marke und Fortschrittsanzeige. Semantisches Grün und Rot erscheinen nur als funktionale Zustände. Große ruhige Flächen, starke Typografie und präzise Interaktionen schaffen ein eigenständiges Lernprodukt statt einer typischen Lernplattform oder eines KI-Templates.",
     "keyCharacteristics": [
-      "Warmes Papier + Tinte statt Weiß + Grau; eine Akzentfarbe, sparsam gesetzt",
+      "Neutrales Weiß + echtes Schwarz; eine Grapefruit-Akzentfarbe, sparsam gesetzt",
       "Grapefruit = Marke = Fortschrittsanzeige (ein Symbol, eine Bedeutung)",
-      "Pillen-Buttons in Tinten-Schwarz; Orange gehört der Frucht, nicht den Buttons",
+      "Kompakte schwarze Buttons mit kleinem Radius; Grapefruit gehört der Marke, nicht jeder Aktion",
       "Karten mit feinen Linien statt Schatten; Tiefe nur als Antwort auf Interaktion",
-      "Ruhige, schnelle Motion (150–350 ms, ease-out, transform/opacity)",
+      "Ruhige, schnelle Motion (140–260 ms, ease-out, transform/opacity)",
+      "Ein funktionales 24px-Iconsystem mit 2px Strichstärke",
       "Keine Emojis im UI, nirgends"
     ],
     "rules": [
-      { "name": "Die Eine-Stimme-Regel", "body": "Orange erscheint auf maximal ~10 % eines Screens. Primäraktionen sind Tinte, nicht Orange — die Seltenheit macht die Frucht wertvoll.", "section": "colors" },
+      { "name": "Die Eine-Stimme-Regel", "body": "Grapefruit erscheint sparsam und gezielt. Primäraktionen sind Schwarz, nicht Orange. Grün und Rot bleiben semantischen Zuständen vorbehalten.", "section": "colors" },
       { "name": "Die Dark-Mode-Regel", "body": "Dark Mode entsteht ausschließlich durch CSS-Variablen unter body.dark. Globale Selektoren auf CSS-Modul-Klassen sind verboten.", "section": "colors" },
-      { "name": "Die Zwei-Schriften-Regel", "body": "Bricolage Grotesque (laut), Inter (leise), JetBrains Mono (nur Mathe). Keine neue Schrift ohne Marken-Entscheidung.", "section": "typography" },
+      { "name": "Die Drei-Schriften-Regel", "body": "Bricolage Grotesque (laut), Inter (leise), JetBrains Mono (nur Mathe). Keine neue Schrift ohne Marken-Entscheidung.", "section": "typography" },
+      { "name": "Die Icon-Regel", "body": "Funktionale Icons nutzen ein 24×24-Raster, 2px Strichstärke und runde Enden. Keine gemischten Glyphen für dieselbe Funktion; BrandMark und Drittanbieter-Logos sind begründete Ausnahmen.", "section": "components" },
       { "name": "Die Antwort-Regel", "body": "Kein Schatten ohne Anlass: Flächen sind flach, bis der Nutzer mit ihnen spricht (Hover, Fokus, Öffnen).", "section": "elevation" },
       { "name": "Die Breakpoint-Regel", "body": "Genau drei Schwellen: 900px (Schublade), 760–820px (stapeln), 560px (kompakt). Keine weiteren Magic-Breakpoints.", "section": "elevation" },
       { "name": "Die Soll-das-überhaupt-animieren-Regel", "body": "Was der Nutzer hundertfach am Tag sieht, animiert kaum oder gar nicht. Je seltener und bedeutungsvoller ein Moment, desto mehr Bewegung ist erlaubt. Im Zweifel weniger.", "section": "elevation" }
     ],
     "dos": [
-      "Do genau EINE Primäraktion pro Screen setzen — als Tinten-Pille.",
+      "Do genau EINE Primäraktion pro Screen setzen — als kompakten schwarzen Button.",
       "Do Fortschritt immer mit GrapefruitProgress zeigen, Zähler in tabular-nums.",
-      "Do nur transform, opacity und Farben animieren; Einstiege 260–350ms, Interaktionen ~160ms, ease-out.",
+      "Do nur transform, opacity und Farben animieren; seltene Einstiege 200–260ms, Interaktionen ~160ms, ease-out.",
       "Do jede Interaktion quittieren: Hover-Lift, Active-Press, sichtbarer Fokus-Ring.",
+      "Do Navigation und globale Aktionen aus dem gemeinsamen UiIcons-System beziehen.",
       "Do kommende Funktionen als gestrichelte „· bald“-Chips zeigen.",
       "Do Theme-Farben ausschließlich über CSS-Variablen beziehen.",
       "Do Overlays per React-Portal an document.body rendern.",
@@ -139,7 +138,7 @@
     "donts": [
       "Don't Orange als Button- oder Flächenfarbe verwenden.",
       "Don't wie eine klassische Lernplattform aussehen: keine Konfetti, Abzeichen, Maskottchen.",
-      "Don't wie ein Dashboard-SaaS aussehen: keine Statistik-Kacheln ohne Handlung, kein kühles Grau.",
+      "Don't wie ein Dashboard-SaaS aussehen: keine Statistik-Kacheln ohne Handlung und keine austauschbaren Kartenraster.",
       "Don't wie ein typisches KI-Produkt aussehen: keine Lila-Gradients, keine Sparkles, keine Emojis im UI.",
       "Don't width/height/padding animieren, niemals transition: all, nie aus scale(0), nie eingebautes ease-in auf UI.",
       "Don't die Gesten-Fläche (Reel-Modus) mit festen CSS-Keyframes bauen — Federn/WAAPI, damit sie unterbrechbar bleibt.",
