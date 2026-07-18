@@ -165,7 +165,10 @@ export default function TopicView({
 
   // Lernen im Reel-Format: gleiche Inhalte, anderes Tempo.
   const openReels = () => {
-    try { localStorage.setItem('gf-feed-topic', topicId); } catch { /* Speicher gesperrt */ }
+    try {
+      localStorage.setItem('gf-feed-topic', topicId);
+      sessionStorage.setItem('gf-feed-return', `${window.location.pathname}${window.location.search}${window.location.hash}`);
+    } catch { /* Speicher gesperrt */ }
     router.push('/feed');
   };
 

@@ -35,7 +35,10 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
     onNavigate('review');
   };
   const openReels = () => {
-    try { localStorage.removeItem('gf-feed-topic'); } catch { /* Speicher gesperrt */ }
+    try {
+      localStorage.removeItem('gf-feed-topic');
+      sessionStorage.setItem('gf-feed-return', `${window.location.pathname}${window.location.search}${window.location.hash}`);
+    } catch { /* Speicher gesperrt */ }
     router.push('/feed');
   };
 

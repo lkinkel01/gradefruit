@@ -35,8 +35,8 @@ Probleme").
   verstanden) pro Aufgabe; Wiederholen-Seite mit Filtern Stufe × Themen;
   Dashboard-Kacheln springen mit Vorauswahl dorthin.
 - **Reel-Modus** (`/feed`, nur eingeloggt): vertikaler Video-Feed mit
-  Autoplay, direkter Lernstatus-Auswahl, Gefällt-mir- und Teilen-Aktion sowie
-  reduzierter Glasnavigation zur Übersicht und zum Weiterlernen.
+  Autoplay und direkter Lernstatus-Auswahl. Die Lernbühne nutzt die verfügbare
+  Breite ohne seitliche Aktionsleiste; unten bleiben nur Zurück und Übersicht.
 - **Fortschritt** überall als sich füllende **Grapefruit**
   (`GrapefruitProgress`).
 - **Konto & Kauf:** Auth (E-Mail + Google), Checkout mit Pflicht-Checkbox
@@ -74,6 +74,13 @@ Probleme").
 > wurde, steht eine *(→ später …)*-Anmerkung — so bleibt die Entwicklung
 > nachvollziehbar, ohne dass die Liste dem Ist-Zustand widerspricht.
 
+- ✅ **Mobile Landing und fokussierter Reel-Modus (18.07.2026):** Der mobile
+  Hero besitzt größere Abstände, bricht Headline und Vorteile ohne Überlauf um
+  und zeigt das vollständige Grapefruit-Visual. Der Reel-Modus nutzt die
+  Bildschirmbreite für den Lerninhalt; Gefällt-mir-, Teilen- und
+  Weiterlernen-Overlays wurden entfernt. Unten bleiben ein Zurück- und ein
+  Übersicht-Button. Alle 47 Audiodateien der sechs Reel-Szenen sind vorhanden
+  und den Szenenschritten vollständig zugeordnet.
 - ✅ **Lernnavigation und Inhaltsansichten (18.07.2026):** Landing-Visual
   zentriert; transparente Liquid-Glass-Navigation verschwindet beim
   Herunterscrollen und erscheint nur am Seitenanfang. Produkt-Breadcrumb und

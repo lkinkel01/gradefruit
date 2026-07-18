@@ -96,8 +96,8 @@
 .playerWrap {
   position: absolute;
   z-index: 10;
-  inset: calc(env(safe-area-inset-top, 0px) + 72px) 62px
-    calc(env(safe-area-inset-bottom, 0px) + 148px) 4px;
+  inset: calc(env(safe-area-inset-top, 0px) + 72px) 8px
+    calc(env(safe-area-inset-bottom, 0px) + 82px);
   min-height: 0;
   overflow: hidden;
   border-radius: 26px;
@@ -158,160 +158,42 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
-.rail {
-  position: absolute;
-  z-index: 35;
-  right: 10px;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 146px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-}
-
-.railButton {
-  width: 54px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  border: 0;
-  color: #fff;
-  background: transparent;
-  font: inherit;
-  font-size: 10px;
-  font-weight: 650;
-  text-align: center;
-  cursor: pointer;
-}
-
-.railIcon {
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 50%;
-  background: rgba(18, 18, 20, 0.48);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  backdrop-filter: blur(20px) saturate(150%);
-  transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    transform 120ms ease;
-}
-
-.railButtonLiked .railIcon {
-  color: #f26b4a;
-  background: rgba(242, 107, 74, 0.16);
-}
-
-.meta {
-  position: absolute;
-  z-index: 30;
-  right: 76px;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 104px);
-  left: 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
-}
-
-.meta span {
-  color: #f58a70;
-  font-size: 11px;
-  font-weight: 750;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.meta strong {
-  font-size: 19px;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
-
-.meta p {
-  max-width: 38ch;
-  margin: 0;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.reelCount {
-  position: absolute;
-  z-index: 30;
-  right: 14px;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
-  color: rgba(255, 255, 255, 0.46);
-  font-size: 10px;
-  font-variant-numeric: tabular-nums;
-}
-
 .bottomNav {
   position: fixed;
   z-index: 50;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
   left: 50%;
   width: min(calc(100% - 24px), 488px);
-  min-height: 62px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  padding: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 24px;
-  background: rgba(16, 16, 18, 0.58);
-  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  backdrop-filter: blur(24px) saturate(150%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
   transform: translateX(-50%);
 }
 
 .bottomNav button {
-  min-height: 48px;
+  width: 52px;
+  height: 52px;
   display: grid;
   place-items: center;
-  border: 0;
-  border-radius: 18px;
-  color: rgba(255, 255, 255, 0.78);
-  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(16, 16, 18, 0.58);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 14px 34px rgba(0, 0, 0, 0.28);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
   cursor: pointer;
+  pointer-events: auto;
   transition:
     color 160ms ease,
     background-color 160ms ease,
     transform 120ms ease;
 }
 
-.bottomNav .continueButton {
-  color: #fff;
-  background: #f26b4a;
-}
-
-.toast {
-  position: fixed;
-  z-index: 70;
-  right: 50%;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
-  padding: 9px 13px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  color: #fff;
-  background: rgba(18, 18, 20, 0.82);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-  font-size: 12px;
-  font-weight: 650;
-  transform: translateX(50%);
-}
-
 .statusButton:focus-visible,
-.railButton:focus-visible,
 .bottomNav button:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
@@ -323,14 +205,9 @@
     background: rgba(255, 255, 255, 0.09);
   }
 
-  .railButton:hover .railIcon,
   .bottomNav button:hover {
     background-color: rgba(255, 255, 255, 0.12);
     transform: translateY(-1px);
-  }
-
-  .bottomNav .continueButton:hover {
-    background-color: #ff7655;
   }
 }
 
@@ -351,19 +228,6 @@
     font-size: 10.5px;
   }
 
-  .playerWrap {
-    right: 58px;
-  }
-
-  .meta {
-    right: 70px;
-    left: 14px;
-  }
-
-  .meta strong {
-    font-size: 18px;
-  }
-
   .bottomNav {
     width: calc(100% - 16px);
   }
@@ -375,7 +239,6 @@
   }
 
   .statusButton,
-  .railIcon,
   .bottomNav button {
     transition-duration: 1ms;
   }
@@ -383,8 +246,7 @@
 
 @media (prefers-reduced-transparency: reduce) {
   .statusBar,
-  .bottomNav,
-  .railIcon {
+  .bottomNav button {
     background: #171719;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;

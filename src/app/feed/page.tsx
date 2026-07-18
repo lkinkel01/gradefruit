@@ -19,22 +19,6 @@ interface VideoCard {
   scene: Scene;
   task: { topicId: TopicId; taskId: string } | null;
   path: string;
-  goal: string;
-}
-
-const TOPIC_LABELS: Record<TopicId, string> = {
-  analysis: 'Analysis',
-  linalg: 'Lineare Algebra',
-  stochastik: 'Stochastik',
-};
-
-const GOALS: Record<string, string> = {
-  v1: 'Polynome sicher mit der Potenzregel ableiten.',
-  v2: 'Hoch- und Tiefpunkte systematisch bestimmen.',
-  v3: 'Bestimmte Integrale mit dem Hauptsatz berechnen.',
-  v4: 'Winkel zwischen Vektoren über das Skalarprodukt bestimmen.',
-  v5: 'Geradengleichungen aufstellen und Punkte prüfen.',
-  v6: 'Binomialwahrscheinlichkeiten sicher berechnen.',
 };
 
 const TASK_SOURCES: {
@@ -92,7 +76,6 @@ function videoCard(scene: Scene): VideoCard {
     scene,
     task: linkedTask(scene.id),
     path: curvePath(scene),
-    goal: GOALS[scene.id] ?? 'Dieses Thema Schritt für Schritt verstehen.',
   };
 }
 
@@ -120,29 +103,11 @@ function HomeIcon() {
   );
 }
 
-function ContinueIcon() {
+function BackIcon() {
   return (
     <svg aria-hidden="true" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 12h14" />
-      <path d="m14 7 5 5-5 5" />
-    </svg>
-  );
-}
-
-function HeartIcon({ filled }: { filled: boolean }) {
-  return (
-    <svg aria-hidden="true" width="27" height="27" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.6 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z" />
-    </svg>
-  );
-}
-
-function ShareIcon() {
-  return (
-    <svg aria-hidden="true" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 16V3" />
-      <path d="m7 8 5-5 5 5" />
-      <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7" />
+      <path d="M19 12H5" />
+      <path d="m10 17-5-5 5-5" />
     </svg>
   );
 }
@@ -153,8 +118,6 @@ export default function FeedPage() {
   const { statusOf, setStatus } = useProgress();
   const [index, setIndex] = useState(0);
   const [topic, setTopic] = useState<TopicId | null>(null);
-  const [liked, setLiked] = useState<Set<string>>(new Set());
-  const [copied, setCopied] = useState(false);
   const feedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -163,17 +126,13 @@ export default function FeedPage() {
 
   useEffect(() => {
     let storedTopic: TopicId | null = null;
-    let storedLikes = new Set<string>();
     try {
       const value = localStorage.getItem('gf-feed-topic');
       if (value === 'analysis' || value === 'linalg' || value === 'stochastik') storedTopic = value;
-      const rawLikes = localStorage.getItem('gf-feed-likes');
-      if (rawLikes) storedLikes = new Set(JSON.parse(rawLikes) as string[]);
     } catch { /* Lokaler Speicher ist nicht verfügbar. */ }
 
     const frame = requestAnimationFrame(() => {
       setTopic(storedTopic);
-      setLiked(storedLikes);
       setIndex(0);
     });
     return () => cancelAnimationFrame(frame);
@@ -201,47 +160,21 @@ export default function FeedPage() {
     );
   };
 
-  const toggleLike = (sceneId: string) => {
-    setLiked(current => {
-      const next = new Set(current);
-      if (next.has(sceneId)) next.delete(sceneId);
-      else next.add(sceneId);
-      try { localStorage.setItem('gf-feed-likes', JSON.stringify([...next])); } catch { /* Lokaler Speicher ist nicht verfügbar. */ }
-      return next;
-    });
-  };
-
-  const share = async () => {
-    const url = `${window.location.origin}/feed`;
+  const goBack = () => {
     try {
-      if (navigator.share) {
-        await navigator.share({
-          title: 'Gradefruit Reel-Modus',
-          text: activeCard?.scene.title ?? 'Mathe Schritt für Schritt verstehen.',
-          url,
-        });
+      const returnTo = sessionStorage.getItem('gf-feed-return');
+      if (returnTo?.startsWith('/') && !returnTo.startsWith('//') && !returnTo.startsWith('/feed')) {
+        sessionStorage.removeItem('gf-feed-return');
+        router.push(returnTo);
         return;
       }
-    } catch { /* Teilen wurde abgebrochen. */ }
+    } catch { /* Lokaler Speicher ist nicht verfügbar. */ }
 
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2200);
-    } catch { /* Zwischenablage ist nicht verfügbar. */ }
-  };
-
-  const continueLearning = () => {
-    if (!activeCard?.task) {
-      router.push('/?view=dashboard');
+    if (window.history.length > 1) {
+      router.back();
       return;
     }
-    const params = new URLSearchParams({
-      view: activeCard.task.topicId,
-      tab: 'uebungen',
-      task: activeCard.task.taskId,
-    });
-    router.push(`/?${params.toString()}`);
+    router.push('/?view=dashboard');
   };
 
   if (loading || !user || !activeCard) {
@@ -271,7 +204,6 @@ export default function FeedPage() {
       <div className={styles.feed} ref={feedRef} onScroll={onScroll}>
         {feed.map((card, cardIndex) => {
           const isActive = cardIndex === index;
-          const isLiked = liked.has(card.scene.id);
           return (
             <section
               key={card.scene.id}
@@ -291,31 +223,6 @@ export default function FeedPage() {
                     <ScenePlayer scene={card.scene} autoPlay variant="reel" />
                   </div>
                 )}
-
-                <aside className={styles.rail} aria-label="Aktionen für das aktuelle Video">
-                  <button
-                    className={`${styles.railButton} ${isLiked ? styles.railButtonLiked : ''}`}
-                    aria-pressed={isLiked}
-                    onClick={() => toggleLike(card.scene.id)}
-                  >
-                    <span className={styles.railIcon}><HeartIcon filled={isLiked} /></span>
-                    <span>{isLiked ? 'Gefällt dir' : 'Gefällt mir'}</span>
-                  </button>
-                  <button className={styles.railButton} onClick={share}>
-                    <span className={styles.railIcon}><ShareIcon /></span>
-                    <span>Teilen</span>
-                  </button>
-                </aside>
-
-                <div className={styles.meta}>
-                  <span>{card.task ? TOPIC_LABELS[card.task.topicId] : card.scene.topic}</span>
-                  <strong>{card.scene.title}</strong>
-                  <p>{card.goal}</p>
-                </div>
-
-                <div className={styles.reelCount} aria-hidden="true">
-                  {cardIndex + 1} / {feed.length}
-                </div>
               </div>
             </section>
           );
@@ -323,15 +230,13 @@ export default function FeedPage() {
       </div>
 
       <nav className={styles.bottomNav} aria-label="Reel-Navigation">
+        <button onClick={goBack} aria-label="Zurück">
+          <BackIcon />
+        </button>
         <button onClick={() => router.push('/?view=dashboard')} aria-label="Zur Übersicht">
           <HomeIcon />
         </button>
-        <button className={styles.continueButton} onClick={continueLearning} aria-label="Weiterlernen">
-          <ContinueIcon />
-        </button>
       </nav>
-
-      {copied && <div className={styles.toast}>Link kopiert</div>}
     </main>
   );
 }

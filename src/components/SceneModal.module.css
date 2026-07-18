@@ -473,8 +473,8 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 8px;
-  padding: 6px 10px;
+  gap: 10px;
+  padding: 8px;
   overflow: hidden;
 }
 
@@ -486,8 +486,9 @@
 }
 
 .reelPlayer .graph {
-  width: min(100%, 330px);
-  max-height: 32dvh;
+  width: 100%;
+  max-width: 100%;
+  max-height: min(42dvh, 360px);
   padding: 3px;
   border-color: rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.06);
@@ -595,7 +596,7 @@
 
 @media (max-height: 720px) {
   .reelPlayer .graph {
-    max-height: 25dvh;
+    max-height: 28dvh;
   }
 
   .reelPlayer .caption {
