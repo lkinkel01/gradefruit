@@ -36,14 +36,18 @@ const ShareIcon = () => (
   </svg>
 );
 
-const LANDING_NAV_ITEMS = [
-  { id: 'system', label: 'System' },
-  { id: 'coach', label: 'Coach' },
-  { id: 'lernweise', label: 'Lernweise' },
-  { id: 'kurse', label: 'Kurse' },
-] as const;
+type LandingSectionId = 'kurse' | 'system' | 'ueber-uns';
 
-type LandingSectionId = (typeof LANDING_NAV_ITEMS)[number]['id'];
+const LANDING_NAV_ITEMS: ReadonlyArray<{
+  href: string;
+  id?: LandingSectionId;
+  label: string;
+}> = [
+  { href: '#kurse', id: 'kurse', label: 'Kursangebot' },
+  { href: '#system', id: 'system', label: 'Lernsystem' },
+  { href: '#ueber-uns', id: 'ueber-uns', label: 'Über uns' },
+  { href: '/impressum', label: 'Kontakt' },
+];
 
 interface Props {
   isAuthed: boolean;
@@ -60,20 +64,28 @@ interface Props {
 
 const SYSTEM_POINTS = [
   {
-    title: 'Dein Stand bleibt sichtbar.',
-    desc: 'Du siehst, was verstanden, zu wiederholen oder noch unklar ist.',
+    title: 'Klarer Lernweg',
+    desc: 'Zusammenfassungen, Übungen und Original-Abituraufgaben aus den letzten Jahren.',
   },
   {
-    title: 'Unsicheres kommt zurück.',
-    desc: 'Du entscheidest selbst, welche Aufgaben du noch einmal brauchst.',
+    title: 'KI und Tutorhilfe',
+    desc: 'Fragen direkt im Lernkontext stellen.',
   },
   {
-    title: 'Hilfe bleibt im Kontext.',
-    desc: 'Der Coach kennt die Formel, Aufgabe oder Lösung vor dir.',
+    title: 'Eigene Inhalte',
+    desc: 'Hochladen, integrieren und damit lernen.',
   },
   {
-    title: 'Alles passt zu deiner Prüfung.',
-    desc: 'Mathe-Abitur Hessen 2027. Getrennt für Grundkurs und Leistungskurs.',
+    title: 'Moderne Lernmethoden',
+    desc: 'Active Recall, Spaced Repetition und Interleaving.',
+  },
+  {
+    title: 'Reel-Modus',
+    desc: 'Lerninhalte wiederholen, wie bei TikTok, Instagram und Co.',
+  },
+  {
+    title: 'Community-Wissen',
+    desc: 'Unterlagen teilen und gemeinsam nutzen.',
   },
 ];
 
@@ -222,7 +234,6 @@ export default function LandingPage({
   onToggleDark,
   onEnter,
   onLogin,
-  onRegister,
   onOpenCheckout,
   onSignOut,
 }: Props) {
@@ -264,6 +275,7 @@ export default function LandingPage({
 
   useEffect(() => {
     const sectionElements = LANDING_NAV_ITEMS
+      .filter((item): item is typeof item & { id: LandingSectionId } => Boolean(item.id))
       .map(item => document.getElementById(item.id))
       .filter((element): element is HTMLElement => Boolean(element));
 
@@ -380,9 +392,9 @@ export default function LandingPage({
               <a
                 aria-current={activeSection === item.id ? 'location' : undefined}
                 className={activeSection === item.id ? styles.navSectionActive : styles.navSection}
-                href={`#${item.id}`}
-                key={item.id}
-                onClick={() => chooseSection(item.id)}
+                href={item.href}
+                key={item.label}
+                onClick={item.id ? () => chooseSection(item.id as LandingSectionId) : undefined}
               >
                 {item.label}
               </a>
@@ -413,12 +425,12 @@ export default function LandingPage({
               {isAuthed ? (
                 <>
                   <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                  <button className="btn primary sm" onClick={onEnter}>Weiterlernen</button>
+                  <button className="btn primary sm" onClick={onEnter}>Kostenlos testen</button>
                 </>
               ) : (
                 <>
                   <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
-                  <button className="btn primary sm" onClick={onRegister}>Registrieren</button>
+                  <button className="btn primary sm" onClick={onEnter}>Kostenlos testen</button>
                 </>
               )}
             </div>
@@ -443,9 +455,9 @@ export default function LandingPage({
             {LANDING_NAV_ITEMS.map(item => (
               <a
                 aria-current={activeSection === item.id ? 'location' : undefined}
-                href={`#${item.id}`}
-                key={item.id}
-                onClick={() => chooseSection(item.id)}
+                href={item.href}
+                key={item.label}
+                onClick={item.id ? () => chooseSection(item.id as LandingSectionId) : undefined}
               >
                 {item.label}
               </a>
@@ -455,12 +467,12 @@ export default function LandingPage({
             {isAuthed ? (
               <>
                 <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                <button className="btn primary sm" onClick={onEnter}>Weiterlernen</button>
+                <button className="btn primary sm" onClick={onEnter}>Kostenlos testen</button>
               </>
             ) : (
               <>
                 <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
-                <button className="btn primary sm" onClick={onRegister}>Registrieren</button>
+                <button className="btn primary sm" onClick={onEnter}>Kostenlos testen</button>
               </>
             )}
           </div>
@@ -470,24 +482,23 @@ export default function LandingPage({
       <main id="main-content">
         <header className={styles.hero}>
           <div className={styles.heroCopy}>
-            <p className={styles.heroContext}>Mathe-Abitur Hessen 2027</p>
+            <p className={styles.heroContext}>Online-Intensivkurs für das Mathematik-Abitur in Hessen 2027</p>
             <h1 className={styles.headline}>
-              <span>Alles für dein</span>
-              <span>Mathe-Abitur.</span>
-              <span>Ein System.</span>
+              <span>Deine komplette </span>
+              <span className={styles.headlineLong}>Mathe-Abiturvorbereitung. </span>
+              <span>An einem Ort.</span>
             </h1>
             <p className={styles.lead}>
-              Kurse, Lernstand, Wiederholung und der KI-gestützte Gradefruit-Coach
-              arbeiten zusammen. Für Grundkurs und Leistungskurs.
+              24/7 KI-Tutor. Originale Abituraufgaben. Detaillierte Erklärvideos.
             </p>
             <div className={styles.heroActions}>
               <button className="btn primary big" onClick={onEnter}>
-                {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
+                Kostenlos testen
               </button>
               <a className="gf-arrow" href="#system">Gradefruit entdecken <Arrow /></a>
             </div>
             <p className={styles.reassurance}>
-              {isAuthed ? 'Mach genau da weiter, wo du aufgehört hast.' : 'Analysis kostenlos. Ohne Account. Ohne Zahlungsdaten.'}
+              Analysis ist kostenlos. Ohne Account. Ohne Zahlungsdaten.
             </p>
           </div>
 
@@ -506,27 +517,35 @@ export default function LandingPage({
         </header>
 
         <div className={styles.proofStrip} aria-label="Produktfokus">
-          <div><strong>Hessen 2027</strong><span>prüfungsspezifisch</span></div>
-          <div><strong>GK und LK</strong><span>getrennte Kursinhalte</span></div>
-          <div><strong>{days ?? '—'} Tage</strong><span>bis zur schriftlichen Prüfung</span></div>
+          <div><strong>Schriftliche Abiturprüfung Mathematik 2027</strong><span>Abgestimmt auf Hessen</span></div>
+          <div><strong>GK und LK</strong><span>Passend zu deinem Kurs</span></div>
+          <div><strong>{days ?? '…'} Tage</strong><span>Bis zur schriftlichen Prüfung</span></div>
         </div>
 
         <section className={styles.section} id="system">
           <div className={styles.sectionIntro}>
-            <h2>Nicht mehr suchen.<br />Weiterlernen.</h2>
+            <h2>Mehr als ein Kurs. Ein vollständiges Lernsystem.</h2>
             <p>
-              Gradefruit verbindet die Teile deiner Vorbereitung zu einem klaren
-              Lernweg. Du behältst die Kontrolle. Das System hält den Zusammenhang.
+              Active Recall, Spaced Repetition und Interleaving. KI-Tutor rund um
+              die Uhr. Lernen im Swipe-Modus.
             </p>
           </div>
           <div className={styles.systemLayout}>
-            <div className={styles.systemVisual} role="img" aria-label="Lernen, einordnen, verstehen und wiederholen greifen ineinander.">
-              <div className={styles.systemRing} aria-hidden="true">
-                <span className={styles.systemTop}>Lernen</span>
-                <span className={styles.systemRight}>Verstehen</span>
-                <span className={styles.systemBottom}>Einordnen</span>
-                <span className={styles.systemLeft}>Wiederholen</span>
-                <Logo size={88} />
+            <div
+              className={styles.systemVisual}
+              role="img"
+              aria-label="Klarer Lernweg, KI und Tutorhilfe, eigene Inhalte, moderne Lernmethoden, Reel-Modus und Community-Wissen bilden das Gradefruit-Lernsystem."
+            >
+              <div className={styles.systemDiagram} aria-hidden="true">
+                <div className={styles.systemCore}>
+                  <Logo size={76} />
+                  <strong>Gradefruit</strong>
+                </div>
+                <div className={styles.systemLabels}>
+                  {SYSTEM_POINTS.map(point => (
+                    <span key={point.title}>{point.title}</span>
+                  ))}
+                </div>
               </div>
             </div>
             <div className={styles.systemPoints}>
@@ -686,7 +705,7 @@ export default function LandingPage({
           </div>
         </section>
 
-        <section className={styles.section}>
+        <section className={styles.section} id="ueber-uns">
           <div className={styles.focusLayout}>
             <div className={styles.focusIntro}>
               <h2>Nur deine Prüfung.<br />Nichts drum herum.</h2>

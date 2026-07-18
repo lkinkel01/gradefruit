@@ -130,7 +130,7 @@
 .navSection,
 .navSectionActive {
   min-height: 34px;
-  padding: 8px 12px;
+  padding: 8px 10px;
   border-radius: var(--radius-control);
   color: var(--muted);
   font-size: 13px;
@@ -231,9 +231,9 @@
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
+  grid-template-columns: minmax(0, 1.22fr) minmax(340px, .78fr);
   align-items: center;
-  gap: clamp(28px, 5vw, 72px);
+  gap: clamp(28px, 4vw, 56px);
   min-height: min(82svh, 780px);
   padding: clamp(58px, 8vh, 92px) 0 72px;
   overflow: hidden;
@@ -257,7 +257,7 @@
 .headline {
   color: var(--ink);
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(52px, 7.3vw, 90px);
+  font-size: clamp(50px, 6.5vw, 80px);
   font-optical-sizing: auto;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -266,6 +266,13 @@
 }
 
 .headline span { display: block; }
+
+.headlineLong {
+  font-size: clamp(28px, 3.1vw, 44px);
+  letter-spacing: -0.045em;
+  line-height: 1.18;
+  white-space: nowrap;
+}
 
 .lead {
   max-width: 51ch;
@@ -430,42 +437,54 @@
 
 .systemVisual {
   display: grid;
-  min-height: 520px;
+  min-height: 620px;
   place-items: center;
   border-right: 1px solid var(--line-strong);
 }
 
-.systemRing {
-  position: relative;
+.systemDiagram {
   display: grid;
-  width: min(80%, 390px);
-  aspect-ratio: 1;
-  place-items: center;
-  border: 1px solid var(--line-strong);
-  border-radius: 50%;
+  width: min(84%, 420px);
+  gap: 30px;
 }
 
-.systemRing::before {
-  content: '';
-  position: absolute;
-  inset: 17%;
+.systemCore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: center;
+  gap: 10px;
+  color: var(--accent);
+}
+
+.systemCore strong {
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+
+.systemLabels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   border: 1px solid var(--line);
-  border-radius: inherit;
+  border-radius: var(--radius-card);
 }
 
-.systemRing > span {
-  position: absolute;
-  padding: 5px 9px;
-  background: var(--canvas);
-  color: var(--muted);
-  font-size: 12.5px;
-  font-weight: 600;
+.systemLabels span {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  padding: 17px 19px;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 650;
+  line-height: 1.35;
 }
 
-.systemTop { top: -14px; left: 50%; transform: translateX(-50%); }
-.systemRight { top: 50%; right: -31px; transform: translateY(-50%); }
-.systemBottom { bottom: -14px; left: 50%; transform: translateX(-50%); }
-.systemLeft { top: 50%; left: -38px; transform: translateY(-50%); }
+.systemLabels span:nth-child(even) { border-left: 1px solid var(--line); }
+.systemLabels span:nth-child(n + 3) { border-top: 1px solid var(--line); }
 
 .systemPoints { display: flex; flex-direction: column; }
 
@@ -901,7 +920,7 @@
    ohne Unterstützung oder bei Reduced Motion vollständig sichtbar. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .systemRing {
+    .systemDiagram {
       animation: systemArrive linear both;
       animation-timeline: view();
       animation-range: entry 0% cover 38%;
@@ -916,8 +935,8 @@
 }
 
 @keyframes systemArrive {
-  from { opacity: .72; transform: rotate(-5deg) scale(.97); }
-  to { opacity: 1; transform: rotate(0) scale(1); }
+  from { opacity: .72; transform: translate3d(0, 10px, 0) scale(.985); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes visualArrive {
@@ -926,7 +945,7 @@
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 980px) {
   .navBar { grid-template-columns: 1fr auto; }
   .navCenter,
   .desktopAccount { display: none; }
@@ -1046,6 +1065,7 @@
 
   .hero { padding-top: 52px; }
   .headline { font-size: clamp(43px, 13.5vw, 56px); }
+  .headlineLong { font-size: clamp(28px, 7.4vw, 40px); line-height: 1.18; }
   .lead { font-size: 16px; }
   .heroActions { align-items: stretch; flex-direction: column; gap: 14px; }
   .heroActions :global(.btn) { width: 100%; }
@@ -1061,10 +1081,9 @@
   .sectionIntro { margin-bottom: 36px; }
   .libraryIntro { margin-bottom: 36px; }
 
-  .systemVisual { min-height: 350px; }
-  .systemRing { width: min(78%, 275px); }
-  .systemRight { right: -27px; }
-  .systemLeft { left: -34px; }
+  .systemVisual { min-height: 470px; }
+  .systemDiagram { width: 100%; gap: 24px; }
+  .systemLabels span { min-height: 70px; padding: 15px 14px; font-size: 12.5px; }
 
   .coachCopy,
   .visualCopy,
