@@ -317,6 +317,14 @@ export default function LandingPage({
     setMobileNavOpen(false);
   };
 
+  // Logo-Klick: Die Startseite ist bereits die Home-Route — also ruhig an den
+  // Seitenanfang, nie automatisch ins Produkt.
+  const scrollToTop = () => {
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    setMobileNavOpen(false);
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  };
+
   const plan = (
     label: string,
     price: string,
@@ -352,7 +360,7 @@ export default function LandingPage({
 
       <nav className={`${styles.nav} ${navScrolled ? styles.navScrolled : ''}`} aria-label="Hauptnavigation">
         <div className={styles.navBar}>
-          <button type="button" className={styles.brand} onClick={onEnter}>
+          <button type="button" className={styles.brand} onClick={scrollToTop} aria-label="Zur Gradefruit Startseite">
             <BrandMark size={28} />
             <span>Gradefruit</span>
           </button>
@@ -395,7 +403,7 @@ export default function LandingPage({
               {isAuthed ? (
                 <>
                   <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                  <button className="btn primary sm" onClick={onEnter}>Weiter lernen</button>
+                  <button className="btn primary sm" onClick={onEnter}>Weiterlernen</button>
                 </>
               ) : (
                 <>
@@ -434,7 +442,7 @@ export default function LandingPage({
             {isAuthed ? (
               <>
                 <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                <button className="btn primary sm" onClick={onEnter}>Weiter lernen</button>
+                <button className="btn primary sm" onClick={onEnter}>Weiterlernen</button>
               </>
             ) : (
               <>
@@ -461,7 +469,7 @@ export default function LandingPage({
             </p>
             <div className={styles.heroActions}>
               <button className="btn primary big" onClick={onEnter}>
-                {isAuthed ? 'Weiter lernen' : 'Kostenlos testen'}
+                {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
               </button>
               <a className="gf-arrow" href="#system">Gradefruit entdecken <Arrow /></a>
             </div>
@@ -470,13 +478,16 @@ export default function LandingPage({
             </p>
           </div>
 
+          {/* Markenvisual statt Feature-Grafik: die Grapefruit im
+              Fortschrittsring — Lernen als sich füllende Frucht, ohne
+              erklärungsbedürftige Beschriftungen. */}
           <div className={styles.heroVisual} aria-hidden="true">
-            <span className={`${styles.orbitLabel} ${styles.orbitTop}`}>Lernstand</span>
-            <span className={`${styles.orbitLabel} ${styles.orbitRight}`}>Coach</span>
-            <span className={`${styles.orbitLabel} ${styles.orbitBottom}`}>Wiederholen</span>
-            <div className={styles.heroOrbit} />
+            <svg className={styles.orbitRing} viewBox="0 0 100 100">
+              <circle className={styles.orbitBase} cx="50" cy="50" r="49" />
+              <circle className={styles.orbitFill} cx="50" cy="50" r="49" pathLength={100} />
+            </svg>
             <div className={styles.heroFruit} ref={fruitRef}>
-              <Logo size={520} filled={1} />
+              <Logo size={520} filled={2} />
             </div>
           </div>
         </header>
@@ -484,7 +495,7 @@ export default function LandingPage({
         <div className={styles.proofStrip} aria-label="Produktfokus">
           <div><strong>Hessen 2027</strong><span>prüfungsspezifisch</span></div>
           <div><strong>GK und LK</strong><span>getrennte Kursinhalte</span></div>
-          <div><strong>{days ?? '—'} Tage</strong><span>voraussichtlich bis zur Prüfung</span></div>
+          <div><strong>{days ?? '—'} Tage</strong><span>bis zur schriftlichen Prüfung</span></div>
         </div>
 
         <section className={styles.section} id="system">
@@ -729,7 +740,7 @@ export default function LandingPage({
           <h2>Fang an.<br />Der Rest wird klarer.</h2>
           <div className={styles.closingActions}>
             <button className="btn primary big" onClick={onEnter}>
-              {isAuthed ? 'Weiter lernen' : 'Kostenlos testen'}
+              {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
             </button>
             <a className="gf-arrow" href="#kurse">Kurse ansehen <Arrow /></a>
           </div>

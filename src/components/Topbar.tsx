@@ -16,8 +16,13 @@ const LABELS: Partial<Record<View, string>> = {
   account: 'Mein Konto',
 };
 
+// Themenseiten besitzen eine zweite Brotkrumen-Ebene (den aktiven Tab).
+const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
+const TAB_LABELS = { zusammenfassung: 'Zusammenfassung', uebungen: 'Übungen' } as const;
+
 interface Props {
   view: View;
+  topicTab: 'zusammenfassung' | 'uebungen';
   dark: boolean;
   onToggleDark: () => void;
   onOpenNav: () => void;
@@ -25,7 +30,7 @@ interface Props {
   onOpenAuth: () => void;
 }
 
-export default function Topbar({ view, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
+export default function Topbar({ view, topicTab, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
   const { user } = useAuth();
   const initials = user ? (user.user_metadata?.full_name || user.email || 'U').slice(0, 2).toUpperCase() : null;
 
@@ -44,11 +49,23 @@ export default function Topbar({ view, dark, onToggleDark, onOpenNav, onNavigate
       <button type="button" className={styles.hamb} onClick={onOpenNav} aria-label="Menü">
         <MenuIcon size={20} />
       </button>
-      <div className={styles.crumbs}>
-        <span>Gradefruit</span>
-        <span className={styles.sep}>›</span>
-        <span className={styles.here}>{LABELS[view] ?? view}</span>
-      </div>
+      <nav className={styles.crumbs} aria-label="Brotkrumen-Navigation">
+        <button type="button" className={styles.crumbLink} onClick={() => onNavigate('landing')} aria-label="Zur Gradefruit Startseite">
+          Gradefruit
+        </button>
+        <span className={styles.sep} aria-hidden="true">›</span>
+        {TOPIC_VIEWS.includes(view) ? (
+          <>
+            <button type="button" className={`${styles.crumbLink} ${styles.crumbMid}`} onClick={() => onNavigate(view)}>
+              {LABELS[view]}
+            </button>
+            <span className={styles.sep} aria-hidden="true">›</span>
+            <span className={styles.here} aria-current="page">{TAB_LABELS[topicTab]}</span>
+          </>
+        ) : (
+          <span className={styles.here} aria-current="page">{LABELS[view] ?? view}</span>
+        )}
+      </nav>
       <button type="button" className={styles.darkBtn} onClick={onToggleDark} aria-label={dark ? 'Hellmodus aktivieren' : 'Dunkelmodus aktivieren'} title={dark ? 'Hellmodus' : 'Dunkelmodus'}>
         {dark ? (
           <SunIcon size={16} />

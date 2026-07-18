@@ -9,15 +9,6 @@ import { GrapefruitProgress } from './Logo';
 import { ArrowRightIcon, ReelIcon } from './UiIcons';
 import styles from './Dashboard.module.css';
 
-// Wechselnde Begrüßungssätze, damit die Übersicht nicht jeden Tag gleich klingt.
-const MOTIVATION = [
-  'Mach dort weiter, wo du aufgehört hast.',
-  'Ein klarer Schritt reicht für heute.',
-  'Jede gelöste Aufgabe macht deinen Stand klarer.',
-  'Beginne mit dem, was noch unklar ist.',
-  'Nimm dir genau eine Aufgabe vor.',
-];
-
 interface Props {
   onNavigate: (v: View) => void;
   level: 'gk' | 'lk';
@@ -31,17 +22,9 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
   const { totalDone, totalLessons, topicDone, topicTotal, statusCounts } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
-  const [greeting, setGreeting] = useState('Hallo');
-  const [motivation, setMotivation] = useState(MOTIVATION[0]);
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
   useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      const now = new Date();
-      const h = now.getHours();
-      setGreeting(h < 12 ? 'Guten Morgen' : h < 18 ? 'Guten Tag' : 'Guten Abend');
-      setMotivation(MOTIVATION[(now.getDate() + h) % MOTIVATION.length]);
-      setDaysLeft(daysUntilExam(now));
-    });
+    const frame = requestAnimationFrame(() => setDaysLeft(daysUntilExam()));
     return () => cancelAnimationFrame(frame);
   }, []);
 
@@ -64,12 +47,9 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
 
   return (
     <div className={`${styles.page} gf-stagger`}>
-      {/* Kopf: Begrüßung + Kurswahl */}
+      {/* Kopf: Begrüßung + Kurswahl — bewusst ruhig, ohne Zusatzsatz */}
       <div className={styles.head}>
-        <div>
-          <h1 className={styles.greet}>{greeting}{firstName ? `, ${firstName}` : ''}.</h1>
-          <p className={styles.blurb}>{motivation}</p>
-        </div>
+        <h1 className={styles.greet}>Guten Tag{firstName ? `, ${firstName}` : ''}.</h1>
         {choosable ? (
           <div className={styles.courseSeg} role="tablist" aria-label="Kursniveau wählen">
             <button role="tab" aria-selected={level === 'gk'} className={`${styles.courseBtn} ${level === 'gk' ? styles.courseOn : ''}`} onClick={() => onChooseLevel('gk')}>Grundkurs</button>
@@ -80,51 +60,54 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
         )}
       </div>
 
-      {/* Countdown — der emotionale Anker, groß und editorial */}
+      {/* Prüfungstermin — ruhige Info-Zeile, kein dominanter Anker mehr */}
       <div className={styles.countdown}>
-        <div className={styles.cdNum}>
-          <span className={`gf-index ${styles.cdDays}`}>{daysLeft ?? '—'}</span>
-          <span className="gf-meta">Tage bis zur Prüfung</span>
-        </div>
-        <div className={styles.cdMeta}>
+        <p className={styles.cdLine}>
+          <span className={styles.cdDays}>{daysLeft ?? '—'}</span>
+          <span className={styles.cdLabel}>Tage bis zur Prüfung</span>
+        </p>
+        <p className={styles.cdMeta}>
           <span className={styles.cdTitle}>Schriftliche Abschlussprüfung Mathematik · Hessen</span>
           <span className={styles.cdDate}>
             {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
             {EXAM_DATE_IS_PRELIMINARY && ' · voraussichtlich'}
           </span>
-        </div>
+        </p>
       </div>
 
-      {/* Fortschritt — Grapefruit präsent */}
-      <div className={styles.progress}>
-        <GrapefruitProgress pct={pct} size={116} />
-        <div className={styles.progressBody}>
-          <p className="gf-meta">Dein Fortschritt</p>
-          <div className={styles.progressPct}>
-            <span className="gf-index">{pct}</span><span className={styles.progressUnit}>%</span>
-          </div>
-          <p className={styles.progressSub}>{totalDone} von {totalLessons} Aufgaben verstanden</p>
-          <div className={styles.actions}>
-            <button className="btn primary" onClick={() => onNavigate('analysis')}>Weiterlernen</button>
-            <button className="btn light" onClick={openReels}>
-              <ReelIcon size={14} />
-              Reel-Modus
+      {/* Fortschritt und Lernstand — eine zusammengehörige, klickbare Einheit.
+          Der Kopf öffnet die Wiederholen-Seite (die bestehende Detailansicht
+          des Lernstands); die drei Stufen springen mit vorgewähltem Filter. */}
+      <section className={styles.statusSec} aria-label="Fortschritt und Lernstand">
+        <button type="button" className={styles.progressCard} onClick={() => onNavigate('review')}>
+          <GrapefruitProgress pct={pct} size={88} />
+          <span className={styles.progressBody}>
+            <span className={styles.progressTitle}>Fortschritt und Lernstand</span>
+            <span className={styles.progressPct}>
+              <span className={styles.pctNum}>{pct}</span>
+              <span className={styles.pctUnit}>%</span>
+            </span>
+            <span className={styles.progressSub}>{totalDone} von {totalLessons} Aufgaben verstanden</span>
+          </span>
+          <span className={styles.progressGo} aria-hidden="true"><ArrowRightIcon size={16} /></span>
+        </button>
+        <div className={styles.statRow}>
+          {statusTiles.map(t => (
+            <button key={t.status} type="button" className={styles.stat} onClick={() => openReview(t.status)}>
+              <span className={styles.statNum}>{t.num}</span>
+              <span className={styles.statLabel}>{t.label}</span>
+              <span className={styles.statGo}><ArrowRightIcon size={14} /></span>
             </button>
-          </div>
+          ))}
         </div>
-      </div>
-
-      {/* Lernstand — editoriale, klickbare Zahlen-Reihe */}
-      <p className={`gf-meta ${styles.secLabel}`}>Dein Lernstand</p>
-      <div className={styles.statRow}>
-        {statusTiles.map(t => (
-          <button key={t.status} className={styles.stat} onClick={() => openReview(t.status)}>
-            <span className={`gf-index ${styles.statNum}`}>{t.num}</span>
-            <span className={styles.statLabel}>{t.label}</span>
-            <span className={styles.statGo}><ArrowRightIcon size={15} /></span>
+        <div className={styles.actions}>
+          <button className="btn primary" onClick={() => onNavigate('analysis')}>Weiterlernen</button>
+          <button className="btn light" onClick={openReels}>
+            <ReelIcon size={14} />
+            Reel-Modus
           </button>
-        ))}
-      </div>
+        </div>
+      </section>
 
       {/* Themen — editoriale Liste */}
       <p className={`gf-meta ${styles.secLabel}`}>Themen</p>

@@ -291,6 +291,16 @@ Probleme").
   Navigation, Fortschritt, Favicon und App-Icon geometrisch konsistent.
   TypeScript, ESLint und Produktions-Build sind sauber; visuell geprüft in
   Hell/Dunkel sowie Desktop und 390-Pixel-Ansicht.
+- ✅ **Personalisierte Startseite und Lernnavigation (18.07.2026):**
+  Angemeldete Nutzer bleiben auf der öffentlichen, personalisierten Startseite
+  und wechseln erst über „Weiterlernen" ins Dashboard; explizite Deep Links
+  bleiben erhalten. Dashboard-Begrüßung, Prüfungsdatum, Countdown sowie
+  Fortschritt und Lernstand sind kompakter. Dreistufige Breadcrumbs,
+  aktive Sidebar-Unterpunkte und vorausgewählte Lernstatus-Filter geben im
+  Lernbereich klare Orientierung. Das reduzierte Grapefruit-Markenvisual ist
+  für Gast-, Konto- und Mobilansicht abgestimmt. TypeScript, gezielter ESLint
+  und Produktions-Build sind sauber; Chromium wurde in Hell/Dunkel sowie
+  Desktop und 390-Pixel-Ansicht geprüft.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten

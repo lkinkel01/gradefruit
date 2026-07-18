@@ -45,8 +45,10 @@ export default function ReviewView({ level, onNavigate }: Props) {
     try {
       const s = localStorage.getItem('gf-review-status');
       if (s === 'verstanden' || s === 'wiederholen' || s === 'unklar') {
-        localStorage.removeItem('gf-review-status');
-        frame = requestAnimationFrame(() => setStatusFilter(s));
+        frame = requestAnimationFrame(() => {
+          setStatusFilter(s);
+          localStorage.removeItem('gf-review-status');
+        });
       }
     } catch { /* Speicher gesperrt */ }
     return () => {

@@ -61,6 +61,7 @@ interface Props {
   onOpenCheckout: (course: 'gk' | 'lk') => void;
   onOpenAsk: (ctx: string, snippet: string) => void;
   onNavigate: (v: View) => void;
+  onTabChange?: (tab: 'zusammenfassung' | 'uebungen') => void;
 }
 
 type Tab = 'zusammenfassung' | 'uebungen';
@@ -72,7 +73,7 @@ const STATUS_BTNS: { status: Exclude<LernStatus, 'none'>; label: string }[] = [
   { status: 'unklar', label: 'Noch unklar' },
 ];
 
-export default function TopicView({ topicId, level, owned, ownedLk, navSignal, onOpenCheckout, onOpenAsk, onNavigate }: Props) {
+export default function TopicView({ topicId, level, owned, ownedLk, navSignal, onOpenCheckout, onOpenAsk, onNavigate, onTabChange }: Props) {
   const router = useRouter();
   const topic = TOPIC_DATA[topicId as string];
   const { user } = useAuth();
@@ -85,6 +86,10 @@ export default function TopicView({ topicId, level, owned, ownedLk, navSignal, o
 
   const tasks = topic ? topic[level] : [];
   const doneCount = tasks.filter(t => statusOf(topicId, t.id) === 'verstanden').length;
+
+  // Aktiven Tab nach außen melden — Breadcrumb (Topbar) und Sidebar-Untermenü
+  // zeigen so immer denselben Standort wie die Seite selbst.
+  useEffect(() => { onTabChange?.(tab); }, [tab, onTabChange]);
 
   // Einstieg: Wer hier schon gelernt hat, landet direkt bei den Übungen,
   // neue Lernende bei der Zusammenfassung. Deep-Links (Sidebar-Untermenü,

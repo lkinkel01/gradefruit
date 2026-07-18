@@ -8,6 +8,7 @@ import styles from './Sidebar.module.css';
 
 interface Props {
   view: View;
+  topicTab: 'zusammenfassung' | 'uebungen';
   owned: boolean;
   ownedLk: boolean;
   level: 'gk' | 'lk';
@@ -36,7 +37,7 @@ function rememberTab(tab: 'zusammenfassung' | 'uebungen') {
   try { localStorage.setItem('gf-open-tab', tab); } catch { /* Speicher gesperrt */ }
 }
 
-export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
+export default function Sidebar({ view, topicTab, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
@@ -67,6 +68,7 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
             <div key={t.id} className={styles.topicWrap}>
               <button
                 className={active ? styles.on : ''}
+                aria-current={active ? 'page' : undefined}
                 onClick={() => onNavigate(t.id)}
               >
                 <span className={styles.cdot} style={{ background: t.color }} />
@@ -76,14 +78,22 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
                   : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><LockIcon size={13} /></span>
                 }
               </button>
-              {/* Untermenü: im aktiven Thema dauerhaft offen, sonst bei Hover */}
+              {/* Untermenü: im aktiven Thema dauerhaft offen, sonst bei Hover.
+                  Der aktive Tab wird markiert (Punkt + Gewicht, nicht nur Farbe). */}
               <div className={`${styles.flyout} ${active ? styles.flyoutPinned : ''}`}>
-                <button className={styles.flyItem} onClick={() => { rememberTab('zusammenfassung'); onNavigate(t.id); }}>
-                  Zusammenfassung
-                </button>
-                <button className={styles.flyItem} onClick={() => { rememberTab('uebungen'); onNavigate(t.id); }}>
-                  Übungen
-                </button>
+                {(['zusammenfassung', 'uebungen'] as const).map(tabId => {
+                  const tabActive = active && topicTab === tabId;
+                  return (
+                    <button
+                      key={tabId}
+                      className={`${styles.flyItem} ${tabActive ? styles.flyOn : ''}`}
+                      aria-current={tabActive ? 'page' : undefined}
+                      onClick={() => { rememberTab(tabId); onNavigate(t.id); }}
+                    >
+                      {tabId === 'zusammenfassung' ? 'Zusammenfassung' : 'Übungen'}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           );
@@ -93,7 +103,7 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
       <div className={`${styles.navsec} ${styles.navsecGap}`}>Navigation</div>
       <nav className={styles.snav}>
         {NAV_ITEMS.map(item => (
-          <button key={item.id} className={view === item.id ? styles.on : ''} onClick={() => onNavigate(item.id)}>
+          <button key={item.id} className={view === item.id ? styles.on : ''} aria-current={view === item.id ? 'page' : undefined} onClick={() => onNavigate(item.id)}>
             <span className={styles.icon}>{item.icon}</span>
             <span className={styles.ti}>{item.label}</span>
           </button>

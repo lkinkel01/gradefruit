@@ -79,9 +79,10 @@
   .topicWrap:hover .flyout, .flyout:hover { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 4px 28px; }
 }
 .flyItem {
+  position: relative;
   display: block;
   width: 100%;
-  padding: 7px 10px;
+  padding: 7px 10px 7px 20px;
   border: none;
   border-radius: var(--radius-control);
   background: transparent;
@@ -91,6 +92,20 @@
   font-size: 12.5px;
   text-align: left;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+.flyItem:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+/* Aktiver Tab: Punkt-Indikator + Gewicht + Tönung — nicht nur Farbe. */
+.flyOn { color: var(--side-text); font-weight: 600; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.flyOn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(-50%);
 }
 .cdot { width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; }
 .ti { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

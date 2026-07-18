@@ -50,25 +50,33 @@ export default function Home() {
   // Tab (gf-open-tab) neu ein – auch wenn man schon im selben Thema ist
   // (Sidebar-Untermenü: „Zusammenfassung"/„Übungen" im aktiven Thema).
   const [navSignal, setNavSignal] = useState(0);
+  // Aktiver Tab der geöffneten Themenseite — gemeldet von TopicView, damit
+  // Breadcrumb (Topbar) und Sidebar-Untermenü denselben Standort zeigen.
+  const [topicTab, setTopicTab] = useState<'zusammenfassung' | 'uebungen'>('zusammenfassung');
 
-  // Wenn Nutzer eingeloggt ist und noch auf Landing: ins Dashboard. Kommt er
-  // gerade aus dem Lernfeed (gf-open-topic), direkt ins gewünschte Thema.
-  // Das Ref merkt sich den konsumierten Sprung, damit Reacts doppelter
-  // Effekt-Lauf im Dev-Modus nicht auf das Dashboard zurückfällt.
-  const consumedJump = useRef<View | null>(null);
+  // Deep-Link aus dem Reel-Modus (gf-open-topic): einmalig beim Start
+  // konsumieren und ins gewünschte Thema springen. Es gibt KEINEN
+  // automatischen Sprung ins Dashboard mehr: Eingeloggte bleiben auf der
+  // Startseite — auch bei Tab-Wechsel, Fokus-Events oder Session-Refresh,
+  // denn dieser Effekt läuft pro Seitenaufruf höchstens einmal (Ref-Guard;
+  // spätere Auth-Events können keine Navigation mehr auslösen).
+  const jumpConsumed = useRef(false);
   useEffect(() => {
-    if (!user || view !== 'landing') return;
-    let target: View = 'dashboard';
+    if (loading || !user || jumpConsumed.current) return;
+    jumpConsumed.current = true;
     try {
-      const jump = localStorage.getItem('gf-open-topic') ?? consumedJump.current;
+      const jump = localStorage.getItem('gf-open-topic');
       if (jump === 'analysis' || jump === 'linalg' || jump === 'stochastik') {
         localStorage.removeItem('gf-open-topic');
-        consumedJump.current = jump;
-        target = jump;
+        // Bewusst ohne Cleanup: Der Frame darf auch nach StrictModes
+        // doppeltem Effekt-Lauf genau einmal feuern (Ref verhindert Doppel-Konsum).
+        requestAnimationFrame(() => {
+          setView(jump);
+          setNavSignal(n => n + 1);
+        });
       }
     } catch { /* Speicher gesperrt */ }
-    setView(target);
-  }, [user, view]);
+  }, [user, loading]);
 
   // Das Inline-Skript in layout.tsx hat das gespeicherte Theme schon vor dem
   // ersten Rendern als Body-Klasse gesetzt (kein Aufblitzen). React gleicht
@@ -194,6 +202,10 @@ export default function Home() {
       openCheckout('gk');
       return;
     }
+    // Die App wechselt Ansichten innerhalb derselben Route. Ohne explizites
+    // Zurücksetzen würde dabei die Scrollposition der vorherigen Ansicht
+    // erhalten bleiben und der neue Seitenkopf könnte unter der Topbar liegen.
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     setView(v);
     setNavOpen(false);
     setNavSignal(n => n + 1);
@@ -210,7 +222,7 @@ export default function Home() {
 
   const handleSignOut = async () => {
     await signOut();
-    setView('landing');
+    navigate('landing');
   };
 
   if (loading) {
@@ -231,7 +243,7 @@ export default function Home() {
           ownedLk={ownedLk}
           dark={dark}
           onToggleDark={() => setTheme(!dark)}
-          onEnter={() => user ? setView('dashboard') : setView('analysis')}
+          onEnter={() => navigate(user ? 'dashboard' : 'analysis')}
           onLogin={() => openAuth('login')}
           onRegister={() => openAuth('register')}
           onOpenCheckout={(course) => user ? openCheckout(course) : openAuth('register')}
@@ -260,6 +272,7 @@ export default function Home() {
             onOpenCheckout={openCheckout}
             onOpenAsk={openAsk}
             onNavigate={navigate}
+            onTabChange={setTopicTab}
           />
         );
       case 'videos': return <VideosView />;
@@ -282,6 +295,7 @@ export default function Home() {
       <div className={styles.shell} key={themeKey}>
         <Sidebar
           view={view}
+          topicTab={topicTab}
           owned={owned}
           ownedLk={ownedLk}
           level={level}
@@ -291,6 +305,7 @@ export default function Home() {
         <div className={styles.content}>
           <Topbar
             view={view}
+            topicTab={topicTab}
             dark={dark}
             onToggleDark={() => setTheme(!dark)}
             onOpenNav={() => setNavOpen(n => !n)}

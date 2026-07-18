@@ -42,8 +42,26 @@
   font-size: 13px;
   white-space: nowrap;
 }
-.sep { color: var(--line-strong); }
-.here { overflow: hidden; color: var(--ink); font-weight: 600; text-overflow: ellipsis; }
+.sep { flex-shrink: 0; color: var(--line-strong); }
+.here { overflow: hidden; color: var(--ink); font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.crumbLink {
+  flex-shrink: 0;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 4px 2px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: color var(--dur-hover) var(--ease-out);
+}
+.crumbLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.crumbMid { flex-shrink: 1; min-width: 0; }
 .darkBtn {
   display: flex;
   flex-shrink: 0;
@@ -94,6 +112,7 @@
   .darkBtn:hover { border-color: var(--line); background: var(--surface-2); color: var(--accent-d); }
   .avatarBtn:hover { background: var(--accent-d); }
   .loginBtn:hover { border-color: var(--ink); background: var(--ink); color: var(--canvas); }
+  .crumbLink:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 }
 
 @media (max-width: 900px) {
@@ -106,7 +125,12 @@
   .darkBtn,
   .avatarBtn { width: 44px; height: 44px; }
   .loginBtn { min-height: 44px; padding-inline: 15px; }
-  .crumbs > span:first-child, .sep { display: none; }
+  /* Kontrolliert kürzen statt verstecken: die mittlere Ebene (Themenname)
+     bekommt Ellipsis, „Gradefruit" und die aktuelle Seite bleiben lesbar. */
+  .crumbs { gap: 5px; font-size: 12.5px; }
+  .crumbLink { font-size: 12.5px; }
+  .crumbMid { max-width: 26vw; }
+  .here { max-width: 34vw; }
 }
 
 @media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
