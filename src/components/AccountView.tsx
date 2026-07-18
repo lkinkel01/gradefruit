@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { createClient } from '@/lib/supabase';
 import styles from './AccountView.module.css';
+import { LogoutIcon } from './UiIcons';
 
 interface Props {
   onNavigate: (v: string) => void;
@@ -135,9 +136,7 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
 
       <div className={styles.danger}>
         <button className={styles.signoutBtn} onClick={handleSignOut}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
+          <LogoutIcon size={15} />
           Abmelden
         </button>
       </div>

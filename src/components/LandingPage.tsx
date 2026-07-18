@@ -14,21 +14,21 @@ const Arrow = () => (
 );
 
 const DocumentIcon = () => (
-  <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M7 3h7l4 4v14H7z" />
     <path d="M14 3v5h4M10 12h5M10 16h5" />
   </svg>
 );
 
 const LockIcon = () => (
-  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="5" y="10" width="14" height="10" rx="2" />
     <path d="M8 10V7a4 4 0 0 1 8 0v3" />
   </svg>
 );
 
 const ShareIcon = () => (
-  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="18" cy="5" r="2.5" />
     <circle cx="6" cy="12" r="2.5" />
     <circle cx="18" cy="19" r="2.5" />
@@ -549,7 +549,7 @@ export default function LandingPage({
         <section className={styles.section} id="lernweise">
           <div className={styles.sectionIntro}>
             <h2>Nicht nur lesen.<br />Wirklich lernen.</h2>
-            <p>Die Methoden sind kurz erklärt. Was noch nicht fertig ist, wird auch nicht als fertig verkauft.</p>
+            <p>Jede Methode erfüllt einen klaren Zweck. Geplantes bleibt klar gekennzeichnet.</p>
           </div>
           <div className={styles.methodList}>
             {LEARNING_METHODS.map(method => (
@@ -677,7 +677,7 @@ export default function LandingPage({
               <div className={styles.trustFacts}>
                 <div><strong>Hessen</strong><span>passend zu den Prüfungsanforderungen</span></div>
                 <div><strong>Grundkurs und Leistungskurs</strong><span>getrennte Inhalte und Zugänge</span></div>
-                <div><strong>Echte Stimmen, sobald sie da sind</strong><span>keine erfundenen Bewertungen oder Sterne</span></div>
+                <div><strong>Eigene Erfahrung</strong><span>entwickelt aus Abitur und Studium</span></div>
               </div>
             </div>
           </div>

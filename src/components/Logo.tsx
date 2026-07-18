@@ -1,156 +1,164 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
 
-// Gradefruit-Logo: eine Grapefruit im Querschnitt, flach und ruhig gezeichnet.
-// Feine Segmentlinien statt Clipart-Keilen, Farben nah an der echten Frucht.
-// Ein Segment ist dezent gefüllt: der Lern-Keil. Über `filled` lassen sich
-// später 0 bis 6 Segmente füllen (Fortschritt, Level, kleine Animationen) –
-// dieselbe Form trägt dann das ganze Belohnungssystem.
-
 const SEGMENTS = [0, 60, 120, 180, 240, 300];
+const MARK_RADIUS = 17.25;
+const FILL_RADIUS = 15.3;
+const WEDGE = 'M24 25 L24 9.9 A15.1 15.1 0 0 1 37.1 17.45 Z';
+const LEAF = 'M28.1 7.15c3.7-3.15 8.45-2.7 11.15.35-2.65 3.45-7.3 4.45-11.05 1.75-.75-.55-.75-1.45-.1-2.1Z';
 
-// Ein Keil zwischen zwei Segmentlinien (oben beginnend), wird rotiert.
-const WEDGE = 'M24 25 L24 10.4 A14.6 14.6 0 0 1 36.65 17.7 Z';
-
+/**
+ * Große und kleine Markenillustration auf Basis derselben Geometrie wie der
+ * BrandMark in Navigation, Favicon und App-Icon. `filled` akzentuiert bis zu
+ * sechs Segmente, ohne eine zweite Logovariante einzuführen.
+ */
 export function Logo({ size = 28, filled = 1 }: { size?: number; filled?: number }) {
-  const n = Math.max(0, Math.min(6, filled));
+  const count = Math.max(0, Math.min(6, filled));
+
   return (
-    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
-      {/* Frucht: flache, warme Scheibe */}
-      <circle cx="24" cy="25" r="20" fill="#EE7457" />
-      {/* Schale: feiner heller Ring */}
-      <circle cx="24" cy="25" r="16.6" fill="none" stroke="#FFF6F1" strokeOpacity="0.5" strokeWidth="1.5" />
-      {/* gefüllte Lern-Keile */}
-      {SEGMENTS.slice(0, n).map(a => (
-        <path key={`w${a}`} d={WEDGE} fill="#FFF6F1" fillOpacity="0.3" transform={`rotate(${a} 24 25)`} />
-      ))}
-      {/* Segmentlinien */}
-      {SEGMENTS.map(a => (
-        <line
-          key={a}
-          x1="24" y1="25" x2="24" y2="10.4"
-          stroke="#FFF6F1" strokeOpacity="0.8" strokeWidth="1.8" strokeLinecap="round"
-          transform={`rotate(${a} 24 25)`}
+    <svg
+      aria-hidden="true"
+      height={size}
+      style={{ color: 'var(--accent)' }}
+      viewBox="0 0 48 48"
+      width={size}
+    >
+      {SEGMENTS.slice(0, count).map(angle => (
+        <path
+          key={`fill-${angle}`}
+          d={WEDGE}
+          fill="currentColor"
+          fillOpacity="0.14"
+          transform={`rotate(${angle} 24 25)`}
         />
       ))}
-      {/* Blatt: klein und matt */}
-      <path
-        d="M26.8 4.4 C29.6 2.2 33.4 2.4 35.7 4.3 C34 6.9 30.5 8 27.4 7 C26.9 6.8 26.7 5.6 26.8 4.4 Z"
-        fill="#5E9E77"
-      />
+      <circle cx="24" cy="25" r={MARK_RADIUS} fill="none" stroke="currentColor" strokeWidth="2.5" />
+      {SEGMENTS.map(angle => (
+        <line
+          key={angle}
+          x1="24"
+          x2="24"
+          y1="25"
+          y2="9.9"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="2"
+          transform={`rotate(${angle} 24 25)`}
+        />
+      ))}
+      <circle cx="24" cy="25" r="2.5" fill="currentColor" />
+      <path d={LEAF} fill="currentColor" />
     </svg>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Grapefruit als Fortschrittsanzeige – die zentrale Designidee der Plattform.
-// Die Frucht füllt sich Stück für Stück, exakt proportional zum Fortschritt
-// (Kreissektor ab 12 Uhr), darüber liegen die ruhigen Segmentlinien.
-// Überall einsetzbar: Gesamtfortschritt, Themenfortschritt, Lernfortschritt.
-// ---------------------------------------------------------------------------
-
-const R_FLESH = 16.6;
-
-// Voller 60°-Segmentkeil ab „12 Uhr" (für Spinner & Illustrationen).
-const SLICE = 'M24 25 L24 8.4 A16.6 16.6 0 0 1 38.38 16.7 Z';
-
-// Grapefruit-Ladeanimation: die sechs Segmente leuchten reihum auf.
-// Ersetzt überall das generische „Laden …". Bei reduced-motion steht sie
-// still und zeigt eine ruhige, volle Frucht.
+// Die Ladeanzeige bleibt dieselbe Frucht. Nur die Segment-Deckkraft bewegt
+// sich, damit der Zustand klar bleibt und keine zusätzliche Form entsteht.
 export function GrapefruitSpinner({ size = 46, label }: { size?: number; label?: string }) {
   return (
     <div role="status" aria-live="polite" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
       <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
-        <circle cx="24" cy="25" r="19.4" fill="none" stroke="var(--line-strong)" strokeWidth="2.4" />
-        <circle cx="24" cy="25" r={R_FLESH} fill="var(--control)" />
-        {SEGMENTS.map((a, i) => (
+        <circle cx="24" cy="25" r={MARK_RADIUS} fill="var(--surface-2)" stroke="var(--accent)" strokeWidth="2.5" />
+        {SEGMENTS.map((angle, index) => (
           <path
-            key={`s${a}`}
+            key={`segment-${angle}`}
             className="gf-spin-seg"
-            d={SLICE}
-            fill="#EE7457"
-            transform={`rotate(${a} 24 25)`}
-            style={{ animationDelay: `${-i * 0.19}s` }}
+            d={WEDGE}
+            fill="var(--accent)"
+            transform={`rotate(${angle} 24 25)`}
+            style={{ animationDelay: `${-index * 0.19}s` }}
           />
         ))}
-        {SEGMENTS.map(a => (
+        {SEGMENTS.map(angle => (
           <line
-            key={`l${a}`}
-            x1="24" y1="25" x2="24" y2={25 - R_FLESH}
-            stroke="var(--surface)" strokeWidth="1.7" strokeLinecap="round"
-            transform={`rotate(${a} 24 25)`}
+            key={`line-${angle}`}
+            x1="24"
+            x2="24"
+            y1="25"
+            y2="9.9"
+            stroke="var(--surface)"
+            strokeLinecap="round"
+            strokeWidth="2"
+            transform={`rotate(${angle} 24 25)`}
           />
         ))}
+        <circle cx="24" cy="25" r="2.5" fill="var(--surface)" />
+        <path d={LEAF} fill="var(--accent)" />
       </svg>
       {label && <span style={{ fontSize: 13.5, color: 'var(--muted)' }}>{label}</span>}
     </div>
   );
 }
 
-// Kreissektor von „12 Uhr" im Uhrzeigersinn bis zum Anteil p (0..1).
-function piePath(p: number): string {
-  const a = p * Math.PI * 2;
-  const x = 24 + R_FLESH * Math.sin(a);
-  const y = 25 - R_FLESH * Math.cos(a);
-  const large = a > Math.PI ? 1 : 0;
-  return `M 24 25 L 24 ${25 - R_FLESH} A ${R_FLESH} ${R_FLESH} 0 ${large} 1 ${x.toFixed(2)} ${y.toFixed(2)} Z`;
+function piePath(progress: number): string {
+  const angle = progress * Math.PI * 2;
+  const x = 24 + FILL_RADIUS * Math.sin(angle);
+  const y = 25 - FILL_RADIUS * Math.cos(angle);
+  const largeArc = angle > Math.PI ? 1 : 0;
+  return `M 24 25 L 24 ${25 - FILL_RADIUS} A ${FILL_RADIUS} ${FILL_RADIUS} 0 ${largeArc} 1 ${x.toFixed(2)} ${y.toFixed(2)} Z`;
 }
 
 interface GrapefruitProgressProps {
-  pct: number;          // 0..100
+  pct: number;
   size?: number;
-  rind?: string;        // Farbe der Schale (Ring)
-  flesh?: string;       // Farbe des ungefüllten Fruchtfleischs
-  gap?: string;         // Farbe der Segmentlinien (Grund dahinter)
+  rind?: string;
+  flesh?: string;
   showLeaf?: boolean;
-  animate?: boolean;    // beim Erscheinen bis zum Zielwert füllen (Standard: an)
+  animate?: boolean;
 }
 
-// Zählt eine 0..1-Fraktion beim Mount (und bei Wertwechsel) sanft zum Ziel –
-// ease-out über ~750ms. Bei reduced-motion sofort am Ziel. So wirkt
-// Fortschritt „verdient", ohne verspielt zu sein.
 function useFillFraction(target: number, animate: boolean): number {
-  const [frac, setFrac] = useState(animate ? 0 : target);
+  const [fraction, setFraction] = useState(animate ? 0 : target);
   const fromRef = useRef(animate ? 0 : target);
 
   useEffect(() => {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (!animate || reduce) {
-      setFrac(target);
-      fromRef.current = target;
-      return;
+      const frame = requestAnimationFrame(() => {
+        setFraction(target);
+        fromRef.current = target;
+      });
+      return () => cancelAnimationFrame(frame);
     }
+
     const from = fromRef.current;
-    const dur = 750;
-    let raf = 0;
+    const duration = 260;
+    let frame = 0;
     let start = 0;
-    const tick = (t: number) => {
-      if (!start) start = t;
-      const e = Math.min(1, (t - start) / dur);
-      const eased = 1 - Math.pow(1 - e, 3); // ease-out-cubic
-      const v = from + (target - from) * eased;
-      setFrac(v);
-      if (e < 1) raf = requestAnimationFrame(tick);
+
+    const tick = (time: number) => {
+      if (!start) start = time;
+      const elapsed = Math.min(1, (time - start) / duration);
+      const eased = 1 - Math.pow(1 - elapsed, 3);
+      const next = from + (target - from) * eased;
+      setFraction(next);
+      if (elapsed < 1) frame = requestAnimationFrame(tick);
       else fromRef.current = target;
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
   }, [target, animate]);
 
-  return frac;
+  return fraction;
 }
 
+/**
+ * Fortschritt und Markenzeichen sind dieselbe Form. Der Akzent füllt sich
+ * innerhalb der monochromen BrandMark-Geometrie proportional im Uhrzeigersinn.
+ */
 export function GrapefruitProgress({
   pct,
   size = 64,
-  rind = 'var(--line-strong)',
-  flesh = 'var(--control)',
-  gap = 'var(--surface)',
+  rind = 'var(--accent)',
+  flesh = 'var(--surface-2)',
   showLeaf = true,
   animate = true,
 }: GrapefruitProgressProps) {
   const target = Math.min(100, Math.max(0, pct)) / 100;
-  const p = useFillFraction(target, animate);
+  const progress = useFillFraction(target, animate);
+
   return (
     <svg
       width={size}
@@ -159,32 +167,27 @@ export function GrapefruitProgress({
       role="img"
       aria-label={`${Math.round(target * 100)} % geschafft`}
     >
-      {/* Schale */}
-      <circle cx="24" cy="25" r="19.4" fill="none" stroke={rind} strokeWidth="2.4" />
-      {/* Fruchtfleisch, noch leer */}
-      <circle cx="24" cy="25" r={R_FLESH} fill={flesh} />
-      {/* gefüllter Anteil */}
-      {p >= 0.999 ? (
-        <circle cx="24" cy="25" r={R_FLESH} fill="#EE7457" />
-      ) : p > 0.001 ? (
-        <path d={piePath(p)} fill="#EE7457" />
+      <circle cx="24" cy="25" r={MARK_RADIUS} fill={flesh} stroke={rind} strokeWidth="2.5" />
+      {progress >= 0.999 ? (
+        <circle cx="24" cy="25" r={FILL_RADIUS} fill="var(--accent-progress)" />
+      ) : progress > 0.001 ? (
+        <path d={piePath(progress)} fill="var(--accent-progress)" />
       ) : null}
-      {/* Segmentlinien über allem */}
-      {SEGMENTS.map(a => (
+      {SEGMENTS.map(angle => (
         <line
-          key={a}
-          x1="24" y1="25" x2="24" y2={25 - R_FLESH}
-          stroke={gap} strokeWidth="1.7" strokeLinecap="round"
-          transform={`rotate(${a} 24 25)`}
+          key={angle}
+          x1="24"
+          x2="24"
+          y1="25"
+          y2="9.9"
+          stroke={rind}
+          strokeLinecap="round"
+          strokeWidth="2"
+          transform={`rotate(${angle} 24 25)`}
         />
       ))}
-      {/* Blatt */}
-      {showLeaf && (
-        <path
-          d="M26.8 4.4 C29.6 2.2 33.4 2.4 35.7 4.3 C34 6.9 30.5 8 27.4 7 C26.9 6.8 26.7 5.6 26.8 4.4 Z"
-          fill="#5E9E77"
-        />
-      )}
+      <circle cx="24" cy="25" r="2.5" fill={rind} />
+      {showLeaf && <path d={LEAF} fill={rind} />}
     </svg>
   );
 }

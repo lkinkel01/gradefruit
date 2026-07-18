@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { createClient } from './supabase';
 
@@ -13,7 +13,7 @@ interface AuthCtx {
 const Ctx = createContext<AuthCtx>({ user: null, session: null, loading: true, signOut: async () => {} });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [supabase]);
 
   const signOut = async () => {
     await supabase.auth.signOut();

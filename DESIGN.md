@@ -1,32 +1,28 @@
 ---
 name: Gradefruit
-description: Premium-Lernplattform für das Mathe-Abitur Hessen 2027 — warmes Papier, Tinte, eine Grapefruit.
+description: Premium-Lernplattform für das Mathe-Abitur Hessen 2027 — klares Weiß, echtes Schwarz, eine Grapefruit.
 colors:
-  paper: "#FAF6F1"
+  canvas: "#F7F7F8"
   surface: "#FFFFFF"
-  surface-warm: "#FBF7F2"
-  ink: "#211C17"
-  muted: "#6F675E"
-  faint: "#A69B90"
-  line: "#EDE4DB"
-  line-strong: "#DDD1C5"
-  control: "#F0E8E0"
-  grapefruit: "#E96A4C"
-  grapefruit-deep: "#C24E31"
-  grapefruit-soft: "#FBEBE3"
-  fruit-flesh: "#EE7457"
-  leaf-green: "#5E9E77"
-  success-green: "#2F9E68"
-  topic-analysis: "#DE5D43"
-  topic-linalg: "#5D6BC9"
-  topic-stochastik: "#2F9E68"
-  side-espresso: "#1C1613"
-  side-espresso-2: "#29211B"
-  side-espresso-3: "#382D25"
-  side-text: "#D6CBC1"
-  dark-canvas: "#171310"
-  dark-surface: "#201B16"
-  dark-ink: "#F5F0EA"
+  surface-muted: "#F0F0F2"
+  ink: "#050505"
+  muted: "#5F6067"
+  faint: "#6E7078"
+  line: "#E6E6E9"
+  line-strong: "#D3D3D8"
+  control: "#ECECEF"
+  grapefruit: "#F26B4A"
+  grapefruit-deep: "#B93820"
+  grapefruit-soft: "#FFF0EC"
+  success-green: "#198754"
+  danger-red: "#C62828"
+  side-black: "#050505"
+  side-black-2: "#111113"
+  side-black-3: "#27272A"
+  side-text: "#EEEEF0"
+  dark-canvas: "#050505"
+  dark-surface: "#0D0D0F"
+  dark-ink: "#F8F8F9"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, sans-serif"
@@ -36,7 +32,7 @@ typography:
     letterSpacing: "-0.035em"
   headline:
     fontFamily: "Bricolage Grotesque, sans-serif"
-    fontSize: "30px"
+    fontSize: "clamp(29px, 4vw, 34px)"
     fontWeight: 800
     lineHeight: 1.2
     letterSpacing: "-0.022em"
@@ -65,11 +61,10 @@ typography:
     lineHeight: 1.55
     letterSpacing: "0"
 rounded:
-  pill: "980px"
-  lg: "18px"
-  md: "16px"
-  sm: "12px"
-  xs: "10px"
+  pill: "999px"
+  panel: "18px"
+  card: "14px"
+  control: "8px"
 spacing:
   xs: "8px"
   sm: "12px"
@@ -81,29 +76,29 @@ components:
   button-primary:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.surface}"
-    rounded: "7px"
+    rounded: "{rounded.control}"
     padding: "13px 24px"
   button-primary-hover:
-    backgroundColor: "#33291F"
+    backgroundColor: "#1A1A1C"
   button-light:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
-    rounded: "7px"
+    rounded: "{rounded.control}"
     padding: "13px 24px"
   chip-action:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
+    rounded: "{rounded.control}"
     padding: "8px 13px"
   card:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.card}"
     padding: "20px"
   input:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.sm}"
+    rounded: "{rounded.control}"
     padding: "12px 15px"
 ---
 
@@ -111,12 +106,12 @@ components:
 
 ## 1. Overview
 
-**Creative North Star: „Frucht auf Papier"**
+**Creative North Star: „Schwarz. Weiß. Grapefruit."**
 
-Gradefruit sieht aus wie Tinte auf warmem Papier — und mittendrin lebt eine
-Frucht. Die Fläche ist ruhiges Papier-Beige (nie klinisches Weiß, nie
-SaaS-Grau), die Schrift ist warmes Tinten-Schwarz, und die einzige laute
-Stimme im Raum ist die Grapefruit: als Logo, als Fortschritt, als Akzent.
+Gradefruit arbeitet mit einem ruhigen neutralen Weiß, echtem tiefem Schwarz
+und genau einer Markenfarbe. Die Grapefruit ist die einzige laute Stimme im
+Raum: als Logo, Fortschritt, Fokus und gezielter Akzent. Wärme und Energie
+kommen aus der Frucht, nicht aus beige eingefärbten Flächen oder braunem Text.
 Alles andere hält sich zurück, damit diese eine Stimme trägt. Das System
 verweigert sich ausdrücklich der „klassischen Lernplattform", dem
 „Dashboard-SaaS" und dem „typischen KI-Produkt" (siehe PRODUCT.md,
@@ -128,12 +123,13 @@ Bewegung ist Feedback, nie Dekoration. Sie läuft in **zwei Registern**, und
 wer sie verwechselt, baut sie falsch:
 
 *Register 1 — Zustandsübergänge* (99 % des Produkts: Hover, Öffnen,
-Einblenden, Tab-Wechsel). CSS-Transitions, 150–350 ms, ausschließlich
-`transform`/`opacity`/Farbe. Einstiege heben 6–7 px an und faden ein —
+Einblenden, Tab-Wechsel). CSS-Transitions, 140–260 ms, ausschließlich
+`transform`/`opacity`/Farbe. Seltene Einstiege heben 6–7 px an und faden ein —
 nie aus `scale(0)`, nichts erscheint aus dem Nichts. Ausgang schneller als
 Eingang (der Nutzer entscheidet langsam, das System antwortet schnell).
-Gestaffelte Listen 45–50 ms Versatz. Interaktionen quittieren sofort
-(Hover −1 px, Active `scale(.97–.98)`). Eigene Kurven statt der schwachen
+Listen erscheinen ohne orchestrierte Kaskaden, damit die App direkt reagiert.
+Interaktionen quittieren sofort (Hover −1 px, Active `scale(.98)`). Eigene
+Kurven statt der schwachen
 eingebauten — die Haus-Kurve ist `cubic-bezier(.2,.7,.3,1)`; **eingebautes
 `ease-in` ist auf UI verboten** (startet träge genau im Moment des
 Hinsehens), `transition: all` ebenso (Eigenschaften immer benennen).
@@ -160,20 +156,21 @@ Moment (Video öffnet, Kauf gelingt), desto mehr Bewegung ist erlaubt.
 Im Zweifel: weniger.
 
 **Die Dark-Mode-Regel.** Dark Mode entsteht ausschließlich durch
-CSS-Variablen unter `body.dark` (warmes Dunkelbraun, nie Blau-Schwarz).
+CSS-Variablen unter `body.dark` (echtes Schwarz mit neutral abgestuften
+Flächen, nicht als simple Invertierung).
 Komponenten verwenden Variablen, niemals harte Theme-Farben — und globale
 Selektoren auf CSS-Modul-Klassen sind verboten (sie greifen wegen der
 Namens-Hashes nie; das war der Topbar-Bug aus Sprint 10).
 
 **Die Editorial-Regel (Marken-Sprint).** Gradefruit soll ohne Logo erkennbar
 sein und NICHT wie ein SaaS-/KI-Template wirken. Deshalb: **Inhalt lebt auf
-dem Papier, geordnet durch Haarlinien (`.gf-rule`) und Weißraum — nicht in
+ruhigen Flächen, geordnet durch Haarlinien (`.gf-rule`) und Weißraum — nicht in
 weißen Karten-Boxen.** Verboten sind: zentrierte Symmetrie als Default,
 farbig eingefärbte Headline-Wörter, Pillen-Buttons, das Icon-im-runden-Quadrat-
 Karten-Raster. Stattdessen: linksbündige, asymmetrische Kompositionen mit
 Spannung, übergroße Bricolage-Zahlen als Motiv (`.gf-index`: Countdown,
-Fortschritt, Aufgaben-/Sektions-Nummern), weit gesperrte Versal-Meta-Labels
-(`.gf-meta`), nummerierte Listen statt Karten-Raster, und die Grapefruit als
+Fortschritt, Aufgaben-/Sektions-Nummern), ruhige Meta-Labels (`.gf-meta`),
+nummerierte Listen statt Karten-Raster und die Grapefruit als
 selbstbewusstes, angeschnittenes Grafik-Element (nicht nur als Watermark).
 Karten bleiben erlaubt, wo sie einen echten Zweck haben (Kurs-Panels, Modals) —
 aber nie als Default-Container für jede Information.
@@ -184,52 +181,53 @@ stapeln), ≤560 px (kompakte Abstände, Seiten-Padding 18 px). Keine weiteren
 Magic-Breakpoints erfinden.
 
 **Key Characteristics:**
-- Warmes Papier + Tinte statt Weiß + Grau; eine Akzentfarbe, sparsam gesetzt
+- Neutrales Weiß + echtes Schwarz; eine Grapefruitfarbe, sparsam gesetzt
 - Grapefruit = Marke = Fortschrittsanzeige (ein Symbol, eine Bedeutung)
-- Pillen-Buttons in Tinten-Schwarz; Orange gehört der Frucht, nicht den Buttons
+- Primäraktionen in Schwarz; Grapefruit gehört Marke, Fortschritt und Fokus
 - Karten mit feinen Linien statt Schatten; Tiefe nur als Antwort auf Interaktion
-- Ruhige, schnelle Motion (150–350 ms, ease-out, transform/opacity)
+- Ruhige, schnelle Motion (140–260 ms, ease-out, transform/opacity)
 - Keine Emojis im UI, nirgends
 
 ## 2. Colors
 
-Eine warme, natürliche Palette: Papier statt Klinik, Grapefruit statt
-Signalrot — alle Werte leben als CSS-Variablen in `src/app/globals.css`.
+Die Palette ist bewusst streng: neutrales Weiß, echtes Schwarz und eine aus
+echtem Grapefruit-Fruchtfleisch abgeleitete Akzentfarbe. Alle Werte leben als
+CSS-Variablen in `src/app/globals.css`.
 
 ### Primary
-- **Grapefruit** (#E96A4C): DIE Markenfarbe. Fortschritts-Akzente, Avatar,
-  aktive Zustände des Wiederholen-Status, kleine Highlights. Nie großflächig.
-- **Grapefruit Tief** (#C24E31): Text-Variante des Akzents auf hellem Grund
-  (Links, Hover-Text), im Dark Mode heller (#FF8D6B) via `--accent-d`.
-- **Fruchtfleisch** (#EE7457): exklusiv für das Innere der Grapefruit-Grafiken
-  (`Logo.tsx`, `GrapefruitProgress`). Bewusst hartkodiert — die Frucht sieht
-  in beiden Themes gleich aus.
-- **Grapefruit Zart** (#FBEBE3): Selektion, weiche Hintergründe für aktive
-  Akzent-Zustände.
+- **Grapefruit** (#F26B4A): die einzige Markenfarbe. Logo, Fortschritt,
+  Fokuszustände und wenige aktive Akzente. Nie als beliebige Dekoration.
+- **Grapefruit Tief** (#B93820): kontrastreiche Textvariante auf hellem Grund;
+  im Dark Mode #FF8A70 via `--accent-d`.
+- **Grapefruit Zart** (#FFF0EC): Fokus- und Auswahlfläche. Im Dark Mode
+  #2B1510. Beide sind Tonwerte derselben Marke, keine weiteren Farben.
 
-**Die Eine-Stimme-Regel.** Orange erscheint auf maximal ~10 % eines Screens.
-Primäraktionen sind Tinte, nicht Orange — die Seltenheit macht die Frucht
-wertvoll. Wenn ein Screen nach mehr Orange verlangt, ist die Hierarchie
-kaputt, nicht die Palette zu klein.
+**Die Eine-Stimme-Regel.** Grapefruit erscheint auf maximal ~10 % eines
+Screens. Primäraktionen sind Schwarz, nicht Orange. Wenn ein Screen mehr
+Akzent verlangt, ist seine Hierarchie zu schwach.
 
-### Secondary
-- **Analysis-Terrakotta** (#DE5D43), **LinAlg-Indigo** (#5D6BC9),
-  **Stochastik-Grün** (#2F9E68): die drei Themenfarben — gedeckt, nie
-  neonhaft. Einsatz nur als Kennung (Punkte, Aufgaben-Nummern, dünne
-  Akzentlinien, Feed-Bühnen-Glow), nie als Flächen- oder Button-Farbe.
+### Functional
+- **Erfolg** (#198754), **Fehler** (#C62828) und **Warnung** (#9A6500) sind
+  ausschließlich funktionale Zustände. Sie werden immer zusätzlich durch Text
+  oder Form erklärt und sind keine Marken- oder Themenfarben.
+- Analysis, lineare Algebra und Stochastik verwenden dieselbe Grapefruitfarbe.
+  Unterscheidung entsteht durch klare Bezeichnung und Inhalt, nicht durch eine
+  dekorative zweite Palette.
 
 ### Neutral
-- **Papier** (#FAF6F1): der Seitengrund (`--canvas`). Dark: #171310.
-- **Fläche** (#FFFFFF): Karten und Controls (`--surface`). Dark: #201B16.
-- **Warme Fläche** (#FBF7F2): Sekundärflächen, Segment-Hintergründe. Dark: #29221C.
-- **Tinte** (#211C17): Text und Primär-Buttons (`--ink`). Dark: #F5F0EA
-  (Buttons invertieren im Dark Mode zu hell — Apple-artig).
-- **Gedämpft** (#6F675E) / **Blass** (#A69B90): Sekundär-/Tertiärtext.
-- **Linie** (#EDE4DB) / **Linie stark** (#DDD1C5): Ränder, Trenner.
-- **Espresso-Familie** (#1C1613 / #29211B / #382D25 + Text #D6CBC1): die
-  immer-dunkle Sidebar — sie wechselt NICHT mit dem Theme.
-- **Milchglas** (`--glass`, rgba(250,246,241,.86) bzw. dunkel .86): obere
-  Leisten mit `backdrop-filter: blur(14–16px)`.
+- **Canvas** (#F7F7F8): angenehmes, chromafreies Off-White. Nicht beige und
+  nicht klinisch grell. Dark: #050505.
+- **Fläche** (#FFFFFF): Karten und Controls. Dark: #0D0D0F.
+- **Sekundärfläche** (#F0F0F2): Controls und Gruppierungen. Dark: #171719.
+- **Schwarz** (#050505): Text, Navigation und Primäraktionen. Dark-Text:
+  #F8F8F9.
+- **Gedämpft** (#5F6067) / **Blass** (#6E7078): Sekundär-/Tertiärtext.
+- **Linie** (#E6E6E9) / **Linie stark** (#D3D3D8): Ränder und Trenner.
+- **Schwarz-Familie** (#050505 / #111113 / #27272A + Text #EEEEF0): die
+  immer-dunkle Sidebar.
+- **Funktionsglas** (`--glass`): ausschließlich Navigation, Topbar und
+  Overlays. Inhaltskarten bleiben solide, damit Hierarchie und Lesbarkeit
+  nicht vom Hintergrund abhängen.
 
 ## 3. Typography
 
@@ -248,11 +246,12 @@ bleibt zurückhaltend.
 
 ### Hierarchy
 - **Display** (800, clamp(40–68px), 1.04, −0.035em): nur Landing-Hero.
-- **Headline** (800, 30px, −0.022em): Seiten-H1 in der App (25px ≤560px).
+- **Headline** (800, clamp(29–34px), −0.022em): Seiten-H1 in der App.
 - **Title** (700, 14.5–20px, −0.01em): Karten- und Abschnittstitel.
 - **Body** (400/450, 13.5–15.5px, 1.55–1.65): Fließtext, Aufgabenstellungen.
-- **Label** (600, 10.5–13px, +0.05–0.08em, UPPERCASE): Navigations-Rubriken,
-  Lösungs-Überschriften („SCHRITT-FÜR-SCHRITT-LÖSUNG").
+- **Label** (600/650, 11.5–13px, +0.01em): Navigations-Rubriken und
+  Lösungs-Überschriften in natürlicher Schreibweise. Keine wiederholten
+  Versal-Eyebrows als Seitenraster.
 - **Mono** (500–600, 13–14px): Formeln, Rechenschritte, Ergebnisse —
   mit `overflow-x: auto` auf schmalen Screens, nie umbrechend zerstört.
 
@@ -265,15 +264,17 @@ immer `font-variant-numeric: tabular-nums`.
 ## 4. Elevation
 
 Flach im Ruhezustand: Struktur entsteht durch 1-px-Linien (`--line`) und
-Flächenabstufung (Papier → Fläche), nicht durch Schatten. Schatten sind warm
-getönt (Braun, nie Schwarz-Blau), extrem weich und erscheinen als *Antwort* —
+Flächenabstufung (Canvas → Fläche), nicht durch Schatten. Schatten sind
+neutral schwarz, extrem weich und erscheinen als *Antwort* —
 auf Hover, auf Öffnen, auf Überlagerung.
 
 ### Shadow Vocabulary
-- **Ruhe/Karte** (`--shadow`: 0 1px 2px rgba(60,40,25,.03), 0 6px 20px rgba(60,40,25,.05)): Grundschatten größerer Karten.
-- **Angehoben** (`--shadow-lg`: 0 2px 4px rgba(60,40,25,.04), 0 18px 44px rgba(60,40,25,.09)): Hover großer Karten.
-- **Button-Primär** (0 1px 2px rgba(30,22,15,.14), 0 8px 22px rgba(30,22,15,.12)): Tinten-Button; verstärkt sich beim Hover.
-- **Overlay** (0 24px 70px rgba(20,15,30,.34)): Modals/Player über abgedunkeltem, geblurrtem Scrim.
+- **Control** (`--shadow-control`): ausschließlich ausgewählte Tabs und
+  Segment-Controls.
+- **Kartenantwort** (`--shadow-card-hover`): klickbare Karten auf Hover oder
+  geöffnete Akkordeons.
+- **Overlay** (`--shadow-panel`): Modals, Player und Schubladen über einem
+  neutral schwarzen Scrim.
 
 **Die Antwort-Regel.** Kein Schatten ohne Anlass: Flächen sind flach, bis
 der Nutzer mit ihnen spricht (Hover, Fokus, Öffnen). Wenn ein ruhender Screen
@@ -282,18 +283,18 @@ nach 2014-App aussieht, ist ein Schatten zu dunkel oder zu klein.
 ## 5. Components
 
 ### Buttons
-- **Form:** kantig, kleiner Radius (7px), 13px 24px Padding, 600er Gewicht,
+- **Form:** kantig, Control-Radius (8px), 13px 24px Padding, 600er Gewicht,
   −0.012em. **Keine Pillen** — die vollrunde Pille ist das klassische
   SaaS-/KI-Template-Signal und deshalb verboten (Marken-Sprint).
-- **Primär:** Tinte auf Papier — #211C17 mit weißem Text; im Dark Mode
-  invertiert (#F5F0EA mit dunklem Text). Genau EIN Primär-Button pro Screen.
+- **Primär:** echtes Schwarz (#050505) mit weißem Text; im Dark Mode
+  invertiert (#F8F8F9 mit schwarzem Text). Genau EIN Primär-Button pro Screen.
   Orange ist als Button-Farbe verboten.
-- **Hover:** Aufhellen auf #33291F + `translateY(-2px)` + weicher Schatten.
+- **Hover:** Aufhellen auf #1A1A1C + `translateY(-1px)` + weicher Schatten.
   **Active:** `translateY(0) scale(.98)` — jeder Button quittiert den Druck.
   **Focus:** `outline: 2px solid var(--accent); outline-offset: 2px`.
   **Disabled:** Opacity .5, keine Transforms.
 - **Light (sekundär):** transparent mit 1px `--ink`-Rand; kehrt beim Hover um
-  (Tinte füllt, Text wird Papier) — editoriales Detail statt SaaS-Glow.
+  (Schwarz füllt, Text wird weiß) — editoriales Detail statt SaaS-Glow.
 - **Zweite Aktion oft als Text-Link mit Pfeil** (`.gf-arrow`) statt zweitem
   Button — der Pfeil wandert beim Hover 4px nach rechts.
 - **Light (sekundär):** weiße Fläche, 1px `--line-strong`-Rand; Hover hebt
@@ -303,56 +304,73 @@ nach 2014-App aussieht, ist ein Schatten zu dunkel oder zu klein.
   border-color/background/color — niemals `transition: all`.
 
 ### Chips (Aktionsleisten)
-- **Aktiv** („Video ansehen", „KI fragen"): Pille, weiße Fläche, 1px Rand,
+- **Aktiv** („Video ansehen", „KI fragen"): 8px-Control, weiße Fläche, 1px Rand,
   13px/500, Icon 14px; Hover: Rand `--faint` + `translateY(-1px)`.
 - **Bald** („Tutor · bald", „Video folgt"): gleiche Geometrie, aber
   `border-style: dashed`, Text `--faint`, `cursor: default`, kein Hover-Lift.
   Ehrlichkeit hat eine eigene Optik — Attrappen sind verboten.
-- **Status-Segment** (Verstanden / Wiederholen / Noch unklar): Pillen-Gruppe
-  auf warmer Fläche; aktiver Zustand farbcodiert (Grün-Zart / Grapefruit-Zart /
+- **Status-Segment** (Verstanden / Wiederholen / Noch unklar): 8px-Gruppe
+  auf neutraler Fläche; aktiver Zustand farbcodiert (Grün-Zart / Grapefruit-Zart /
   Control) mit passendem Textton.
 
 ### Cards / Containers
-- **Ecken:** 18px (Lernkarten, Feature-Karten), 16px (`--radius`, Standard),
-  13px (Sidebar-Karten).
+- **Ecken:** genau drei Stufen: 8px Controls, 14px Karten, 18px schwebende
+  Panels und Navigation. Pillen ausschließlich für Status und kreisnahe
+  Geometrien. Keine Zwischenwerte erfinden.
 - **Grund:** `--surface` auf `--canvas`; Ränder 1px `--line`.
-- **Hover (klickbare Karten):** Rand → `--line-strong`, `translateY(-1px
-  bis -2px)`, `--shadow`; 180ms ease.
+- **Hover (klickbare Karten):** Rand → `--line-strong`, `translateY(-1px)`,
+  `--shadow-card-hover`; 180ms Haus-Easing.
 - **Akkordeon (Aufgaben):** offener Zustand bekommt Randverstärkung + weichen
-  Schatten; Inhalt erscheint mit `reveal` (280ms, 7px Anheben, Lösungs-
-  Schritte gestaffelt mit 50ms Delay).
+  Schatten; Inhalt erscheint mit `reveal` (220–240ms, 7px Anheben), ohne
+  gestaffelte Kaskade.
 - **Innen-Padding:** 20px (17px Kopfzeilen, 15px mobil).
 
 ### Inputs / Fields
-- **Form:** 12px Radius, 1.5px `--line-strong`-Rand, weiße Fläche,
+- **Form:** 8px Radius, 1px `--line-strong`-Rand, weiße Fläche,
   12px 15px Padding, 15px Text. Label darüber (13px/600, `--muted`) —
   **niemals Placeholder als Beschriftung**; Hinweise als Zeile unter dem Feld.
 - **Hover:** Rand `--faint`. **Focus:** Rand `--ink` + 3px `--control`-Ring
   (`box-shadow: 0 0 0 3px`). **Fehler/Info:** eigene weiche Flächen
-  (`--danger-soft` / `--green-soft`) mit 10px Radius.
+  (`--danger-soft` / `--green-soft`) mit 8px Radius.
+
+### Icons
+- Alle funktionalen Icons liegen auf einem 24×24-Raster, nutzen standardmäßig
+  2px Strichstärke, runde Enden und runde Ecken.
+- Die Perspektive ist frontal und ruhig. Füllungen zeigen nur einen echten
+  Zustand, zum Beispiel „gespeichert" oder „abgeschlossen".
+- Navigation und globale Aktionen verwenden die gemeinsamen Glyphen aus
+  `UiIcons.tsx`; keine lokal neu gezeichneten Varianten derselben Funktion.
+- Das Grapefruit-Markenzeichen ist die einzige geometrische Ausnahme. Google
+  darf als Drittanbieter seine eigene Markenform behalten.
+- Icons erklären oder verstärken eine Aktion. Sie werden nie als zufällige
+  Dekoration oder als buntes Feature-Raster eingesetzt.
 
 ### Navigation
-- **Sidebar:** immer dunkel (Espresso-Familie), 258px, Themen mit Farbpunkt,
-  aktiver Eintrag auf #382D25; Untermenü (Zusammenfassung/Übungen) im aktiven
+- **Sidebar:** immer echtes Schwarz, 258px, Themen mit einheitlichem
+  Grapefruit-Punkt, aktiver Eintrag als leise Grapefruit-Tönung; Untermenü
+  (Zusammenfassung/Übungen) im aktiven
   Thema dauerhaft offen, sonst per Hover. ≤900px: fixierte Schublade,
   `translateX(-100%) → 0` in 280ms `cubic-bezier(.2,.8,.2,1)` über
   `body.navopen`, mit Scrim.
-- **Topbar:** 58px, `--glass` + `backdrop-filter: blur(14px)`, 1px Linie
-  unten; Brotkrumen 13.5px; Avatar als Grapefruit-Kreis.
+- **Topbar:** schwebendes 18px-Panel, `--glass-strong` +
+  `backdrop-filter: blur(20px)`, feine Kontur; Brotkrumen 13px; Avatar als
+  Grapefruit-Kreis.
 
 ### GrapefruitProgress (Signature)
-Die Fortschrittsanzeige der Plattform (`Logo.tsx`): flache Frucht-Scheibe,
-deren Fruchtfleisch (#EE7457) sich als Kreissektor ab 12 Uhr exakt
-proportional füllt, darüber ruhige Segmentlinien, optional das Blatt
-(#5E9E77). Einsatzorte: Dashboard-Gesamtfortschritt (84px), Themenzeilen
-(34px), Sidebar-Kurskarte (38px, Espresso-Töne), Themenseiten (26px),
+Die Fortschrittsanzeige der Plattform (`Logo.tsx`) verwendet exakt dieselbe
+monochrome Segmentgeometrie wie `BrandMark`, Favicon und App-Icon. Der
+  Grapefruit-Akzent (#F26B4A) zeichnet Kontur, Segmentlinien, Mittelpunkt und
+  Blatt. Ein Tonwert derselben Farbe füllt sich als Kreissektor ab 12 Uhr
+  proportional. Dadurch bleibt die Markenform in jedem Fortschrittsstand klar.
+Einsatzorte: Dashboard-Gesamtfortschritt (116px), Themenzeilen (40px),
+Sidebar-Kurskarte (38px), Themenseiten (26px),
 Leerzustände (56px). **Fortschritt wird ausschließlich so erzählt** — keine
 Ringe, keine Prozent-Balken-Batterien, keine Konfetti-Momente. Auf dunklem
-Grund werden `rind`/`flesh`/`gap` als Props auf die Espresso-Töne gestellt.
+Grund werden `rind` und `flesh` als Props auf die neutralen Sidebar-Töne gestellt.
 
 ### Reel-Bühne (Signature)
-Der Reel-Modus (`/feed`) ist IMMER dunkel (#141110), unabhängig vom Theme:
-volle Video-Bühne mit thematisch gefärbtem Radial-Glow, weiße Overlays,
+Der Reel-Modus (`/feed`) ist IMMER tiefschwarz (#050505), unabhängig vom Theme:
+volle Video-Bühne, klare Grapefruit-Akzente und weiße Overlays,
 Aktions-Leiste rechts (44px runde Buttons, rgba-Weiß mit Blur), Segment-
 Fortschritt oben. Scroll-Snap pro Karte (`scroll-snap-type: y mandatory`).
 **Dies ist die einzige Gesten-Fläche der Plattform (Register 2, siehe
@@ -366,16 +384,16 @@ Bewegung greifbar bleibt.
 ## 6. Do's and Don'ts
 
 ### Do:
-- **Do** genau EINE Primäraktion pro Screen setzen — als Tinten-Pille; alles
+- **Do** genau EINE Primäraktion pro Screen setzen — als schwarzer Button; alles
   Sekundäre als Light-Button oder Chip.
 - **Do** Fortschritt immer mit `GrapefruitProgress` zeigen (proportional
   gefüllte Frucht), mit Zähler in `tabular-nums` daneben.
-- **Do** nur `transform`, `opacity` und Farben animieren; Einstiege 260–350ms
-  mit 6–7px Anheben (ab `scale(.95)` + Opacity, nie aus `scale(0)`),
-  Interaktionen ~160ms mit der Haus-Kurve `cubic-bezier(.2,.7,.3,1)`;
-  gestaffelte Listen mit 45–50ms Delay; Ausgang schneller als Eingang.
+- **Do** nur `transform`, `opacity` und Farben animieren; seltene UI-Einstiege
+  180–260ms mit 6–7px Anheben (nie aus `scale(0)`), Interaktionen ~160ms
+  mit der Haus-Kurve `cubic-bezier(.2,.7,.3,1)`; Ausgang schneller als Eingang.
 - **Do** jede Interaktion quittieren: Hover-Lift (−1px), Active-Press
-  (scale .97–.98), sichtbarer `:focus-visible`-Ring (2px Accent, 2px Offset).
+  (`scale(.98)`), sichtbarer `:focus-visible`-Ring (2px Accent, 2px Offset).
+- **Do** funktionale Icons aus dem gemeinsamen 24px/2px-System verwenden.
 - **Do** Hover-Effekte hinter `@media (hover: hover)` setzen (Touch löst
   sonst falsche Hover-Zustände beim Tippen aus).
 - **Do** seltene, bedeutungsvolle Momente mehr Bewegung geben als häufige;
@@ -398,8 +416,7 @@ Bewegung greifbar bleibt.
 - **Don't** wie eine „klassische Lernplattform" aussehen: keine Konfetti,
   Abzeichen, Maskottchen, Fortschrittsringe oder Gamification-Feuerwerke.
 - **Don't** wie ein „Dashboard-SaaS" aussehen: keine Statistik-Kacheln ohne
-  Handlung, keine Tabellen-Ästhetik, kein kühles Grau (#F3F3F7 ist verboten —
-  Papier ist #FAF6F1).
+  Handlung, keine Tabellen-Ästhetik und keine austauschbare Grauflächen-Wand.
 - **Don't** wie ein „typisches KI-Produkt" aussehen: keine Lila-Gradients,
   keine Sparkles, keine Emojis im UI — nirgends, auch nicht in Buttons
   oder Toasts.
@@ -414,8 +431,8 @@ Bewegung greifbar bleibt.
   über dem Feld.
 - **Don't** globale CSS-Selektoren auf Modul-Klassen richten
   (`body.dark .topbar` erreicht `styles.topbar` nie) und keine harten
-  Hex-Werte in Komponenten (Ausnahmen: Fruchtfleisch #EE7457, Themenfarben,
-  Reel-Bühne #141110 — die sind bewusst theme-fest).
+  Hex-Werte in Komponenten (Ausnahmen: die theme-feste Grapefruitfarbe in
+  Inhaltsmetadaten sowie die schwarze Reel-Bühne).
 - **Don't** neue Radius-, Abstands- oder Breakpoint-Werte erfinden — die
   Skalen oben sind vollständig.
 - **Don't** mehr als ~10 % eines Screens mit Akzentfarbe füllen; wenn es

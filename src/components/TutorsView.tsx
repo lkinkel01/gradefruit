@@ -1,5 +1,6 @@
 'use client';
 import styles from './TutorsView.module.css';
+import { TutorIcon } from './UiIcons';
 
 // 1:1-Nachhilfe ist in Vorbereitung. Diese Seite sagt das ehrlich, statt
 // erfundene Tutor-Profile oder simulierte Buchungen zu zeigen.
@@ -8,15 +9,12 @@ export default function TutorsView() {
     <div className={styles.page}>
       <h1 className={styles.ph1}>1:1 Nachhilfe</h1>
       <p className={styles.pblurb}>
-        Persönliche Einzelstunden mit geprüften Tutor:innen sind in Vorbereitung.
+        Persönliche Einzelstunden sind in Vorbereitung.
       </p>
 
       <div className={styles.soonCard}>
         <div className={styles.soonBadge}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="8" r="3.4" />
-            <path d="M5.5 19a6.5 6.5 0 0 1 13 0" />
-          </svg>
+          <TutorIcon size={22} />
         </div>
         <div className={styles.soonTitle}>Bald verfügbar</div>
         <p className={styles.soonText}>

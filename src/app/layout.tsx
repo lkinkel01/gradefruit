@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de">
+    <html lang="de" data-scroll-behavior="smooth">
       <body suppressHydrationWarning>
         {/* Setzt das gespeicherte Theme VOR dem ersten Rendern, damit die Seite
             nicht kurz hell aufblitzt und dann auf Dunkel springt. */}

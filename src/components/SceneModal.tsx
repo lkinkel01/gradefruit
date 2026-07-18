@@ -124,10 +124,15 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
 
   // Beim Szenenwechsel/Abbau zurücksetzen
   useEffect(() => {
-    setSeg(0);
-    setPlaying(false);
-    setFrac(0);
-    return () => stopNarration();
+    const frame = requestAnimationFrame(() => {
+      setSeg(0);
+      setPlaying(false);
+      setFrac(0);
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      stopNarration();
+    };
   }, [scene, stopNarration]);
 
   // ESC schließt den Player (nur wenn es ein Schließen gibt)
@@ -218,7 +223,10 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
   // Direktstart im Lernfeed: Wiedergabe beginnt mit dem Einbetten.
   useEffect(() => {
     if (!autoPlay) return;
-    runFrom(0);
+    const frame = requestAnimationFrame(() => {
+      void runFrom(0);
+    });
+    return () => cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoPlay, scene]);
 
@@ -305,7 +313,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
         )}
         {onClose && (
           <button className={styles.close} onClick={onClose} aria-label="Schließen">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -451,7 +459,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
         </button>
 
         <button className={styles.ctrl} onClick={restart} aria-label="Von vorne">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="1 4 1 10 7 10" />
             <path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10" />
           </svg>

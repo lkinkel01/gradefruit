@@ -7,9 +7,7 @@
   flex-direction: column;
   padding: 18px 14px;
   border-right: 1px solid rgba(255,255,255,.055);
-  background:
-    radial-gradient(circle at 8% 0%, rgba(233,106,76,.13), transparent 28%),
-    var(--side);
+  background: var(--side);
   color: var(--side-tx);
 }
 
@@ -30,8 +28,7 @@
   letter-spacing: -0.03em;
   text-align: left;
 }
-.brand svg { color: var(--accent); transition: transform var(--dur-hover) var(--ease-out); }
-.brand:hover svg { transform: rotate(8deg); }
+.brand svg { color: var(--accent); }
 
 .course {
   display: flex;
@@ -49,10 +46,9 @@
 .navsec {
   margin: 11px 9px 7px;
   color: var(--side-faint);
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 650;
-  letter-spacing: .13em;
-  text-transform: uppercase;
+  letter-spacing: .01em;
 }
 .navsecGap { margin-top: 20px; }
 .snav { display: flex; flex-direction: column; gap: 2px; }
@@ -64,29 +60,18 @@
   gap: 11px;
   padding: 10px 11px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--side-tx);
   cursor: pointer;
   font-family: inherit;
   font-size: 13.5px;
   text-align: left;
+  min-height: 44px;
   transition: background-color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
-.snav button:hover { border-color: rgba(255,255,255,.05); background: rgba(255,255,255,.055); color: #fff; }
-.snav button:active { transform: scale(.985); }
-.snav button.on { border-color: rgba(255,255,255,.07); background: rgba(255,255,255,.085); color: #fff; font-weight: 600; }
-.snav button.on::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 3px;
-  width: 2px;
-  height: 18px;
-  border-radius: 2px;
-  background: var(--accent);
-  transform: translateY(-50%);
-}
+.snav button:active { transform: scale(.98); }
+.snav button.on { border-color: color-mix(in srgb, var(--accent) 42%, transparent); background: color-mix(in srgb, var(--accent) 12%, transparent); color: #fff; font-weight: 600; }
 .topicWrap { position: relative; }
 .flyout { display: none; }
 .flyoutPinned { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 4px 28px; }
@@ -98,7 +83,7 @@
   width: 100%;
   padding: 7px 10px;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--side-faint);
   cursor: pointer;
@@ -107,11 +92,10 @@
   text-align: left;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
 }
-.flyItem:hover { background: rgba(255,255,255,.055); color: #fff; transform: translateX(3px); }
 .cdot { width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; }
 .ti { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .icon { flex: 0 0 18px; display: flex; }
-.icon svg { width: 15px; height: 15px; }
+.icon svg { width: 17px; height: 17px; }
 .stDone { width: 18px; height: 18px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--green); }
 .stDone svg { width: 11px; height: 11px; }
 .stLock { display: flex; align-items: center; }
@@ -123,8 +107,13 @@
   border-top: 1px solid var(--side-3);
 }
 .unlockCard p { margin-bottom: 11px; color: var(--side-tx); font-size: 12.5px; line-height: 1.5; }
-.unlockCard :global(.btn.primary) { width: 100%; background: #F5F0EA; color: #211C17; box-shadow: none; font-size: 13px; }
+.unlockCard :global(.btn.primary) { width: 100%; background: #fff; color: #050505; box-shadow: none; font-size: 13px; }
 .unlockCard :global(.btn.primary:hover) { background: #fff; }
+
+@media (hover: hover) and (pointer: fine) {
+  .snav button:hover { border-color: rgba(255,255,255,.08); background: rgba(255,255,255,.06); color: #fff; }
+  .flyItem:hover { background: rgba(255,255,255,.06); color: #fff; transform: translateX(3px); }
+}
 
 @media (max-width: 900px) {
   .sidebar {
@@ -137,10 +126,11 @@
     max-width: 84vw;
     height: 100%;
     border-right: 1px solid rgba(255,255,255,.08);
-    border-radius: 0 18px 18px 0;
+    border-radius: 0 var(--radius-panel) var(--radius-panel) 0;
     box-shadow: 12px 0 54px rgba(0,0,0,.34);
     transform: translateX(-105%);
     transition: transform 280ms var(--ease-drawer);
   }
   :global(body.navopen) .sidebar { transform: translateX(0); }
+  .flyItem { min-height: 44px; }
 }

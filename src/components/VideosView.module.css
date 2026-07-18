@@ -1,6 +1,6 @@
-.page { max-width: 860px; margin: 0 auto; padding: 42px 34px 100px; animation: fade var(--dur-enter) var(--ease-out) both; }
+.page { max-width: var(--page-max); margin: 0 auto; padding: var(--page-top) var(--page-gutter) var(--page-bottom); }
 @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.ph1 { margin-bottom: 7px; font-size: 34px; font-weight: 800; letter-spacing: -.035em; }
+.ph1 { margin-bottom: 7px; font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -.035em; }
 .pblurb { max-width: 60ch; margin-bottom: 26px; color: var(--muted); font-size: 15px; }
 .vcard {
   width: 100%;
@@ -17,18 +17,17 @@
   transition: background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
 .vcard:last-of-type { border-bottom: 1px solid var(--line-strong); }
-.vcard:hover { background: var(--surface-2); }
 .vcard:active { transform: scale(.99); }
-.vthumb { position: relative; width: 138px; height: 82px; flex: 0 0 138px; overflow: hidden; border-radius: 8px; }
-.vbadge { position: absolute; top: 9px; left: 10px; color: rgba(255,255,255,.92); font-size: 9.5px; font-weight: 700; letter-spacing: .05em; }
+.vthumb { position: relative; width: 138px; height: 82px; flex: 0 0 138px; overflow: hidden; border-radius: var(--radius-control); }
+.vbadge { position: absolute; top: 9px; left: 10px; color: var(--accent-tx); font-size: 9.5px; font-weight: 700; letter-spacing: .05em; }
 .vplay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.vplay span { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,.94); box-shadow: 0 8px 20px rgba(0,0,0,.16); }
+.vplay span { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,.94); color: #050505; box-shadow: 0 8px 20px rgba(0,0,0,.16); }
 .vplay svg { width: 13px; height: 13px; margin-left: 2px; }
 .vt { font-size: 15px; font-weight: 650; }
 .vd { margin-top: 3px; color: var(--faint); font-size: 12.5px; }
-.toast { position: fixed; bottom: 28px; left: 50%; z-index: 320; padding: 11px 18px; border-radius: 8px; background: var(--ink); color: var(--surface); box-shadow: var(--shadow-lg); font-size: 14px; font-weight: 600; transform: translateX(-50%); animation: fade var(--dur-hover) var(--ease-out) both; }
+.toast { position: fixed; bottom: 28px; left: 50%; z-index: 320; padding: 11px 18px; border-radius: var(--radius-control); background: var(--ink); color: var(--surface); box-shadow: var(--shadow-lg); font-size: 14px; font-weight: 600; transform: translateX(-50%); animation: fade var(--dur-hover) var(--ease-out) both; }
+@media (hover: hover) and (pointer: fine) { .vcard:hover { background: var(--surface-2); } }
 @media (max-width: 560px) {
-  .page { padding: 30px 18px 96px; }
-  .ph1 { font-size: 29px; }
+  .page { --page-top: 30px; --page-bottom: 96px; }
   .vthumb { width: 112px; height: 70px; flex-basis: 112px; }
 }

@@ -53,7 +53,7 @@ export default function ImpressumPage() {
           E-Mail: <Ph>[E-Mail-Adresse]</Ph>
         </p>
         <p>
-          Telefon (optional): <Ph>[Telefonnummer oder „nicht öffentlich"]</Ph>
+          Telefon (optional): <Ph>[Telefonnummer oder „nicht öffentlich“]</Ph>
         </p>
       </div>
 
@@ -63,7 +63,7 @@ export default function ImpressumPage() {
           Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:
         </p>
         <p>
-          <Ph>[USt-IdNr. — oder: „Nicht vorhanden. Kleinunternehmer gemäß § 19 UStG."]</Ph>
+          <Ph>[USt-IdNr. — oder: „Nicht vorhanden. Kleinunternehmer gemäß § 19 UStG.“]</Ph>
         </p>
       </div>
 

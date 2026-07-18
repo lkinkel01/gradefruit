@@ -3,6 +3,7 @@ import { View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { BrandMark } from './BrandMark';
 import { GrapefruitProgress } from './Logo';
+import { CheckIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -17,15 +18,15 @@ interface Props {
 const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
   {
     id: 'dashboard', label: 'Übersicht',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>
+    icon: <OverviewIcon />,
   },
   {
     id: 'review', label: 'Wiederholen',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10" /><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10" /></svg>
+    icon: <ReviewIcon />,
   },
   {
     id: 'tutors', label: '1:1 Nachhilfe',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.4" /><path d="M5.5 19a6.5 6.5 0 0 1 13 0" /></svg>
+    icon: <TutorIcon />,
   },
 ];
 
@@ -50,10 +51,7 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
         <GrapefruitProgress
           pct={pct}
           size={38}
-          rind="var(--side-3)"
-          flesh="var(--side-3)"
-          gap="var(--side-2)"
-          showLeaf={false}
+          flesh="var(--side-2)"
         />
         <div className={styles.courseTx}>
           <div className={styles.courseTitle}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</div>
@@ -74,8 +72,8 @@ export default function Sidebar({ view, owned, ownedLk, level, onNavigate, onOpe
                 <span className={styles.cdot} style={{ background: t.color }} />
                 <span className={styles.ti}>{t.label}</span>
                 {topicTotal(t.id) > 0 && topicDone(t.id) === topicTotal(t.id)
-                  ? <span className={styles.stDone}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg></span>
-                  : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></span>
+                  ? <span className={styles.stDone}><CheckIcon size={11} /></span>
+                  : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><LockIcon size={13} /></span>
                 }
               </button>
               {/* Untermenü: im aktiven Thema dauerhaft offen, sonst bei Hover */}
