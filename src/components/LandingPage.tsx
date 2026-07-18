@@ -64,30 +64,90 @@ interface Props {
 
 const SYSTEM_POINTS = [
   {
+    icon: 'path',
     title: 'Klarer Lernweg',
     desc: 'Zusammenfassungen, Übungen und Original-Abituraufgaben aus den letzten Jahren.',
   },
   {
+    icon: 'help',
     title: 'KI und Tutorhilfe',
     desc: 'Fragen direkt im Lernkontext stellen.',
   },
   {
+    icon: 'content',
     title: 'Eigene Inhalte',
     desc: 'Hochladen, integrieren und damit lernen.',
   },
   {
+    icon: 'methods',
     title: 'Moderne Lernmethoden',
     desc: 'Active Recall, Spaced Repetition und Interleaving.',
   },
   {
+    icon: 'reel',
     title: 'Reel-Modus',
     desc: 'Lerninhalte wiederholen, wie bei TikTok, Instagram und Co.',
   },
   {
+    icon: 'community',
     title: 'Community-Wissen',
     desc: 'Unterlagen teilen und gemeinsam nutzen.',
   },
-];
+] satisfies Array<{
+  icon: SystemIconName;
+  title: string;
+  desc: string;
+}>;
+
+type SystemIconName = 'path' | 'help' | 'content' | 'methods' | 'reel' | 'community';
+
+function SystemIcon({ name }: { name: SystemIconName }) {
+  return (
+    <svg className={styles.systemIcon} aria-hidden="true" focusable="false" viewBox="0 0 40 40" fill="none">
+      {name === 'path' && (
+        <>
+          <circle cx="11" cy="29" r="3" />
+          <circle cx="29" cy="11" r="3" />
+          <path d="M14 28c9 0 3-16 12-16" />
+        </>
+      )}
+      {name === 'help' && (
+        <>
+          <path d="M8 10h24v17H18l-7 5v-5H8z" />
+          <path d="M16.5 16a3.7 3.7 0 1 1 5.2 3.4c-1.4.7-1.7 1.5-1.7 2.6" />
+          <path d="M20 25.8h.01" />
+        </>
+      )}
+      {name === 'content' && (
+        <>
+          <path d="M11 6h13l6 6v22H11z" />
+          <path d="M24 6v7h6M16 20h9M16 25h9M16 30h6" />
+        </>
+      )}
+      {name === 'methods' && (
+        <>
+          <path d="M12 12a11 11 0 0 1 18 7" />
+          <path d="m30 12 .3 7-7-.4" />
+          <path d="M28 28a11 11 0 0 1-18-7" />
+          <path d="m10 28-.3-7 7 .4" />
+        </>
+      )}
+      {name === 'reel' && (
+        <>
+          <rect x="11" y="5" width="18" height="30" rx="5" />
+          <path d="m18 15 7 5-7 5z" />
+        </>
+      )}
+      {name === 'community' && (
+        <>
+          <circle cx="15" cy="15" r="5" />
+          <circle cx="27" cy="17" r="4" />
+          <path d="M6 33c.8-6 4-9 9-9s8.2 3 9 9M23 25c5.7-.4 9 2.2 10 7" />
+        </>
+      )}
+    </svg>
+  );
+}
 
 type MethodIconName = 'recall' | 'spacing' | 'errors' | 'adaptive' | 'interleaving';
 
@@ -234,16 +294,15 @@ export default function LandingPage({
   onToggleDark,
   onEnter,
   onLogin,
+  onRegister,
   onOpenCheckout,
   onSignOut,
 }: Props) {
   const [days, setDays] = useState<number | null>(null);
   const [activeSection, setActiveSection] = useState<LandingSectionId | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [navScrolled, setNavScrolled] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
   const fruitRef = useRef<HTMLDivElement>(null);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const daysRaf = requestAnimationFrame(() => setDays(daysUntilExam()));
@@ -281,12 +340,9 @@ export default function LandingPage({
 
     const onScroll = () => {
       const nextY = Math.max(0, window.scrollY);
-      const delta = nextY - lastScrollY.current;
-      setNavScrolled(nextY > 18);
-      setNavHidden(!mobileNavOpen && nextY > 96 && delta > 3);
-      if (nextY < 20 || delta < -3) setNavHidden(false);
+      setNavHidden(nextY > 12);
+      if (nextY > 12 && mobileNavOpen) setMobileNavOpen(false);
       if (nextY < 260) setActiveSection(null);
-      lastScrollY.current = nextY;
     };
 
     const observer = new IntersectionObserver(
@@ -378,7 +434,7 @@ export default function LandingPage({
       <a className={styles.skipLink} href="#main-content">Zum Inhalt</a>
 
       <nav
-        className={`${styles.nav} ${navScrolled ? styles.navScrolled : ''} ${navHidden ? styles.navHidden : ''}`}
+        className={`${styles.nav} ${navHidden ? styles.navHidden : ''}`}
         aria-label="Hauptnavigation"
       >
         <div className={styles.navBar}>
@@ -425,12 +481,12 @@ export default function LandingPage({
               {isAuthed ? (
                 <>
                   <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                  <button className="btn primary sm" onClick={onEnter}>Kostenlos testen</button>
+                  <button className="btn primary sm" onClick={onEnter}>Weiterlernen</button>
                 </>
               ) : (
                 <>
                   <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
-                  <button className="btn primary sm" onClick={onEnter}>Kostenlos testen</button>
+                  <button className="btn primary sm" onClick={onRegister}>Registrieren</button>
                 </>
               )}
             </div>
@@ -445,24 +501,12 @@ export default function LandingPage({
               }}
               type="button"
             >
-              <span className={styles.menuIcon} aria-hidden="true"><i /><i /></span>
+              <span className={styles.menuIcon} aria-hidden="true"><i /><i /><i /></span>
             </button>
           </div>
         </div>
 
         <div className={styles.mobileNav} hidden={!mobileNavOpen} id="mobile-landing-navigation">
-          <div className={styles.mobileSections}>
-            {LANDING_NAV_ITEMS.map(item => (
-              <a
-                aria-current={activeSection === item.id ? 'location' : undefined}
-                href={item.href}
-                key={item.label}
-                onClick={item.id ? () => chooseSection(item.id as LandingSectionId) : undefined}
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
           <div className={styles.mobileAccount}>
             {isAuthed ? (
               <>
@@ -476,6 +520,18 @@ export default function LandingPage({
               </>
             )}
           </div>
+          <div className={styles.mobileSections}>
+            {LANDING_NAV_ITEMS.map(item => (
+              <a
+                aria-current={activeSection === item.id ? 'location' : undefined}
+                href={item.href}
+                key={item.label}
+                onClick={item.id ? () => chooseSection(item.id as LandingSectionId) : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
         </div>
       </nav>
 
@@ -485,12 +541,14 @@ export default function LandingPage({
             <p className={styles.heroContext}>Online-Intensivkurs für das Mathematik-Abitur in Hessen 2027</p>
             <h1 className={styles.headline}>
               <span>Deine komplette </span>
-              <span className={styles.headlineLong}>Mathe-Abiturvorbereitung. </span>
+              <span className={styles.headlineNoBreak}>Mathe-Abiturvorbereitung. </span>
               <span>An einem Ort.</span>
             </h1>
-            <p className={styles.lead}>
-              24/7 KI-Tutor. Originale Abituraufgaben. Detaillierte Erklärvideos.
-            </p>
+            <ul className={styles.heroHighlights}>
+              <li>24/7 KI-Tutor</li>
+              <li>Originale Abituraufgaben</li>
+              <li>Erklärvideos</li>
+            </ul>
             <div className={styles.heroActions}>
               <button className="btn primary big" onClick={onEnter}>
                 Kostenlos testen
@@ -551,6 +609,7 @@ export default function LandingPage({
             <div className={styles.systemPoints}>
               {SYSTEM_POINTS.map(point => (
                 <article key={point.title} className={styles.systemPoint}>
+                  <SystemIcon name={point.icon} />
                   <h3>{point.title}</h3>
                   <p>{point.desc}</p>
                 </article>
