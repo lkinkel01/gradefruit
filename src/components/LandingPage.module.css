@@ -1205,8 +1205,8 @@
   .mobileAccount :global(.btn) { padding-inline: 13px; }
 
   .hero {
-    gap: 64px;
-    padding: 82px 0 78px;
+    gap: 0;
+    padding: 82px 0 72px;
   }
   .heroCopy {
     width: 100%;
@@ -1220,11 +1220,12 @@
     line-height: 1.5;
   }
   .headline {
-    font-size: clamp(34px, 9.4vw, 42px);
+    position: relative;
+    font-size: clamp(29px, 7.75vw, 31.5px);
     letter-spacing: -0.035em;
-    line-height: 1.02;
+    line-height: 1.04;
   }
-  .headlineNoBreak { white-space: normal; }
+  .headlineNoBreak { white-space: nowrap; }
   .heroHighlights {
     width: min(100%, 340px);
     gap: 12px 20px;
@@ -1254,17 +1255,20 @@
     text-align: center;
   }
   .heroVisual {
-    position: relative;
-    top: auto;
+    position: absolute;
+    z-index: 0;
+    top: 72px;
     right: auto;
-    width: min(78vw, 300px);
-    min-height: 300px;
-    margin: 0 auto;
-    opacity: 1;
-    transform: none;
+    left: 50%;
+    width: min(86vw, 340px);
+    min-height: 340px;
+    margin: 0;
+    opacity: .11;
+    transform: translateX(-50%);
+    animation: none;
   }
   .orbitRing { width: 100%; }
-  .heroFruit { width: min(116%, 342px); }
+  .heroFruit { width: min(116%, 390px); }
 
   .proofStrip { grid-template-columns: 1fr; padding: 20px 0; }
   .proofStrip > div,
