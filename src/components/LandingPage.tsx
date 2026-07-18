@@ -550,14 +550,16 @@ export default function LandingPage({
               <li>Erklärvideos</li>
             </ul>
             <div className={styles.heroActions}>
-              <button className="btn primary big" onClick={onEnter}>
-                Kostenlos testen
-              </button>
+              <div className={styles.heroPrimaryAction}>
+                <button className="btn primary big" onClick={onEnter}>
+                  Kostenlos testen
+                </button>
+                <p className={styles.reassurance}>
+                  Analysis ist kostenlos. Ohne Account. Ohne Zahlungsdaten.
+                </p>
+              </div>
               <a className="gf-arrow" href="#system">Gradefruit entdecken <Arrow /></a>
             </div>
-            <p className={styles.reassurance}>
-              Analysis ist kostenlos. Ohne Account. Ohne Zahlungsdaten.
-            </p>
           </div>
 
           {/* Markenvisual statt Feature-Grafik: die Grapefruit im

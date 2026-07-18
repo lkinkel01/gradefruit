@@ -1,7 +1,7 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { View, LernStatus } from '@/lib/types';
+import { LernStatus, NavigateTo, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { GrapefruitProgress } from './Logo';
@@ -15,7 +15,7 @@ import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
 import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
 import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
 import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
-import { ChevronIcon, PlayIcon, QuestionIcon, TutorIcon, UploadIcon } from './UiIcons';
+import { ArrowRightIcon, ChevronIcon, PlayIcon, QuestionIcon, TutorIcon, UploadIcon } from './UiIcons';
 
 interface Task {
   id: string;
@@ -58,21 +58,20 @@ interface Props {
   level: 'gk' | 'lk';
   owned: boolean;
   ownedLk: boolean;
-  navSignal: number;
+  tab: TopicTab;
+  itemId: string | null;
   onOpenCheckout: (course: 'gk' | 'lk') => void;
   onOpenAsk: (ctx: string, snippet: string) => void;
-  onNavigate: (v: View) => void;
-  onTabChange?: (tab: 'zusammenfassung' | 'uebungen') => void;
-  onSectionChange?: (section: string | null) => void;
+  onNavigate: NavigateTo;
+  onLocationChange: (tab: TopicTab, itemId: string | null, itemLabel: string | null) => void;
+  onItemLabelChange: (itemLabel: string | null) => void;
 }
-
-type Tab = 'zusammenfassung' | 'uebungen';
 
 // Die drei Lernstufen in fester Reihenfolge (Fuß jeder Aufgabe).
 const STATUS_BTNS: { status: Exclude<LernStatus, 'none'>; label: string }[] = [
   { status: 'verstanden', label: 'Verstanden' },
   { status: 'wiederholen', label: 'Wiederholen' },
-  { status: 'unklar', label: 'Noch unklar' },
+  { status: 'unklar', label: 'Nicht verstanden' },
 ];
 
 export default function TopicView({
@@ -80,12 +79,13 @@ export default function TopicView({
   level,
   owned,
   ownedLk,
-  navSignal,
+  tab,
+  itemId,
   onOpenCheckout,
   onOpenAsk,
   onNavigate,
-  onTabChange,
-  onSectionChange,
+  onLocationChange,
+  onItemLabelChange,
 }: Props) {
   const router = useRouter();
   const topic = TOPIC_DATA[topicId as string];
@@ -94,25 +94,26 @@ export default function TopicView({
     : undefined;
   const { user } = useAuth();
   const { statusOf, setStatus } = useProgress();
-  const [tab, setTab] = useState<Tab>('zusammenfassung');
-  const [openCards, setOpenCards] = useState<Set<string>>(new Set());
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
-  const [openSummaryCards, setOpenSummaryCards] = useState<Set<string>>(new Set());
   const [openSummaryDetails, setOpenSummaryDetails] = useState<Set<string>>(new Set());
-  const [activeSummary, setActiveSummary] = useState<string | null>(null);
   const [summaryStatuses, setSummaryStatuses] = useState<Record<string, LernStatus>>({});
   const [video, setVideo] = useState<Scene | null>(null);
   const isFree = topicId === 'analysis';
 
   const tasks = topic ? topic[level] : [];
   const doneCount = tasks.filter(t => statusOf(topicId, t.id) === 'verstanden').length;
+  const selectedSummary = tab === 'zusammenfassung'
+    ? summary?.sections.find(section => section.title === itemId)
+    : undefined;
+  const selectedSummaryIndex = selectedSummary
+    ? summary?.sections.findIndex(section => section.title === selectedSummary.title) ?? -1
+    : -1;
+  const selectedTask = tab === 'uebungen' ? tasks.find(task => task.id === itemId) : undefined;
+  const selectedTaskIndex = selectedTask ? tasks.findIndex(task => task.id === selectedTask.id) : -1;
 
-  // Aktiven Tab nach außen melden — Breadcrumb (Topbar) und Sidebar-Untermenü
-  // zeigen so immer denselben Standort wie die Seite selbst.
-  useEffect(() => { onTabChange?.(tab); }, [tab, onTabChange]);
   useEffect(() => {
-    onSectionChange?.(tab === 'zusammenfassung' ? activeSummary : null);
-  }, [activeSummary, onSectionChange, tab]);
+    onItemLabelChange(selectedSummary?.title ?? selectedTask?.tag ?? null);
+  }, [onItemLabelChange, selectedSummary?.title, selectedTask?.tag]);
 
   useEffect(() => {
     let saved: Record<string, LernStatus> = {};
@@ -124,84 +125,10 @@ export default function TopicView({
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  // Einstieg: Wer hier schon gelernt hat, landet direkt bei den Übungen,
-  // neue Lernende bei der Zusammenfassung. Deep-Links (Sidebar-Untermenü,
-  // Reel-Modus, Wiederholen-Seite) können Tab und Aufgabe vorgeben.
-  // Das Ref merkt sich den konsumierten Wunsch pro Navigation (key), damit
-  // Reacts doppelter Effekt-Lauf im Dev-Modus ihn nicht wieder verwirft.
-  const consumed = useRef<{ key: string; tab: Tab | null; task: string | null; summary: string | null }>({
-    key: '',
-    tab: null,
-    task: null,
-    summary: null,
-  });
-  useEffect(() => {
-    const done = tasks.filter(t => statusOf(topicId, t.id) === 'verstanden').length;
-    const key = `${topicId}/${level}/${navSignal}`;
-    let forcedTab: Tab | null = consumed.current.key === key ? consumed.current.tab : null;
-    let forcedTask: string | null = consumed.current.key === key ? consumed.current.task : null;
-    let forcedSummary: string | null = consumed.current.key === key ? consumed.current.summary : null;
-    try {
-      const t = localStorage.getItem('gf-open-tab');
-      if (t === 'zusammenfassung' || t === 'uebungen') {
-        forcedTab = t;
-        localStorage.removeItem('gf-open-tab');
-      }
-      const ft = localStorage.getItem('gf-open-task');
-      if (ft && tasks.some(x => x.id === ft)) {
-        forcedTask = ft;
-        forcedTab = 'uebungen';
-        localStorage.removeItem('gf-open-task');
-      }
-      const fs = localStorage.getItem('gf-open-summary');
-      if (fs && summary?.sections.some(section => section.title === fs)) {
-        forcedSummary = fs;
-        forcedTab = 'zusammenfassung';
-        localStorage.removeItem('gf-open-summary');
-      }
-      consumed.current = { key, tab: forcedTab, task: forcedTask, summary: forcedSummary };
-    } catch { /* Speicher gesperrt */ }
-    const nextTab = forcedTab ?? (done > 0 ? 'uebungen' : 'zusammenfassung');
-    setTab(nextTab);
-    const toOpen = forcedTask
-      ? tasks.find(t => t.id === forcedTask)
-      : tasks.find(t => statusOf(topicId, t.id) !== 'verstanden') ?? tasks[0];
-    setOpenCards(toOpen ? new Set([toOpen.id]) : new Set());
-    setOpenSolutions(new Set());
-    const firstSummary = forcedSummary ?? summary?.sections[0]?.title ?? null;
-    setOpenSummaryCards(nextTab === 'zusammenfassung' && firstSummary ? new Set([firstSummary]) : new Set());
-    setOpenSummaryDetails(new Set());
-    setActiveSummary(nextTab === 'zusammenfassung' ? firstSummary : null);
-    if (forcedTask) {
-      // Gewünschte Aufgabe nach dem Rendern in den Blick holen
-      setTimeout(() => {
-        document.getElementById(`task-${forcedTask}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 80);
-    }
-    if (forcedSummary) {
-      setTimeout(() => {
-        const summaryIndex = summary?.sections.findIndex(section => section.title === forcedSummary) ?? -1;
-        if (summaryIndex >= 0) {
-          document.getElementById(`summary-${summaryIndex}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 80);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topicId, level, navSignal]);
-
   if (!topic) return null;
 
   const hasAccess = isFree || (level === 'gk' ? owned : ownedLk);
   const levelLabel = level === 'lk' ? 'Leistungskurs' : 'Grundkurs';
-
-  const toggleCard = (id: string) => {
-    setOpenCards(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
 
   const toggleSolution = (id: string) => {
     setOpenSolutions(prev => {
@@ -212,29 +139,10 @@ export default function TopicView({
     });
   };
 
-  const selectTab = (nextTab: Tab) => {
-    setTab(nextTab);
-    if (nextTab === 'zusammenfassung') {
-      const first = activeSummary ?? summary?.sections[0]?.title ?? null;
-      setActiveSummary(first);
-      if (first) setOpenSummaryCards(prev => prev.size > 0 ? prev : new Set([first]));
-    } else {
-      setActiveSummary(null);
-    }
-  };
-
-  const toggleSummaryCard = (title: string) => {
-    setOpenSummaryCards(prev => {
-      const next = new Set(prev);
-      if (next.has(title)) {
-        next.delete(title);
-        if (activeSummary === title) setActiveSummary(null);
-      } else {
-        next.add(title);
-        setActiveSummary(title);
-      }
-      return next;
-    });
+  const selectTab = (nextTab: TopicTab) => {
+    setOpenSolutions(new Set());
+    setOpenSummaryDetails(new Set());
+    onLocationChange(nextTab, null, null);
   };
 
   const toggleSummaryDetails = (title: string) => {
@@ -282,6 +190,284 @@ export default function TopicView({
       </button>
     </div>
   );
+
+  const renderSummaryIndex = () => (
+    <div className={styles.contentIndex}>
+      {summary?.intro && <p className={styles.indexIntro}>{summary.intro}</p>}
+      <div className={styles.indexList}>
+        {summary?.sections.map((section, index) => {
+          const status = summaryStatuses[summaryStatusKey(section.title)] ?? 'none';
+          return (
+            <button
+              key={section.title}
+              className={styles.indexRow}
+              onClick={() => onLocationChange('zusammenfassung', section.title, section.title)}
+            >
+              <span className={styles.indexNumber}>{index + 1}</span>
+              <span className={styles.indexText}>
+                <strong>{section.title}</strong>
+                <small>{section.text}</small>
+              </span>
+              {status !== 'none' && (
+                <span className={styles.headStatus}>
+                  {STATUS_BTNS.find(statusButton => statusButton.status === status)?.label}
+                </span>
+              )}
+              <span className={styles.indexArrow} aria-hidden="true"><ArrowRightIcon size={16} /></span>
+            </button>
+          );
+        })}
+      </div>
+      <div className={styles.summaryFoot}>
+        <button className="btn primary" onClick={() => selectTab('uebungen')}>
+          Jetzt üben
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderSummaryDetail = () => {
+    if (!selectedSummary) return renderSummaryIndex();
+    const detailsOpen = openSummaryDetails.has(selectedSummary.title);
+    const status = summaryStatuses[summaryStatusKey(selectedSummary.title)] ?? 'none';
+
+    return (
+      <div className={styles.detailPage}>
+        <button
+          type="button"
+          className={styles.backLink}
+          onClick={() => onLocationChange('zusammenfassung', null, null)}
+        >
+          Alle Zusammenfassungen
+        </button>
+        <article className={`${styles.card} ${styles.cardOpen}`}>
+          <header className={styles.detailHeader}>
+            <span className={styles.cardNum} style={{ background: topic.color }}>{selectedSummaryIndex + 1}</span>
+            <h2 className={styles.detailTitle}>{selectedSummary.title}</h2>
+            {status !== 'none' && (
+              <span className={styles.headStatus}>
+                {STATUS_BTNS.find(statusButton => statusButton.status === status)?.label}
+              </span>
+            )}
+          </header>
+          <div className={styles.cardBody}>
+            <p className={styles.summaryIntro}>{selectedSummary.text}</p>
+            <div className={styles.solRow}>
+              <button
+                className={`${styles.mini} ${styles.solBtn}`}
+                onClick={() => toggleSummaryDetails(selectedSummary.title)}
+                aria-expanded={detailsOpen}
+              >
+                <ChevronIcon direction={detailsOpen ? 'up' : 'down'} size={14} />
+                {detailsOpen ? 'Zusammenfassung verbergen' : 'Zusammenfassung anzeigen'}
+              </button>
+            </div>
+
+            {detailsOpen && (
+              <div className={styles.summaryDetails}>
+                <div className={styles.formulas}>
+                  {selectedSummary.formulas.map((formula, formulaIndex) => (
+                    <button
+                      key={formulaIndex}
+                      className={styles.formula}
+                      title="Diese Formel vom Coach erklären lassen"
+                      onClick={() => onOpenAsk(topic.label, `Erkläre mir diese Formel aus „${selectedSummary.title}“: ${formula}`)}
+                    >
+                      <span className={styles.formulaText}>{formula}</span>
+                      <QuestionIcon size={14} />
+                    </button>
+                  ))}
+                </div>
+
+                {actionBar({
+                  askCtx: topic.label,
+                  askSnippet: `Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`,
+                })}
+
+                {user && (
+                  <div className={styles.cardFoot}>
+                    <span className={styles.footLabel}>Wie sicher fühlst du dich?</span>
+                    <div className={styles.statusSeg}>
+                      {STATUS_BTNS.map(button => (
+                        <button
+                          key={button.status}
+                          className={`${styles.statusBtn} ${status === button.status ? styles[`statusOn_${button.status}`] : ''}`}
+                          aria-pressed={status === button.status}
+                          onClick={() => setSummaryStatus(selectedSummary.title, status === button.status ? 'none' : button.status)}
+                        >
+                          {button.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </article>
+      </div>
+    );
+  };
+
+  const renderExerciseIndex = () => (
+    <div className={styles.contentIndex}>
+      <div className={styles.indexList}>
+        {tasks.map((task, index) => {
+          const status = statusOf(topicId, task.id);
+          const scene = task.videoId ? SCENES[task.videoId] : undefined;
+          return (
+            <button
+              key={task.id}
+              className={styles.indexRow}
+              onClick={() => onLocationChange('uebungen', task.id, task.tag)}
+            >
+              <span className={`${styles.indexNumber} ${status === 'verstanden' ? styles.indexNumberDone : ''}`}>
+                {status === 'verstanden' ? <span aria-hidden="true">✓</span> : index + 1}
+              </span>
+              <span className={styles.indexText}>
+                <strong>{task.tag}</strong>
+                <small>{task.q}</small>
+              </span>
+              {scene && <span className={styles.indexVideo}>Video</span>}
+              {status !== 'none' && (
+                <span className={styles.headStatus}>
+                  {STATUS_BTNS.find(statusButton => statusButton.status === status)?.label}
+                </span>
+              )}
+              <span className={styles.indexArrow} aria-hidden="true"><ArrowRightIcon size={16} /></span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderExerciseDetail = () => {
+    if (!selectedTask) return renderExerciseIndex();
+    const status = statusOf(topicId, selectedTask.id);
+    const done = status === 'verstanden';
+    const scene = selectedTask.videoId ? SCENES[selectedTask.videoId] : undefined;
+    const solutionOpen = openSolutions.has(selectedTask.id);
+
+    return (
+      <div className={styles.detailPage}>
+        <button
+          type="button"
+          className={styles.backLink}
+          onClick={() => onLocationChange('uebungen', null, null)}
+        >
+          Alle Übungen
+        </button>
+        <article id={`task-${selectedTask.id}`} className={`${styles.card} ${styles.cardOpen}`}>
+          <header className={styles.detailHeader}>
+            <span className={`${styles.cardNum} ${done ? styles.cardNumDone : ''}`} style={done ? undefined : { background: topic.color }}>
+              {done ? '✓' : selectedTaskIndex + 1}
+            </span>
+            <h2 className={styles.detailTitle}>{selectedTask.tag}</h2>
+            {status !== 'none' && (
+              <span className={styles.headStatus}>
+                {STATUS_BTNS.find(statusButton => statusButton.status === status)?.label}
+              </span>
+            )}
+          </header>
+
+          <div className={styles.cardBody}>
+            <div className={styles.taskBlock}>
+              <span className={styles.taskLabel}>Aufgabe</span>
+              <p className={styles.taskQ}>{selectedTask.q}</p>
+            </div>
+
+            <div className={styles.solRow}>
+              <button
+                className={`${styles.mini} ${styles.solBtn}`}
+                onClick={() => toggleSolution(selectedTask.id)}
+                aria-expanded={solutionOpen}
+              >
+                <ChevronIcon direction={solutionOpen ? 'up' : 'down'} size={14} />
+                {solutionOpen ? 'Lösung verbergen' : 'Lösung'}
+              </button>
+            </div>
+
+            {solutionOpen && (
+              <div className={styles.solutionStage}>
+                {selectedTask.steps.length > 0 && (
+                  <div className={styles.solution}>
+                    <div className={styles.solHead}>
+                      <div className={styles.solTitle}>Schritt-für-Schritt-Lösung</div>
+                      <span className={styles.solHint}>Tippe auf einen Schritt für mehr Erklärung</span>
+                    </div>
+                    {selectedTask.steps.map((step, stepIndex) => (
+                      <div
+                        key={stepIndex}
+                        className={styles.sstep}
+                        style={{ animationDelay: `${stepIndex * 50}ms` }}
+                        role="button"
+                        tabIndex={0}
+                        title="Diesen Schritt vom Coach erklären lassen"
+                        onClick={() => onOpenAsk(topic.label, `Schritt ${stepIndex + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${selectedTask.q}`)}
+                        onKeyDown={event => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            onOpenAsk(topic.label, `Schritt ${stepIndex + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${selectedTask.q}`);
+                          }
+                        }}
+                      >
+                        <div className={styles.stepNum}>{stepIndex + 1}</div>
+                        <div className={styles.stepBody}>
+                          <div className={styles.stepLd}>{step.label}</div>
+                          <div className={styles.stepMt}>{step.math}</div>
+                        </div>
+                        <QuestionIcon size={15} />
+                      </div>
+                    ))}
+                    {selectedTask.result && <div className={styles.result}>{selectedTask.result}</div>}
+                    {selectedTask.mistakes && selectedTask.mistakes.length > 0 && (
+                      <div className={styles.mistakes}>
+                        <div className={styles.mistakesTitle}>Typische Fehler</div>
+                        <ul className={styles.mistakesList}>
+                          {selectedTask.mistakes.map((mistake, mistakeIndex) => (
+                            <li key={mistakeIndex}>{mistake}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <button
+                  className={`${styles.mini} ${styles.checkOwn}`}
+                  onClick={() => onOpenAsk(topic.label, `Ich habe diese Aufgabe selbst gerechnet und möchte meine Lösung prüfen lassen (Foto oder PDF hochladen): ${selectedTask.q}`)}
+                >
+                  <UploadIcon size={14} />
+                  Eigene Lösung prüfen
+                </button>
+
+                {actionBar({ scene, askCtx: topic.label, askSnippet: selectedTask.q })}
+
+                {user && (
+                  <div className={styles.cardFoot}>
+                    <span className={styles.footLabel}>Wie sicher fühlst du dich?</span>
+                    <div className={styles.statusSeg}>
+                      {STATUS_BTNS.map(button => (
+                        <button
+                          key={button.status}
+                          className={`${styles.statusBtn} ${status === button.status ? styles[`statusOn_${button.status}`] : ''}`}
+                          aria-pressed={status === button.status}
+                          onClick={() => setStatus(topicId, selectedTask.id, status === button.status ? 'none' : button.status)}
+                        >
+                          {button.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </article>
+      </div>
+    );
+  };
 
   return (
     <div className={styles.page}>
@@ -341,223 +527,9 @@ export default function TopicView({
           <p className={styles.lockHint}>Analysis kannst du kostenlos ausprobieren.</p>
         </div>
       ) : tab === 'zusammenfassung' && summary ? (
-        <div className={styles.summaryWrap}>
-          {summary.sections.map((sec, i) => {
-            const open = openSummaryCards.has(sec.title);
-            const detailsOpen = openSummaryDetails.has(sec.title);
-            const status = summaryStatuses[summaryStatusKey(sec.title)] ?? 'none';
-
-            return (
-              <article
-                key={sec.title}
-                id={`summary-${i}`}
-                className={`${styles.card} ${open ? styles.cardOpen : ''}`}
-              >
-                <button
-                  className={styles.cardHead}
-                  onClick={() => toggleSummaryCard(sec.title)}
-                  aria-expanded={open}
-                >
-                  <span className={styles.cardNum} style={{ background: topic.color }}>{i + 1}</span>
-                  <span className={styles.cardTitle}>{sec.title}</span>
-                  {status !== 'none' && <span className={styles.headStatus}>{STATUS_BTNS.find(item => item.status === status)?.label}</span>}
-                  <ChevronIcon direction={open ? 'up' : 'down'} size={16} />
-                </button>
-
-                {open && (
-                  <div className={styles.cardBody}>
-                    <p className={styles.summaryIntro}>{sec.text}</p>
-                    <div className={styles.solRow}>
-                      <button
-                        className={`${styles.mini} ${styles.solBtn}`}
-                        onClick={() => toggleSummaryDetails(sec.title)}
-                        aria-expanded={detailsOpen}
-                      >
-                        <ChevronIcon direction={detailsOpen ? 'up' : 'down'} size={14} />
-                        {detailsOpen ? 'Zusammenfassung verbergen' : 'Zusammenfassung anzeigen'}
-                      </button>
-                    </div>
-
-                    {detailsOpen && (
-                      <div className={styles.summaryDetails}>
-                        <div className={styles.formulas}>
-                          {sec.formulas.map((formula, formulaIndex) => (
-                            <button
-                              key={formulaIndex}
-                              className={styles.formula}
-                              title="Diese Formel vom Coach erklären lassen"
-                              onClick={() => onOpenAsk(topic.label, `Erkläre mir diese Formel aus „${sec.title}“: ${formula}`)}
-                            >
-                              <span className={styles.formulaText}>{formula}</span>
-                              <QuestionIcon size={14} />
-                            </button>
-                          ))}
-                        </div>
-
-                        {actionBar({
-                          askCtx: topic.label,
-                          askSnippet: `Erkläre mir das Thema „${sec.title}“: ${sec.text}`,
-                        })}
-
-                        {user && (
-                          <div className={styles.cardFoot}>
-                            <span className={styles.footLabel}>Wie sicher fühlst du dich?</span>
-                            <div className={styles.statusSeg}>
-                              {STATUS_BTNS.map(button => (
-                                <button
-                                  key={button.status}
-                                  className={`${styles.statusBtn} ${status === button.status ? styles[`statusOn_${button.status}`] : ''}`}
-                                  aria-pressed={status === button.status}
-                                  onClick={() => setSummaryStatus(sec.title, status === button.status ? 'none' : button.status)}
-                                >
-                                  {button.label}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </article>
-            );
-          })}
-          <div className={styles.summaryFoot}>
-            <button className="btn primary" onClick={() => selectTab('uebungen')}>
-              Jetzt üben
-            </button>
-          </div>
-        </div>
+        selectedSummary ? renderSummaryDetail() : renderSummaryIndex()
       ) : (
-        <div className={styles.cards}>
-          {tasks.map((task, i) => {
-            const open = openCards.has(task.id);
-            const status = statusOf(topicId, task.id);
-            const done = status === 'verstanden';
-            const scene = task.videoId ? SCENES[task.videoId] : undefined;
-            return (
-              <div key={task.id} id={`task-${task.id}`} className={`${styles.card} ${open ? styles.cardOpen : ''}`}>
-                <button className={styles.cardHead} onClick={() => toggleCard(task.id)} aria-expanded={open}>
-                  <span className={`${styles.cardNum} ${done ? styles.cardNumDone : ''}`} style={done ? undefined : { background: topic.color }}>
-                    {done ? (
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    ) : (
-                      i + 1
-                    )}
-                  </span>
-                  <span className={styles.cardTitle}>{task.tag}</span>
-                  <span className={styles.cardMeta}>
-                    {scene && (
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-label="Mit Erklärvideo">
-                        <polygon points="6 4 20 12 6 20 6 4" />
-                      </svg>
-                    )}
-                    {status === 'wiederholen' && <span className={styles.headStatus}>Wiederholen</span>}
-                    {status === 'unklar' && <span className={styles.headStatus}>Noch unklar</span>}
-                  </span>
-                  <svg className={styles.chev} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <polyline points={open ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
-                  </svg>
-                </button>
-
-                {open && (
-                  <div className={styles.cardBody}>
-                    <div className={styles.taskBlock}>
-                      <span className={styles.taskLabel}>Aufgabe</span>
-                      <p className={styles.taskQ}>{task.q}</p>
-                    </div>
-
-                    <div className={styles.solRow}>
-                      <button className={`${styles.mini} ${styles.solBtn}`} onClick={() => toggleSolution(task.id)} aria-expanded={openSolutions.has(task.id)}>
-                        <ChevronIcon direction={openSolutions.has(task.id) ? 'up' : 'down'} size={14} />
-                        {openSolutions.has(task.id) ? 'Lösung verbergen' : 'Lösung'}
-                      </button>
-                    </div>
-
-                    {openSolutions.has(task.id) && (
-                      <div className={styles.solutionStage}>
-                        {task.steps.length > 0 && (
-                          <div className={styles.solution}>
-                            <div className={styles.solHead}>
-                              <div className={styles.solTitle}>Schritt-für-Schritt-Lösung</div>
-                              <span className={styles.solHint}>Tippe auf einen Schritt für mehr Erklärung</span>
-                            </div>
-                            {task.steps.map((step, si) => (
-                              <div
-                                key={si}
-                                className={styles.sstep}
-                                style={{ animationDelay: `${si * 50}ms` }}
-                                role="button"
-                                tabIndex={0}
-                                title="Diesen Schritt vom Coach erklären lassen"
-                                onClick={() => onOpenAsk(topic.label, `Schritt ${si + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${task.q}`)}
-                                onKeyDown={event => {
-                                  if (event.key === 'Enter' || event.key === ' ') {
-                                    event.preventDefault();
-                                    onOpenAsk(topic.label, `Schritt ${si + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${task.q}`);
-                                  }
-                                }}
-                              >
-                                <div className={styles.stepNum}>{si + 1}</div>
-                                <div className={styles.stepBody}>
-                                  <div className={styles.stepLd}>{step.label}</div>
-                                  <div className={styles.stepMt}>{step.math}</div>
-                                </div>
-                                <QuestionIcon size={15} />
-                              </div>
-                            ))}
-                            {task.result && <div className={styles.result}>{task.result}</div>}
-                            {task.mistakes && task.mistakes.length > 0 && (
-                              <div className={styles.mistakes}>
-                                <div className={styles.mistakesTitle}>Typische Fehler</div>
-                                <ul className={styles.mistakesList}>
-                                  {task.mistakes.map((mistake, mistakeIndex) => (
-                                    <li key={mistakeIndex}>{mistake}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        <button
-                          className={`${styles.mini} ${styles.checkOwn}`}
-                          onClick={() => onOpenAsk(topic.label, `Ich habe diese Aufgabe selbst gerechnet und möchte meine Lösung prüfen lassen (Foto oder PDF hochladen): ${task.q}`)}
-                        >
-                          <UploadIcon size={14} />
-                          Eigene Lösung prüfen
-                        </button>
-
-                        {actionBar({ scene, askCtx: topic.label, askSnippet: task.q })}
-
-                        {user && (
-                          <div className={styles.cardFoot}>
-                            <span className={styles.footLabel}>Wie sicher fühlst du dich?</span>
-                            <div className={styles.statusSeg}>
-                              {STATUS_BTNS.map(button => (
-                                <button
-                                  key={button.status}
-                                  className={`${styles.statusBtn} ${status === button.status ? styles[`statusOn_${button.status}`] : ''}`}
-                                  aria-pressed={status === button.status}
-                                  onClick={() => setStatus(topicId, task.id, status === button.status ? 'none' : button.status)}
-                                >
-                                  {button.label}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+        selectedTask ? renderExerciseDetail() : renderExerciseIndex()
       )}
 
       <div className={styles.topicFoot}>

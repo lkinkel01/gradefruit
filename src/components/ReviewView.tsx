@@ -13,7 +13,7 @@ import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
 import styles from './ReviewView.module.css';
 
 // Wiederholen: das Herz des Lernsystems. Jeder Inhalt lässt sich als
-// „Verstanden", „Wiederholen" oder „Noch unklar" einordnen – hier werden die
+// „Verstanden", „Wiederholen" oder „Nicht verstanden" einordnen – hier werden die
 // Einordnungen nach Lernstufe und Thema gefiltert und direkt geöffnet.
 // Die Oberfläche ist bewusst auf Active Recall / Spaced Repetition
 // vorbereitet: die Filter unten sind die spätere Wiederhol-Warteschlange.
@@ -160,7 +160,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
               <div className={styles.emptyTitle}>Noch nichts eingeordnet</div>
               <p className={styles.emptyText}>
                 Beim Üben kannst du jede Aufgabe als „Verstanden“, „Wiederholen“
-                oder „Noch unklar“ einordnen. Hier findest du sie dann wieder.
+                oder „Nicht verstanden“ einordnen. Hier findest du sie dann wieder.
               </p>
               <button className="btn primary" onClick={() => onNavigate('analysis')}>Jetzt lernen</button>
             </>

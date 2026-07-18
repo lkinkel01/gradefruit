@@ -304,25 +304,38 @@
 
 .heroActions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   flex-wrap: wrap;
   gap: 22px;
   margin-top: 34px;
 }
 
+.heroPrimaryAction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .reassurance {
   display: inline-flex;
+  align-items: center;
+  gap: 7px;
   width: fit-content;
-  margin: 20px auto 0;
-  padding: 8px 12px;
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
-  border-radius: var(--radius-control);
-  background: color-mix(in srgb, var(--accent-soft) 48%, transparent);
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 600;
+  margin: 9px auto 0;
+  color: var(--faint);
+  font-size: 11.5px;
+  font-weight: 500;
   letter-spacing: -0.005em;
+}
+
+.reassurance::before {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  content: '';
 }
 
 .heroVisual {
@@ -357,6 +370,10 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  width: min(114%, 480px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
   line-height: 0;
   filter: drop-shadow(0 32px 64px color-mix(in srgb, var(--ink) 16%, transparent));
   transform: translate3d(-50%, -50%, 0);
@@ -365,8 +382,9 @@
 }
 
 .heroFruit :global(svg) {
-  width: min(64%, 276px);
+  width: 100%;
   height: auto;
+  transform: translateY(-2.1%);
 }
 
 @keyframes heroCopyIn {
@@ -975,7 +993,7 @@
   text-align: center;
 }
 
-.closing h2 { font-size: clamp(58px, 10vw, 126px); line-height: .9; }
+.closing h2 { font-size: clamp(52px, 8vw, 104px); line-height: .92; }
 .closingActions { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 26px; }
 
 .footer {
@@ -1026,6 +1044,15 @@
       animation-timeline: view();
       animation-range: entry 0% cover 34%;
     }
+  }
+}
+
+@media (min-width: 901px) {
+  .systemVisual { align-items: start; }
+  .systemDiagram {
+    position: sticky;
+    top: 110px;
+    margin-block: 90px;
   }
 }
 
@@ -1119,7 +1146,7 @@
   .heroCopy { max-width: 680px; margin-inline: auto; }
   .heroVisual { position: absolute; top: 20px; right: 50%; width: min(68vw, 420px); min-height: 420px; opacity: .14; transform: translateX(50%); }
   .orbitRing { width: 100%; }
-  .heroFruit :global(svg) { width: min(64%, 246px); }
+  .heroFruit { width: min(116%, 490px); }
 
   .sectionIntro,
   .libraryIntro,
@@ -1181,8 +1208,11 @@
   .headline { font-size: clamp(30px, 7.8vw, 36px); }
   .heroHighlights { gap: 9px 14px; font-size: 14px; }
   .heroHighlights li { white-space: normal; }
-  .heroActions { align-items: stretch; flex-direction: column; gap: 14px; }
+  .heroActions { align-items: center; flex-direction: column; gap: 16px; }
+  .heroPrimaryAction { width: 100%; align-items: center; }
   .heroActions :global(.btn) { width: 100%; }
+  .heroActions :global(.gf-arrow) { align-self: center; justify-content: center; }
+  .reassurance { align-self: center; text-align: center; }
   .heroVisual { display: none; }
 
   .proofStrip { grid-template-columns: 1fr; padding: 14px 0; }
@@ -1209,11 +1239,24 @@
   .coachShell { padding: 20px; }
   .coachQuestion { max-width: 94%; }
 
-  .methodRow { grid-template-columns: 40px 1fr; gap: 8px 14px; padding: 20px 0; }
-  .methodIcon { width: 34px; height: 34px; }
+  .methodRow {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 9px;
+    min-height: 0;
+    padding: 26px 10px;
+    text-align: center;
+  }
+  .methodIcon { width: 36px; height: 36px; }
+  .methodRow h3,
+  .methodRow p,
   .methodLive,
-  .methodSoon { grid-column: 2; grid-row: 2; justify-self: start; }
-  .methodRow p { grid-column: 2; grid-row: 3; }
+  .methodSoon {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: center;
+  }
+  .methodRow p { margin-inline: auto; }
 
   .visualStage { min-height: 390px; padding: 24px 14px; }
   .graphCaption { grid-template-columns: 1fr; gap: 5px; }

@@ -37,7 +37,118 @@
 .tabBtn { transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out); }
 .tabOn { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-control); }
 
-/* Zusammenfassungen folgen derselben ruhigen Akkordeon-Logik wie Übungen. */
+/* Themenindex: Zusammenfassungen und Übungen folgen demselben ruhigen Muster. */
+.contentIndex,
+.detailPage {
+  animation: contentReveal var(--dur-enter) var(--ease-out) both;
+}
+.indexIntro {
+  max-width: 62ch;
+  margin: 2px 0 24px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
+}
+.indexList {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+.indexRow {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto auto auto;
+  gap: 15px;
+  align-items: center;
+  padding: 18px 20px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
+}
+.indexRow:last-child { border-bottom: 0; }
+.indexRow:active { transform: scale(.995); }
+.indexRow:focus-visible { position: relative; z-index: 1; outline: 2px solid var(--accent); outline-offset: -2px; }
+.indexNumber {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.indexNumberDone {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+.indexText { min-width: 0; display: grid; gap: 4px; }
+.indexText strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 680;
+  letter-spacing: -.012em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.indexText small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.indexVideo {
+  color: var(--accent-d);
+  font-size: 11.5px;
+  font-weight: 650;
+}
+.indexArrow {
+  display: grid;
+  place-items: center;
+  color: var(--faint);
+  transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+.backLink {
+  min-height: 44px;
+  margin: -6px 0 12px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+.backLink::before { content: '←'; margin-right: 8px; }
+.backLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.detailHeader {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 20px 15px;
+}
+.detailTitle {
+  color: var(--ink);
+  font-size: clamp(19px, 2.5vw, 25px);
+  font-weight: 760;
+  letter-spacing: -.025em;
+  line-height: 1.15;
+}
+
 .summaryWrap {
   display: flex; flex-direction: column; gap: 9px;
   animation: contentReveal var(--dur-enter) var(--ease-out) both;
@@ -226,6 +337,8 @@
 @media (hover: hover) and (pointer: fine) {
   .reelBtn:hover { border-color: var(--ink); transform: translateY(-1px); }
   .tabBtn:hover { color: var(--ink); }
+  .indexRow:hover { background: var(--surface-2); }
+  .indexRow:hover .indexArrow { color: var(--accent-d); transform: translateX(3px); }
   .formula:hover { border-color: var(--accent); background: var(--accent-soft); }
   .formula:hover svg { opacity: 1; color: var(--accent-d); }
   .card:not(.cardOpen):hover { border-color: var(--line-strong); transform: translateY(-1px); }
@@ -248,6 +361,21 @@
   .progressTrack { max-width: none; }
   .tabs { display: flex; width: 100%; }
   .tabBtn { flex: 1; padding-inline: 10px; }
+  .indexRow {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    gap: 11px;
+    padding: 15px 14px;
+  }
+  .indexText small,
+  .indexVideo,
+  .indexRow .headStatus { display: none; }
+  .indexText strong { white-space: normal; }
+  .detailHeader {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 11px;
+    padding: 15px;
+  }
+  .detailHeader .headStatus { grid-column: 2; justify-self: start; }
   .statusSeg { width: 100%; }
   .statusBtn { min-height: 44px; flex: 1; padding-inline: 7px; }
 }

@@ -42,7 +42,7 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
   const statusTiles: { status: Exclude<LernStatus, 'none'>; label: string; num: number }[] = [
     { status: 'verstanden', label: 'Verstanden', num: statusCounts.verstanden },
     { status: 'wiederholen', label: 'Wiederholen', num: statusCounts.wiederholen },
-    { status: 'unklar', label: 'Noch unklar', num: statusCounts.unklar },
+    { status: 'unklar', label: 'Nicht verstanden', num: statusCounts.unklar },
   ];
 
   return (

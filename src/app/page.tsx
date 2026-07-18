@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { View } from '@/lib/types';
+import { NavigateTo, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import LandingPage from '@/components/LandingPage';
@@ -27,12 +27,39 @@ const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'linalg', 'stochastik', 'ac
 // Themen-Seiten mit eigener Bezahlschranke – Eingeloggte dürfen sie immer öffnen
 // (die Sperre pro Kursstufe steckt direkt in der Themenseite).
 const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
+const APP_VIEWS: View[] = ['landing', 'dashboard', 'analysis', 'linalg', 'stochastik', 'videos', 'review', 'tutors', 'account'];
+
+interface LocationState {
+  view: View;
+  tab: TopicTab;
+  itemId: string | null;
+}
+
+function readLocationState(): LocationState {
+  const params = new URLSearchParams(window.location.search);
+  const candidate = params.get('view');
+  const view = APP_VIEWS.includes(candidate as View) ? candidate as View : 'landing';
+  const tab: TopicTab = params.get('tab') === 'uebungen' ? 'uebungen' : 'zusammenfassung';
+  const itemId = tab === 'uebungen' ? params.get('task') : params.get('section');
+  return { view, tab, itemId };
+}
+
+function locationFor(view: View, tab: TopicTab, itemId: string | null): string {
+  if (view === 'landing') return window.location.pathname;
+  const params = new URLSearchParams({ view });
+  if (TOPIC_VIEWS.includes(view)) {
+    params.set('tab', tab);
+    if (itemId) params.set(tab === 'uebungen' ? 'task' : 'section', itemId);
+  }
+  return `${window.location.pathname}?${params.toString()}`;
+}
 
 export default function Home() {
   const { user, loading, signOut } = useAuth();
   const { owned, ownedLk, refresh } = useProgress();
 
   const [view, setView] = useState<View>('landing');
+  const [routeReady, setRouteReady] = useState(false);
   const [dark, setDark] = useState(false);
   // Kursstufe: Wer gekauft hat, hat sich entschieden. Nur Gäste (und wer beide
   // Kurse besitzt) wählen selbst; die Wahl wird lokal gemerkt.
@@ -46,38 +73,79 @@ export default function Home() {
   const [askCtx, setAskCtx] = useState('');
   const [askSnippet, setAskSnippet] = useState('');
   const [notice, setNotice] = useState('');
-  // Zählt bei jeder Navigation hoch. TopicView liest daraufhin den gewünschten
-  // Tab (gf-open-tab) neu ein – auch wenn man schon im selben Thema ist
-  // (Sidebar-Untermenü: „Zusammenfassung"/„Übungen" im aktiven Thema).
-  const [navSignal, setNavSignal] = useState(0);
-  // Aktiver Tab der geöffneten Themenseite — gemeldet von TopicView, damit
-  // Breadcrumb (Topbar) und Sidebar-Untermenü denselben Standort zeigen.
-  const [topicTab, setTopicTab] = useState<'zusammenfassung' | 'uebungen'>('zusammenfassung');
-  const [topicSection, setTopicSection] = useState<string | null>(null);
+  const [topicTab, setTopicTab] = useState<TopicTab>('zusammenfassung');
+  const [topicItemId, setTopicItemId] = useState<string | null>(null);
+  const [topicItemLabel, setTopicItemLabel] = useState<string | null>(null);
 
-  // Deep-Link aus dem Reel-Modus (gf-open-topic): einmalig beim Start
-  // konsumieren und ins gewünschte Thema springen. Es gibt KEINEN
-  // automatischen Sprung ins Dashboard mehr: Eingeloggte bleiben auf der
-  // Startseite — auch bei Tab-Wechsel, Fokus-Events oder Session-Refresh,
-  // denn dieser Effekt läuft pro Seitenaufruf höchstens einmal (Ref-Guard;
-  // spätere Auth-Events können keine Navigation mehr auslösen).
+  // Die App bleibt eine View-State-Machine auf derselben Next.js-Route.
+  // Der sichtbare Standort wird zusätzlich in der URL gespiegelt, damit
+  // Reload, Zurück und Vorwärts dieselbe Ansicht wiederherstellen.
+  useEffect(() => {
+    let frame = 0;
+    const applyLocation = () => {
+      const location = readLocationState();
+      setView(location.view);
+      setTopicTab(location.tab);
+      setTopicItemId(location.itemId);
+      setTopicItemLabel(location.itemId);
+      setNavOpen(false);
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    };
+
+    frame = requestAnimationFrame(() => {
+      applyLocation();
+      setRouteReady(true);
+    });
+    window.addEventListener('popstate', applyLocation);
+    return () => {
+      window.removeEventListener('popstate', applyLocation);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  // Ein bewusster Login führt zur Übersicht. Eine bereits vorhandene Session
+  // verändert den aktuellen URL-Standort dagegen nicht. Deep-Links aus dem
+  // Reel-Modus werden weiterhin einmalig konsumiert.
   const jumpConsumed = useRef(false);
   useEffect(() => {
-    if (loading || !user || jumpConsumed.current) return;
-    jumpConsumed.current = true;
-    try {
-      const jump = localStorage.getItem('gf-open-topic');
-      if (jump === 'analysis' || jump === 'linalg' || jump === 'stochastik') {
-        localStorage.removeItem('gf-open-topic');
-        // Bewusst ohne Cleanup: Der Frame darf auch nach StrictModes
-        // doppeltem Effekt-Lauf genau einmal feuern (Ref verhindert Doppel-Konsum).
-        requestAnimationFrame(() => {
+    if (loading || !routeReady || !user || jumpConsumed.current) return;
+    const frame = requestAnimationFrame(() => {
+      jumpConsumed.current = true;
+      try {
+        const afterAuth = localStorage.getItem('gf-after-auth');
+        if (afterAuth === 'dashboard') {
+          localStorage.removeItem('gf-after-auth');
+          setView('dashboard');
+          setTopicItemId(null);
+          setTopicItemLabel(null);
+          window.history.replaceState({}, '', locationFor('dashboard', 'zusammenfassung', null));
+          return;
+        }
+
+        const jump = localStorage.getItem('gf-open-topic');
+        if (jump === 'analysis' || jump === 'linalg' || jump === 'stochastik') {
+          localStorage.removeItem('gf-open-topic');
+          const requestedTab = localStorage.getItem('gf-open-tab') === 'uebungen'
+            ? 'uebungen'
+            : 'zusammenfassung';
+          const requestedItem = requestedTab === 'uebungen'
+            ? localStorage.getItem('gf-open-task')
+            : localStorage.getItem('gf-open-summary');
+          localStorage.removeItem('gf-open-tab');
+          localStorage.removeItem('gf-open-task');
+          localStorage.removeItem('gf-open-summary');
+          setTopicTab(requestedTab);
+          setTopicItemId(requestedItem);
+          setTopicItemLabel(requestedItem);
           setView(jump);
-          setNavSignal(n => n + 1);
-        });
-      }
-    } catch { /* Speicher gesperrt */ }
-  }, [user, loading]);
+          window.history.replaceState({}, '', locationFor(jump, requestedTab, requestedItem));
+        }
+      } catch { /* Speicher gesperrt */ }
+    });
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [user, loading, routeReady]);
 
   // Das Inline-Skript in layout.tsx hat das gespeicherte Theme schon vor dem
   // ersten Rendern als Body-Klasse gesetzt (kein Aufblitzen). React gleicht
@@ -133,8 +201,15 @@ export default function Home() {
     const params = new URLSearchParams(window.location.search);
     const c = params.get('checkout');
     if (!c) return;
-    // Query aus der Adresszeile entfernen, damit ein Reload nichts doppelt auslöst
-    window.history.replaceState({}, '', window.location.pathname);
+    // Query aus der Adresszeile entfernen, damit ein Reload nichts doppelt
+    // auslöst. Nach Erfolg ist die Übersicht zugleich der neue URL-Standort.
+    window.history.replaceState(
+      {},
+      '',
+      c === 'success'
+        ? locationFor('dashboard', 'zusammenfassung', null)
+        : window.location.pathname,
+    );
 
     if (c === 'success') {
       const PENDING = 'Zahlung erfolgreich! Dein Vollzugang wird freigeschaltet …';
@@ -188,7 +263,7 @@ export default function Home() {
     setCheckoutOpen(true);
   };
 
-  const navigate = (v: View) => {
+  const navigate: NavigateTo = (v, destination = {}) => {
     // Nicht eingeloggt → Login verlangen (außer freie Views)
     if (!user && !FREE_VIEWS.includes(v)) {
       setAuthMode('login');
@@ -207,10 +282,46 @@ export default function Home() {
     // Zurücksetzen würde dabei die Scrollposition der vorherigen Ansicht
     // erhalten bleiben und der neue Seitenkopf könnte unter der Topbar liegen.
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    if (!TOPIC_VIEWS.includes(v)) setTopicSection(null);
+
+    let nextTab: TopicTab = destination.tab ?? 'zusammenfassung';
+    let nextItemId = destination.itemId ?? null;
+    let nextItemLabel = destination.itemLabel ?? nextItemId;
+
+    if (TOPIC_VIEWS.includes(v) && destination.tab === undefined) {
+      try {
+        const pendingTab = localStorage.getItem('gf-open-tab');
+        if (pendingTab === 'zusammenfassung' || pendingTab === 'uebungen') {
+          nextTab = pendingTab;
+          localStorage.removeItem('gf-open-tab');
+        }
+        const pendingItem = nextTab === 'uebungen'
+          ? localStorage.getItem('gf-open-task')
+          : localStorage.getItem('gf-open-summary');
+        if (pendingItem) {
+          nextItemId = pendingItem;
+          nextItemLabel = pendingItem;
+        }
+        localStorage.removeItem('gf-open-task');
+        localStorage.removeItem('gf-open-summary');
+      } catch { /* Speicher gesperrt */ }
+    }
+
+    if (TOPIC_VIEWS.includes(v)) {
+      setTopicTab(nextTab);
+      setTopicItemId(nextItemId);
+      setTopicItemLabel(nextItemLabel);
+    } else {
+      setTopicItemId(null);
+      setTopicItemLabel(null);
+    }
+
     setView(v);
     setNavOpen(false);
-    setNavSignal(n => n + 1);
+    const nextLocation = locationFor(v, nextTab, nextItemId);
+    const currentLocation = `${window.location.pathname}${window.location.search}`;
+    if (nextLocation !== currentLocation) {
+      window.history[destination.replace ? 'replaceState' : 'pushState']({}, '', nextLocation);
+    }
   };
 
   const openAsk = (ctx: string, snippet: string) => {
@@ -222,12 +333,18 @@ export default function Home() {
     setAuthMode(mode); setAuthOpen(true);
   };
 
+  const handleAuthenticated = () => {
+    setAuthOpen(false);
+    try { localStorage.removeItem('gf-after-auth'); } catch { /* Speicher gesperrt */ }
+    navigate('dashboard');
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate('landing');
   };
 
-  if (loading) {
+  if (loading || !routeReady) {
     return (
       <div className={styles.loading}>
         <GrapefruitSpinner label="Einen Moment …" />
@@ -252,7 +369,12 @@ export default function Home() {
           onSignOut={handleSignOut}
         />
         <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} course={checkoutCourse} />
-        <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} initialMode={authMode} />
+        <AuthModal
+          open={authOpen}
+          onClose={() => setAuthOpen(false)}
+          onAuthenticated={handleAuthenticated}
+          initialMode={authMode}
+        />
       </>
     );
   }
@@ -270,17 +392,20 @@ export default function Home() {
             level={level}
             owned={owned}
             ownedLk={ownedLk}
-            navSignal={navSignal}
+            tab={topicTab}
+            itemId={topicItemId}
             onOpenCheckout={openCheckout}
             onOpenAsk={openAsk}
             onNavigate={navigate}
-            onTabChange={setTopicTab}
-            onSectionChange={setTopicSection}
+            onLocationChange={(tab, itemId, itemLabel) => {
+              navigate(view, { tab, itemId, itemLabel });
+            }}
+            onItemLabelChange={setTopicItemLabel}
           />
         );
       case 'videos': return <VideosView />;
       case 'tutors': return <TutorsView />;
-      case 'account': return <AccountView onNavigate={(v) => setView(v as View)} onOpenCheckout={openCheckout} />;
+      case 'account': return <AccountView onNavigate={(v) => navigate(v as View)} onOpenCheckout={openCheckout} />;
       case 'review':
         return <ReviewView level={level} onNavigate={navigate} />;
       default:
@@ -299,7 +424,7 @@ export default function Home() {
         <Sidebar
           view={view}
           topicTab={topicTab}
-          topicSection={topicSection}
+          topicItemId={topicItemId}
           owned={owned}
           ownedLk={ownedLk}
           level={level}
@@ -310,7 +435,7 @@ export default function Home() {
           <Topbar
             view={view}
             topicTab={topicTab}
-            topicSection={topicSection}
+            topicItemLabel={topicItemLabel}
             dark={dark}
             onToggleDark={() => setTheme(!dark)}
             onOpenNav={() => setNavOpen(n => !n)}
@@ -331,6 +456,7 @@ export default function Home() {
       <AuthModal
         open={authOpen}
         onClose={() => setAuthOpen(false)}
+        onAuthenticated={handleAuthenticated}
         initialMode={authMode}
       />
       <AskDrawer open={askOpen} ctx={askCtx} snippet={askSnippet} onClose={() => setAskOpen(false)} />

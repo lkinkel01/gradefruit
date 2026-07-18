@@ -1,4 +1,14 @@
 export type View = 'landing' | 'dashboard' | 'analysis' | 'linalg' | 'stochastik' | 'videos' | 'review' | 'tutors' | 'account';
+export type TopicTab = 'zusammenfassung' | 'uebungen';
+
+export interface TopicDestination {
+  tab?: TopicTab;
+  itemId?: string | null;
+  itemLabel?: string | null;
+  replace?: boolean;
+}
+
+export type NavigateTo = (view: View, destination?: TopicDestination) => void;
 
 export interface Topic {
   id: View;
@@ -24,5 +34,5 @@ export type LernStatus = 'none' | 'verstanden' | 'wiederholen' | 'unklar';
 export const STATUS_LABEL: Record<Exclude<LernStatus, 'none'>, string> = {
   verstanden: 'Verstanden',
   wiederholen: 'Wiederholen',
-  unklar: 'Noch unklar',
+  unklar: 'Nicht verstanden',
 };

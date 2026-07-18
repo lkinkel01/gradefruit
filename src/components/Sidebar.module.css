@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   padding: 18px 14px;
-  border-right: 1px solid rgba(255,255,255,.055);
+  border-right: 1px solid var(--side-3);
   background: var(--side);
   color: var(--side-tx);
 }
@@ -20,7 +20,7 @@
   padding: 5px 8px 18px;
   border: none;
   background: transparent;
-  color: #fff;
+  color: var(--side-tx);
   cursor: pointer;
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 19px;
@@ -40,7 +40,7 @@
   border-bottom: 1px solid var(--side-3);
 }
 .courseTx { min-width: 0; }
-.courseTitle { overflow: hidden; color: #fff; font-size: 13px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.courseTitle { overflow: hidden; color: var(--side-tx); font-size: 13px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
 .courseSub { margin-top: 2px; color: var(--side-faint); font-size: 11.5px; font-variant-numeric: tabular-nums; }
 
 .navsec {
@@ -71,7 +71,7 @@
   transition: background-color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
 .snav button:active { transform: scale(.98); }
-.snav button.on { border-color: color-mix(in srgb, var(--accent) 42%, transparent); background: color-mix(in srgb, var(--accent) 12%, transparent); color: #fff; font-weight: 600; }
+.snav button.on { border-color: color-mix(in srgb, var(--accent) 42%, transparent); background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--side-tx); font-weight: 600; }
 .topicWrap { position: relative; }
 .flyout { display: none; }
 .flyoutPinned { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 4px 28px; }
@@ -127,7 +127,7 @@
 }
 .sectionOn {
   background: color-mix(in srgb, var(--accent) 10%, transparent) !important;
-  color: #fff !important;
+  color: var(--side-tx) !important;
   font-weight: 600;
 }
 .sectionOn::before {
@@ -156,13 +156,21 @@
   border-top: 1px solid var(--side-3);
 }
 .unlockCard p { margin-bottom: 11px; color: var(--side-tx); font-size: 12.5px; line-height: 1.5; }
-.unlockCard :global(.btn.primary) { width: 100%; background: #fff; color: #050505; box-shadow: none; font-size: 13px; }
-.unlockCard :global(.btn.primary:hover) { background: #fff; }
+.unlockCard :global(.btn.primary) { width: 100%; background: var(--btn-ink); color: var(--btn-ink-tx); box-shadow: none; font-size: 13px; }
+.unlockCard :global(.btn.primary:hover) { background: var(--btn-ink-hover); }
 
 @media (hover: hover) and (pointer: fine) {
-  .snav button:hover { border-color: rgba(255,255,255,.08); background: rgba(255,255,255,.06); color: #fff; }
-  .flyItem:hover { background: rgba(255,255,255,.06); color: #fff; transform: translateX(3px); }
-  .sectionItem:hover { color: #fff !important; transform: translateX(3px); }
+  .snav button:hover {
+    border-color: color-mix(in srgb, var(--side-tx) 9%, transparent);
+    background: color-mix(in srgb, var(--side-tx) 6%, transparent);
+    color: var(--side-tx);
+  }
+  .flyItem:hover {
+    background: color-mix(in srgb, var(--side-tx) 6%, transparent);
+    color: var(--side-tx);
+    transform: translateX(3px);
+  }
+  .sectionItem:hover { color: var(--side-tx) !important; transform: translateX(3px); }
 }
 
 @media (max-width: 900px) {
@@ -175,7 +183,7 @@
     width: 272px;
     max-width: 84vw;
     height: 100%;
-    border-right: 1px solid rgba(255,255,255,.08);
+    border-right: 1px solid var(--side-3);
     border-radius: 0 var(--radius-panel) var(--radius-panel) 0;
     box-shadow: 12px 0 54px rgba(0,0,0,.34);
     transform: translateX(-105%);

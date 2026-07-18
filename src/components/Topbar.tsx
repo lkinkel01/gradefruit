@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { View } from '@/lib/types';
+import { NavigateTo, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { MenuIcon, MoonIcon, SunIcon } from './UiIcons';
 import styles from './Topbar.module.css';
@@ -22,16 +22,16 @@ const TAB_LABELS = { zusammenfassung: 'Zusammenfassung', uebungen: 'Übungen' } 
 
 interface Props {
   view: View;
-  topicTab: 'zusammenfassung' | 'uebungen';
-  topicSection: string | null;
+  topicTab: TopicTab;
+  topicItemLabel: string | null;
   dark: boolean;
   onToggleDark: () => void;
   onOpenNav: () => void;
-  onNavigate: (v: View) => void;
+  onNavigate: NavigateTo;
   onOpenAuth: () => void;
 }
 
-export default function Topbar({ view, topicTab, topicSection, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
+export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
   const { user } = useAuth();
   const initials = user ? (user.user_metadata?.full_name || user.email || 'U').slice(0, 2).toUpperCase() : null;
 
@@ -74,15 +74,19 @@ export default function Topbar({ view, topicTab, topicSection, dark, onToggleDar
         <span className={styles.sep} aria-hidden="true">›</span>
         {TOPIC_VIEWS.includes(view) ? (
           <>
-            <button type="button" className={`${styles.crumbLink} ${styles.crumbMid}`} onClick={() => onNavigate(view)}>
+            <button
+              type="button"
+              className={`${styles.crumbLink} ${styles.crumbMid}`}
+              onClick={() => onNavigate(view, { tab: topicTab, itemId: null })}
+            >
               {LABELS[view]}
             </button>
             <span className={styles.sep} aria-hidden="true">›</span>
-            {topicSection && topicTab === 'zusammenfassung' ? (
+            {topicItemLabel ? (
               <>
                 <span className={`${styles.crumbLevel} ${styles.crumbMid}`}>{TAB_LABELS[topicTab]}</span>
                 <span className={styles.sep} aria-hidden="true">›</span>
-                <span className={styles.here} aria-current="page">{topicSection}</span>
+                <span className={styles.here} aria-current="page">{topicItemLabel}</span>
               </>
             ) : (
               <span className={styles.here} aria-current="page">{TAB_LABELS[topicTab]}</span>

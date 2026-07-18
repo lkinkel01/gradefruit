@@ -28,11 +28,11 @@
   --success: #147A49;
   --success-line: #A6DFC1;
   --warn: #9A6500;
-  --side: #050505;
-  --side-2: #111113;
-  --side-3: #27272A;
-  --side-tx: #EEEEF0;
-  --side-faint: #A0A0A8;
+  --side: #F7F7F8;
+  --side-2: #FFFFFF;
+  --side-3: #D3D3D8;
+  --side-tx: #050505;
+  --side-faint: #6E7078;
   /* Milchglas für obere Leisten – als Variable, damit Dark Mode in
      CSS-Modulen zuverlässig greift (globale Klassen matchen dort nicht). */
   --glass: rgba(247, 247, 248, 0.82);
@@ -217,6 +217,11 @@ body.dark {
   --success: #61D39A;
   --success-line: #23543D;
   --warn: #F0B24C;
+  --side: #050505;
+  --side-2: #111113;
+  --side-3: #27272A;
+  --side-tx: #EEEEF0;
+  --side-faint: #A0A0A8;
   --glass: rgba(5, 5, 5, 0.84);
   --glass-strong: rgba(13, 13, 15, 0.80);
   --glass-line: rgba(255, 255, 255, 0.12);

@@ -436,3 +436,169 @@
   .foot { gap: 9px; padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
   .dots { display: none; }
 }
+
+/* Der Reel-Modus reduziert den Erklärplayer auf die eigentliche Videobühne.
+   Die reguläre Modalansicht bleibt davon unberührt. */
+.reelPlayer {
+  color: #fff;
+  background: rgba(8, 8, 10, 0.42);
+}
+
+.reelPlayer .head {
+  flex: none;
+  gap: 8px;
+  padding: 9px 10px 7px;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.reelPlayer .badge {
+  padding: 4px 9px;
+  font-size: 10px;
+}
+
+.reelPlayer .htitle {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 720;
+}
+
+.reelPlayer .soundOn {
+  padding: 7px 10px;
+  color: #fff;
+  box-shadow: none;
+}
+
+.reelPlayer .body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: 6px 10px;
+  overflow: hidden;
+}
+
+.reelPlayer .right {
+  order: -1;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+}
+
+.reelPlayer .graph {
+  width: min(100%, 330px);
+  max-height: 32dvh;
+  padding: 3px;
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.reelPlayer .axis,
+.reelPlayer .gridline {
+  stroke: rgba(255, 255, 255, 0.25);
+}
+
+.reelPlayer .arrowHead,
+.reelPlayer .gridlabel,
+.reelPlayer .axisLabel,
+.reelPlayer .markLabel {
+  fill: rgba(255, 255, 255, 0.72);
+}
+
+.reelPlayer .left {
+  flex: none;
+  gap: 7px;
+}
+
+.reelPlayer .func {
+  padding: 6px 10px;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 15px;
+}
+
+.reelPlayer .steps {
+  gap: 6px;
+}
+
+.reelPlayer .step {
+  padding: 7px 9px;
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.reelPlayer .stepDone {
+  display: none;
+}
+
+.reelPlayer .stepActive {
+  box-shadow: none;
+}
+
+.reelPlayer .stepTitle,
+.reelPlayer .stepMath {
+  color: #fff;
+}
+
+.reelPlayer .stepTitle {
+  font-size: 12px;
+}
+
+.reelPlayer .stepMath {
+  font-size: 14px;
+}
+
+.reelPlayer .result {
+  padding: 7px 11px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.reelPlayer .caption {
+  flex: none;
+  min-height: 0;
+  max-height: 74px;
+  margin: 3px 10px 0;
+  padding: 9px 11px;
+  overflow: auto;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.reelPlayer .progressbar {
+  flex: none;
+  height: 3px;
+  margin: 7px 10px 0;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.reelPlayer .foot {
+  flex: none;
+  justify-content: center;
+  padding: 7px 10px 9px;
+}
+
+.reelPlayer .ctrl,
+.reelPlayer .progress {
+  display: none;
+}
+
+.reelPlayer .play {
+  width: 44px;
+  height: 44px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+}
+
+@media (max-height: 720px) {
+  .reelPlayer .graph {
+    max-height: 25dvh;
+  }
+
+  .reelPlayer .caption {
+    max-height: 62px;
+  }
+}

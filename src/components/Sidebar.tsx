@@ -1,7 +1,13 @@
 'use client';
-import { View, TOPICS } from '@/lib/types';
+import { NavigateTo, TopicTab, View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { SUMMARIES } from '@/lib/summaries';
+import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
+import { LINALG_TASKS } from '@/lib/linalgTasks';
+import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
+import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
+import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
+import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
 import { BrandMark } from './BrandMark';
 import { GrapefruitProgress } from './Logo';
 import { CheckIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
@@ -9,12 +15,12 @@ import styles from './Sidebar.module.css';
 
 interface Props {
   view: View;
-  topicTab: 'zusammenfassung' | 'uebungen';
-  topicSection: string | null;
+  topicTab: TopicTab;
+  topicItemId: string | null;
   owned: boolean;
   ownedLk: boolean;
   level: 'gk' | 'lk';
-  onNavigate: (v: View) => void;
+  onNavigate: NavigateTo;
   onOpenCheckout: () => void;
 }
 
@@ -33,26 +39,19 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
-// Sprungziel fürs Themen-Untermenü: gewünschten Tab einmalig merken
-// (TopicView liest und löscht den Schlüssel beim Öffnen bzw. beim navSignal).
-function rememberTab(tab: 'zusammenfassung' | 'uebungen') {
-  try { localStorage.setItem('gf-open-tab', tab); } catch { /* Speicher gesperrt */ }
-}
+const TASKS_BY_TOPIC = {
+  analysis: { gk: ANALYSIS_TASKS, lk: ANALYSIS_LK_TASKS },
+  linalg: { gk: LINALG_TASKS, lk: LINALG_LK_TASKS },
+  stochastik: { gk: STOCHASTIK_TASKS, lk: STOCHASTIK_LK_TASKS },
+};
 
-function rememberSummary(title: string) {
-  try {
-    localStorage.setItem('gf-open-tab', 'zusammenfassung');
-    localStorage.setItem('gf-open-summary', title);
-  } catch { /* Speicher gesperrt */ }
-}
-
-export default function Sidebar({ view, topicTab, topicSection, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
+export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
   return (
     <aside className={styles.sidebar}>
-      <button className={styles.brand} onClick={() => onNavigate('dashboard')} aria-label="Zur Übersicht">
+      <button className={styles.brand} onClick={() => onNavigate('landing')} aria-label="Zur Startseite">
         <BrandMark size={24} />
         Gradefruit
       </button>
@@ -73,7 +72,9 @@ export default function Sidebar({ view, topicTab, topicSection, owned, ownedLk, 
       <nav className={styles.snav}>
         {TOPICS.map(t => {
           const active = view === t.id;
-          const sections = SUMMARIES[t.id as 'analysis' | 'linalg' | 'stochastik'][level].sections;
+          const topicId = t.id as 'analysis' | 'linalg' | 'stochastik';
+          const sections = SUMMARIES[topicId][level].sections;
+          const tasks = TASKS_BY_TOPIC[topicId][level];
           const summaryActive = active && topicTab === 'zusammenfassung';
           const exercisesActive = active && topicTab === 'uebungen';
           return (
@@ -81,7 +82,7 @@ export default function Sidebar({ view, topicTab, topicSection, owned, ownedLk, 
               <button
                 className={active ? styles.on : ''}
                 aria-expanded={active}
-                onClick={() => onNavigate(t.id)}
+                onClick={() => onNavigate(t.id, { tab: 'zusammenfassung', itemId: null })}
               >
                 <span className={styles.cdot} style={{ background: t.color }} />
                 <span className={styles.ti}>{t.label}</span>
@@ -94,22 +95,26 @@ export default function Sidebar({ view, topicTab, topicSection, owned, ownedLk, 
                   Der aktive Tab wird markiert (Punkt + Gewicht, nicht nur Farbe). */}
               <div className={`${styles.flyout} ${active ? styles.flyoutPinned : ''}`}>
                 <button
-                  className={`${styles.flyItem} ${summaryActive && !topicSection ? styles.flyOn : ''} ${summaryActive && topicSection ? styles.flyParentOn : ''}`}
-                  aria-current={summaryActive && !topicSection ? 'page' : undefined}
-                  onClick={() => { rememberTab('zusammenfassung'); onNavigate(t.id); }}
+                  className={`${styles.flyItem} ${summaryActive && !topicItemId ? styles.flyOn : ''} ${summaryActive && topicItemId ? styles.flyParentOn : ''}`}
+                  aria-current={summaryActive && !topicItemId ? 'page' : undefined}
+                  onClick={() => onNavigate(t.id, { tab: 'zusammenfassung', itemId: null })}
                 >
                   Zusammenfassung
                 </button>
                 {summaryActive && (
                   <div className={styles.sectionList} aria-label={`Themen in ${t.label}`}>
                     {sections.map(section => {
-                      const sectionActive = topicSection === section.title;
+                      const sectionActive = topicItemId === section.title;
                       return (
                         <button
                           key={section.title}
                           className={`${styles.sectionItem} ${sectionActive ? styles.sectionOn : ''}`}
                           aria-current={sectionActive ? 'page' : undefined}
-                          onClick={() => { rememberSummary(section.title); onNavigate(t.id); }}
+                          onClick={() => onNavigate(t.id, {
+                            tab: 'zusammenfassung',
+                            itemId: section.title,
+                            itemLabel: section.title,
+                          })}
                         >
                           {section.title}
                         </button>
@@ -118,12 +123,34 @@ export default function Sidebar({ view, topicTab, topicSection, owned, ownedLk, 
                   </div>
                 )}
                 <button
-                  className={`${styles.flyItem} ${exercisesActive ? styles.flyOn : ''}`}
-                  aria-current={exercisesActive ? 'page' : undefined}
-                  onClick={() => { rememberTab('uebungen'); onNavigate(t.id); }}
+                  className={`${styles.flyItem} ${exercisesActive && !topicItemId ? styles.flyOn : ''} ${exercisesActive && topicItemId ? styles.flyParentOn : ''}`}
+                  aria-current={exercisesActive && !topicItemId ? 'page' : undefined}
+                  onClick={() => onNavigate(t.id, { tab: 'uebungen', itemId: null })}
                 >
                   Übungen
                 </button>
+                {exercisesActive && (
+                  <div className={styles.sectionList} aria-label={`Übungen in ${t.label}`}>
+                    {tasks.map((task, taskIndex) => {
+                      const taskActive = topicItemId === task.id;
+                      const taskLabel = `${taskIndex + 1}. ${task.tag}`;
+                      return (
+                        <button
+                          key={task.id}
+                          className={`${styles.sectionItem} ${taskActive ? styles.sectionOn : ''}`}
+                          aria-current={taskActive ? 'page' : undefined}
+                          onClick={() => onNavigate(t.id, {
+                            tab: 'uebungen',
+                            itemId: task.id,
+                            itemLabel: task.tag,
+                          })}
+                        >
+                          {taskLabel}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           );

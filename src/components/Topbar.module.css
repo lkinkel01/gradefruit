@@ -9,10 +9,12 @@
   align-items: center;
   gap: 12px;
   padding: 0 10px 0 16px;
-  border: 1px solid transparent;
+  border: 1px solid var(--glass-line);
   border-radius: var(--radius-panel);
-  background: transparent;
-  box-shadow: none;
+  background: var(--glass);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 48%, transparent) inset, 0 12px 34px var(--nav-shadow-soft);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
   transform: translate3d(0, 0, 0);
   transition:
     opacity var(--dur-enter) var(--ease-out),
@@ -23,10 +25,7 @@
   will-change: transform, opacity;
 }
 .scrolled {
-  border-color: var(--glass-line);
   background: var(--glass-strong);
-  -webkit-backdrop-filter: blur(24px) saturate(155%);
-  backdrop-filter: blur(24px) saturate(155%);
   box-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 54%, transparent) inset, var(--shadow-float);
 }
 .hidden {
@@ -157,20 +156,17 @@
   .crumbMid { display: none; }
   .sep:has(+ .crumbMid) { display: none; }
   .here {
-    display: -webkit-box;
+    display: block;
     flex: 1;
     max-width: none;
     overflow: hidden;
-    line-height: 1.15;
-    text-overflow: clip;
-    white-space: normal;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 
 @media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
-  .scrolled { background: var(--surface); }
+  .topbar { background: var(--surface); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -7,6 +7,7 @@ import modalStyles from './Modal.module.css';
 interface Props {
   open: boolean;
   onClose: () => void;
+  onAuthenticated: () => void;
   initialMode?: 'login' | 'register';
 }
 
@@ -28,7 +29,7 @@ function germanAuthError(msg: string): string {
   return 'Registrierung fehlgeschlagen. Bitte prüfe deine Angaben und versuch es erneut.';
 }
 
-export default function AuthModal({ open, onClose, initialMode = 'login' }: Props) {
+export default function AuthModal({ open, onClose, onAuthenticated, initialMode = 'login' }: Props) {
   const supabase = createClient();
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [email, setEmail] = useState('');
@@ -65,7 +66,7 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Prop
         options: { data: { full_name: name } },
       });
       if (error) setError(germanAuthError(error.message));
-      else if (data.session) onClose(); // E-Mail-Bestätigung ist aus -> sofort eingeloggt
+      else if (data.session) onAuthenticated(); // E-Mail-Bestätigung ist aus -> sofort eingeloggt
       else setInfo('Bestätigungs-E-Mail gesendet! Bitte überprüfe dein Postfach (auch den Spam-Ordner).');
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -73,12 +74,13 @@ export default function AuthModal({ open, onClose, initialMode = 'login' }: Prop
         setError(/email not confirmed/i.test(error.message)
           ? 'Bitte bestätige zuerst deine E-Mail – der Link ist in deinem Postfach.'
           : 'E-Mail oder Passwort falsch.');
-      } else onClose();
+      } else onAuthenticated();
     }
     setLoading(false);
   };
 
   const handleGoogle = async () => {
+    try { localStorage.setItem('gf-after-auth', 'dashboard'); } catch { /* Speicher gesperrt */ }
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${window.location.origin}/` },

@@ -81,11 +81,12 @@ interface PlayerProps {
   scene: Scene;
   autoPlay?: boolean; // startet die Wiedergabe direkt nach dem Einbetten (Lernfeed)
   onClose?: () => void;
+  variant?: 'default' | 'reel';
 }
 
 // Der eigentliche Player – wiederverwendbar: im Modal (Themenseiten, Videos)
 // und direkt eingebettet im Lernfeed (Inline-Wiedergabe wie bei TikTok).
-export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
+export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'default' }: PlayerProps) {
   const [seg, setSeg] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [frac, setFrac] = useState(0); // Fortschritt innerhalb des aktuellen Segments (0..1)
@@ -296,7 +297,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose }: PlayerProps) {
   };
 
   return (
-    <div className={styles.player}>
+    <div className={`${styles.player} ${variant === 'reel' ? styles.reelPlayer : ''}`}>
       <div className={styles.head}>
         <span className={styles.badge} style={{ background: scene.color }}>
           {scene.topic}

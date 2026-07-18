@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-18 (Lernnavigation und Inhaltsansichten)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-18 (Mobile und Reel-Modus)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -31,12 +31,12 @@ Probleme").
   Sidebar und Breadcrumb erreichbar. Lernhilfen und Status erscheinen erst
   nach dem bewussten Öffnen des Inhalts; klickbare Formeln/Schritte öffnen den
   Coach, „Eigene Lösung prüfen" nutzt den vorhandenen Foto/PDF-Upload.
-- **Wiederholungssystem:** drei Lernstufen (Verstanden / Wiederholen / Noch
-  unklar) pro Aufgabe; Wiederholen-Seite mit Filtern Stufe × Themen;
+- **Wiederholungssystem:** drei Lernstufen (Verstanden / Wiederholen / Nicht
+  verstanden) pro Aufgabe; Wiederholen-Seite mit Filtern Stufe × Themen;
   Dashboard-Kacheln springen mit Vorauswahl dorthin.
-- **Reel-Modus** (`/feed`, nur eingeloggt): pro Thema von jeder Themenseite
-  (dynamischer Feed) oder gemischt von der Übersicht; Videos mit Autoplay
-  und ElevenLabs-Stimme; „Merken" = Lernstufe „Wiederholen".
+- **Reel-Modus** (`/feed`, nur eingeloggt): vertikaler Video-Feed mit
+  Autoplay, direkter Lernstatus-Auswahl, Gefällt-mir- und Teilen-Aktion sowie
+  reduzierter Glasnavigation zur Übersicht und zum Weiterlernen.
 - **Fortschritt** überall als sich füllende **Grapefruit**
   (`GrapefruitProgress`).
 - **Konto & Kauf:** Auth (E-Mail + Google), Checkout mit Pflicht-Checkbox
@@ -76,7 +76,7 @@ Probleme").
 
 - ✅ **Lernnavigation und Inhaltsansichten (18.07.2026):** Landing-Visual
   zentriert; transparente Liquid-Glass-Navigation verschwindet beim
-  Herunterscrollen und kehrt beim Hochscrollen zurück. Produkt-Breadcrumb und
+  Herunterscrollen und erscheint nur am Seitenanfang. Produkt-Breadcrumb und
   Sidebar führen „Gradefruit" zur Übersicht. Zusammenfassungen besitzen eine
   dritte, anklickbare Navigationsebene; Übungen und Zusammenfassungen zeigen
   Aufgabe beziehungsweise Einleitung zuerst und blenden Lösung, Lernhilfen
@@ -103,14 +103,15 @@ Probleme").
   Zugang entziehen), Stripe-Kundenportal
 - ✅ Konto-Seite
 - ✅ **Wiederholungssystem (Sprint 10, 07/2026):** statt „Verstanden/Gespeichert"
-  gibt es drei Lernstufen — **Verstanden / Wiederholen / Noch unklar** — als
+  gibt es drei Lernstufen — **Verstanden / Wiederholen / Nicht verstanden**
+  (ursprünglich „Noch unklar") — als
   Segment-Buttons unter jeder Aufgabe. Gespeichert wird OHNE DB-Änderung auf den
   zwei bestehenden Bool-Spalten (`understood`,`saved`) kodiert: verstanden=(1,0),
   wiederholen=(0,1), unklar=(1,1), keine=(0,0) → Logik in `ProgressContext.tsx`
   (`statusOf`/`setStatus`). Neue **Wiederholen-Seite** (`ReviewView.tsx`, ersetzt
   „Gespeichert"): Filter nach Lernstufe × Themen (mehrfach), sortiert
   Unklares zuerst; Klick öffnet die Aufgabe direkt (Deep-Link `gf-open-task`).
-  Dashboard-Kacheln (Verstanden/Wiederholen/Noch unklar) sind klickbar und
+  Dashboard-Kacheln (Verstanden/Wiederholen/Nicht verstanden) sind klickbar und
   springen mit vorgewähltem Filter dorthin (`gf-review-status`). Vorbereitet
   für Active Recall/Spaced Repetition (Stufen = spätere Wiederhol-Intervalle).
   Grenze: Lernstufen gibt es bisher nur für Aufgaben (DB-Tabelle `lessons`);
@@ -310,6 +311,15 @@ Probleme").
   für Gast-, Konto- und Mobilansicht abgestimmt. TypeScript, gezielter ESLint
   und Produktions-Build sind sauber; Chromium wurde in Hell/Dunkel sowie
   Desktop und 390-Pixel-Ansicht geprüft.
+- ✅ **Mobile und Reel-Modus (18.07.2026):** Der Reel-Modus zeigt nur noch
+  verknüpfte Erklärvideos als vertikalen, automatisch startenden Feed.
+  Lernstatus stehen oben als „Verstanden", „Wiederholen" und „Nicht
+  verstanden"; rechts bleiben Gefällt mir und Teilen, unten nur Übersicht und
+  Weiterlernen in einer kompakten Glasleiste. Die neue Bezeichnung gilt auch
+  in Aufgaben, Zusammenfassungen, Dashboard und Wiederholen. Mobile Hero-Aktion
+  und Lernmethoden wurden für 390 px entzerrt und zentriert. TypeScript,
+  gezielter ESLint und Produktions-Build sind sauber; die öffentliche Landing
+  wurde in Hell/Dunkel auf Desktop und 390 px geprüft.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
