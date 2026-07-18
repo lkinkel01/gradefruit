@@ -110,6 +110,10 @@ export default function TopicView({
     : -1;
   const selectedTask = tab === 'uebungen' ? tasks.find(task => task.id === itemId) : undefined;
   const selectedTaskIndex = selectedTask ? tasks.findIndex(task => task.id === selectedTask.id) : -1;
+  const previousSummary = selectedSummaryIndex > 0 ? summary?.sections[selectedSummaryIndex - 1] : undefined;
+  const nextSummary = selectedSummaryIndex >= 0 ? summary?.sections[selectedSummaryIndex + 1] : undefined;
+  const previousTask = selectedTaskIndex > 0 ? tasks[selectedTaskIndex - 1] : undefined;
+  const nextTask = selectedTaskIndex >= 0 ? tasks[selectedTaskIndex + 1] : undefined;
 
   useEffect(() => {
     onItemLabelChange(selectedSummary?.title ?? selectedTask?.tag ?? null);
@@ -163,6 +167,57 @@ export default function TopicView({
     });
   };
 
+  const openSummaryItem = (section: NonNullable<typeof selectedSummary>) => {
+    setOpenSummaryDetails(new Set());
+    onLocationChange('zusammenfassung', section.title, section.title);
+  };
+
+  const openTaskItem = (task: Task) => {
+    setOpenSolutions(new Set());
+    onLocationChange('uebungen', task.id, task.tag);
+  };
+
+  const detailNavigation = ({
+    previous,
+    next,
+    kind,
+    onPrevious,
+    onNext,
+  }: {
+    previous?: string;
+    next?: string;
+    kind: 'Aufgabe' | 'Zusammenfassung';
+    onPrevious: () => void;
+    onNext: () => void;
+  }) => (
+    <nav className={styles.detailNav} aria-label={`${kind} wechseln`}>
+      <button
+        type="button"
+        className={styles.detailNavButton}
+        disabled={!previous}
+        onClick={onPrevious}
+      >
+        <span className={styles.detailNavDirection}>
+          <span className={styles.detailNavArrowBack} aria-hidden="true"><ArrowRightIcon size={15} /></span>
+          Vorherige {kind}
+        </span>
+        <strong>{previous ?? `Keine vorherige ${kind}`}</strong>
+      </button>
+      <button
+        type="button"
+        className={`${styles.detailNavButton} ${styles.detailNavButtonNext}`}
+        disabled={!next}
+        onClick={onNext}
+      >
+        <span className={styles.detailNavDirection}>
+          Nächste {kind}
+          <span aria-hidden="true"><ArrowRightIcon size={15} /></span>
+        </span>
+        <strong>{next ?? `Keine nächste ${kind}`}</strong>
+      </button>
+    </nav>
+  );
+
   // Lernen im Reel-Format: gleiche Inhalte, anderes Tempo.
   const openReels = () => {
     try {
@@ -204,7 +259,7 @@ export default function TopicView({
             <button
               key={section.title}
               className={styles.indexRow}
-              onClick={() => onLocationChange('zusammenfassung', section.title, section.title)}
+              onClick={() => openSummaryItem(section)}
             >
               <span className={styles.indexNumber}>{index + 1}</span>
               <span className={styles.indexText}>
@@ -308,6 +363,13 @@ export default function TopicView({
             )}
           </div>
         </article>
+        {detailNavigation({
+          previous: previousSummary?.title,
+          next: nextSummary?.title,
+          kind: 'Zusammenfassung',
+          onPrevious: () => previousSummary && openSummaryItem(previousSummary),
+          onNext: () => nextSummary && openSummaryItem(nextSummary),
+        })}
       </div>
     );
   };
@@ -322,7 +384,7 @@ export default function TopicView({
             <button
               key={task.id}
               className={styles.indexRow}
-              onClick={() => onLocationChange('uebungen', task.id, task.tag)}
+              onClick={() => openTaskItem(task)}
             >
               <span className={`${styles.indexNumber} ${status === 'verstanden' ? styles.indexNumberDone : ''}`}>
                 {status === 'verstanden' ? <span aria-hidden="true">✓</span> : index + 1}
@@ -468,6 +530,13 @@ export default function TopicView({
             )}
           </div>
         </article>
+        {detailNavigation({
+          previous: previousTask?.tag,
+          next: nextTask?.tag,
+          kind: 'Aufgabe',
+          onPrevious: () => previousTask && openTaskItem(previousTask),
+          onNext: () => nextTask && openTaskItem(nextTask),
+        })}
       </div>
     );
   };

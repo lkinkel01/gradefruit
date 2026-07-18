@@ -312,30 +312,27 @@
 }
 
 .heroPrimaryAction {
+  width: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
+.heroPrimaryAction :global(.btn) {
+  width: 100%;
+}
+
 .reassurance {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  width: fit-content;
+  display: block;
+  width: 100%;
   margin: 9px auto 0;
+  padding-inline: 4px;
   color: var(--faint);
   font-size: 11.5px;
   font-weight: 500;
   letter-spacing: -0.005em;
-}
-
-.reassurance::before {
-  width: 5px;
-  height: 5px;
-  flex: 0 0 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  content: '';
+  line-height: 1.4;
+  text-align: center;
 }
 
 .heroVisual {
@@ -1248,7 +1245,8 @@
     justify-content: center;
   }
   .reassurance {
-    max-width: 330px;
+    width: 100%;
+    max-width: 100%;
     align-self: center;
     margin-top: 12px;
     line-height: 1.45;
