@@ -4,7 +4,7 @@ import { AuthProvider } from "@/lib/AuthContext";
 import { ProgressProvider } from "@/lib/ProgressContext";
 
 export const metadata: Metadata = {
-  title: "Gradefruit — Mathe-Abi",
+  title: "Gradefruit",
   description: "Mathe-Abi Hessen 2027 – Grundkurs Vorbereitung",
 };
 
