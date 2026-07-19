@@ -1,38 +1,37 @@
 interface BrandMarkProps {
   size?: number;
   className?: string;
+  variant?: 'color' | 'monochrome';
 }
 
+export const BRAND_VIEW_BOX = '6 6 88 88';
+export const BRAND_RING_PATH =
+  'M 56.165 15.039 A 35.5 35.5 0 1 0 84.961 43.835 A 4.5 4.5 0 0 0 76.097 45.398 A 26.5 26.5 0 1 1 54.602 23.903 A 4.5 4.5 0 0 0 56.165 15.039 Z';
+export const BRAND_CORE_PATH =
+  'M 50 50 L 50 27.5 A 22.5 22.5 0 1 0 72.5 50 Z';
+
 /**
- * Monochromes Gradefruit-Markenzeichen.
- *
- * Die reduzierte Zitrus-Geometrie bleibt auch in 16 px erkennbar und nimmt
- * ihre Farbe immer aus `currentColor`. So funktioniert dasselbe Zeichen auf
- * hellen und dunklen Flächen, ohne eine zweite Komponentenvariante zu pflegen.
+ * Das freigegebene Gradefruit-Markenzeichen aus dem gelieferten Logopaket.
+ * Die optionale monochrome Variante bleibt für Sonderfälle auf einfarbigen
+ * Flächen verfügbar; regulär wird die originale Zweifarbigkeit verwendet.
  */
-export function BrandMark({ size = 28, className }: BrandMarkProps) {
+export function BrandMark({ size = 28, className, variant = 'color' }: BrandMarkProps) {
+  const ring = variant === 'monochrome' ? 'currentColor' : 'var(--brand-rind)';
+  const core = variant === 'monochrome' ? 'currentColor' : 'var(--brand-flesh)';
+
   return (
     <svg
       aria-hidden="true"
       className={className}
       focusable="false"
       height={size}
-      viewBox="0 0 48 48"
+      viewBox={BRAND_VIEW_BOX}
       width={size}
     >
-      <circle cx="24" cy="25" r="17.25" fill="none" stroke="currentColor" strokeWidth="2.5" />
-      <path
-        d="M24 9.9v13.2M37.1 17.45l-11.45 6.6M37.1 32.55l-11.45-6.6M24 40.1V26.9M10.9 32.55l11.45-6.6M10.9 17.45l11.45 6.6"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="2"
-      />
-      <circle cx="24" cy="25" r="2.5" fill="currentColor" />
-      <path
-        d="M28.1 7.15c3.7-3.15 8.45-2.7 11.15.35-2.65 3.45-7.3 4.45-11.05 1.75-.75-.55-.75-1.45-.1-2.1Z"
-        fill="currentColor"
-      />
+      <g transform="translate(0 6)">
+        <path d={BRAND_RING_PATH} fill={ring} />
+        <path d={BRAND_CORE_PATH} fill={core} />
+      </g>
     </svg>
   );
 }

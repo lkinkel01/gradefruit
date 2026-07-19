@@ -9,27 +9,24 @@ export default function AppleIcon() {
       <div
         style={{
           alignItems: 'center',
-          background: '#F26B4A',
+          background: '#FFF4E8',
           display: 'flex',
           height: '100%',
           justifyContent: 'center',
           width: '100%',
         }}
       >
-        <svg height="132" viewBox="0 0 48 48" width="132">
-          <circle cx="24" cy="25" r="17.25" fill="none" stroke="#FFFFFF" strokeWidth="2.5" />
-          <path
-            d="M24 9.9v13.2M37.1 17.45l-11.45 6.6M37.1 32.55l-11.45-6.6M24 40.1V26.9M10.9 32.55l11.45-6.6M10.9 17.45l11.45 6.6"
-            fill="none"
-            stroke="#FFFFFF"
-            strokeLinecap="round"
-            strokeWidth="2"
-          />
-          <circle cx="24" cy="25" r="2.5" fill="#FFFFFF" />
-          <path
-            d="M28.1 7.15c3.7-3.15 8.45-2.7 11.15.35-2.65 3.45-7.3 4.45-11.05 1.75-.75-.55-.75-1.45-.1-2.1Z"
-            fill="#FFFFFF"
-          />
+        <svg height="148" viewBox="6 6 88 88" width="148">
+          <g transform="translate(0 6) translate(50 44) scale(.78) translate(-50 -50)">
+            <path
+              d="M 56.165 15.039 A 35.5 35.5 0 1 0 84.961 43.835 A 4.5 4.5 0 0 0 76.097 45.398 A 26.5 26.5 0 1 1 54.602 23.903 A 4.5 4.5 0 0 0 56.165 15.039 Z"
+              fill="#FF7A00"
+            />
+            <path
+              d="M 50 50 L 50 27.5 A 22.5 22.5 0 1 0 72.5 50 Z"
+              fill="#F5152E"
+            />
+          </g>
         </svg>
       </div>
     ),

@@ -571,7 +571,7 @@ export default function LandingPage({
               <circle className={styles.orbitFill} cx="50" cy="50" r="49" pathLength={100} />
             </svg>
             <div className={styles.heroFruit} ref={fruitRef}>
-              <Logo size={520} filled={2} />
+              <Logo size={520} />
             </div>
           </div>
         </header>

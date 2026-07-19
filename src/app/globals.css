@@ -15,6 +15,10 @@
   --accent-d: #B93820;
   --accent-soft: #FFF0EC;
   --accent-progress: #FFB7A4;
+  /* Originalfarben des freigegebenen Gradefruit-Logos. */
+  --brand-rind: #FF7A00;
+  --brand-flesh: #F5152E;
+  --brand-app-bg: #FFF4E8;
   --topic-analysis: #F26B4A;
   --topic-linalg: #F26B4A;
   --topic-stochastik: #F26B4A;
@@ -186,10 +190,17 @@ h1, h2, h3, h4 {
 @keyframes gf-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes gf-pop { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
 
-/* Grapefruit-Ladeanimation: die sechs Segmente leuchten reihum auf. Bei
-   reduced-motion steht sie still (Animation aus → volle Frucht). */
-@keyframes gf-spin-seg { 0%, 100% { opacity: .16; } 22% { opacity: 1; } }
-.gf-spin-seg { animation: gf-spin-seg 1.15s var(--ease-in-out) infinite; }
+/* Das neue Markenzeichen bleibt auch beim Laden intakt. Nur der
+   Fortschrittskern pulsiert; Reduced Motion deaktiviert die Bewegung. */
+@keyframes gf-logo-pulse {
+  0%, 100% { opacity: .3; transform: scale(.92); }
+  50% { opacity: 1; transform: scale(1); }
+}
+.gf-logo-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gf-logo-pulse 1.15s var(--ease-in-out) infinite;
+}
 
 .gf-rise { animation: gf-rise var(--dur-enter) var(--ease-out) both; }
 .gf-stagger > * { animation: none; }
