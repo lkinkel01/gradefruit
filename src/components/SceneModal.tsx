@@ -322,7 +322,9 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
         )}
       </div>
 
-      <div className={styles.body}>
+      {/* Im Reel wie bei TikTok: Tippen auf die Bühne pausiert und startet.
+          Die Bühne enthält keine eigenen Buttons, daher kollidiert nichts. */}
+      <div className={styles.body} onClick={variant === 'reel' ? togglePlay : undefined}>
         <div className={styles.left}>
           {scene.func && (
             <div className={styles.func} style={{ borderColor: `${scene.color}40` }}>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './LandingPage.module.css';
 import { BrandMark } from './BrandMark';
 import { Logo } from './Logo';
@@ -302,6 +302,10 @@ export default function LandingPage({
   const [activeSection, setActiveSection] = useState<LandingSectionId | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
+  // Nach einem Klick auf den schwebenden Menü-Knopf bleibt die Leiste stehen,
+  // bis wirklich neu gescrollt wird — sonst würde ein nachlaufendes
+  // Scroll-Ereignis (Momentum) sie sofort wieder verstecken.
+  const navPinnedAtY = useRef<number | null>(null);
 
   useEffect(() => {
     const daysRaf = requestAnimationFrame(() => setDays(daysUntilExam()));
@@ -316,8 +320,13 @@ export default function LandingPage({
 
     const onScroll = () => {
       const nextY = Math.max(0, window.scrollY);
-      setNavHidden(nextY > 12);
-      if (nextY > 12 && mobileNavOpen) setMobileNavOpen(false);
+      if (navPinnedAtY.current !== null && Math.abs(nextY - navPinnedAtY.current) < 48) {
+        // Leiste wurde gerade über den Menü-Knopf geöffnet: stehen lassen.
+      } else {
+        navPinnedAtY.current = null;
+        setNavHidden(nextY > 12);
+        if (nextY > 12 && mobileNavOpen) setMobileNavOpen(false);
+      }
       if (nextY < 260) setActiveSection(null);
     };
 
@@ -511,6 +520,23 @@ export default function LandingPage({
         </div>
       </nav>
 
+      {/* Beim Scrollen bleibt das Menü erreichbar: kleiner schwebender
+          Knopf oben links (Desktop und mobil). */}
+      <button
+        type="button"
+        className={`${styles.floatingMenu} ${navHidden && !mobileNavOpen ? styles.floatingMenuVisible : ''}`}
+        aria-label="Menü anzeigen"
+        onClick={() => {
+          navPinnedAtY.current = window.scrollY;
+          setNavHidden(false);
+          if (window.matchMedia('(max-width: 980px)').matches) setMobileNavOpen(true);
+        }}
+      >
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+
       <main id="main-content">
         <header className={styles.hero}>
           <div className={styles.heroCopy}>
@@ -543,13 +569,6 @@ export default function LandingPage({
             </div>
           </div>
 
-          {/* Das Zeichen steht ruhig für sich. Ein zusätzlicher Fortschrittsring
-              würde die offene G-Form des Logos visuell verdoppeln. */}
-          <div className={styles.heroVisual} aria-hidden="true">
-            <div className={styles.heroFruit}>
-              <Logo size={320} />
-            </div>
-          </div>
         </header>
 
         <div className={styles.proofStrip} aria-label="Produktfokus">

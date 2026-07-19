@@ -33,9 +33,11 @@
   --success: #147A49;
   --success-line: #A6DFC1;
   --warn: #9A6500;
-  --side: #F7F7F8;
+  /* Sidebar hell: zarter Orange-Ton aus dem Logo-Hintergrund statt Weiß,
+     damit sich das Menü sichtbar von der Lernfläche abhebt. */
+  --side: #FFF4E8;
   --side-2: #FFFFFF;
-  --side-3: #D3D3D8;
+  --side-3: #EBDCC8;
   --side-tx: #050505;
   --side-faint: #6E7078;
   /* Milchglas für obere Leisten – als Variable, damit Dark Mode in

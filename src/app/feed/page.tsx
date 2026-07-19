@@ -151,6 +151,22 @@ export default function FeedPage() {
     if (nextIndex !== index && nextIndex >= 0 && nextIndex < feed.length) setIndex(nextIndex);
   };
 
+  // Desktop wie TikTok: Pfeil hoch/runter wechselt zum nächsten Video.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+      const element = feedRef.current;
+      if (!element) return;
+      event.preventDefault();
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      const next = Math.min(Math.max(index + direction, 0), feed.length - 1);
+      const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      element.scrollTo({ top: next * element.clientHeight, behavior: reduce ? 'auto' : 'smooth' });
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [index, feed.length]);
+
   const chooseStatus = (status: Exclude<LernStatus, 'none'>) => {
     if (!activeCard?.task) return;
     setStatus(

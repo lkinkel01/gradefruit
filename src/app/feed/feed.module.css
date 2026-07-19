@@ -41,7 +41,7 @@
   height: 100%;
   overflow: hidden;
   background:
-    radial-gradient(circle at 72% 22%, rgba(242, 107, 74, 0.16), transparent 34%),
+    radial-gradient(circle at 72% 22%, rgba(255, 122, 0, 0.16), transparent 34%),
     linear-gradient(160deg, #171719 0%, #09090a 52%, #020203 100%);
 }
 
@@ -71,7 +71,7 @@
 
 .posterCurve path {
   fill: none;
-  stroke: #f26b4a;
+  stroke: #ff7a00;
   stroke-width: 4;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;

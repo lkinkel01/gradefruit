@@ -180,7 +180,7 @@
 .continueButton {
   border: 1px solid color-mix(in srgb, var(--brand-rind) 82%, var(--ink));
   background: var(--brand-rind);
-  color: var(--accent-tx);
+  color: #fff;
   box-shadow: 0 8px 24px color-mix(in srgb, var(--brand-rind) 20%, transparent);
   transition:
     transform var(--dur-press) var(--ease-press),
@@ -239,13 +239,15 @@
 .section[id] { scroll-margin-top: 96px; }
 
 /* Hero */
+/* Nur Text: Das große Logo ist bewusst raus — die Marke trägt oben links
+   in der Navigation, der Hero gehört der Botschaft. */
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.22fr) minmax(340px, .78fr);
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
   align-items: center;
-  gap: clamp(28px, 4vw, 56px);
-  min-height: min(82svh, 780px);
+  min-height: min(72svh, 660px);
   padding: clamp(58px, 8vh, 92px) 0 72px;
   overflow: visible;
   border-bottom: 1px solid var(--line-strong);
@@ -348,38 +350,45 @@
   text-align: center;
 }
 
-.heroVisual {
-  position: relative;
-  min-height: 360px;
-  pointer-events: none;
-}
-
-.heroFruit {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: min(82%, 320px);
-  aspect-ratio: 1;
+/* Schwebender Menü-Knopf: erscheint beim Scrollen (die Leiste ist dann
+   ausgeblendet) klein oben links — auf Desktop und mobil. */
+.floatingMenu {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 46;
   display: grid;
   place-items: center;
-  line-height: 0;
-  filter: drop-shadow(0 24px 50px color-mix(in srgb, var(--ink) 11%, transparent));
-  transform: translate3d(-50%, -50%, 0);
+  width: 42px;
+  height: 42px;
+  border: 1px solid color-mix(in srgb, var(--line-strong) 72%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--surface) 62%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--nav-shadow-strong) 45%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition:
+    opacity var(--dur-hover) var(--ease-out),
+    transform var(--dur-hover) var(--ease-out),
+    background-color var(--dur-hover) var(--ease-out);
 }
 
-.heroFruit :global(svg) {
-  width: 100%;
-  height: auto;
-  transform: translateY(-2.1%);
+.floatingMenuVisible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
 }
+
+.floatingMenu:active { transform: scale(.96); }
+.floatingMenu:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @keyframes heroCopyIn {
   from { opacity: 0; transform: translate3d(0, 12px, 0); }
-  to { opacity: 1; transform: none; }
-}
-
-@keyframes heroObjectIn {
-  from { opacity: 0; transform: translate3d(18px, 0, 0) scale(.985); }
   to { opacity: 1; transform: none; }
 }
 
@@ -389,7 +398,6 @@
   .heroCopy > :nth-child(3) { animation-delay: 90ms; }
   .heroCopy > :nth-child(4) { animation-delay: 135ms; }
   .heroCopy > :nth-child(5) { animation-delay: 180ms; }
-  .heroVisual { animation: heroObjectIn 620ms var(--ease-out) 100ms both; }
 }
 
 .proofStrip {
@@ -1137,7 +1145,6 @@
   }
 
   .heroCopy { max-width: 680px; margin-inline: auto; }
-  .heroVisual { display: none; }
 
   .sectionIntro,
   .libraryIntro,

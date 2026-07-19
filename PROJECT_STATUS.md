@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-18 (Mobile und Reel-Modus)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-19 (Marken-Orange vereinheitlicht, Hero beruhigt)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -327,6 +327,36 @@ Probleme").
   und Lernmethoden wurden für 390 px entzerrt und zentriert. TypeScript,
   gezielter ESLint und Produktions-Build sind sauber; die öffentliche Landing
   wurde in Hell/Dunkel auf Desktop und 390 px geprüft.
+- ✅ **Marken-Orange vereinheitlicht, Hero beruhigt (19.07.2026, live):**
+  Die Akzentfarbe der Oberfläche folgt jetzt in Hell und Dunkel dem
+  Logo-Orange `#FF7A00` (inklusive Themen-, Video- und Szenenfarben; die
+  funktionalen Fehler-/Erfolgsfarben bleiben eigenständig). Das große
+  Hero-Logo steht kleiner und ruhig für sich — der zusätzliche
+  Fortschritts-Außenring wurde entfernt (er verdoppelte die offene G-Form),
+  der Parallax-Code dazu ebenso; mobil ist das Visual ausgeblendet.
+  Angemeldete sehen „Weiterlernen" als orangen CTA in Navigation und Hero,
+  der Kostenlos-Hinweis erscheint nur noch für Gäste; nebenbei behoben: das
+  mobile Menü zeigte Angemeldeten fälschlich „Kostenlos testen". Verifiziert
+  mit tsc, ESLint (src), Produktions-Build sowie im Browser (Gast + Login,
+  Hell/Dunkel, Desktop + 390 px); als `f1f1dda` per Fast-Forward auf `main`
+  deployt und in Produktion geprüft.
+- ✅ **Feinschliff Marke und Navigation (19.07.2026, zweite Runde, live):**
+  „Weiterlernen" auf den orangen Buttons trägt jetzt weiße Schrift. Der Hero
+  der Startseite besteht auch auf Desktop nur noch aus Text — das große
+  Logo ist entfernt, die kleinen Markenzeichen (Navigation, Footer,
+  Favicon) bleiben. Die helle Produkt-Sidebar nutzt statt Weiß den zarten
+  Orange-Ton des Logo-Hintergrunds (`--side: #FFF4E8`), damit sich Menü und
+  Lernfläche abheben. Neu: ein kleiner schwebender Menü-Knopf oben links
+  erscheint beim Scrollen der Startseite (Desktop und mobil) und holt die
+  Navigation zurück; nach dem Klick bleibt sie stehen, bis wirklich neu
+  gescrollt wird. Reel-Modus näher an TikTok: Tippen auf die Videobühne
+  pausiert/startet, Pfeiltasten wechseln am Desktop das Video
+  (reduced-motion-sicher), und die Bühnenfarben folgen dem neuen
+  Marken-Orange. Verifiziert mit tsc, ESLint (src) und Produktions-Build;
+  Browser-Prüfung für Hero, weiße Button-Schrift (hell + dunkel) und den
+  schwebenden Menü-Knopf. Hinweis: Der lokale Preview-Browser verlor am Ende
+  die externe Netzverbindung, daher liefen die letzten eingeloggten Checks
+  über DOM-Prüfungen; Produktion nach dem Deploy per HTTP geprüft.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
