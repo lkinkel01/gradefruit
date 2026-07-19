@@ -177,9 +177,22 @@
   transition: color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
 
+.continueButton {
+  border: 1px solid color-mix(in srgb, var(--brand-rind) 82%, var(--ink));
+  background: var(--brand-rind);
+  color: var(--accent-tx);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--brand-rind) 20%, transparent);
+  transition:
+    transform var(--dur-press) var(--ease-press),
+    background-color var(--dur-hover) var(--ease-out),
+    border-color var(--dur-hover) var(--ease-out),
+    box-shadow var(--dur-hover) var(--ease-out);
+}
+
 .brand:active,
 .iconBtn:active,
 .navLink:active,
+.continueButton:active,
 .navSection:active,
 .navSectionActive:active { transform: scale(.98); }
 
@@ -337,45 +350,21 @@
 
 .heroVisual {
   position: relative;
-  min-height: 520px;
+  min-height: 360px;
   pointer-events: none;
-}
-
-/* Fortschrittsring: ein ruhiger Kreis, dessen Grapefruit-Bogen ab 12 Uhr
-   beginnt — dieselbe Geste wie GrapefruitProgress im Produkt. Statisch,
-   ohne Animation und ohne Beschriftung. */
-.orbitRing {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: min(100%, 420px);
-  height: auto;
-  overflow: visible;
-  transform: translate(-50%, -50%) rotate(-90deg);
-}
-
-.orbitBase { fill: none; stroke: var(--line-strong); stroke-width: 0.7; }
-.orbitFill {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 2.1;
-  stroke-linecap: round;
-  stroke-dasharray: 30 70;
 }
 
 .heroFruit {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(114%, 480px);
+  width: min(82%, 320px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
   line-height: 0;
-  filter: drop-shadow(0 32px 64px color-mix(in srgb, var(--ink) 16%, transparent));
+  filter: drop-shadow(0 24px 50px color-mix(in srgb, var(--ink) 11%, transparent));
   transform: translate3d(-50%, -50%, 0);
-  transform-origin: center;
-  will-change: transform;
 }
 
 .heroFruit :global(svg) {
@@ -1013,6 +1002,13 @@
 
 /* Interaktion bleibt sparsam und funktioniert auf Touch ohne Hover-Fallen. */
 @media (hover: hover) and (pointer: fine) {
+  .continueButton:hover {
+    border-color: var(--brand-rind);
+    background: var(--brand-rind-hover);
+    box-shadow: 0 12px 28px color-mix(in srgb, var(--brand-rind) 25%, transparent);
+    transform: translateY(-1px);
+  }
+
   .brand:hover,
   .navLink:hover,
   .footerLinks a:hover,
@@ -1141,9 +1137,7 @@
   }
 
   .heroCopy { max-width: 680px; margin-inline: auto; }
-  .heroVisual { position: absolute; top: 20px; right: 50%; width: min(68vw, 420px); min-height: 420px; opacity: .14; transform: translateX(50%); }
-  .orbitRing { width: 100%; }
-  .heroFruit { width: min(116%, 490px); }
+  .heroVisual { display: none; }
 
   .sectionIntro,
   .libraryIntro,
@@ -1252,22 +1246,6 @@
     line-height: 1.45;
     text-align: center;
   }
-  .heroVisual {
-    position: absolute;
-    z-index: 0;
-    top: 72px;
-    right: auto;
-    left: 50%;
-    width: min(86vw, 340px);
-    min-height: 340px;
-    margin: 0;
-    opacity: .11;
-    transform: translateX(-50%);
-    animation: none;
-  }
-  .orbitRing { width: 100%; }
-  .heroFruit { width: min(116%, 390px); }
-
   .proofStrip { grid-template-columns: 1fr; padding: 20px 0; }
   .proofStrip > div,
   .proofStrip > div:first-child { padding: 16px 0; border-left: 0; }

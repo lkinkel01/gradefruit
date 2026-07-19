@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './LandingPage.module.css';
 import { BrandMark } from './BrandMark';
 import { Logo } from './Logo';
@@ -302,34 +302,10 @@ export default function LandingPage({
   const [activeSection, setActiveSection] = useState<LandingSectionId | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
-  const fruitRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const daysRaf = requestAnimationFrame(() => setDays(daysUntilExam()));
-    const el = fruitRef.current;
-    if (!el) return () => cancelAnimationFrame(daysRaf);
-
-    const canParallax = window.matchMedia?.('(min-width: 901px) and (prefers-reduced-motion: no-preference)');
-    if (!canParallax?.matches) return () => cancelAnimationFrame(daysRaf);
-
-    let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        const y = Math.min(window.scrollY, 760);
-        el.style.transform = `translate3d(-50%, calc(-50% - ${y * 0.025}px), 0) rotate(${y * 0.003}deg)`;
-      });
-    };
-
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      cancelAnimationFrame(daysRaf);
-      window.removeEventListener('scroll', onScroll);
-      if (raf) cancelAnimationFrame(raf);
-      el.style.transform = '';
-    };
+    return () => cancelAnimationFrame(daysRaf);
   }, []);
 
   useEffect(() => {
@@ -481,7 +457,7 @@ export default function LandingPage({
               {isAuthed ? (
                 <>
                   <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                  <button className="btn primary sm" onClick={onEnter}>Weiterlernen</button>
+                  <button className={`btn sm ${styles.continueButton}`} onClick={onEnter}>Weiterlernen</button>
                 </>
               ) : (
                 <>
@@ -511,7 +487,7 @@ export default function LandingPage({
             {isAuthed ? (
               <>
                 <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                <button className="btn primary sm" onClick={onEnter}>Kostenlos testen</button>
+                <button className={`btn sm ${styles.continueButton}`} onClick={onEnter}>Weiterlernen</button>
               </>
             ) : (
               <>
@@ -551,27 +527,27 @@ export default function LandingPage({
             </ul>
             <div className={styles.heroActions}>
               <div className={styles.heroPrimaryAction}>
-                <button className="btn primary big" onClick={onEnter}>
-                  Kostenlos testen
+                <button
+                  className={isAuthed ? `btn big ${styles.continueButton}` : 'btn primary big'}
+                  onClick={onEnter}
+                >
+                  {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
                 </button>
-                <p className={styles.reassurance}>
-                  Analysis ist kostenlos. Ohne Account. Ohne Zahlungsdaten.
-                </p>
+                {!isAuthed && (
+                  <p className={styles.reassurance}>
+                    Analysis ist kostenlos. Ohne Account. Ohne Zahlungsdaten.
+                  </p>
+                )}
               </div>
               <a className="gf-arrow" href="#system">Gradefruit entdecken <Arrow /></a>
             </div>
           </div>
 
-          {/* Markenvisual statt Feature-Grafik: die Grapefruit im
-              Fortschrittsring — Lernen als sich füllende Frucht, ohne
-              erklärungsbedürftige Beschriftungen. */}
+          {/* Das Zeichen steht ruhig für sich. Ein zusätzlicher Fortschrittsring
+              würde die offene G-Form des Logos visuell verdoppeln. */}
           <div className={styles.heroVisual} aria-hidden="true">
-            <svg className={styles.orbitRing} viewBox="0 0 100 100">
-              <circle className={styles.orbitBase} cx="50" cy="50" r="49" />
-              <circle className={styles.orbitFill} cx="50" cy="50" r="49" pathLength={100} />
-            </svg>
-            <div className={styles.heroFruit} ref={fruitRef}>
-              <Logo size={520} />
+            <div className={styles.heroFruit}>
+              <Logo size={320} />
             </div>
           </div>
         </header>
