@@ -10,7 +10,6 @@ import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
 import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
 import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
 import { BrandMark } from './BrandMark';
-import { GrapefruitProgress } from './Logo';
 import { CheckIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
 
@@ -27,7 +26,7 @@ interface Props {
 
 const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
   {
-    id: 'dashboard', label: 'Übersicht',
+    id: 'dashboard', label: 'Dashboard',
     icon: <OverviewIcon />,
   },
   {
@@ -47,12 +46,19 @@ const TASKS_BY_TOPIC = {
 };
 
 export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
-  const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
-  const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
+  const { topicDone, topicTotal } = useProgress();
 
   // Eingeklappte Themen: Ein Klick auf das bereits aktive Thema klappt sein
   // Untermenü zu (und wieder auf), ohne zu navigieren.
   const [collapsedTopics, setCollapsedTopics] = useState<Set<View>>(new Set());
+  // Eingeklappte Unterlisten (Zusammenfassung/Übungen), Schlüssel „id:tab".
+  const [collapsedSubs, setCollapsedSubs] = useState<Set<string>>(new Set());
+  const toggleSub = (key: string) => setCollapsedSubs(prev => {
+    const next = new Set(prev);
+    if (next.has(key)) next.delete(key);
+    else next.add(key);
+    return next;
+  });
   // Hover öffnet das Untermenü erst nach einem kurzen Moment (160 ms), damit
   // beim Vorbeifahren mit der Maus nichts versehentlich aufklappt.
   const [hoverTopic, setHoverTopic] = useState<View | null>(null);
@@ -87,17 +93,10 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
         Gradefruit
       </button>
 
-      <div className={styles.course}>
-        <GrapefruitProgress
-          pct={pct}
-          size={38}
-          flesh="var(--side-2)"
-        />
-        <div className={styles.courseTx}>
-          <div className={styles.courseTitle}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</div>
-          <div className={styles.courseSub}>{pct} % · {totalDone}/{totalLessons} Aufgaben</div>
-        </div>
-      </div>
+      <button className={styles.dashLink} onClick={() => onNavigate('dashboard')}>
+        <span className={styles.dashIcon}><OverviewIcon /></span>
+        Zum Dashboard
+      </button>
 
       <div className={styles.navsec}>Themen</div>
       <nav className={styles.snav}>
@@ -121,8 +120,12 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                 aria-expanded={expanded}
                 onClick={() => {
                   if (active) {
-                    // Aktives Thema: Untermenü nur ein-/ausklappen.
+                    // Aktives Thema: Untermenü sofort ein-/ausklappen. Hover-Zustand
+                    // dabei zurücksetzen, sonst hielte der Hover es offen, bis die
+                    // Maus wegfährt.
                     toggleCollapse(t.id);
+                    if (hoverTimer.current) { window.clearTimeout(hoverTimer.current); hoverTimer.current = null; }
+                    setHoverTopic(null);
                   } else {
                     setCollapsedTopics(prev => {
                       const next = new Set(prev);
@@ -146,11 +149,15 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                 <button
                   className={`${styles.flyItem} ${summaryActive && !topicItemId ? styles.flyOn : ''} ${summaryActive && topicItemId ? styles.flyParentOn : ''}`}
                   aria-current={summaryActive && !topicItemId ? 'page' : undefined}
-                  onClick={() => onNavigate(t.id, { tab: 'zusammenfassung', itemId: null })}
+                  aria-expanded={summaryActive ? !collapsedSubs.has(`${t.id}:zusammenfassung`) : undefined}
+                  onClick={() => {
+                    if (summaryActive) toggleSub(`${t.id}:zusammenfassung`);
+                    else onNavigate(t.id, { tab: 'zusammenfassung', itemId: null });
+                  }}
                 >
                   Zusammenfassung
                 </button>
-                {summaryActive && (
+                {summaryActive && !collapsedSubs.has(`${t.id}:zusammenfassung`) && (
                   <div className={styles.sectionList} aria-label={`Themen in ${t.label}`}>
                     {sections.map(section => {
                       const sectionActive = topicItemId === section.title;
@@ -174,11 +181,15 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                 <button
                   className={`${styles.flyItem} ${exercisesActive && !topicItemId ? styles.flyOn : ''} ${exercisesActive && topicItemId ? styles.flyParentOn : ''}`}
                   aria-current={exercisesActive && !topicItemId ? 'page' : undefined}
-                  onClick={() => onNavigate(t.id, { tab: 'uebungen', itemId: null })}
+                  aria-expanded={exercisesActive ? !collapsedSubs.has(`${t.id}:uebungen`) : undefined}
+                  onClick={() => {
+                    if (exercisesActive) toggleSub(`${t.id}:uebungen`);
+                    else onNavigate(t.id, { tab: 'uebungen', itemId: null });
+                  }}
                 >
                   Übungen
                 </button>
-                {exercisesActive && (
+                {exercisesActive && !collapsedSubs.has(`${t.id}:uebungen`) && (
                   <div className={styles.sectionList} aria-label={`Übungen in ${t.label}`}>
                     {tasks.map((task, taskIndex) => {
                       const taskActive = topicItemId === task.id;

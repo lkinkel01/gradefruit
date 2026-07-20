@@ -29,6 +29,13 @@ const TASKS: Record<TopicId, { gk: { id: string; tag: string; q: string; videoId
 type StatusFilter = 'alle' | Exclude<LernStatus, 'none'>;
 const STATUS_FILTERS: StatusFilter[] = ['alle', 'wiederholen', 'unklar', 'verstanden'];
 
+// Ampel: grün = verstanden, gelb = wiederholen, rot = nicht verstanden.
+const STATUS_DOT: Record<Exclude<LernStatus, 'none'>, string> = {
+  verstanden: 'var(--green)',
+  wiederholen: 'var(--yellow)',
+  unklar: 'var(--danger)',
+};
+
 interface Props {
   level: 'gk' | 'lk';
   onNavigate: (v: View) => void;
@@ -110,6 +117,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
             className={`${styles.seg} ${statusFilter === s ? styles.segOn : ''}`}
             onClick={() => setStatusFilter(s)}
           >
+            {s !== 'alle' && <span className={styles.segDot} style={{ background: STATUS_DOT[s] }} aria-hidden="true" />}
             {s === 'alle' ? 'Alle' : STATUS_LABEL[s]}
           </button>
         ))}

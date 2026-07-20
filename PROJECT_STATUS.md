@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-20 (Feinschliff-Runde 5: Sidebar wieder schwarz, Reel-Overhaul, Favicon neu, Landing-Politur)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-20 (Feinschliff-Runde 6: Lernbereich neu strukturiert — Kästen, Ampel-Status, Sidebar-Dashboard)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -414,6 +414,26 @@ Probleme").
   ESLint (src), Produktions-Build und Browser (Landing hell/dunkel + 390 px,
   schwarze Sidebar hell, Reel eingeloggt: kein Overlap, Pause/Resume,
   Doppeltipp-Spulen).
+
+- ✅ **Feinschliff-Runde 6 (20.07.2026, live) — Lernbereich neu strukturiert:**
+  **Sidebar:** die frühere Kurs-Fortschrittskarte ist ein klickbarer
+  **„Zum Dashboard"**-Knopf; der Navigationspunkt „Übersicht" heißt jetzt
+  **„Dashboard"** (auch Brotkrume/Feed). Aktives Thema klappt beim erneuten
+  Klick **sofort** ein (Hover-Zustand wird zurückgesetzt); Zusammenfassung und
+  Übungen lassen sich in der Sidebar ein-/ausklappen. **Themenansicht:** Index
+  listet **nur die Überschriften** (kein Vorschautext, kein „Video"-Label);
+  der Lernstatus erscheint als **farbiger Punkt (grün/gelb/rot)** statt Text.
+  **Zusammenfassungs-Detail:** Inhalt wird **direkt** in einem Kasten gezeigt
+  (kein „anzeigen/verbergen" mehr), Formeln direkt darunter, jeder Kasten kann
+  eine KI-Frage auslösen. **Abgegrenzte Aktionszone** (KI fragen · Tutor
+  fragen — **ohne Video**) plus **Ampel-Status** (Verstanden = grün,
+  Wiederholen = gelb, Nicht verstanden = rot); der Text „Wie sicher fühlst du
+  dich?" ist weg. Unten kein „Vorherige/Zurück"-Knopf mehr — nur noch
+  **„Nächste …"** als hervorgehobener CTA und „Frage stellen".
+  **Wiederholen-Seite:** Filter tragen dieselben Ampelfarben. Neue Farbtokens
+  `--yellow` und `--warn-soft` (hell + dunkel). Verifiziert mit tsc, ESLint,
+  Produktions-Build und Browser (Analysis eingeloggt, hell + dunkel, Sidebar-
+  Einklappen, Ampel-Punkte in Detail und Wiederholen).
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten

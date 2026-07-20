@@ -6,7 +6,7 @@ import { MenuIcon, MoonIcon, SunIcon } from './UiIcons';
 import styles from './Topbar.module.css';
 
 const LABELS: Partial<Record<View, string>> = {
-  dashboard: 'Übersicht',
+  dashboard: 'Dashboard',
   analysis: 'Analysis',
   linalg: 'Lineare Algebra & Geometrie',
   stochastik: 'Stochastik',
@@ -68,7 +68,7 @@ export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleD
         <MenuIcon size={20} />
       </button>
       <nav className={styles.crumbs} aria-label="Brotkrumen-Navigation">
-        <button type="button" className={styles.crumbLink} onClick={() => onNavigate('dashboard')} aria-label="Zur Übersicht">
+        <button type="button" className={styles.crumbLink} onClick={() => onNavigate('dashboard')} aria-label="Zum Dashboard">
           Gradefruit
         </button>
         <span className={styles.sep} aria-hidden="true">›</span>

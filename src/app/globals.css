@@ -37,6 +37,9 @@
   --success: #147A49;
   --success-line: #A6DFC1;
   --warn: #9A6500;
+  /* Lernstatus-Ampel: grün = verstanden, gelb = wiederholen, rot = nicht verstanden. */
+  --yellow: #E0A400;
+  --warn-soft: #FBF1D8;
   /* Sidebar: immer echtes Schwarz mit heller Schrift (DESIGN.md-Regel),
      hebt das Menü ruhig und ästhetisch von der weißen Lernfläche ab. */
   --side: #050505;
@@ -235,6 +238,8 @@ body.dark {
   --success: #61D39A;
   --success-line: #23543D;
   --warn: #F0B24C;
+  --yellow: #F0B24C;
+  --warn-soft: #2A1F08;
   --side: #050505;
   --side-2: #111113;
   --side-3: #27272A;

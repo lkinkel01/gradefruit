@@ -1,13 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { LernStatus, NavigateTo, TopicTab, View } from '@/lib/types';
+import { LernStatus, NavigateTo, STATUS_LABEL, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { GrapefruitProgress } from './Logo';
 import styles from './TopicView.module.css';
-import SceneModal from './SceneModal';
-import { SCENES, Scene } from '@/lib/scenes';
 import { SUMMARIES } from '@/lib/summaries';
 import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
 import { LINALG_TASKS } from '@/lib/linalgTasks';
@@ -15,7 +13,7 @@ import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
 import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
 import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
 import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
-import { ArrowRightIcon, ChevronIcon, PlayIcon, QuestionIcon, TutorIcon, UploadIcon } from './UiIcons';
+import { ArrowRightIcon, ChevronIcon, QuestionIcon, TutorIcon, UploadIcon } from './UiIcons';
 
 interface Task {
   id: string;
@@ -67,12 +65,31 @@ interface Props {
   onItemLabelChange: (itemLabel: string | null) => void;
 }
 
-// Die drei Lernstufen in fester Reihenfolge (Fuß jeder Aufgabe).
+// Die drei Lernstufen als Ampel: grün = verstanden, gelb = wiederholen,
+// rot = nicht verstanden. Reihenfolge fest.
 const STATUS_BTNS: { status: Exclude<LernStatus, 'none'>; label: string }[] = [
   { status: 'verstanden', label: 'Verstanden' },
   { status: 'wiederholen', label: 'Wiederholen' },
   { status: 'unklar', label: 'Nicht verstanden' },
 ];
+
+const STATUS_DOT: Record<Exclude<LernStatus, 'none'>, string> = {
+  verstanden: 'var(--green)',
+  wiederholen: 'var(--yellow)',
+  unklar: 'var(--danger)',
+};
+
+function StatusDot({ status }: { status: LernStatus }) {
+  if (status === 'none') return <span className={styles.statusDotEmpty} aria-hidden="true" />;
+  return (
+    <span
+      className={styles.statusDot}
+      style={{ background: STATUS_DOT[status] }}
+      title={STATUS_LABEL[status]}
+      aria-label={STATUS_LABEL[status]}
+    />
+  );
+}
 
 export default function TopicView({
   topicId,
@@ -95,9 +112,7 @@ export default function TopicView({
   const { user } = useAuth();
   const { statusOf, setStatus } = useProgress();
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
-  const [openSummaryDetails, setOpenSummaryDetails] = useState<Set<string>>(new Set());
   const [summaryStatuses, setSummaryStatuses] = useState<Record<string, LernStatus>>({});
-  const [video, setVideo] = useState<Scene | null>(null);
   const isFree = topicId === 'analysis';
 
   const tasks = topic ? topic[level] : [];
@@ -110,9 +125,7 @@ export default function TopicView({
     : -1;
   const selectedTask = tab === 'uebungen' ? tasks.find(task => task.id === itemId) : undefined;
   const selectedTaskIndex = selectedTask ? tasks.findIndex(task => task.id === selectedTask.id) : -1;
-  const previousSummary = selectedSummaryIndex > 0 ? summary?.sections[selectedSummaryIndex - 1] : undefined;
   const nextSummary = selectedSummaryIndex >= 0 ? summary?.sections[selectedSummaryIndex + 1] : undefined;
-  const previousTask = selectedTaskIndex > 0 ? tasks[selectedTaskIndex - 1] : undefined;
   const nextTask = selectedTaskIndex >= 0 ? tasks[selectedTaskIndex + 1] : undefined;
 
   useEffect(() => {
@@ -145,17 +158,7 @@ export default function TopicView({
 
   const selectTab = (nextTab: TopicTab) => {
     setOpenSolutions(new Set());
-    setOpenSummaryDetails(new Set());
     onLocationChange(nextTab, null, null);
-  };
-
-  const toggleSummaryDetails = (title: string) => {
-    setOpenSummaryDetails(prev => {
-      const next = new Set(prev);
-      if (next.has(title)) next.delete(title);
-      else next.add(title);
-      return next;
-    });
   };
 
   const summaryStatusKey = (title: string) => `${topicId}/${level}/${title}`;
@@ -168,7 +171,6 @@ export default function TopicView({
   };
 
   const openSummaryItem = (section: NonNullable<typeof selectedSummary>) => {
-    setOpenSummaryDetails(new Set());
     onLocationChange('zusammenfassung', section.title, section.title);
   };
 
@@ -176,47 +178,6 @@ export default function TopicView({
     setOpenSolutions(new Set());
     onLocationChange('uebungen', task.id, task.tag);
   };
-
-  const detailNavigation = ({
-    previous,
-    next,
-    kind,
-    onPrevious,
-    onNext,
-  }: {
-    previous?: string;
-    next?: string;
-    kind: 'Aufgabe' | 'Zusammenfassung';
-    onPrevious: () => void;
-    onNext: () => void;
-  }) => (
-    <nav className={styles.detailNav} aria-label={`${kind} wechseln`}>
-      <button
-        type="button"
-        className={styles.detailNavButton}
-        disabled={!previous}
-        onClick={onPrevious}
-      >
-        <span className={styles.detailNavDirection}>
-          <span className={styles.detailNavArrowBack} aria-hidden="true"><ArrowRightIcon size={15} /></span>
-          Vorherige {kind}
-        </span>
-        <strong>{previous ?? `Keine vorherige ${kind}`}</strong>
-      </button>
-      <button
-        type="button"
-        className={`${styles.detailNavButton} ${styles.detailNavButtonNext}`}
-        disabled={!next}
-        onClick={onNext}
-      >
-        <span className={styles.detailNavDirection}>
-          Nächste {kind}
-          <span aria-hidden="true"><ArrowRightIcon size={15} /></span>
-        </span>
-        <strong>{next ?? `Keine nächste ${kind}`}</strong>
-      </button>
-    </nav>
-  );
 
   // Lernen im Reel-Format: gleiche Inhalte, anderes Tempo.
   const openReels = () => {
@@ -227,17 +188,10 @@ export default function TopicView({
     router.push('/feed');
   };
 
-  const actionBar = (opts: { scene?: Scene; askCtx: string; askSnippet: string }) => (
+  // Aktionsleiste ohne „Video" (Videos kommen später überall dazu) – nur
+  // KI- und Tutor-Hilfe, klar abgegrenzt in einer eigenen Aktionszone.
+  const actionBar = (opts: { askCtx: string; askSnippet: string }) => (
     <div className={styles.rowActions} aria-label="Weitere Lernhilfen">
-      <button
-        className={styles.mini}
-        disabled={!opts.scene}
-        onClick={() => opts.scene && setVideo(opts.scene)}
-        title={opts.scene ? 'Erklärvideo öffnen' : 'Für diesen Inhalt ist noch kein Video hinterlegt'}
-      >
-        <PlayIcon size={14} />
-        Video
-      </button>
       <button className={styles.mini} onClick={() => onOpenAsk(opts.askCtx, opts.askSnippet)}>
         <QuestionIcon size={14} />
         KI fragen
@@ -249,9 +203,62 @@ export default function TopicView({
     </div>
   );
 
+  const statusSegment = (status: LernStatus, onSet: (status: LernStatus) => void) => (
+    <div className={styles.statusSeg} role="group" aria-label="Lernstatus wählen">
+      {STATUS_BTNS.map(button => (
+        <button
+          key={button.status}
+          className={`${styles.statusBtn} ${status === button.status ? styles[`statusOn_${button.status}`] : ''}`}
+          aria-pressed={status === button.status}
+          onClick={() => onSet(status === button.status ? 'none' : button.status)}
+        >
+          <span className={styles.statusBtnDot} style={{ background: STATUS_DOT[button.status] }} aria-hidden="true" />
+          {button.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  // Abgegrenzte Aktionszone: Lernhilfen + Lernstatus, klar getrennt vom Inhalt.
+  const actionZone = (opts: {
+    askCtx: string;
+    askSnippet: string;
+    status: LernStatus;
+    onSet: (status: LernStatus) => void;
+  }) => (
+    <div className={styles.actionZone}>
+      {actionBar({ askCtx: opts.askCtx, askSnippet: opts.askSnippet })}
+      {user && (
+        <div className={styles.statusRow}>
+          <span className={styles.zoneLabel}>Lernstatus</span>
+          {statusSegment(opts.status, opts.onSet)}
+        </div>
+      )}
+    </div>
+  );
+
+  const nextCta = (next: string | undefined, onNext: () => void, kind: 'Aufgabe' | 'Zusammenfassung') =>
+    next ? (
+      <button type="button" className={`btn primary ${styles.nextCta}`} onClick={onNext}>
+        <span>Nächste {kind}: {next}</span>
+        <ArrowRightIcon size={16} />
+      </button>
+    ) : null;
+
   const renderSummaryIndex = () => (
     <div className={styles.contentIndex}>
-      {summary?.intro && <p className={styles.indexIntro}>{summary.intro}</p>}
+      {summary?.intro && (
+        <div className={styles.introBox}>
+          <p>{summary.intro}</p>
+          <button
+            className={styles.boxAsk}
+            onClick={() => onOpenAsk(topic.label, summary.intro)}
+          >
+            <QuestionIcon size={13} />
+            Dazu eine Frage stellen
+          </button>
+        </div>
+      )}
       <div className={styles.indexList}>
         {summary?.sections.map((section, index) => {
           const status = summaryStatuses[summaryStatusKey(section.title)] ?? 'none';
@@ -264,13 +271,8 @@ export default function TopicView({
               <span className={styles.indexNumber}>{index + 1}</span>
               <span className={styles.indexText}>
                 <strong>{section.title}</strong>
-                <small>{section.text}</small>
               </span>
-              {status !== 'none' && (
-                <span className={styles.headStatus}>
-                  {STATUS_BTNS.find(statusButton => statusButton.status === status)?.label}
-                </span>
-              )}
+              <StatusDot status={status} />
               <span className={styles.indexArrow} aria-hidden="true"><ArrowRightIcon size={16} /></span>
             </button>
           );
@@ -286,7 +288,6 @@ export default function TopicView({
 
   const renderSummaryDetail = () => {
     if (!selectedSummary) return renderSummaryIndex();
-    const detailsOpen = openSummaryDetails.has(selectedSummary.title);
     const status = summaryStatuses[summaryStatusKey(selectedSummary.title)] ?? 'none';
 
     return (
@@ -302,74 +303,44 @@ export default function TopicView({
           <header className={styles.detailHeader}>
             <span className={styles.cardNum} style={{ background: topic.color }}>{selectedSummaryIndex + 1}</span>
             <h2 className={styles.detailTitle}>{selectedSummary.title}</h2>
-            {status !== 'none' && (
-              <span className={styles.headStatus}>
-                {STATUS_BTNS.find(statusButton => statusButton.status === status)?.label}
-              </span>
-            )}
+            <StatusDot status={status} />
           </header>
           <div className={styles.cardBody}>
-            <p className={styles.summaryIntro}>{selectedSummary.text}</p>
-            <div className={styles.solRow}>
+            {/* Inhalt direkt sichtbar, im Kasten – mit Frage-Möglichkeit. */}
+            <div className={styles.contentBox}>
+              <p>{selectedSummary.text}</p>
               <button
-                className={`${styles.mini} ${styles.solBtn}`}
-                onClick={() => toggleSummaryDetails(selectedSummary.title)}
-                aria-expanded={detailsOpen}
+                className={styles.boxAsk}
+                onClick={() => onOpenAsk(topic.label, `Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`)}
               >
-                <ChevronIcon direction={detailsOpen ? 'up' : 'down'} size={14} />
-                {detailsOpen ? 'Zusammenfassung verbergen' : 'Zusammenfassung anzeigen'}
+                <QuestionIcon size={13} />
+                Dazu eine Frage stellen
               </button>
             </div>
 
-            {detailsOpen && (
-              <div className={styles.summaryDetails}>
-                <div className={styles.formulas}>
-                  {selectedSummary.formulas.map((formula, formulaIndex) => (
-                    <button
-                      key={formulaIndex}
-                      className={styles.formula}
-                      title="Diese Formel vom Coach erklären lassen"
-                      onClick={() => onOpenAsk(topic.label, `Erkläre mir diese Formel aus „${selectedSummary.title}“: ${formula}`)}
-                    >
-                      <span className={styles.formulaText}>{formula}</span>
-                      <QuestionIcon size={14} />
-                    </button>
-                  ))}
-                </div>
+            <div className={styles.formulas}>
+              {selectedSummary.formulas.map((formula, formulaIndex) => (
+                <button
+                  key={formulaIndex}
+                  className={styles.formula}
+                  title="Diese Formel vom Coach erklären lassen"
+                  onClick={() => onOpenAsk(topic.label, `Erkläre mir diese Formel aus „${selectedSummary.title}“: ${formula}`)}
+                >
+                  <span className={styles.formulaText}>{formula}</span>
+                  <QuestionIcon size={14} />
+                </button>
+              ))}
+            </div>
 
-                {actionBar({
-                  askCtx: topic.label,
-                  askSnippet: `Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`,
-                })}
-
-                {user && (
-                  <div className={styles.cardFoot}>
-                    <span className={styles.footLabel}>Wie sicher fühlst du dich?</span>
-                    <div className={styles.statusSeg}>
-                      {STATUS_BTNS.map(button => (
-                        <button
-                          key={button.status}
-                          className={`${styles.statusBtn} ${status === button.status ? styles[`statusOn_${button.status}`] : ''}`}
-                          aria-pressed={status === button.status}
-                          onClick={() => setSummaryStatus(selectedSummary.title, status === button.status ? 'none' : button.status)}
-                        >
-                          {button.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+            {actionZone({
+              askCtx: topic.label,
+              askSnippet: `Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`,
+              status,
+              onSet: (s) => setSummaryStatus(selectedSummary.title, s),
+            })}
           </div>
         </article>
-        {detailNavigation({
-          previous: previousSummary?.title,
-          next: nextSummary?.title,
-          kind: 'Zusammenfassung',
-          onPrevious: () => previousSummary && openSummaryItem(previousSummary),
-          onNext: () => nextSummary && openSummaryItem(nextSummary),
-        })}
+        {nextCta(nextSummary?.title, () => nextSummary && openSummaryItem(nextSummary), 'Zusammenfassung')}
       </div>
     );
   };
@@ -379,26 +350,17 @@ export default function TopicView({
       <div className={styles.indexList}>
         {tasks.map((task, index) => {
           const status = statusOf(topicId, task.id);
-          const scene = task.videoId ? SCENES[task.videoId] : undefined;
           return (
             <button
               key={task.id}
               className={styles.indexRow}
               onClick={() => openTaskItem(task)}
             >
-              <span className={`${styles.indexNumber} ${status === 'verstanden' ? styles.indexNumberDone : ''}`}>
-                {status === 'verstanden' ? <span aria-hidden="true">✓</span> : index + 1}
-              </span>
+              <span className={styles.indexNumber}>{index + 1}</span>
               <span className={styles.indexText}>
                 <strong>{task.tag}</strong>
-                <small>{task.q}</small>
               </span>
-              {scene && <span className={styles.indexVideo}>Video</span>}
-              {status !== 'none' && (
-                <span className={styles.headStatus}>
-                  {STATUS_BTNS.find(statusButton => statusButton.status === status)?.label}
-                </span>
-              )}
+              <StatusDot status={status} />
               <span className={styles.indexArrow} aria-hidden="true"><ArrowRightIcon size={16} /></span>
             </button>
           );
@@ -410,8 +372,6 @@ export default function TopicView({
   const renderExerciseDetail = () => {
     if (!selectedTask) return renderExerciseIndex();
     const status = statusOf(topicId, selectedTask.id);
-    const done = status === 'verstanden';
-    const scene = selectedTask.videoId ? SCENES[selectedTask.videoId] : undefined;
     const solutionOpen = openSolutions.has(selectedTask.id);
 
     return (
@@ -425,21 +385,22 @@ export default function TopicView({
         </button>
         <article id={`task-${selectedTask.id}`} className={`${styles.card} ${styles.cardOpen}`}>
           <header className={styles.detailHeader}>
-            <span className={`${styles.cardNum} ${done ? styles.cardNumDone : ''}`} style={done ? undefined : { background: topic.color }}>
-              {done ? '✓' : selectedTaskIndex + 1}
-            </span>
+            <span className={styles.cardNum} style={{ background: topic.color }}>{selectedTaskIndex + 1}</span>
             <h2 className={styles.detailTitle}>{selectedTask.tag}</h2>
-            {status !== 'none' && (
-              <span className={styles.headStatus}>
-                {STATUS_BTNS.find(statusButton => statusButton.status === status)?.label}
-              </span>
-            )}
+            <StatusDot status={status} />
           </header>
 
           <div className={styles.cardBody}>
             <div className={styles.taskBlock}>
               <span className={styles.taskLabel}>Aufgabe</span>
               <p className={styles.taskQ}>{selectedTask.q}</p>
+              <button
+                className={styles.boxAsk}
+                onClick={() => onOpenAsk(topic.label, selectedTask.q)}
+              >
+                <QuestionIcon size={13} />
+                Dazu eine Frage stellen
+              </button>
             </div>
 
             <div className={styles.solRow}>
@@ -506,37 +467,18 @@ export default function TopicView({
                   <UploadIcon size={14} />
                   Eigene Lösung prüfen
                 </button>
-
-                {actionBar({ scene, askCtx: topic.label, askSnippet: selectedTask.q })}
-
-                {user && (
-                  <div className={styles.cardFoot}>
-                    <span className={styles.footLabel}>Wie sicher fühlst du dich?</span>
-                    <div className={styles.statusSeg}>
-                      {STATUS_BTNS.map(button => (
-                        <button
-                          key={button.status}
-                          className={`${styles.statusBtn} ${status === button.status ? styles[`statusOn_${button.status}`] : ''}`}
-                          aria-pressed={status === button.status}
-                          onClick={() => setStatus(topicId, selectedTask.id, status === button.status ? 'none' : button.status)}
-                        >
-                          {button.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             )}
+
+            {actionZone({
+              askCtx: topic.label,
+              askSnippet: selectedTask.q,
+              status,
+              onSet: (s) => setStatus(topicId, selectedTask.id, s),
+            })}
           </div>
         </article>
-        {detailNavigation({
-          previous: previousTask?.tag,
-          next: nextTask?.tag,
-          kind: 'Aufgabe',
-          onPrevious: () => previousTask && openTaskItem(previousTask),
-          onNext: () => nextTask && openTaskItem(nextTask),
-        })}
+        {nextCta(nextTask?.tag, () => nextTask && openTaskItem(nextTask), 'Aufgabe')}
       </div>
     );
   };
@@ -605,13 +547,10 @@ export default function TopicView({
       )}
 
       <div className={styles.topicFoot}>
-        <button className="btn light" onClick={() => onNavigate('dashboard')}>← Zurück</button>
         <button className="btn primary" onClick={() => onOpenAsk(topic.label, '')}>
           Frage stellen
         </button>
       </div>
-
-      <SceneModal scene={video} onClose={() => setVideo(null)} />
     </div>
   );
 }

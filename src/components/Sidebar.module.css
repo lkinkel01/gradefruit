@@ -30,18 +30,29 @@
 }
 .brand svg { color: var(--accent); }
 
-.course {
+/* „Zum Dashboard": ersetzt die frühere Kurs-Fortschrittskarte. */
+.dashLink {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  width: calc(100% - 8px);
   margin: 0 4px 16px;
-  padding: 13px 6px 15px;
-  border-top: 1px solid var(--side-3);
-  border-bottom: 1px solid var(--side-3);
+  padding: 11px 12px;
+  border: 1px solid var(--side-3);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--side-tx) 6%, transparent);
+  color: var(--side-tx);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  transition: background-color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
-.courseTx { min-width: 0; }
-.courseTitle { overflow: hidden; color: var(--side-tx); font-size: 13px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
-.courseSub { margin-top: 2px; color: var(--side-faint); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.dashLink:active { transform: scale(.98); }
+.dashLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dashIcon { display: inline-flex; color: var(--accent); }
+.dashIcon svg { width: 18px; height: 18px; }
 
 .navsec {
   margin: 11px 9px 7px;

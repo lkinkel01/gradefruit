@@ -248,7 +248,7 @@ export default function FeedPage() {
         <button onClick={goBack} aria-label="Zurück">
           <BackIcon />
         </button>
-        <button onClick={() => router.push('/?view=dashboard')} aria-label="Zur Übersicht">
+        <button onClick={() => router.push('/?view=dashboard')} aria-label="Zum Dashboard">
           <HomeIcon />
         </button>
       </nav>
