@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-19 (Marken-Orange vereinheitlicht, Hero beruhigt)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-20 (Feinschliff-Runde 5: Sidebar wieder schwarz, Reel-Overhaul, Favicon neu, Landing-Politur)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -393,6 +393,27 @@ Probleme").
   Wischen bleibt fürs Reel-Wechseln. Verifiziert mit tsc, ESLint (src),
   Produktions-Build und Browser (Landing hell/dunkel, dunkle Sidebar im
   Lernbereich, Reel-Tap-Pause auf 390 px).
+- ✅ **Feinschliff-Runde 5 (20.07.2026, live):** Mobiles Menü für Angemeldete
+  zeigt „Weiterlernen" (orange) wieder neben „Abmelden". „Kostenlos testen"
+  ist jetzt orange wie „Weiterlernen" (Hero, Abschluss, mobil). Landing-Eyebrow
+  („Online-Intensivkurs …") deutlich dunkler (`color-mix` aus
+  `--brand-rind-deep` + `--ink`; im Dunkelmodus hell). Social-Links: nur
+  Instagram verlinkt (`instagram.com/gradefruit.de`), TikTok/Facebook sind
+  ruhige, nicht klickbare Platzhalter. Hero-Link „Gradefruit entdecken"
+  entfernt. Login/Registrieren-Maske: „Mathematik-Abitur Hessen 2027" statt
+  „Mathe-Abi Hessen", Tag-Zeile und Umschalt-Link neutral (grau/ink statt
+  Orange). **Sidebar im Lernbereich (heller Modus) wieder echtes Schwarz**
+  (`--side: #050505`, DESIGN.md-Regel) statt Espresso-Orange. **Favicon neu
+  erzeugt** aus dem aktuellen Markenzeichen (16–256 px, frische Bytes → iOS
+  lädt das Tab-Icon neu). **Reel überarbeitet:** der Videotitel liegt jetzt im
+  Fluss unter dem Inhalt und überdeckt Formel/Schritte nicht mehr; „Ton an"-
+  Chip entfernt (Ton folgt dem Gerät); Play→Pause→Play setzt exakt an der
+  Pausenstelle fort (kein Neustart); Doppeltippen links/rechts spult
+  stufenlos vor/zurück, Gedrückthalten spult flüssig; iOS-Langdruck-Kopieren
+  per `user-select`/`touch-callout: none` unterbunden. Verifiziert mit tsc,
+  ESLint (src), Produktions-Build und Browser (Landing hell/dunkel + 390 px,
+  schwarze Sidebar hell, Reel eingeloggt: kein Overlap, Pause/Resume,
+  Doppeltipp-Spulen).
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten

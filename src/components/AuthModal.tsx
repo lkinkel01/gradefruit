@@ -95,7 +95,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
       <div className={`${modalStyles.modal} ${modalStyles.open}`} role="dialog" aria-modal="true" aria-labelledby="auth-title">
         <div className={modalStyles.mhead}>
           <button type="button" className={modalStyles.mclose} onClick={onClose} aria-label="Dialog schließen">✕</button>
-          <div className={modalStyles.ptag}>Gradefruit · Mathe-Abi Hessen 2027</div>
+          <div className={`${modalStyles.ptag} ${styles.ptag}`}>Gradefruit · Mathematik-Abitur Hessen 2027</div>
           <h2 id="auth-title">{mode === 'login' ? 'Anmelden' : 'Registrieren'}</h2>
           <p>{mode === 'login' ? 'Mit deinem Konto einloggen.' : 'Konto erstellen und loslegen.'}</p>
         </div>

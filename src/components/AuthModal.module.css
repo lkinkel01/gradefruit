@@ -35,11 +35,15 @@
   padding: 10px 13px; font-size: 13px; color: var(--success); margin-bottom: 10px;
 }
 
+/* Tag-Zeile neutral wie der Rest der Seite (überschreibt das Orange aus
+   Modal.module.css — doppelte Klasse für höhere Spezifität). */
+.ptag.ptag { color: var(--muted); }
+
 .switchMode {
   text-align: center; font-size: 13.5px; color: var(--muted); margin-top: 16px;
 }
 .switchMode button {
-  border: none; background: transparent; color: var(--accent-d);
+  border: none; background: transparent; color: var(--ink);
   font-weight: 600; cursor: pointer; font-size: 13.5px; font-family: inherit;
   min-height: 44px;
   padding: 8px 4px;
@@ -47,5 +51,5 @@
 @media (hover: hover) and (pointer: fine) {
   .googleBtn:hover { border-color: var(--ink); background: var(--surface-2); }
   .field input:hover { border-color: var(--faint); }
-  .switchMode button:hover { color: var(--ink); }
+  .switchMode button:hover { text-decoration: underline; }
 }

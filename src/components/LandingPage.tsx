@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import styles from './LandingPage.module.css';
 import { BrandMark } from './BrandMark';
 import { Logo } from './Logo';
@@ -36,10 +36,10 @@ const ShareIcon = () => (
   </svg>
 );
 
-const SOCIALS = [
+const SOCIALS: Array<{ label: string; href: string | null; icon: ReactNode }> = [
   {
     label: 'Instagram',
-    href: 'https://www.instagram.com/gradefruit/',
+    href: 'https://www.instagram.com/gradefruit.de/',
     icon: (
       <svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -50,7 +50,7 @@ const SOCIALS = [
   },
   {
     label: 'TikTok',
-    href: 'https://www.tiktok.com/@gradefruit',
+    href: null,
     icon: (
       <svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
         <path d="M16.5 3c.3 2.1 1.5 3.6 3.5 3.9v2.6c-1.3.1-2.5-.3-3.6-1v5.9a5.7 5.7 0 1 1-5.7-5.7c.3 0 .6 0 .9.1v2.7a3 3 0 1 0 2.1 2.9V3h2.8Z" />
@@ -59,7 +59,7 @@ const SOCIALS = [
   },
   {
     label: 'Facebook',
-    href: 'https://www.facebook.com/gradefruit',
+    href: null,
     icon: (
       <svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
         <path d="M14 8.5V7c0-.8.2-1.2 1.3-1.2H17V3h-2.6C11.7 3 10.7 4.7 10.7 7v1.5H8.5V11h2.2v10h3.3V11h2.3l.4-2.5H14Z" />
@@ -524,13 +524,16 @@ export default function LandingPage({
         </div>
 
         <div className={styles.mobileNav} hidden={!mobileNavOpen} id="mobile-landing-navigation">
-          <div className={`${styles.mobileAccount} ${isAuthed ? styles.mobileAccountEnd : ''}`}>
+          <div className={styles.mobileAccount}>
             {isAuthed ? (
-              <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
+              <>
+                <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
+                <button className={`btn sm ${styles.continueButton}`} onClick={onEnter}>Weiterlernen</button>
+              </>
             ) : (
               <>
                 <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
-                <button className="btn primary sm" onClick={onEnter}>Kostenlos testen</button>
+                <button className={`btn sm ${styles.continueButton}`} onClick={onEnter}>Kostenlos testen</button>
               </>
             )}
           </div>
@@ -583,7 +586,7 @@ export default function LandingPage({
             <div className={styles.heroActions}>
               <div className={styles.heroPrimaryAction}>
                 <button
-                  className={isAuthed ? `btn big ${styles.continueButton}` : 'btn primary big'}
+                  className={`btn big ${styles.continueButton}`}
                   onClick={onEnter}
                 >
                   {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
@@ -594,7 +597,6 @@ export default function LandingPage({
                   </p>
                 )}
               </div>
-              <a className="gf-arrow" href="#system">Gradefruit entdecken <Arrow /></a>
             </div>
           </div>
 
@@ -855,7 +857,7 @@ export default function LandingPage({
         <section className={styles.closing}>
           <h2>Fang an.<br />Der Rest wird klarer.</h2>
           <div className={styles.closingActions}>
-            <button className="btn primary big" onClick={onEnter}>
+            <button className={`btn big ${styles.continueButton}`} onClick={onEnter}>
               {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
             </button>
             <a className="gf-arrow" href="#kurse">Kurse ansehen <Arrow /></a>
@@ -863,7 +865,7 @@ export default function LandingPage({
           <div className={styles.social}>
             <span className={styles.socialLabel}>Folge Gradefruit</span>
             <div className={styles.socialRow}>
-              {SOCIALS.map(s => (
+              {SOCIALS.map(s => s.href ? (
                 <a
                   key={s.label}
                   className={styles.socialLink}
@@ -874,6 +876,14 @@ export default function LandingPage({
                 >
                   {s.icon}
                 </a>
+              ) : (
+                <span
+                  key={s.label}
+                  className={`${styles.socialLink} ${styles.socialLinkSoon}`}
+                  aria-label={`Gradefruit auf ${s.label} – bald`}
+                >
+                  {s.icon}
+                </span>
               ))}
             </div>
           </div>

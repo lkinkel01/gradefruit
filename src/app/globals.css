@@ -37,13 +37,13 @@
   --success: #147A49;
   --success-line: #A6DFC1;
   --warn: #9A6500;
-  /* Sidebar hell: dunkles, warmes Logo-Orange (Espresso-Orange) mit heller
-     Schrift — hebt das Menü klar von der weißen Lernfläche ab. */
-  --side: #4E2708;
-  --side-2: #64340F;
-  --side-3: #7A481F;
-  --side-tx: #FFF2E6;
-  --side-faint: #E2BB98;
+  /* Sidebar: immer echtes Schwarz mit heller Schrift (DESIGN.md-Regel),
+     hebt das Menü ruhig und ästhetisch von der weißen Lernfläche ab. */
+  --side: #050505;
+  --side-2: #111113;
+  --side-3: #27272A;
+  --side-tx: #EEEEF0;
+  --side-faint: #A0A0A8;
   /* Milchglas für obere Leisten – als Variable, damit Dark Mode in
      CSS-Modulen zuverlässig greift (globale Klassen matchen dort nicht). */
   --glass: rgba(247, 247, 248, 0.82);

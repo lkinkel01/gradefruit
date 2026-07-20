@@ -93,15 +93,15 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
   const [rate, setRate] = useState(1);
   const rateRef = useRef(1);
   const [frac, setFrac] = useState(0); // Fortschritt innerhalb des aktuellen Segments (0..1)
-  // true, wenn der Browser den automatischen Ton blockiert hat (Autoplay-Regel):
-  // das Video läuft dann stumm mit Untertiteln weiter, bis „Ton an" getippt wird.
-  const [soundBlocked, setSoundBlocked] = useState(false);
+  const fracRef = useRef(0);           // spiegelt frac für Gesten-/Resume-Logik (ohne Re-Render)
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playToken = useRef(0);
 
-  // TikTok-Gesten im Reel: Tippen = Play/Pause, Doppeltippen = ein Segment
-  // vor/zurück, Gedrückthalten = schnelles Spulen (links zurück, rechts vor).
+  // TikTok-Gesten im Reel: Tippen = Play/Pause, Doppeltippen links/rechts =
+  // ein Stück vor/zurück springen, Gedrückthalten = flüssiges Spulen. Die
+  // Position als Fließkommazahl seg+frac (posRef) macht das Spulen stufenlos.
   const segRef = useRef(0);
+  const posRef = useRef(0);
   const gSide = useRef(1);
   const gStart = useRef<{ x: number; y: number } | null>(null);
   const gMoved = useRef(false);
@@ -144,6 +144,9 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
       setSeg(0);
       setPlaying(false);
       setFrac(0);
+      segRef.current = 0;
+      fracRef.current = 0;
+      posRef.current = 0;
     });
     return () => {
       cancelAnimationFrame(frame);
@@ -151,9 +154,10 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     };
   }, [scene, stopNarration]);
 
-  // segRef spiegelt das aktuelle Segment, damit die Gesten-Handler es synchron
-  // lesen können; beim Abbau alle Gesten-Timer aufräumen.
+  // segRef/fracRef spiegeln den aktuellen Stand, damit die Gesten-Handler ihn
+  // synchron lesen können; beim Abbau alle Gesten-Timer aufräumen.
   useEffect(() => { segRef.current = seg; }, [seg]);
+  useEffect(() => { fracRef.current = frac; }, [frac]);
   useEffect(() => () => {
     if (gHold.current) window.clearTimeout(gHold.current);
     if (gSeek.current) window.clearInterval(gSeek.current);
@@ -172,10 +176,11 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
 
   // Stummer Ablauf mit Untertiteln: Lesedauer aus der Textlänge schätzen.
   // Ersetzt die frühere Roboter-Browserstimme vollständig.
-  const advanceSilently = (text: string, token: number, finish: () => void) => {
+  const advanceSilently = (text: string, token: number, finish: () => void, startFrac = 0) => {
     if (token !== playToken.current) return finish();
     const duration = Math.max(2600, text.length * 72) / rateRef.current;
-    const started = performance.now();
+    // Startversatz verrechnen, damit ein resume/scrub mitten im Segment fortsetzt.
+    const started = performance.now() - Math.max(0, Math.min(0.999, startFrac)) * duration;
     const iv = setInterval(() => {
       if (token !== playToken.current) {
         clearInterval(iv);
@@ -188,20 +193,22 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
         finish();
       } else {
         setFrac(p);
+        fracRef.current = p;
       }
     }, 120);
   };
 
   // Ein Segment abspielen: mp3 mit menschlicher Stimme wenn vorhanden,
   // sonst (oder bei blockiertem Autoplay-Ton) stumm mit Untertiteln.
-  const narrate = (text: string, file: string, token: number) =>
+  const narrate = (text: string, file: string, token: number, startFrac = 0) =>
     new Promise<void>((resolve) => {
       let done = false;
-      setFrac(0);
+      setFrac(startFrac);
+      fracRef.current = startFrac;
       const finish = () => {
         if (!done) {
           done = true;
-          if (token === playToken.current) setFrac(1);
+          if (token === playToken.current) { setFrac(1); fracRef.current = 1; }
           resolve();
         }
       };
@@ -209,34 +216,40 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
         const audio = new Audio(`/audio/${file}.mp3`);
         audio.playbackRate = rateRef.current;
         audioRef.current = audio;
+        // Bei resume/scrub an die passende Stelle springen, sobald die Dauer bekannt ist.
+        const applySeek = () => {
+          if (startFrac > 0 && audio.duration && isFinite(audio.duration)) {
+            try { audio.currentTime = startFrac * audio.duration; } catch { /* noch nicht seekbar */ }
+          }
+        };
+        audio.onloadedmetadata = applySeek;
+        if (audio.readyState >= 1) applySeek();
         audio.onended = finish;
         audio.ontimeupdate = () => {
           if (token === playToken.current && audio.duration) {
-            setFrac(Math.min(1, audio.currentTime / audio.duration));
+            const p = Math.min(1, audio.currentTime / audio.duration);
+            setFrac(p);
+            fracRef.current = p;
           }
         };
-        audio.onerror = () => advanceSilently(text, token, finish);
-        audio.play().then(() => {
-          if (token === playToken.current) setSoundBlocked(false);
-        }).catch(() => {
-          // Browser blockiert Ton ohne vorherige Nutzer-Geste: stumm
-          // weiterlaufen und den „Ton an"-Hinweis zeigen.
-          if (token === playToken.current) setSoundBlocked(true);
-          advanceSilently(text, token, finish);
-        });
+        audio.onerror = () => advanceSilently(text, token, finish, startFrac);
+        // Ton wird versucht; blockiert der Browser den Ton (kein Gesten-Kontext),
+        // läuft das Segment stumm weiter — ohne sichtbaren Hinweis, wie bei TikTok.
+        audio.play().catch(() => advanceSilently(text, token, finish, startFrac));
       } else {
-        advanceSilently(text, token, finish);
+        advanceSilently(text, token, finish, startFrac);
       }
     });
 
   const runFrom = useCallback(
-    async (start: number) => {
+    async (start: number, startFrac = 0) => {
       const token = ++playToken.current;
       setPlaying(true);
       for (let i = start; i < segments.length; i++) {
         if (token !== playToken.current) return;
+        segRef.current = i;
         setSeg(i);
-        await narrate(segments[i].say, `${scene.id}-${i}`, token);
+        await narrate(segments[i].say, `${scene.id}-${i}`, token, i === start ? startFrac : 0);
         if (token !== playToken.current) return;
         await new Promise((r) => setTimeout(r, 350));
       }
@@ -267,17 +280,19 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
           stopNarration();
           setPlaying(false);
         } else {
-          runFrom(seg);
+          runFrom(seg, fracRef.current);
         }
       } else if (e.key === 'ArrowRight') {
         stopNarration();
         setPlaying(false);
         setFrac(0);
+        fracRef.current = 0;
         setSeg((s) => Math.min(s + 1, segments.length - 1));
       } else if (e.key === 'ArrowLeft') {
         stopNarration();
         setPlaying(false);
         setFrac(0);
+        fracRef.current = 0;
         setSeg((s) => Math.max(s - 1, 0));
       }
     };
@@ -290,7 +305,8 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
   const g = scene.graph ? buildGraph(scene.graph) : null;
   const pct = Math.min(100, ((seg + frac) / segments.length) * 100);
 
-  const play = () => runFrom(seg);
+  // Weiterspielen genau an der pausierten Stelle (nicht das Segment neu starten).
+  const play = () => runFrom(segRef.current, fracRef.current);
   const pause = () => {
     stopNarration();
     setPlaying(false);
@@ -304,22 +320,18 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     setRate(next);
     if (audioRef.current) audioRef.current.playbackRate = next;
   };
-  // Nutzer-Geste schaltet den Ton frei: aktuelles Segment mit Stimme neu starten.
-  const enableSound = () => {
-    setSoundBlocked(false);
-    stopNarration();
-    runFrom(seg);
-  };
   const goNext = () => {
     stopNarration();
     setPlaying(false);
     setFrac(0);
+    fracRef.current = 0;
     setSeg((s) => Math.min(s + 1, segments.length - 1));
   };
   const goPrev = () => {
     stopNarration();
     setPlaying(false);
     setFrac(0);
+    fracRef.current = 0;
     setSeg((s) => Math.max(s - 1, 0));
   };
   const restart = () => {
@@ -327,22 +339,55 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     setSeg(0);
     setPlaying(false);
     setFrac(0);
+    segRef.current = 0;
+    fracRef.current = 0;
+    posRef.current = 0;
   };
 
-  // Ein Segment vor/zurück und (optional) direkt weiterspielen.
-  const reelJump = (delta: number, resume: boolean) => {
-    stopNarration();
-    const target = Math.max(0, Math.min(segRef.current + delta, segments.length - 1));
-    segRef.current = target;
-    setFrac(0);
-    setSeg(target);
-    if (resume) runFrom(target);
-    else setPlaying(false);
+  // ---- Reel-Gesten: stufenloses Spulen über eine Fließkomma-Position ----
+  // Position ist seg+frac. applyPos setzt daraus Segment und Segment-Fortschritt,
+  // sodass Schritte und Fortschrittsbalken beim Spulen flüssig mitlaufen.
+  const applyPos = (pos: number) => {
+    const maxPos = segments.length - 0.001;
+    const clamped = Math.max(0, Math.min(pos, maxPos));
+    posRef.current = clamped;
+    const s = Math.min(segments.length - 1, Math.floor(clamped));
+    const f = Math.max(0, Math.min(0.999, clamped - s));
+    segRef.current = s;
+    fracRef.current = f;
+    setSeg(s);
+    setFrac(f);
   };
 
-  const clearGestureTimers = () => {
-    if (gHold.current) { window.clearTimeout(gHold.current); gHold.current = null; }
+  const stopSeekInterval = () => {
     if (gSeek.current) { window.clearInterval(gSeek.current); gSeek.current = null; }
+  };
+  const clearHold = () => {
+    if (gHold.current) { window.clearTimeout(gHold.current); gHold.current = null; }
+  };
+
+  // Gedrückthalten: flüssig in eine Richtung spulen (links zurück, rechts vor).
+  const startSeek = (dir: number) => {
+    stopNarration();
+    setPlaying(false);
+    gSeeking.current = true;
+    posRef.current = segRef.current + fracRef.current;
+    stopSeekInterval();
+    gSeek.current = window.setInterval(() => {
+      applyPos(posRef.current + dir * 0.06);
+    }, 55);
+  };
+  const stopSeek = (resume: boolean) => {
+    stopSeekInterval();
+    gSeeking.current = false;
+    if (resume) runFrom(segRef.current, fracRef.current);
+  };
+
+  // Doppeltippen: ein Stück vor/zurück springen und weiterspielen.
+  const seekBy = (delta: number) => {
+    stopNarration();
+    applyPos(segRef.current + fracRef.current + delta);
+    runFrom(segRef.current, fracRef.current);
   };
 
   const onReelPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -351,50 +396,46 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     gStart.current = { x: e.clientX, y: e.clientY };
     gMoved.current = false;
     gSeeking.current = false;
-    clearGestureTimers();
-    // Gedrückthalten (> 420 ms) startet das kontinuierliche Spulen.
-    gHold.current = window.setTimeout(() => {
-      gSeeking.current = true;
-      reelJump(gSide.current, true);
-      gSeek.current = window.setInterval(() => reelJump(gSide.current, true), 750);
-    }, 420);
+    clearHold();
+    stopSeekInterval();
+    // Nach ~300 ms Halten beginnt das flüssige Spulen.
+    gHold.current = window.setTimeout(() => startSeek(gSide.current), 300);
   };
 
   const onReelPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!gStart.current) return;
+    if (!gStart.current || gSeeking.current) return;
     if (Math.hypot(e.clientX - gStart.current.x, e.clientY - gStart.current.y) > 12) {
-      // Vertikales Wischen (Reel-Wechsel): keine Tipp-Geste auslösen.
+      // Vertikales Wischen (Reel-Wechsel): keine Tipp-/Halte-Geste auslösen.
       gMoved.current = true;
-      clearGestureTimers();
+      clearHold();
     }
   };
 
   const onReelPointerEnd = () => {
-    clearGestureTimers();
-    const wasSeeking = gSeeking.current;
-    gSeeking.current = false;
+    clearHold();
+    if (gSeeking.current) { stopSeek(true); gStart.current = null; gMoved.current = false; return; }
     gStart.current = null;
-    if (gMoved.current || wasSeeking) { gMoved.current = false; return; }
+    if (gMoved.current) { gMoved.current = false; return; }
     const side = gSide.current;
     const now = performance.now();
-    if (gLastTap.current && now - gLastTap.current.t < 280 && gLastTap.current.side === side) {
-      // Doppeltippen: ein Segment in diese Richtung springen.
+    if (gLastTap.current && now - gLastTap.current.t < 300 && gLastTap.current.side === side) {
+      // Doppeltippen rechts = vor, links = zurück.
       if (gTap.current) { window.clearTimeout(gTap.current); gTap.current = null; }
       gLastTap.current = null;
-      reelJump(side, true);
+      seekBy(side * 0.6);
     } else {
       // Einfaches Tippen: kurz warten, ob ein zweiter Tipp folgt; sonst Play/Pause.
       gLastTap.current = { t: now, side };
       gTap.current = window.setTimeout(() => {
         gLastTap.current = null;
         togglePlay();
-      }, 280);
+      }, 300);
     }
   };
 
   const onReelPointerCancel = () => {
-    clearGestureTimers();
-    gSeeking.current = false;
+    clearHold();
+    if (gSeeking.current) stopSeek(true);
     gMoved.current = false;
     gStart.current = null;
   };
@@ -409,15 +450,6 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
             </span>
             <span className={styles.htitle}>{scene.title}</span>
           </>
-        )}
-        {soundBlocked && (
-          <button className={styles.soundOn} onClick={enableSound}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none" />
-              <path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.5 5.5a9 9 0 0 1 0 13" />
-            </svg>
-            Ton an
-          </button>
         )}
         {onClose && (
           <button className={styles.close} onClick={onClose} aria-label="Schließen">
