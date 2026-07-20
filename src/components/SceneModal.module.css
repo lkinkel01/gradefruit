@@ -452,17 +452,68 @@
 /* Der Reel-Modus reduziert den Erklärplayer auf die eigentliche Videobühne.
    Die reguläre Modalansicht bleibt davon unberührt. */
 .reelPlayer {
+  position: relative;
   color: #fff;
   background: rgba(8, 8, 10, 0.42);
 }
 
 .reelPlayer .head {
+  position: relative;
+  z-index: 8;
   flex: none;
   gap: 8px;
   padding: 9px 10px 7px;
   border-bottom: 0;
   background: transparent;
 }
+
+/* Ganze Bühne ist tipp-/haltbar; vertikales Wischen bleibt fürs Reel-Scrollen. */
+.reelGestures {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  touch-action: pan-y;
+}
+
+/* Play-Dreieck nur wenn pausiert (verschwindet beim Abspielen). */
+.reelPlayIndicator {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.reelPlayIndicator svg {
+  width: 66px;
+  height: 66px;
+  padding: 19px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.42);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Titel unten wie ein Creator-Name. */
+.reelMeta {
+  position: absolute;
+  z-index: 7;
+  left: 14px;
+  right: 64px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  pointer-events: none;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+}
+.reelTopic { color: rgba(255, 255, 255, 0.74); font-size: 12px; font-weight: 650; }
+.reelTitle { color: #fff; font-size: 15.5px; font-weight: 750; letter-spacing: -0.01em; }
+
+/* Im Reel: keine Untertitel, keine Steuerleiste (nur Gesten). */
+.reelPlayer .caption,
+.reelPlayer .foot { display: none; }
+.reelPlayer .progressbar { position: relative; z-index: 7; }
 
 .reelPlayer .badge {
   padding: 4px 9px;

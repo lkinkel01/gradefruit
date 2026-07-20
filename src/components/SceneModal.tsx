@@ -99,6 +99,18 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playToken = useRef(0);
 
+  // TikTok-Gesten im Reel: Tippen = Play/Pause, Doppeltippen = ein Segment
+  // vor/zurück, Gedrückthalten = schnelles Spulen (links zurück, rechts vor).
+  const segRef = useRef(0);
+  const gSide = useRef(1);
+  const gStart = useRef<{ x: number; y: number } | null>(null);
+  const gMoved = useRef(false);
+  const gSeeking = useRef(false);
+  const gHold = useRef<number | null>(null);
+  const gSeek = useRef<number | null>(null);
+  const gTap = useRef<number | null>(null);
+  const gLastTap = useRef<{ t: number; side: number } | null>(null);
+
   // Segmente aus der Szene bauen: Intro -> jeder Schritt -> Outro
   const segments = useMemo<Segment[]>(() => {
     const segs: Segment[] = [];
@@ -138,6 +150,15 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
       stopNarration();
     };
   }, [scene, stopNarration]);
+
+  // segRef spiegelt das aktuelle Segment, damit die Gesten-Handler es synchron
+  // lesen können; beim Abbau alle Gesten-Timer aufräumen.
+  useEffect(() => { segRef.current = seg; }, [seg]);
+  useEffect(() => () => {
+    if (gHold.current) window.clearTimeout(gHold.current);
+    if (gSeek.current) window.clearInterval(gSeek.current);
+    if (gTap.current) window.clearTimeout(gTap.current);
+  }, []);
 
   // ESC schließt den Player (nur wenn es ein Schließen gibt)
   useEffect(() => {
@@ -308,13 +329,87 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     setFrac(0);
   };
 
+  // Ein Segment vor/zurück und (optional) direkt weiterspielen.
+  const reelJump = (delta: number, resume: boolean) => {
+    stopNarration();
+    const target = Math.max(0, Math.min(segRef.current + delta, segments.length - 1));
+    segRef.current = target;
+    setFrac(0);
+    setSeg(target);
+    if (resume) runFrom(target);
+    else setPlaying(false);
+  };
+
+  const clearGestureTimers = () => {
+    if (gHold.current) { window.clearTimeout(gHold.current); gHold.current = null; }
+    if (gSeek.current) { window.clearInterval(gSeek.current); gSeek.current = null; }
+  };
+
+  const onReelPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    gSide.current = e.clientX - rect.left < rect.width / 2 ? -1 : 1;
+    gStart.current = { x: e.clientX, y: e.clientY };
+    gMoved.current = false;
+    gSeeking.current = false;
+    clearGestureTimers();
+    // Gedrückthalten (> 420 ms) startet das kontinuierliche Spulen.
+    gHold.current = window.setTimeout(() => {
+      gSeeking.current = true;
+      reelJump(gSide.current, true);
+      gSeek.current = window.setInterval(() => reelJump(gSide.current, true), 750);
+    }, 420);
+  };
+
+  const onReelPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!gStart.current) return;
+    if (Math.hypot(e.clientX - gStart.current.x, e.clientY - gStart.current.y) > 12) {
+      // Vertikales Wischen (Reel-Wechsel): keine Tipp-Geste auslösen.
+      gMoved.current = true;
+      clearGestureTimers();
+    }
+  };
+
+  const onReelPointerEnd = () => {
+    clearGestureTimers();
+    const wasSeeking = gSeeking.current;
+    gSeeking.current = false;
+    gStart.current = null;
+    if (gMoved.current || wasSeeking) { gMoved.current = false; return; }
+    const side = gSide.current;
+    const now = performance.now();
+    if (gLastTap.current && now - gLastTap.current.t < 280 && gLastTap.current.side === side) {
+      // Doppeltippen: ein Segment in diese Richtung springen.
+      if (gTap.current) { window.clearTimeout(gTap.current); gTap.current = null; }
+      gLastTap.current = null;
+      reelJump(side, true);
+    } else {
+      // Einfaches Tippen: kurz warten, ob ein zweiter Tipp folgt; sonst Play/Pause.
+      gLastTap.current = { t: now, side };
+      gTap.current = window.setTimeout(() => {
+        gLastTap.current = null;
+        togglePlay();
+      }, 280);
+    }
+  };
+
+  const onReelPointerCancel = () => {
+    clearGestureTimers();
+    gSeeking.current = false;
+    gMoved.current = false;
+    gStart.current = null;
+  };
+
   return (
     <div className={`${styles.player} ${variant === 'reel' ? styles.reelPlayer : ''}`}>
       <div className={styles.head}>
-        <span className={styles.badge} style={{ background: scene.color }}>
-          {scene.topic}
-        </span>
-        <span className={styles.htitle}>{scene.title}</span>
+        {variant !== 'reel' && (
+          <>
+            <span className={styles.badge} style={{ background: scene.color }}>
+              {scene.topic}
+            </span>
+            <span className={styles.htitle}>{scene.title}</span>
+          </>
+        )}
         {soundBlocked && (
           <button className={styles.soundOn} onClick={enableSound}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -334,9 +429,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
         )}
       </div>
 
-      {/* Im Reel wie bei TikTok: Tippen auf die Bühne pausiert und startet.
-          Die Bühne enthält keine eigenen Buttons, daher kollidiert nichts. */}
-      <div className={styles.body} onClick={variant === 'reel' ? togglePlay : undefined}>
+      <div className={styles.body}>
         <div className={styles.left}>
           {scene.func && (
             <div className={styles.func} style={{ borderColor: `${scene.color}40` }}>
@@ -434,12 +527,39 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
         )}
       </div>
 
-      <div className={styles.caption}>{current.say}</div>
+      {variant === 'reel' ? (
+        <>
+          {/* TikTok-Gesten: die ganze Bühne ist tipp-/haltbar. */}
+          <div
+            className={styles.reelGestures}
+            onPointerDown={onReelPointerDown}
+            onPointerMove={onReelPointerMove}
+            onPointerUp={onReelPointerEnd}
+            onPointerCancel={onReelPointerCancel}
+            onPointerLeave={onReelPointerCancel}
+            onContextMenu={(e) => e.preventDefault()}
+            aria-hidden="true"
+          />
+          {!playing && (
+            <div className={styles.reelPlayIndicator} aria-hidden="true">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 20 12 6 20 6 4" /></svg>
+            </div>
+          )}
+          {/* Titel unten wie ein Creator-Name bei TikTok. */}
+          <div className={styles.reelMeta}>
+            <span className={styles.reelTopic}>{scene.topic}</span>
+            <strong className={styles.reelTitle}>{scene.title}</strong>
+          </div>
+        </>
+      ) : (
+        <div className={styles.caption}>{current.say}</div>
+      )}
 
       <div className={styles.progressbar}>
         <div className={styles.pfill} style={{ transform: `scaleX(${pct / 100})`, background: scene.color }} />
       </div>
 
+      {variant !== 'reel' && (
       <div className={styles.foot}>
         <button className={styles.ctrl} onClick={goPrev} disabled={seg === 0} aria-label="Zurück">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -504,6 +624,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
           </span>
         </div>
       </div>
+      )}
     </div>
   );
 }

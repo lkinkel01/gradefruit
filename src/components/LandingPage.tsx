@@ -36,6 +36,38 @@ const ShareIcon = () => (
   </svg>
 );
 
+const SOCIALS = [
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/gradefruit/',
+    icon: (
+      <svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    label: 'TikTok',
+    href: 'https://www.tiktok.com/@gradefruit',
+    icon: (
+      <svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16.5 3c.3 2.1 1.5 3.6 3.5 3.9v2.6c-1.3.1-2.5-.3-3.6-1v5.9a5.7 5.7 0 1 1-5.7-5.7c.3 0 .6 0 .9.1v2.7a3 3 0 1 0 2.1 2.9V3h2.8Z" />
+      </svg>
+    ),
+  },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/gradefruit',
+    icon: (
+      <svg aria-hidden="true" focusable="false" width="21" height="21" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M14 8.5V7c0-.8.2-1.2 1.3-1.2H17V3h-2.6C11.7 3 10.7 4.7 10.7 7v1.5H8.5V11h2.2v10h3.3V11h2.3l.4-2.5H14Z" />
+      </svg>
+    ),
+  },
+];
+
 type LandingSectionId = 'kurse' | 'system' | 'ueber-uns';
 
 const LANDING_NAV_ITEMS: ReadonlyArray<{
@@ -492,12 +524,9 @@ export default function LandingPage({
         </div>
 
         <div className={styles.mobileNav} hidden={!mobileNavOpen} id="mobile-landing-navigation">
-          <div className={styles.mobileAccount}>
+          <div className={`${styles.mobileAccount} ${isAuthed ? styles.mobileAccountEnd : ''}`}>
             {isAuthed ? (
-              <>
-                <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                <button className={`btn sm ${styles.continueButton}`} onClick={onEnter}>Weiterlernen</button>
-              </>
+              <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
             ) : (
               <>
                 <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
@@ -542,9 +571,9 @@ export default function LandingPage({
           <div className={styles.heroCopy}>
             <p className={styles.heroContext}>Online-Intensivkurs für das Mathematik-Abitur in Hessen 2027</p>
             <h1 className={styles.headline}>
-              <span>Deine komplette </span>
-              <span className={styles.headlineNoBreak}>Mathe-Abiturvorbereitung. </span>
-              <span>An einem Ort.</span>
+              <span>Deine gesamte </span>
+              <span className={styles.headlineNoBreak}>Mathe-Abiturvorbereitung </span>
+              <span>an einem Ort.</span>
             </h1>
             <ul className={styles.heroHighlights}>
               <li>24/7 KI-Tutor</li>
@@ -830,6 +859,23 @@ export default function LandingPage({
               {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
             </button>
             <a className="gf-arrow" href="#kurse">Kurse ansehen <Arrow /></a>
+          </div>
+          <div className={styles.social}>
+            <span className={styles.socialLabel}>Folge Gradefruit</span>
+            <div className={styles.socialRow}>
+              {SOCIALS.map(s => (
+                <a
+                  key={s.label}
+                  className={styles.socialLink}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Gradefruit auf ${s.label}`}
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
       </main>

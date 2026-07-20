@@ -231,7 +231,6 @@ export default function FeedPage() {
                   <svg className={styles.posterCurve} viewBox="0 0 400 300" preserveAspectRatio="none">
                     <path d={card.path} />
                   </svg>
-                  {card.scene.func && <span>{card.scene.func}</span>}
                 </div>
 
                 {isActive && (

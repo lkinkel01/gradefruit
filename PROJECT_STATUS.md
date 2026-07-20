@@ -376,6 +376,23 @@ Probleme").
   und stumme Segmente) neben den vorhandenen Spul-Tasten. Verifiziert mit
   tsc, ESLint (src), Produktions-Build und Browser-Smoke (390 px:
   Stichpunkte einzeilig).
+- ✅ **Feinschliff-Runde 4 (20.07.2026, live):** Hero-Headline „Deine gesamte
+  Mathe-Abiturvorbereitung an einem Ort." Der Eyebrow-Satz und die
+  Landing-Icons (Lernsystem, Lernmethoden) sowie die Hero-Aufzählungspunkte
+  tragen jetzt das dunklere Logo-Orange der Weiterlernen-Buttons
+  (`--brand-rind-deep`), in Hell und Dunkel. Social-Media-Links (Instagram,
+  TikTok, Facebook) nach dem Abschluss-CTA „Fang an." Mobiles Menü für
+  Angemeldete: nur noch „Abmelden", rechtsbündig. **Sidebar im Lernbereich
+  (heller Modus) auf dunkles Logo-Orange** mit heller Schrift
+  (`--side: #4E2708`, `--side-tx: #FFF2E6`) — klar abgehoben von der weißen
+  Lernfläche. **Reel-Modus jetzt echtes TikTok-Verhalten:** kein Play-Button
+  mehr (nur ein Play-Indikator bei Pause), die Formel-Kachel hinter dem
+  früheren Button ist entfernt, keine Untertitel; der Videotitel steht unten
+  wie ein Creator-Name. Gesten: Tippen = Play/Pause, Doppeltippen links/rechts
+  = ein Segment zurück/vor, Gedrückthalten = schnelles Spulen; vertikales
+  Wischen bleibt fürs Reel-Wechseln. Verifiziert mit tsc, ESLint (src),
+  Produktions-Build und Browser (Landing hell/dunkel, dunkle Sidebar im
+  Lernbereich, Reel-Tap-Pause auf 390 px).
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
