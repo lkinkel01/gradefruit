@@ -253,7 +253,7 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
           <div className={styles.dctx}>{ctx || 'Mathe'}</div>
           <h2 id="coach-title">Gradefruit-Coach</h2>
           <p className={styles.dsub}>Dein persönlicher Lernassistent</p>
-          {snippet && <div className={styles.snippet}><span className={styles.snipLabel}>Aufgabe</span>{snippet.slice(0, 120)}{snippet.length > 120 ? '…' : ''}</div>}
+          {snippet && <div className={styles.snippet}><span className={styles.snipLabel}>Aufgabe</span>{snippet}</div>}
         </div>
 
         <div className={styles.seg}>

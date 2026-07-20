@@ -84,12 +84,25 @@ export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleD
             <span className={styles.sep} aria-hidden="true">›</span>
             {topicItemLabel ? (
               <>
-                <span className={`${styles.crumbLevel} ${styles.crumbMid}`}>{TAB_LABELS[topicTab]}</span>
+                <button
+                  type="button"
+                  className={`${styles.crumbLink} ${styles.crumbMid}`}
+                  onClick={() => onNavigate(view, { tab: topicTab, itemId: null })}
+                >
+                  {TAB_LABELS[topicTab]}
+                </button>
                 <span className={styles.sep} aria-hidden="true">›</span>
                 <span className={styles.here} aria-current="page">{topicItemLabel}</span>
               </>
             ) : (
-              <span className={styles.here} aria-current="page">{TAB_LABELS[topicTab]}</span>
+              <button
+                type="button"
+                className={`${styles.crumbLink} ${styles.hereLink}`}
+                aria-current="page"
+                onClick={() => onNavigate(view, { tab: topicTab, itemId: null })}
+              >
+                {TAB_LABELS[topicTab]}
+              </button>
             )}
           </>
         ) : (

@@ -89,6 +89,9 @@ interface PlayerProps {
 export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'default' }: PlayerProps) {
   const [seg, setSeg] = useState(0);
   const [playing, setPlaying] = useState(false);
+  // Wiedergabegeschwindigkeit — gilt für Stimme und stumme Segmente.
+  const [rate, setRate] = useState(1);
+  const rateRef = useRef(1);
   const [frac, setFrac] = useState(0); // Fortschritt innerhalb des aktuellen Segments (0..1)
   // true, wenn der Browser den automatischen Ton blockiert hat (Autoplay-Regel):
   // das Video läuft dann stumm mit Untertiteln weiter, bis „Ton an" getippt wird.
@@ -150,7 +153,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
   // Ersetzt die frühere Roboter-Browserstimme vollständig.
   const advanceSilently = (text: string, token: number, finish: () => void) => {
     if (token !== playToken.current) return finish();
-    const duration = Math.max(2600, text.length * 72);
+    const duration = Math.max(2600, text.length * 72) / rateRef.current;
     const started = performance.now();
     const iv = setInterval(() => {
       if (token !== playToken.current) {
@@ -183,6 +186,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
       };
       if (scene.hasAudio) {
         const audio = new Audio(`/audio/${file}.mp3`);
+        audio.playbackRate = rateRef.current;
         audioRef.current = audio;
         audio.onended = finish;
         audio.ontimeupdate = () => {
@@ -271,6 +275,14 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     setPlaying(false);
   };
   const togglePlay = () => (playing ? pause() : play());
+  // Geschwindigkeit im Kreis durchschalten; laufendes Audio zieht sofort mit.
+  const RATES = [1, 1.25, 1.5, 2];
+  const cycleRate = () => {
+    const next = RATES[(RATES.indexOf(rateRef.current) + 1) % RATES.length];
+    rateRef.current = next;
+    setRate(next);
+    if (audioRef.current) audioRef.current.playbackRate = next;
+  };
   // Nutzer-Geste schaltet den Ton frei: aktuelles Segment mit Stimme neu starten.
   const enableSound = () => {
     setSoundBlocked(false);
@@ -466,6 +478,15 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
             <polyline points="1 4 1 10 7 10" />
             <path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10" />
           </svg>
+        </button>
+
+        <button
+          className={`${styles.ctrl} ${styles.rate}`}
+          onClick={cycleRate}
+          aria-label={`Wiedergabegeschwindigkeit ändern, aktuell ${rate}-fach`}
+          title="Geschwindigkeit"
+        >
+          {rate}×
         </button>
 
         <div className={styles.progress}>

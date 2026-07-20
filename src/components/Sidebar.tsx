@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useRef, useState } from 'react';
 import { NavigateTo, TopicTab, View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { SUMMARIES } from '@/lib/summaries';
@@ -49,6 +50,36 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
   const { totalDone, totalLessons, topicDone, topicTotal } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
+  // Eingeklappte Themen: Ein Klick auf das bereits aktive Thema klappt sein
+  // Untermenü zu (und wieder auf), ohne zu navigieren.
+  const [collapsedTopics, setCollapsedTopics] = useState<Set<View>>(new Set());
+  // Hover öffnet das Untermenü erst nach einem kurzen Moment (160 ms), damit
+  // beim Vorbeifahren mit der Maus nichts versehentlich aufklappt.
+  const [hoverTopic, setHoverTopic] = useState<View | null>(null);
+  const hoverTimer = useRef<number | null>(null);
+
+  const enterTopic = (id: View) => {
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = window.setTimeout(() => setHoverTopic(id), 160);
+  };
+  const leaveTopic = () => {
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = null;
+    setHoverTopic(null);
+  };
+  useEffect(() => () => {
+    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+  }, []);
+
+  const toggleCollapse = (id: View) => {
+    setCollapsedTopics(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
   return (
     <aside className={styles.sidebar}>
       <button className={styles.brand} onClick={() => onNavigate('landing')} aria-label="Zur Startseite">
@@ -77,12 +108,30 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
           const tasks = TASKS_BY_TOPIC[topicId][level];
           const summaryActive = active && topicTab === 'zusammenfassung';
           const exercisesActive = active && topicTab === 'uebungen';
+          const expanded = (active && !collapsedTopics.has(t.id)) || hoverTopic === t.id;
           return (
-            <div key={t.id} className={styles.topicWrap}>
+            <div
+              key={t.id}
+              className={styles.topicWrap}
+              onMouseEnter={() => enterTopic(t.id)}
+              onMouseLeave={leaveTopic}
+            >
               <button
                 className={active ? styles.on : ''}
-                aria-expanded={active}
-                onClick={() => onNavigate(t.id, { tab: 'zusammenfassung', itemId: null })}
+                aria-expanded={expanded}
+                onClick={() => {
+                  if (active) {
+                    // Aktives Thema: Untermenü nur ein-/ausklappen.
+                    toggleCollapse(t.id);
+                  } else {
+                    setCollapsedTopics(prev => {
+                      const next = new Set(prev);
+                      next.delete(t.id);
+                      return next;
+                    });
+                    onNavigate(t.id, { tab: 'zusammenfassung', itemId: null });
+                  }
+                }}
               >
                 <span className={styles.cdot} style={{ background: t.color }} />
                 <span className={styles.ti}>{t.label}</span>
@@ -91,9 +140,9 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                   : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><LockIcon size={13} /></span>
                 }
               </button>
-              {/* Untermenü: im aktiven Thema dauerhaft offen, sonst bei Hover.
-                  Der aktive Tab wird markiert (Punkt + Gewicht, nicht nur Farbe). */}
-              <div className={`${styles.flyout} ${active ? styles.flyoutPinned : ''}`}>
+              {/* Untermenü: im aktiven Thema offen (einklappbar per Klick auf
+                  das Thema), sonst nach kurzem Hover-Moment. */}
+              <div className={`${styles.flyout} ${expanded ? styles.flyoutPinned : ''}`}>
                 <button
                   className={`${styles.flyItem} ${summaryActive && !topicItemId ? styles.flyOn : ''} ${summaryActive && topicItemId ? styles.flyParentOn : ''}`}
                   aria-current={summaryActive && !topicItemId ? 'page' : undefined}

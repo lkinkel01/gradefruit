@@ -357,6 +357,25 @@ Probleme").
   schwebenden Menü-Knopf. Hinweis: Der lokale Preview-Browser verlor am Ende
   die externe Netzverbindung, daher liefen die letzten eingeloggten Checks
   über DOM-Prüfungen; Produktion nach dem Deploy per HTTP geprüft.
+- ✅ **Feinschliff-Runde 3 (20.07.2026, live):** Hero-Stichpunkte kleiner und
+  mobil bewusst auf einer Zeile; der Hinweissatz „Die Antwort bleibt bei
+  deiner Aufgabe." ist entfernt. Die helle Sidebar ist kräftiger orange
+  (`--side: #FFEAD3`) und hebt sich klar von der Lernfläche ab. Der
+  Coach-Drawer zeigt Aufgaben-Kontexte jetzt vollständig (mehrzeilig, bei
+  sehr langen Texten scrollbar) statt hart nach 120 Zeichen zu kürzen.
+  Sidebar-Themen lassen sich per Klick auf das aktive Thema ein- und
+  ausklappen; Hover öffnet Untermenüs erst nach 160 ms, damit nichts
+  versehentlich aufklappt. Der Fortschrittskern im G füllt sich jetzt im
+  Uhrzeigersinn (nach rechts). Aktive Themenfilter auf der
+  Wiederholen-Seite sind orange. Die Weiterlernen-Buttons tragen ein
+  dunkleres Logo-Orange (`--brand-rind-deep`, aus den beiden
+  Original-Logofarben gemischt). Die FAQ-Intro ist nicht mehr sticky —
+  die Sektion scrollt wie die übrigen. Im Brotkrumen-Pfad ist auch die
+  Tab-Ebene (Zusammenfassung/Übungen) klickbar. Videos haben einen
+  Geschwindigkeits-Umschalter (1× / 1,25× / 1,5× / 2×, wirkt auf Stimme
+  und stumme Segmente) neben den vorhandenen Spul-Tasten. Verifiziert mit
+  tsc, ESLint (src), Produktions-Build und Browser-Smoke (390 px:
+  Stichpunkte einzeilig).
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten

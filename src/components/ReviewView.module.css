@@ -43,7 +43,8 @@
   transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
   min-height: 44px;
 }
-.chipOn { border-color: var(--ink); background: var(--ink); color: var(--canvas); }
+.chipOn { border-color: var(--brand-rind); background: var(--brand-rind); color: #fff; }
+.chipOn .cdot { background: #fff !important; }
 .cdot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; }
 
 .list { display: flex; flex-direction: column; border-top: 1px solid var(--line-strong); }

@@ -45,12 +45,14 @@ export function GrapefruitSpinner({ size = 46, label }: { size?: number; label?:
   );
 }
 
+// Der Fortschritt wächst ab 12 Uhr IM Uhrzeigersinn (nach rechts) —
+// wie ein Zifferblatt, das sich füllt.
 function piePath(progress: number): string {
-  const angle = -Math.PI / 2 - progress * Math.PI * 2;
+  const angle = -Math.PI / 2 + progress * Math.PI * 2;
   const x = 50 + CORE_RADIUS * Math.cos(angle);
   const y = 50 + CORE_RADIUS * Math.sin(angle);
   const largeArc = progress > 0.5 ? 1 : 0;
-  return `M 50 50 L 50 ${50 - CORE_RADIUS} A ${CORE_RADIUS} ${CORE_RADIUS} 0 ${largeArc} 0 ${x.toFixed(2)} ${y.toFixed(2)} Z`;
+  return `M 50 50 L 50 ${50 - CORE_RADIUS} A ${CORE_RADIUS} ${CORE_RADIUS} 0 ${largeArc} 1 ${x.toFixed(2)} ${y.toFixed(2)} Z`;
 }
 
 interface GrapefruitProgressProps {
@@ -100,8 +102,7 @@ function useFillFraction(target: number, animate: boolean): number {
 
 /**
  * Fortschritt und Markenzeichen sind dieselbe Form. Der rote Kern füllt sich
- * innerhalb des orangefarbenen G-Rings proportional gegen den Uhrzeigersinn.
- * Bei 75 Prozent entspricht er exakt der gelieferten statischen Logogeometrie.
+ * innerhalb des orangefarbenen G-Rings proportional im Uhrzeigersinn.
  */
 export function GrapefruitProgress({
   pct,

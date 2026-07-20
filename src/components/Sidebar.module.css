@@ -74,10 +74,10 @@
 .snav button.on { border-color: color-mix(in srgb, var(--accent) 42%, transparent); background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--side-tx); font-weight: 600; }
 .topicWrap { position: relative; }
 .flyout { display: none; }
+/* Sichtbarkeit steuert die Komponente (aktiv, eingeklappt oder nach kurzem
+   Hover-Moment) — keine reine CSS-Hover-Öffnung mehr, damit nichts
+   versehentlich aufklappt. */
 .flyoutPinned { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 4px 28px; }
-@media (hover: hover) and (min-width: 901px) {
-  .topicWrap:hover .flyout, .flyout:hover { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 4px 28px; }
-}
 .flyItem {
   position: relative;
   display: block;

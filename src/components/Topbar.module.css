@@ -84,6 +84,8 @@
 }
 .crumbLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .crumbMid { flex-shrink: 1; min-width: 0; }
+/* Letzte Ebene als klickbarer, aber klar aktueller Standort. */
+.hereLink { flex-shrink: 1; min-width: 0; color: var(--ink); font-weight: 600; }
 .darkBtn {
   display: flex;
   flex-shrink: 0;

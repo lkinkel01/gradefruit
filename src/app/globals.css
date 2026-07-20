@@ -18,6 +18,10 @@
   /* Originalfarben des freigegebenen Gradefruit-Logos. */
   --brand-rind: #FF7A00;
   --brand-rind-hover: #FF9133;
+  /* Dunkleres Logo-Orange: aus den beiden Originalfarben gemischt —
+     für die Weiterlernen-Buttons. */
+  --brand-rind-deep: color-mix(in srgb, var(--brand-rind) 58%, var(--brand-flesh));
+  --brand-rind-deep-hover: color-mix(in srgb, var(--brand-rind) 74%, var(--brand-flesh));
   --brand-flesh: #F5152E;
   --brand-app-bg: #FFF4E8;
   --topic-analysis: #FF7A00;
@@ -33,11 +37,11 @@
   --success: #147A49;
   --success-line: #A6DFC1;
   --warn: #9A6500;
-  /* Sidebar hell: zarter Orange-Ton aus dem Logo-Hintergrund statt Weiß,
-     damit sich das Menü sichtbar von der Lernfläche abhebt. */
-  --side: #FFF4E8;
+  /* Sidebar hell: kräftigerer Orange-Ton aus der Logo-Welt statt Weiß,
+     damit sich das Menü klar von der Lernfläche abhebt. */
+  --side: #FFEAD3;
   --side-2: #FFFFFF;
-  --side-3: #EBDCC8;
+  --side-3: #E9D3B4;
   --side-tx: #050505;
   --side-faint: #6E7078;
   /* Milchglas für obere Leisten – als Variable, damit Dark Mode in

@@ -640,7 +640,6 @@ export default function LandingPage({
                 <Logo size={28} />
                 <p>Weil du Stellen suchst, an denen die Steigung null ist. Danach prüfst du, ob dort wirklich ein Hoch- oder Tiefpunkt liegt.</p>
               </div>
-              <span className={styles.coachHint}>Die Antwort bleibt bei deiner Aufgabe.</span>
             </div>
           </div>
         </section>
