@@ -133,6 +133,54 @@ const SYSTEM_POINTS = [
 
 type SystemIconName = 'path' | 'help' | 'content' | 'methods' | 'reel' | 'community';
 
+function SystemIcon({ name }: { name: SystemIconName }) {
+  return (
+    <svg className={styles.systemIcon} aria-hidden="true" focusable="false" viewBox="0 0 40 40" fill="none">
+      {name === 'path' && (
+        <>
+          <circle cx="11" cy="29" r="3" />
+          <circle cx="29" cy="11" r="3" />
+          <path d="M14 28c9 0 3-16 12-16" />
+        </>
+      )}
+      {name === 'help' && (
+        <>
+          <path d="M8 10h24v17H18l-7 5v-5H8z" />
+          <path d="M16.5 16a3.7 3.7 0 1 1 5.2 3.4c-1.4.7-1.7 1.5-1.7 2.6" />
+          <path d="M20 25.8h.01" />
+        </>
+      )}
+      {name === 'content' && (
+        <>
+          <path d="M11 6h13l6 6v22H11z" />
+          <path d="M24 6v7h6M16 20h9M16 25h9M16 30h6" />
+        </>
+      )}
+      {name === 'methods' && (
+        <>
+          <path d="M12 12a11 11 0 0 1 18 7" />
+          <path d="m30 12 .3 7-7-.4" />
+          <path d="M28 28a11 11 0 0 1-18-7" />
+          <path d="m10 28-.3-7 7 .4" />
+        </>
+      )}
+      {name === 'reel' && (
+        <>
+          <rect x="11" y="5" width="18" height="30" rx="5" />
+          <path d="m18 15 7 5-7 5z" />
+        </>
+      )}
+      {name === 'community' && (
+        <>
+          <circle cx="15" cy="15" r="5" />
+          <circle cx="27" cy="17" r="4" />
+          <path d="M6 33c.8-6 4-9 9-9s8.2 3 9 9M23 25c5.7-.4 9 2.2 10 7" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 type MethodIconName = 'recall' | 'spacing' | 'errors' | 'adaptive' | 'interleaving';
 
 const LEARNING_METHODS: Array<{
@@ -569,10 +617,27 @@ export default function LandingPage({
             </p>
           </div>
           <div className={styles.systemLayout}>
+            <div
+              className={styles.systemVisual}
+              role="img"
+              aria-label="Klarer Lernweg, KI und Tutorhilfe, eigene Inhalte, moderne Lernmethoden, Reel-Modus und Community-Wissen bilden das Gradefruit-Lernsystem."
+            >
+              <div className={styles.systemDiagram} aria-hidden="true">
+                <div className={styles.systemCore}>
+                  <Logo size={76} />
+                  <strong>Gradefruit</strong>
+                </div>
+                <div className={styles.systemLabels}>
+                  {SYSTEM_POINTS.map(point => (
+                    <span key={point.title}>{point.title}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
             <div className={styles.systemPoints}>
-              {SYSTEM_POINTS.map((point, index) => (
+              {SYSTEM_POINTS.map(point => (
                 <article key={point.title} className={styles.systemPoint}>
-                  <span className={styles.systemNum} aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                  <SystemIcon name={point.icon} />
                   <h3>{point.title}</h3>
                   <p>{point.desc}</p>
                 </article>
