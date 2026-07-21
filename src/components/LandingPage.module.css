@@ -1368,3 +1368,304 @@
   .plan,
   .coachShell { border-color: var(--ink); }
 }
+
+/* ================================================================
+   BOLD / STREET — bewusst weg vom KI-/SaaS-Look.
+   Harte Kanten, keine weichen Schatten, Versal-Grotesk, Schwarz-Weiß
+   mit Orange als grafischem Blitz. Schwarze Poster-Flächen als Signatur.
+   Diese Regeln stehen am Ende und überschreiben die obige Basis.
+   ================================================================ */
+
+.lpage { max-width: 1200px; padding: 0 28px 0; }
+
+/* ---- Navigation: solide Leiste, harte Kante, Versalien ---- */
+.nav {
+  top: 0;
+  margin-top: 16px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--surface);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  isolation: auto;
+}
+.nav::before { display: none; }
+.navBar { padding: 6px 8px 6px 12px; }
+.brand { text-transform: uppercase; letter-spacing: -0.01em; font-size: 18px; }
+.navCenter { border: 0; background: transparent; gap: 0; padding: 0; }
+.navSection,
+.navSectionActive {
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.navSectionActive { background: var(--ink); color: var(--surface); box-shadow: none; }
+.iconBtn {
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--surface);
+}
+.navLink {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.menuBtn { border: 2px solid var(--ink); border-radius: 0; }
+.floatingMenu { border: 2px solid var(--ink); border-radius: 0; box-shadow: none; background: var(--surface); }
+
+/* ---- Buttons: kantige Rechtecke, Versalien, schwer ---- */
+.lpage :global(.btn) {
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 800;
+  font-size: 12.5px;
+  box-shadow: none;
+}
+.lpage :global(.btn.big) { padding: 17px 30px; font-size: 14px; }
+.lpage :global(.btn.primary) { background: var(--ink); color: var(--surface); border: 2px solid var(--ink); }
+.lpage :global(.btn.light) { border: 2px solid var(--ink); }
+.continueButton {
+  border-radius: 0;
+  border: 2px solid var(--brand-rind-deep);
+  background: var(--brand-rind-deep);
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 800;
+}
+.lpage :global(.gf-arrow) {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* ---- HERO: schwarzes Poster, riesige Versal-Headline ---- */
+.hero {
+  margin: 22px calc(50% - 50vw) 0;
+  width: 100vw;
+  padding: clamp(56px, 9vw, 104px) max(28px, calc(50vw - 572px)) clamp(48px, 7vw, 84px);
+  background: #0B0B0C;
+  text-align: left;
+}
+.heroCopy { max-width: 100%; text-align: left; }
+.heroContext {
+  margin-bottom: 20px;
+  color: #FF8A3C;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.headline {
+  color: #FFFFFF;
+  font-size: clamp(34px, 6.2vw, 84px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.94;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.headlineNoBreak { white-space: normal; }
+.heroHighlights {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px 22px;
+  list-style: none;
+  padding: 0;
+}
+.heroPrimaryAction { align-items: flex-start; text-align: left; width: auto; }
+.reassurance { text-align: left; }
+.heroActions :global(.gf-arrow) { justify-content: flex-start; }
+.heroHighlights li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.heroHighlights li::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--brand-rind);
+}
+.heroActions { margin-top: 34px; align-items: flex-start; }
+.reassurance { color: rgba(255, 255, 255, 0.62); }
+.heroActions :global(.btn.primary) { background: #FFFFFF; color: #0B0B0C; border-color: #FFFFFF; }
+
+/* ---- Proof-Ticker: fette Kennzahlen zwischen dicken Linien ---- */
+.proofStrip {
+  margin: 0 calc(50% - 50vw);
+  width: 100vw;
+  padding: 22px max(28px, calc(50vw - 572px));
+  gap: 0;
+  border: 0;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  background: var(--surface);
+}
+.proofStrip > div { border: 0; padding: 4px 26px 4px 0; }
+.proofStrip strong {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(18px, 2.4vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.proofStrip span { text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px; font-weight: 700; color: var(--muted); }
+
+/* ---- Sektions-Rhythmus: dicke Oberkante, riesige Versal-H2 ---- */
+.section { padding-top: clamp(56px, 8vw, 96px); }
+.sectionIntro h2,
+.coachCopy h2,
+.visualCopy h2,
+.focusIntro h2,
+.libraryIntro h2,
+.faqIntro h2 {
+  font-size: clamp(30px, 5.4vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.96;
+  text-transform: uppercase;
+}
+.sectionName {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.sectionName::before { content: ''; width: 20px; height: 3px; background: var(--brand-rind); }
+
+/* ---- System-Punkte: nummerierte, kantige Liste ---- */
+.systemLayout { display: block; }
+.systemPoints {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.systemPoint {
+  margin: 0;
+  padding: 22px 20px 26px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--surface);
+  border-radius: 0;
+  box-shadow: none;
+}
+.systemNum {
+  display: block;
+  margin-bottom: 14px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--brand-rind-deep);
+  font-variant-numeric: tabular-nums;
+}
+.systemPoint h3 { text-transform: uppercase; letter-spacing: 0.01em; font-size: 15px; font-weight: 800; }
+
+/* ---- Karten flach & kantig: Coach, Kurse, Bibliothek, FAQ, Fächer ---- */
+.coachShell,
+.plan,
+.privateLibrary,
+.communityLibrary,
+.visualStage,
+.trustBlock,
+.faqItem {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: 1px solid var(--ink) !important;
+}
+.coachContext,
+.coachAnswer,
+.sharedMaterial,
+.libraryFiles > div,
+.coachQuestion {
+  border-radius: 0 !important;
+}
+.subjectRow,
+.methodRow,
+.systemPoint,
+.planFeatures li { border-radius: 0; }
+
+.plan { padding: 26px 24px; }
+.planPrice strong { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; letter-spacing: -0.02em; }
+.planHeading h3 { text-transform: uppercase; letter-spacing: 0.01em; font-weight: 800; }
+.planMarker { border-radius: 0; }
+
+.subjectMarker { border-radius: 0; }
+.subjectRow h3 { text-transform: uppercase; letter-spacing: 0.005em; }
+
+.methodRow { border-radius: 0; }
+.methodLive,
+.methodSoon {
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* FAQ: kantige Zeilen mit dicker Trennung */
+.faqItem { border-width: 0 0 1px 0 !important; }
+.faqItem summary { font-weight: 700; }
+.faqPlus { border-radius: 0; }
+
+/* ---- CLOSING: zweites schwarzes Poster ---- */
+.closing {
+  margin: clamp(64px, 9vw, 110px) calc(50% - 50vw) 0;
+  width: 100vw;
+  padding: clamp(60px, 9vw, 104px) max(28px, calc(50vw - 572px));
+  background: #0B0B0C;
+  text-align: left;
+  border-radius: 0;
+}
+.closing h2 {
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  font-size: clamp(48px, 12vw, 108px);
+}
+.closingActions { justify-content: flex-start; margin-top: 30px; }
+.closingActions :global(.btn.primary) { background: #FFFFFF; color: #0B0B0C; border-color: #FFFFFF; }
+.closingActions :global(.gf-arrow) { color: rgba(255, 255, 255, 0.8); }
+.social { align-items: flex-start; margin-top: 44px; }
+.socialLabel { color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; font-weight: 700; }
+.socialLink { border-radius: 0; border: 2px solid rgba(255, 255, 255, 0.3); background: transparent; color: #FFFFFF; }
+.socialLinkSoon { color: rgba(255, 255, 255, 0.4); border-color: rgba(255, 255, 255, 0.18); }
+
+/* ---- Footer: kantig, Versal-Links ---- */
+.footer { border-top: 2px solid var(--ink); }
+.footerLinks a { text-transform: uppercase; letter-spacing: 0.05em; font-size: 11.5px; font-weight: 700; }
+
+@media (hover: hover) and (pointer: fine) {
+  .navSection:hover,
+  .navLink:hover { color: var(--brand-rind-deep); }
+  .socialLink:not(.socialLinkSoon):hover { background: var(--brand-rind); border-color: var(--brand-rind); color: #0B0B0C; }
+}
+
+@media (max-width: 760px) {
+  .systemPoints { grid-template-columns: 1fr; }
+  .heroHighlights li { font-size: 11.5px; }
+}

@@ -435,6 +435,23 @@ Probleme").
   Produktions-Build und Browser (Analysis eingeloggt, hell + dunkel, Sidebar-
   Einklappen, Ampel-Punkte in Detail und Wiederholen).
 
+- ✅ **Landing „Bold / Street" (21.07.2026, live) — weg vom KI-/Claude-Look:**
+  Auf Leons Wunsch stark überarbeitet, damit die öffentliche Startseite nicht
+  mehr nach KI aussieht. Weg mit Glas-Navigation, warmen Verläufen, weichen
+  Schatten, runden Karten und dem KI-typischen „System-Diagramm". Stattdessen:
+  **schwarzes Poster-Hero** mit riesiger Versal-Grotesk-Headline (theme-fest
+  schwarz, orange Akzente), **kantige Navigation** mit 2px-Rahmen und
+  Versal-Links, **Voll-Breite-Ticker** mit fetten Kennzahlen zwischen dicken
+  Linien, **Versal-H2** mit Mono-Eyebrows und Orange-Tick, **nummerierte,
+  kantige System-Liste** statt Icon-Karten, **flache Karten** (keine Schatten,
+  Haarlinien, 0px Radius), **zweites schwarzes Poster** im Closing, kantige
+  Buttons in Versalien. Orange nur noch als grafischer Blitz. Umgesetzt als
+  Override-Block am Ende von `LandingPage.module.css` (Layout-Struktur bleibt,
+  nur die Optik kippt) + JSX (Diagramm raus, nummerierte Punkte). Verifiziert
+  mit tsc, ESLint, Build und Browser (Hell + Dunkel, Desktop + 375 px, kein
+  horizontaler Overflow). Der App-Innenbereich (Dashboard/Themen/Reel) ist
+  bewusst noch NICHT umgestellt — erst Leons Reaktion auf die Landing abwarten.
+
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
   rote Platzhalter (Name, Adresse, E-Mail, USt-Status §19, Zugangs-Enddatum,
