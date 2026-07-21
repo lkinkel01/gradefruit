@@ -437,11 +437,19 @@ Probleme").
 
 - ↩️ **Landing „Bold / Street" (21.07.2026) — verworfen & zurückgerollt:**
   Ein Versuch, die Landing radikal weg vom KI-Look zu bringen (schwarzes
-  Poster-Hero, riesige Versal-Grotesk, kantige Karten). **Leon gefiel das nicht
-  — die vorherige Version war ihm lieber.** Wieder auf den Stand `fbf520e`
-  zurückgesetzt. Offener Wunsch bleibt: die KI-Optik **behutsam** reduzieren
-  (nicht radikal) — nächster Schritt erst nach Leons konkreter Angabe, was
-  genau „nach KI" wirkt (Farben? Rundungen? bestimmte Sektion?).
+  Poster-Hero, riesige Versal-Grotesk). **Leon gefiel das nicht — zu radikal.**
+  Auf Stand `fbf520e` zurückgesetzt. Lehre: **keine radikalen Rundumschläge**.
+- ✅ **Landing behutsam „weniger KI" (21.07.2026, live):** Auf Leons konkrete
+  Angabe (Farben / Rundung+Schatten / Ton+Aufbau) in kleinen Schritten, nur in
+  der Landing (App-Innenbereich unangetastet): **kühlere/ruhigere Farben**
+  (aktiver Menüpunkt neutral statt warmes Orange-Feld, Nav solider mit weniger
+  Glas & Schwebe-Schatten), **flachere, weniger runde Karten** (8px statt 14/18,
+  feine Linien statt weicher Schatten), **nüchterner linksbündiger Aufbau**
+  statt zentrierter Marketing-Mitte (Hero, Sektions-Intros, FAQ). Inhalte,
+  Struktur und die Produkt-Grafiken (Coach/Bibliothek) bleiben. Umgesetzt als
+  kleiner Override-Block am Ende von `LandingPage.module.css`. Verifiziert mit
+  Build + Browser (hell, Hero linksbündig, Karten flach). Kalibrierung mit Leon
+  offen (mehr/weniger).
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
