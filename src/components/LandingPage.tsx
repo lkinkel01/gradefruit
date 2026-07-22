@@ -36,6 +36,98 @@ const ShareIcon = () => (
   </svg>
 );
 
+// Einladendes, vertrauensbildendes Hero-Bild: echte Mathe (Kurvendiskussion),
+// eine kurze Coach-Hilfe und ehrliche Fakten-Badges (Hessen · Abitur 2027,
+// GK & LK, Schritt für Schritt) — keine erfundenen Bewertungen. Als eigenständige
+// Illustration statt eines generischen Stockfotos.
+function HeroVisual() {
+  return (
+    <svg
+      className={styles.heroArt}
+      viewBox="0 0 480 548"
+      role="img"
+      aria-label="Gradefruit begleitet dich Schritt für Schritt bis zum Mathe-Abitur in Hessen 2027."
+    >
+      <defs>
+        <linearGradient id="hv-bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--hv-bg-top)" />
+          <stop offset="1" stopColor="var(--hv-bg-bottom)" />
+        </linearGradient>
+        <clipPath id="hv-graph"><rect x="28" y="86" width="424" height="196" rx="14" /></clipPath>
+      </defs>
+
+      {/* Karte */}
+      <rect x="1" y="1" width="478" height="546" rx="26" fill="url(#hv-bg)" stroke="var(--hv-line)" />
+
+      {/* Kopf: Coach + Prüfungsbezug */}
+      <g>
+        <circle cx="46" cy="46" r="16" fill="#FF7A00" />
+        <path d="M46 46 L46 30 A16 16 0 1 0 62 46 Z" fill="#F5152E" />
+        <text x="74" y="42" className={styles.hvTitle}>Gradefruit-Coach</text>
+        <circle cx="78" cy="55" r="3.4" fill="#22A565" />
+        <text x="88" y="59" className={styles.hvMuted}>begleitet dich bis zur Prüfung</text>
+      </g>
+
+      {/* Graph-Panel: echte Kurvendiskussion */}
+      <rect x="28" y="86" width="424" height="196" rx="14" fill="var(--hv-panel)" stroke="var(--hv-line)" />
+      <g clipPath="url(#hv-graph)">
+        {/* Gitter */}
+        <g stroke="var(--hv-grid)" strokeWidth="1">
+          <line x1="28" y1="140" x2="452" y2="140" />
+          <line x1="28" y1="188" x2="452" y2="188" />
+          <line x1="28" y1="236" x2="452" y2="236" />
+          <line x1="130" y1="86" x2="130" y2="282" />
+          <line x1="232" y1="86" x2="232" y2="282" />
+          <line x1="334" y1="86" x2="334" y2="282" />
+        </g>
+        {/* Achsen */}
+        <line x1="60" y1="252" x2="440" y2="252" stroke="var(--hv-axis)" strokeWidth="1.6" />
+        <line x1="80" y1="104" x2="80" y2="266" stroke="var(--hv-axis)" strokeWidth="1.6" />
+        {/* Kurve mit Hochpunkt */}
+        <path d="M70 250 C 120 250 150 132 232 132 C 314 132 344 232 430 214" fill="none" stroke="#FF7A00" strokeWidth="3.2" strokeLinecap="round" />
+        {/* Hochpunkt-Markierung */}
+        <line x1="232" y1="132" x2="232" y2="252" stroke="var(--hv-axis)" strokeWidth="1.2" strokeDasharray="4 4" />
+        <circle cx="232" cy="132" r="6" fill="#fff" stroke="#F5152E" strokeWidth="3" />
+        <rect x="196" y="100" width="86" height="22" rx="7" fill="#F5152E" />
+        <text x="239" y="115" textAnchor="middle" className={styles.hvChip}>Hochpunkt</text>
+      </g>
+
+      {/* Coach-Hilfe (Chat) */}
+      <g>
+        <rect x="28" y="304" width="256" height="46" rx="13" fill="var(--hv-panel)" stroke="var(--hv-line)" />
+        <text x="46" y="326" className={styles.hvMsg}>Wie finde ich den Hochpunkt?</text>
+        <text x="46" y="342" className={styles.hvMuted}>Du · gerade eben</text>
+
+        <rect x="164" y="360" width="288" height="62" rx="13" fill="var(--hv-coach)" stroke="var(--hv-coach-line)" />
+        <circle cx="188" cy="384" r="10" fill="#22A565" />
+        <path d="M183.5 384.2l3 3 6-6.4" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        <text x="206" y="382" className={styles.hvMsgStrong}>Setze f′(x) = 0 …</text>
+        <text x="206" y="400" className={styles.hvMsg}>… und prüfe f″(x). Ich zeig dir</text>
+        <text x="206" y="414" className={styles.hvMsg}>jeden Schritt.</text>
+      </g>
+
+      {/* Ehrliche Fakten-Badges */}
+      <g transform="translate(28 452)">
+        <g>
+          <rect x="0" y="0" width="132" height="34" rx="10" fill="var(--hv-panel)" stroke="var(--hv-line)" />
+          <path d="M16 17l4 4 7-8" fill="none" stroke="#22A565" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <text x="34" y="22" className={styles.hvBadge}>Hessen · Abi 2027</text>
+        </g>
+        <g transform="translate(142 0)">
+          <rect x="0" y="0" width="96" height="34" rx="10" fill="var(--hv-panel)" stroke="var(--hv-line)" />
+          <path d="M16 17l4 4 7-8" fill="none" stroke="#22A565" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <text x="34" y="22" className={styles.hvBadge}>GK &amp; LK</text>
+        </g>
+        <g transform="translate(248 0)">
+          <rect x="0" y="0" width="176" height="34" rx="10" fill="var(--hv-panel)" stroke="var(--hv-line)" />
+          <path d="M16 17l4 4 7-8" fill="none" stroke="#22A565" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          <text x="34" y="22" className={styles.hvBadge}>Schritt für Schritt erklärt</text>
+        </g>
+      </g>
+    </svg>
+  );
+}
+
 const SOCIALS: Array<{ label: string; href: string | null; icon: ReactNode }> = [
   {
     label: 'Instagram',
@@ -591,15 +683,13 @@ export default function LandingPage({
                 >
                   {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
                 </button>
-                {!isAuthed && (
-                  <p className={styles.reassurance}>
-                    Analysis ist kostenlos. Ohne Account. Ohne Zahlungsdaten.
-                  </p>
-                )}
               </div>
             </div>
           </div>
 
+          <div className={styles.heroVisual}>
+            <HeroVisual />
+          </div>
         </header>
 
         <div className={styles.proofStrip} aria-label="Produktfokus">

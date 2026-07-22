@@ -40,6 +40,15 @@
   /* Lernstatus-Ampel: grün = verstanden, gelb = wiederholen, rot = nicht verstanden. */
   --yellow: #E0A400;
   --warn-soft: #FBF1D8;
+  /* Hero-Bild (Landing): warme, einladende Illustration. */
+  --hv-bg-top: #FFF3E9;
+  --hv-bg-bottom: #FFFFFF;
+  --hv-line: #EFE6DE;
+  --hv-panel: #FFFFFF;
+  --hv-grid: #F1EBE5;
+  --hv-axis: #C9BFB6;
+  --hv-coach: #FFF1E3;
+  --hv-coach-line: #FBD9B8;
   /* Sidebar: immer echtes Schwarz mit heller Schrift (DESIGN.md-Regel),
      hebt das Menü ruhig und ästhetisch von der weißen Lernfläche ab. */
   --side: #050505;
@@ -240,6 +249,14 @@ body.dark {
   --warn: #F0B24C;
   --yellow: #F0B24C;
   --warn-soft: #2A1F08;
+  --hv-bg-top: #17130F;
+  --hv-bg-bottom: #0D0D0F;
+  --hv-line: #2A2622;
+  --hv-panel: #141210;
+  --hv-grid: #221E1A;
+  --hv-axis: #4A423A;
+  --hv-coach: #241A10;
+  --hv-coach-line: #3A2A18;
   --side: #050505;
   --side-2: #111113;
   --side-3: #27272A;
