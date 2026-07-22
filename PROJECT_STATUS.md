@@ -449,13 +449,16 @@ Probleme").
   Struktur und die Produkt-Grafiken (Coach/Bibliothek) bleiben. Umgesetzt als
   kleiner Override-Block am Ende von `LandingPage.module.css`. Verifiziert mit
   Build + Browser (hell, Hero linksbündig, Karten flach).
-- ✅ **Hero mit Vertrauens-Bild + Feinschliff (22.07.2026, live):** Der Hero ist
-  jetzt **zweispaltig** — Text links, rechts ein einladendes, vertrauensbildendes
-  **echtes Foto** einer Mathe-Lernsituation (Hand schreibt Geometrie-Formeln am
-  Schreibtisch), mit kleinem Badge „Hessen · Abitur 2027". Datei
-  `public/hero-lernen.jpg` (Quelle: Pexels-Foto 5212341, **Pexels-Lizenz** —
-  frei nutzbar inkl. kommerziell, ohne Namensnennung; **keine erkennbaren
-  Gesichter**). Der Satz „Analysis ist kostenlos …" ist **entfernt**. Der
+- ✅ **Hero mit Vertrauens-Bild + Feinschliff (22.07.2026, live; Foto am
+  23.07. modernisiert):** Der Hero ist **zweispaltig** — Text links, rechts ein
+  einladendes **echtes Foto**. Aktuell (Leons Wunsch: moderner/digitaler, kein
+  Text im Bild) ein **iPad + Apple Pencil** beim digitalen Mitschreiben,
+  **Hochformat-Rahmen** (5/6, `object-position: 50% 66%` fokussiert auf iPad +
+  Hand), **ohne Text-Badge**. Datei `public/hero-lernen.jpg` (Quelle: Pexels-
+  Foto 6712479, **Pexels-Lizenz** — frei inkl. kommerziell, ohne Namensnennung,
+  kein Gesicht; auf 1100×1648, ~234 KB optimiert). Sauber eingebunden auf
+  Desktop (2 Spalten) und Mobil (Bild unter dem Text). Der Satz „Analysis ist
+  kostenlos …" ist **entfernt**. Der
   Abschnitt „Mehr als ein Kurs. Ein vollständiges Lernsystem." (und die übrigen
   `.sectionIntro`-Überschriften) sind wieder **zentriert**. Mobil stapelt das
   Bild unter den Text. Verifiziert mit tsc, ESLint, Build, Browser (hell +

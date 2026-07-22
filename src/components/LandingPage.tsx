@@ -599,12 +599,11 @@ export default function LandingPage({
             <div className={styles.heroPhoto}>
               <img
                 src="/hero-lernen.jpg"
-                alt="Handschriftliche Mathe-Formeln und Übungen am Schreibtisch – Vorbereitung aufs Abitur."
-                width={1400}
-                height={1004}
+                alt="Digitales Lernen mit dem iPad und Apple Pencil – moderne Abiturvorbereitung."
+                width={1100}
+                height={1648}
                 loading="eager"
               />
-              <span className={styles.heroPhotoTag}>Hessen · Abitur 2027</span>
             </div>
           </div>
         </header>
