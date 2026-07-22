@@ -449,20 +449,19 @@ Probleme").
   Struktur und die Produkt-Grafiken (Coach/Bibliothek) bleiben. Umgesetzt als
   kleiner Override-Block am Ende von `LandingPage.module.css`. Verifiziert mit
   Build + Browser (hell, Hero linksbündig, Karten flach).
-- ✅ **Hero mit Vertrauens-Bild + Feinschliff (22.07.2026, live):** Auf Leons
-  Wunsch: Der Hero ist jetzt **zweispaltig** — Text links, rechts ein
-  einladendes, vertrauensbildendes **Bild** (`HeroVisual`, eigenständige
-  SVG-Illustration: Gradefruit-Coach begleitet dich, echte Kurvendiskussion mit
-  markiertem Hochpunkt, kurze Coach-Hilfe „Setze f′(x)=0 …", ehrliche Fakten-
-  Badges „Hessen · Abi 2027 / GK & LK / Schritt für Schritt" — **keine
-  erfundenen Bewertungen**). Warme, theme-fähige Farben über neue `--hv-*`-
-  Tokens (hell + dunkel). Der Satz „Analysis ist kostenlos …" ist **entfernt**.
-  Der Abschnitt „Mehr als ein Kurs. Ein vollständiges Lernsystem." (und die
-  übrigen `.sectionIntro`-Überschriften) sind wieder **zentriert**. Mobil
-  stapelt das Bild unter den Text. Verifiziert mit tsc, ESLint, Build und
-  Browser (hell + dunkel, Desktop-2-Spalten + mobil gestapelt). Hinweis:
-  Illustration statt Stockfoto — ein echtes Foto kann Leon jederzeit liefern,
-  dann tausche ich es aus.
+- ✅ **Hero mit Vertrauens-Bild + Feinschliff (22.07.2026, live):** Der Hero ist
+  jetzt **zweispaltig** — Text links, rechts ein einladendes, vertrauensbildendes
+  **echtes Foto** einer Mathe-Lernsituation (Hand schreibt Geometrie-Formeln am
+  Schreibtisch), mit kleinem Badge „Hessen · Abitur 2027". Datei
+  `public/hero-lernen.jpg` (Quelle: Pexels-Foto 5212341, **Pexels-Lizenz** —
+  frei nutzbar inkl. kommerziell, ohne Namensnennung; **keine erkennbaren
+  Gesichter**). Der Satz „Analysis ist kostenlos …" ist **entfernt**. Der
+  Abschnitt „Mehr als ein Kurs. Ein vollständiges Lernsystem." (und die übrigen
+  `.sectionIntro`-Überschriften) sind wieder **zentriert**. Mobil stapelt das
+  Bild unter den Text. Verifiziert mit tsc, ESLint, Build, Browser (hell +
+  dunkel, Desktop-2-Spalten). Foto lässt sich jederzeit durch Leons eigenes
+  ersetzen (Datei tauschen). Hinweis: die zuvor gebauten `--hv-*`-Tokens/SVG-
+  Illustration wurden ersetzt (Tokens noch in globals.css, ungenutzt/harmlos).
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
