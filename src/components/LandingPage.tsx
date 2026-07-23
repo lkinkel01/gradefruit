@@ -599,9 +599,9 @@ export default function LandingPage({
             <div className={styles.heroPhoto}>
               <img
                 src="/hero-lernen.jpg"
-                alt="Digitales Lernen mit dem iPad und Apple Pencil – moderne Abiturvorbereitung."
+                alt="Aufgeräumter, moderner Lernplatz mit Laptop und Heft – Vorbereitung aufs Mathe-Abitur."
                 width={1100}
-                height={1648}
+                height={1650}
                 loading="eager"
               />
             </div>
