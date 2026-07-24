@@ -599,9 +599,9 @@ export default function LandingPage({
             <div className={styles.heroPhoto}>
               <img
                 src="/hero-lernen.jpg"
-                alt="Aufgeräumter, moderner Lernplatz mit MacBook – Vorbereitung aufs Mathe-Abitur."
-                width={1100}
-                height={1650}
+                alt="Cleaner Lernplatz mit Laptop und aufgeschlagenem Heft – Vorbereitung aufs Mathe-Abitur."
+                width={1300}
+                height={867}
                 loading="eager"
                 draggable={false}
               />
