@@ -603,6 +603,7 @@ export default function LandingPage({
                 width={1100}
                 height={1650}
                 loading="eager"
+                draggable={false}
               />
             </div>
           </div>
