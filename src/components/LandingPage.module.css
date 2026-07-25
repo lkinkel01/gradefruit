@@ -1417,10 +1417,15 @@
 .libraryIntro,
 .libraryPromise { text-align: left; }
 
-/* HERO: das Foto ist ein breiter, integrierter Hintergrund und verblendet über
-   eine weiche Maske auf ALLEN Seiten in die Seitenfarbe — kein Kasten, kein
-   harter Rechteck-Cut. Links viel ruhiger Platz für Text, rechts das Bild. */
+/* HERO: das Foto ist ein breiter, integrierter Hintergrund. Statt einer Maske
+   liegen über den Bildkanten weiche Verlaufs-Schleier in der Seitenfarbe
+   (var(--canvas)) — sie lösen die zur Seite zeigenden Ränder (links zum Text,
+   oben unter der Navi, unten zum nächsten Abschnitt) zuverlässig auf. Rechts
+   läuft das Bild aus dem Viewport. Robust in Hell UND Dunkel. */
 .hero {
+  /* RGB-Kanäle der Seitenfarbe für die Schleier (reiner Alpha-Verlauf, keine
+     Grautrübung); im Dark Mode unten umgeschaltet. */
+  --scrim: 247, 247, 248;
   position: relative;
   display: flex;
   align-items: center;
@@ -1432,13 +1437,13 @@
   isolation: isolate;
   border-bottom: 0;
 }
-/* Bildbühne rechts; die Maske am Bild selbst macht die weichen Kanten. */
+/* Bildbühne rechts. */
 .heroVisual {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  left: 44%;
+  left: 42%;
   z-index: -2;
   width: auto;
   max-width: none;
@@ -1457,17 +1462,13 @@
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
-  /* Weiche Verblendung rundum: großer opaker Kern (Laptop bleibt sichtbar),
-     die Ränder faden weich in den Weißraum — keine harten Ecken. */
-  -webkit-mask-image: radial-gradient(118% 150% at 62% 48%, #000 38%, transparent 82%);
-  mask-image: radial-gradient(118% 150% at 62% 48%, #000 38%, transparent 82%);
 }
 .heroPhoto img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 44% 50%;
+  object-position: 46% 50%;
   /* Nicht anklick-, zieh- oder kopierbar — Teil der Seite. */
   pointer-events: none;
   -webkit-user-drag: none;
@@ -1475,6 +1476,17 @@
   user-select: none;
   -webkit-touch-callout: none;
   transition: filter var(--dur-hover) var(--ease-out);
+}
+/* Weiche Schleier in Seitenfarbe über die zur Seite zeigenden Kanten. */
+.heroPhoto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to right, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 52%),
+    linear-gradient(to bottom, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 30%),
+    linear-gradient(to top, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 20%);
 }
 .heroCopy {
   position: relative;
@@ -1487,7 +1499,9 @@
 .heroActions { justify-content: flex-start; }
 .heroPrimaryAction { align-items: flex-start; }
 
-/* Dark Mode: gleiches Bild, deutlich ruhiger abgedunkelt. */
+/* Dark Mode: gleiches Bild, deutlich ruhiger abgedunkelt; Schleier auf dunkle
+   Seitenfarbe umgeschaltet, damit die Kanten in Schwarz statt Weiß auslaufen. */
+:global(body.dark) .hero { --scrim: 5, 5, 5; }
 :global(body.dark) .heroPhoto { border: 0; box-shadow: none; }
 :global(body.dark) .heroPhoto img {
   filter: brightness(0.5) contrast(1.05) saturate(0.9);
@@ -1495,18 +1509,20 @@
 
 @media (max-width: 900px) {
   /* Mobil: oben die komplette Headline + Button auf clean, darunter verblendet
-     das Bild weich herein — der Button liegt nie über dem Laptop. */
+     das Bild weich herein — der Button liegt nie über dem Laptop. Der Schleier
+     löst hier vor allem die OBERE Kante auf (links/rechts laufen aus dem Rand). */
   .hero {
     align-items: flex-start;
     min-height: 96svh;
     padding: 104px 24px 40px;
   }
-  .heroVisual { left: 0; top: 48%; }
+  .heroVisual { left: 0; top: 46%; }
   .heroCopy { max-width: 560px; }
-  .heroPhoto img { object-position: 50% 58%; }
-  .heroPhoto {
-    -webkit-mask-image: radial-gradient(180% 155% at 50% 74%, #000 54%, transparent 93%);
-    mask-image: radial-gradient(180% 155% at 50% 74%, #000 54%, transparent 93%);
+  .heroPhoto img { object-position: 50% 60%; }
+  .heroPhoto::after {
+    background:
+      linear-gradient(to bottom, rgba(var(--scrim), 1) 2%, rgba(var(--scrim), 0) 46%),
+      linear-gradient(to top, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 12%);
   }
 }
 
