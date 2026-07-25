@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-20 (Feinschliff-Runde 6: Lernbereich neu strukturiert — Kästen, Ampel-Status, Sidebar-Dashboard)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-25 (Hero als integriertes Vollbild-Foto — weiche Kanten, ruhiger Freiraum links, saubere Mobil-Stapelung)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -465,6 +465,23 @@ Probleme").
   dunkel, Desktop-2-Spalten). Foto lässt sich jederzeit durch Leons eigenes
   ersetzen (Datei tauschen). Hinweis: die zuvor gebauten `--hv-*`-Tokens/SVG-
   Illustration wurden ersetzt (Tokens noch in globals.css, ungenutzt/harmlos).
+- ✅ **Hero als integriertes Vollbild-Foto (25.07.2026, live):** Auf Leons Wunsch
+  ist das Hero-Foto jetzt ein **randlos eingebundenes Hintergrundbild** (kein
+  gerahmtes Zweispalten-Bild mehr). Motiv: **cleaner Lernplatz mit MacBook +
+  aufgeschlagenem Heft** (Datei `public/hero-lernen.jpg`, Quelle Pexels-Foto
+  8092413, Pexels-Lizenz — frei inkl. kommerziell, ohne Namensnennung, kein
+  Gesicht). Das Bild sitzt rechts und wird an **allen Kanten** über eine
+  `radial-gradient`-**Maske weich ausgeblendet** — keine harten Rechteck-Ecken
+  mehr; da das Foto überwiegend hell ist, verschmelzen die hellen Kanten im
+  Hellmodus unsichtbar mit der Seite. Links bleibt viel **ruhiger Freiraum**,
+  die Headline „…Abiturvorbereitung…" liegt **nicht mehr auf dem Laptop**.
+  **Dark Mode:** dasselbe Bild, per `filter: brightness(.5)` abgedunkelt, Text
+  hell/lesbar. **Nicht interaktiv** (kein Klick/Ziehen/Kopieren via
+  `pointer-events`/`user-select`/`touch-callout: none`). **Mobil:** Headline +
+  „Kostenlos testen" liegen oben auf freier Fläche, das Foto blendet **darunter**
+  weich herein — der Button überdeckt den Laptop **nicht** mehr. Umgesetzt im
+  Override-Block am Ende von `LandingPage.module.css`. Verifiziert mit tsc,
+  ESLint, Build und Browser (hell + dunkel Desktop, 375 px mobil).
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
