@@ -1417,11 +1417,11 @@
 .libraryIntro,
 .libraryPromise { text-align: left; }
 
-/* HERO: das Foto ist ein breiter, integrierter Hintergrund. Statt einer Maske
-   liegen über den Bildkanten weiche Verlaufs-Schleier in der Seitenfarbe
-   (var(--canvas)) — sie lösen die zur Seite zeigenden Ränder (links zum Text,
-   oben unter der Navi, unten zum nächsten Abschnitt) zuverlässig auf. Rechts
-   läuft das Bild aus dem Viewport. Robust in Hell UND Dunkel. */
+/* HERO: das Foto sitzt rechts und reicht bis zum ECHTEN Viewport-Rand (die
+   Sektion hat kein seitliches Padding mehr — daher keine rechte Kante und mehr
+   Breite als vorher). Der Text steht links auf klarer Fläche (keine Kollision
+   mit dem Laptop). Die linke Kante des Fotos wird über einen Schleier in der
+   Seitenfarbe aufgelöst; oben/unten je eine zarte Verblendung. Hell UND Dunkel. */
 .hero {
   /* RGB-Kanäle der Seitenfarbe für die Schleier (reiner Alpha-Verlauf, keine
      Grautrübung); im Dark Mode unten umgeschaltet. */
@@ -1432,18 +1432,19 @@
   margin: 14px calc(50% - 50vw) 0;
   width: 100vw;
   min-height: min(86vh, 720px);
-  padding: 48px max(26px, calc(50vw - 610px));
+  padding: 48px 0;
   overflow: hidden;
   isolation: isolate;
   border-bottom: 0;
 }
-/* Bildbühne rechts. */
+/* Bildbühne rechts — reicht bis zum rechten Viewport-Rand (right: 0, kein
+   Padding), links breit genug für einen weichen Übergang zum Text. */
 .heroVisual {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  left: 42%;
+  left: 34%;
   z-index: -2;
   width: auto;
   max-width: none;
@@ -1468,7 +1469,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 46% 50%;
+  object-position: 50% 50%;
   /* Nicht anklick-, zieh- oder kopierbar — Teil der Seite. */
   pointer-events: none;
   -webkit-user-drag: none;
@@ -1477,22 +1478,25 @@
   -webkit-touch-callout: none;
   transition: filter var(--dur-hover) var(--ease-out);
 }
-/* Weiche Schleier in Seitenfarbe über die zur Seite zeigenden Kanten. */
+/* Schleier: die LINKE Kante des Fotos löst sich weich in die Seite auf (der
+   Laptop in der Mitte bleibt klar); oben und unten je eine zarte Verblendung.
+   Rechts bleibt frei = die Kante liegt exakt am Viewport-Rand. */
 .heroPhoto::after {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(to right, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 52%),
-    linear-gradient(to bottom, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 30%),
-    linear-gradient(to top, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 20%);
+    linear-gradient(to right, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 42%),
+    linear-gradient(to bottom, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 14%),
+    linear-gradient(to top, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 12%);
 }
 .heroCopy {
   position: relative;
   z-index: 1;
+  margin-left: max(24px, calc(50vw - 610px));
+  margin-right: 24px;
   max-width: 430px;
-  margin: 0;
   text-align: left;
 }
 .heroHighlights { justify-content: flex-start; }
@@ -1508,21 +1512,34 @@
 }
 
 @media (max-width: 900px) {
-  /* Mobil: oben die komplette Headline + Button auf clean, darunter verblendet
-     das Bild weich herein — der Button liegt nie über dem Laptop. Der Schleier
-     löst hier vor allem die OBERE Kante auf (links/rechts laufen aus dem Rand). */
+  /* Mobil: kein Überlappen mehr. Text-Block oben, darunter FLIESST das Foto als
+     eigener, randloser Block (nie mehr unter dem Button). Es blendet an der
+     Oberkante weich aus der Seite heraus — sauberer Übergang statt „halb-halb". */
   .hero {
-    align-items: flex-start;
-    min-height: 96svh;
-    padding: 104px 24px 40px;
+    flex-direction: column;
+    align-items: stretch;
+    min-height: 0;
+    padding: 104px 24px 0;
   }
-  .heroVisual { left: 0; top: 46%; }
-  .heroCopy { max-width: 560px; }
-  .heroPhoto img { object-position: 50% 60%; }
+  .heroCopy {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 560px;
+  }
+  .heroVisual {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    width: 100vw;
+    margin-left: -24px;
+    margin-top: 30px;
+    height: 50svh;
+  }
+  .heroPhoto img { object-position: 50% 52%; }
   .heroPhoto::after {
     background:
-      linear-gradient(to bottom, rgba(var(--scrim), 1) 2%, rgba(var(--scrim), 0) 46%),
-      linear-gradient(to top, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 12%);
+      linear-gradient(to bottom, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 32%),
+      linear-gradient(to top, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 8%);
   }
 }
 
