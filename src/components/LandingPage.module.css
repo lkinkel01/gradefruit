@@ -1427,26 +1427,32 @@
      Grautrübung); im Dark Mode unten umgeschaltet. */
   --scrim: 247, 247, 248;
   position: relative;
-  display: flex;
+  /* Echtes Zwei-Spalten-Raster: Textspalte | Bildspalte. Dadurch kann der Text
+     das Bild bei KEINER Fensterbreite überlappen — die Spalten stoßen aneinander,
+     statt dass ein prozentual platziertes Bild unter den Text rutscht. */
+  display: grid;
+  grid-template-columns: minmax(0, 500px) minmax(0, 1fr);
+  justify-items: stretch;
   align-items: center;
   margin: 14px calc(50% - 50vw) 0;
   width: 100vw;
-  min-height: min(86vh, 720px);
-  padding: 48px 0;
+  min-height: min(80vh, 680px);
+  /* Kein senkrechtes Padding: so füllt das Bild die Sektion oben/unten ganz aus
+     (der Innenabstand sitzt an der Textspalte). Links der Lesetext-Einzug. */
+  padding: 0 0 0 max(24px, calc(50vw - 610px));
   overflow: hidden;
   isolation: isolate;
   border-bottom: 0;
 }
-/* Bildbühne rechts — reicht bis zum rechten Viewport-Rand (right: 0, kein
-   Padding), links breit genug für einen weichen Übergang zum Text. */
+/* Bildspalte: füllt die zweite Rasterspalte komplett und läuft 2px über den
+   rechten Viewport-Rand hinaus (wird abgeschnitten) — so kann dort durch
+   Rundungen oder Scrollbalken nie ein heller Streifen / eine Kante entstehen. */
 .heroVisual {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 34%;
+  position: relative;
+  grid-column: 2;
+  align-self: stretch;
   z-index: -2;
-  width: auto;
+  width: calc(100% + 2px);
   max-width: none;
   margin: 0;
 }
@@ -1493,10 +1499,13 @@
 }
 .heroCopy {
   position: relative;
+  grid-column: 1;
   z-index: 1;
-  margin-left: max(24px, calc(50vw - 610px));
-  margin-right: 24px;
-  max-width: 430px;
+  margin: 0;
+  /* Der Innenabstand sitzt hier (statt am Hero), damit das Bild oben und unten
+     randlos bleibt. Rechts ein fester Sicherheitsabstand zur Bildspalte. */
+  padding: 56px 30px 56px 0;
+  max-width: 460px;
   text-align: left;
 }
 .heroHighlights { justify-content: flex-start; }
@@ -1516,14 +1525,15 @@
      eigener, randloser Block (nie mehr unter dem Button). Es blendet an der
      Oberkante weich aus der Seite heraus — sauberer Übergang statt „halb-halb". */
   .hero {
+    display: flex;
     flex-direction: column;
     align-items: stretch;
     min-height: 0;
     padding: 104px 24px 0;
   }
   .heroCopy {
-    margin-left: 0;
-    margin-right: 0;
+    margin: 0;
+    padding: 0;
     max-width: 560px;
   }
   .heroVisual {
