@@ -598,10 +598,10 @@ export default function LandingPage({
           <div className={styles.heroVisual}>
             <div className={styles.heroPhoto}>
               <img
-                src="/hero-lernen.jpg"
-                alt="Cleaner Lernplatz mit Laptop und aufgeschlagenem Heft – Vorbereitung aufs Mathe-Abitur."
-                width={1300}
-                height={867}
+                src="/hero-lernplatz.jpg"
+                alt="Lernplatz mit aufgeklapptem Laptop, auf dem das Gradefruit-Dashboard läuft, daneben ein karierter Collegeblock und ein Stift."
+                width={1536}
+                height={1024}
                 loading="eager"
                 draggable={false}
               />
