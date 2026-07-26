@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-25 (Hero als integriertes Vollbild-Foto — weiche Kanten, ruhiger Freiraum links, saubere Mobil-Stapelung)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-26 (neues Hero-Motiv: KI-Foto mit echtem Dashboard auf dem Laptop-Bildschirm)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -482,6 +482,32 @@ Probleme").
   weich herein — der Button überdeckt den Laptop **nicht** mehr. Umgesetzt im
   Override-Block am Ende von `LandingPage.module.css`. Verifiziert mit tsc,
   ESLint, Build und Browser (hell + dunkel Desktop, 375 px mobil).
+
+- ✅ **Hero-Motiv neu: KI-Foto + echtes Dashboard auf dem Bildschirm
+  (26.07.2026, live):** Das Stockfoto ist ersetzt durch ein **von Leon per
+  ChatGPT erzeugtes Bild** (blaues Laptop, karierter Collegeblock, schwarzer
+  Kuli, ruhiger heller Hintergrund, viel Freiraum links). Quelle liegt als
+  `design/hero-quelle-laptop.png` (bewusst **außerhalb** von `public/`, sonst
+  würden 1,7 MB an jeden Besucher ausgeliefert). **Der Bildschirminhalt ist
+  nicht gemalt:** ein echter Dashboard-Screenshot wird per Homographie auf die
+  vier erkannten Panel-Ecken perspektivisch eingepasst (plus dezenter
+  Lichtschleier), Ergebnis = `public/hero-lernplatz.jpg`. Screenshot entstand
+  headless über Chrome-DevTools-Protokoll mit einem Wegwerf-Testkonto
+  (Anzeigename „Lena", 39 % Fortschritt gesetzt, Konto danach gelöscht).
+  Layout aufs neue Motiv abgestimmt: Hero-Höhe näher am 3:2 des Fotos (Block
+  und Stift bleiben im Bild), linker Schleier auf 26 % verkürzt (endet genau
+  dort, wo der Laptop beginnt — kein Schleier über dem Produkt), im
+  **Dunkelmodus deutlich längere Schleier** (34/30/26 %), weil das abgedunkelte
+  Foto sonst als graues Rechteck auf dem Schwarz stand. Vorheriges
+  `hero-lernen.jpg` entfernt. Verifiziert mit tsc, Build und Browser
+  (hell + dunkel Desktop, 390 px mobil).
+  **Nachbau möglich:** Bildschirm-Ecken in der Quelle sind
+  TL(761,209) TR(1208,248) BR(1150,634) BL(709,551).
+- ⚠️ **Nebenbefund (nicht behoben):** Die App hängt bei „Einen Moment …",
+  wenn der Tab nicht sichtbar gezeichnet wird — `setRouteReady(true)` läuft in
+  `requestAnimationFrame` (`src/app/page.tsx`), und rAF feuert in
+  Hintergrund-Tabs nicht. Für echte Nutzer harmlos, aber es kann automatisierte
+  Tests und Screenshot-Werkzeuge blockieren.
 
 ## Bekannte Probleme / offen
 - 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
