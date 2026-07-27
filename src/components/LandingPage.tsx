@@ -597,9 +597,23 @@ export default function LandingPage({
 
           <div className={styles.heroVisual}>
             <div className={styles.heroPhoto}>
+              {/* Dasselbe Motiv in zwei Fassungen: heller Raum und dunkler Raum.
+                  Umgeschaltet wird per CSS über `body.dark` — ohne JavaScript,
+                  damit beim Themenwechsel nichts flackert. */}
               <img
+                className={styles.heroPhotoLight}
                 src="/hero-lernplatz.jpg"
-                alt="Aufgeklappter Laptop auf einem hellen Schreibtisch, auf dem Bildschirm läuft das Gradefruit-Dashboard mit Lernfortschritt."
+                alt="Aufgeklappter Laptop auf einem hellen Schreibtisch, auf dem Bildschirm ist eine Gradefruit-Übungsaufgabe zur Kurvendiskussion geöffnet."
+                width={2560}
+                height={1440}
+                loading="eager"
+                draggable={false}
+              />
+              <img
+                className={styles.heroPhotoDark}
+                src="/hero-lernplatz-dark.jpg"
+                alt=""
+                aria-hidden="true"
                 width={2560}
                 height={1440}
                 loading="eager"
