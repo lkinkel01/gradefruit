@@ -199,20 +199,26 @@ export default function TopicView({
   const [selection, setSelection] = useState<{ text: string; x: number; y: number } | null>(null);
 
   useEffect(() => {
-    const onSelect = () => {
+    // Erst wenn die Maus losgelassen wird, prüfen wir die Auswahl. Während des
+    // Ziehens bleibt alles ruhig — Markieren funktioniert also ganz normal.
+    const evaluate = () => {
       const sel = window.getSelection();
       const text = sel?.toString().trim() ?? '';
       if (!sel || sel.rangeCount === 0 || text.length < 2) { setSelection(null); return; }
       const node = sel.anchorNode;
       const host = node instanceof Element ? node : node?.parentElement ?? null;
-      // Nur innerhalb der Inhaltsblöcke anbieten.
       if (!host || !host.closest('[data-askable]')) { setSelection(null); return; }
       const rect = sel.getRangeAt(0).getBoundingClientRect();
       if (!rect.width && !rect.height) { setSelection(null); return; }
       setSelection({ text, x: rect.left + rect.width / 2, y: rect.top });
     };
-    document.addEventListener('selectionchange', onSelect);
-    return () => document.removeEventListener('selectionchange', onSelect);
+    const onUp = () => window.setTimeout(evaluate, 10);
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchend', onUp);
+    return () => {
+      document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('touchend', onUp);
+    };
   }, []);
 
   // Fließtext in Absätze zerlegen: je Satz eine Zeile. So beginnt kein Satz
@@ -238,7 +244,13 @@ export default function TopicView({
     role: 'button',
     tabIndex: 0,
     title: 'Antippen, um dazu eine Frage zu stellen',
-    onClick: () => onOpenAsk(topic.label, snippet, source),
+    onClick: () => {
+      // Wer gerade Text markiert hat, will lesen und gezielt fragen — dann
+      // öffnet der Klick auf den Block nichts.
+      const marked = window.getSelection()?.toString().trim() ?? '';
+      if (marked.length >= 2) return;
+      onOpenAsk(topic.label, snippet, source);
+    },
     onKeyDown: (event: React.KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
@@ -316,6 +328,40 @@ export default function TopicView({
       ) : <span />}
     </div>
   ) : null;
+
+  // Themenseite: kurz worum es geht, dazu die Gliederung beider Bereiche.
+  const renderOverview = () => (
+    <div className={styles.contentIndex}>
+      {summary?.intro && (
+        <div className={styles.introBox} {...askable(summary.intro)}>
+          {richText(summary.intro, '')}
+        </div>
+      )}
+      <div className={styles.areaGrid}>
+        <button type="button" className={styles.areaCard} onClick={() => selectTab('zusammenfassung')}>
+          <span className={styles.areaCardHead}>
+            <span className={styles.areaCardTitle}>Zusammenfassung</span>
+            <span className={styles.areaCardMeta}>{summary?.sections.length ?? 0} Abschnitte</span>
+          </span>
+          <ol className={styles.areaList}>
+            {summary?.sections.map(section => <li key={section.title}>{section.title}</li>)}
+          </ol>
+          <span className={styles.areaCardGo}>Zur Zusammenfassung <ArrowRightIcon size={15} /></span>
+        </button>
+        <button type="button" className={styles.areaCard} onClick={() => selectTab('uebungen')}>
+          <span className={styles.areaCardHead}>
+            <span className={styles.areaCardTitle}>Übungen</span>
+            <span className={styles.areaCardMeta}>{tasks.length} Aufgaben</span>
+          </span>
+          <ol className={styles.areaList}>
+            {tasks.slice(0, 8).map(task => <li key={task.id}>{task.tag}</li>)}
+            {tasks.length > 8 && <li className={styles.areaMore}>und {tasks.length - 8} weitere</li>}
+          </ol>
+          <span className={styles.areaCardGo}>Zu den Übungen <ArrowRightIcon size={15} /></span>
+        </button>
+      </div>
+    </div>
+  );
 
   const renderSummaryIndex = () => (
     <div className={styles.contentIndex}>
@@ -592,7 +638,7 @@ export default function TopicView({
           }}
         >
           <SparkIcon size={13} />
-          Dazu fragen
+          Frage stellen
         </button>
       )}
       {!detailOpen && (
@@ -616,9 +662,9 @@ export default function TopicView({
         </div>
       )}
 
-      {!detailOpen && (
+      {!detailOpen && tab !== 'uebersicht' && (
         <p className={styles.areaTitle}>
-          {tab === 'zusammenfassung' ? 'Zusammenfassung' : `Übungen · ${tasks.length}`}
+          {tab === 'zusammenfassung' ? 'Zusammenfassung' : 'Übungen'}
         </p>
       )}
 
@@ -639,6 +685,8 @@ export default function TopicView({
           </button>
           <p className={styles.lockHint}>Analysis kannst du kostenlos ausprobieren.</p>
         </div>
+      ) : tab === 'uebersicht' ? (
+        renderOverview()
       ) : tab === 'zusammenfassung' && summary ? (
         selectedSummary ? renderSummaryDetail() : renderSummaryIndex()
       ) : (

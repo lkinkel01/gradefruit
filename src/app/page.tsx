@@ -39,8 +39,11 @@ function readLocationState(): LocationState {
   const params = new URLSearchParams(window.location.search);
   const candidate = params.get('view');
   const view = APP_VIEWS.includes(candidate as View) ? candidate as View : 'landing';
-  const tab: TopicTab = params.get('tab') === 'uebungen' ? 'uebungen' : 'zusammenfassung';
-  const itemId = tab === 'uebungen' ? params.get('task') : params.get('section');
+  const rawTab = params.get('tab');
+  const tab: TopicTab = rawTab === 'uebungen' ? 'uebungen'
+    : rawTab === 'zusammenfassung' ? 'zusammenfassung'
+    : 'uebersicht';
+  const itemId = tab === 'uebungen' ? params.get('task') : tab === 'zusammenfassung' ? params.get('section') : null;
   return { view, tab, itemId };
 }
 
@@ -299,7 +302,7 @@ export default function Home() {
     // erhalten bleiben und der neue Seitenkopf könnte unter der Topbar liegen.
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
 
-    let nextTab: TopicTab = destination.tab ?? 'zusammenfassung';
+    let nextTab: TopicTab = destination.tab ?? 'uebersicht';
     let nextItemId = destination.itemId ?? null;
     let nextItemLabel = destination.itemLabel ?? nextItemId;
 

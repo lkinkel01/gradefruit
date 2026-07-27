@@ -18,7 +18,7 @@ const LABELS: Partial<Record<View, string>> = {
 
 // Themenseiten besitzen eine zweite Brotkrumen-Ebene (den aktiven Tab).
 const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
-const TAB_LABELS = { zusammenfassung: 'Zusammenfassung', uebungen: 'Übungen' } as const;
+const TAB_LABELS: Record<TopicTab, string> = { uebersicht: 'Übersicht', zusammenfassung: 'Zusammenfassung', uebungen: 'Übungen' };
 
 interface Props {
   view: View;
@@ -33,8 +33,18 @@ interface Props {
 
 export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
   const { user } = useAuth();
-  // Kürzel im Konto-Knopf: bewusst die Marke, nicht der Nutzername.
-  const initials = user ? 'GR' : null;
+  // Kürzel: Vor- und Nachname (Leon Kinkel → LK). Ohne Nachnamen die ersten
+  // beiden Buchstaben des Vornamens (Leon → LE); sonst aus der E-Mail.
+  const initials = (() => {
+    if (!user) return null;
+    const name = (user.user_metadata?.full_name as string | undefined)?.trim();
+    if (name) {
+      const parts = name.split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    return (user.email || 'U').slice(0, 2).toUpperCase();
+  })();
 
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -90,12 +100,12 @@ export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleD
           Gradefruit
         </button>
         <span className={styles.sep} aria-hidden="true">›</span>
-        {TOPIC_VIEWS.includes(view) ? (
+        {TOPIC_VIEWS.includes(view) && topicTab !== 'uebersicht' ? (
           <>
             <button
               type="button"
               className={`${styles.crumbLink} ${styles.crumbMid}`}
-              onClick={() => onNavigate(view, { tab: topicTab, itemId: null })}
+              onClick={() => onNavigate(view, { tab: 'uebersicht', itemId: null })}
             >
               {LABELS[view]}
             </button>

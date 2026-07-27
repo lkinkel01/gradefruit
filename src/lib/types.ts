@@ -1,5 +1,7 @@
 export type View = 'landing' | 'dashboard' | 'analysis' | 'linalg' | 'stochastik' | 'videos' | 'review' | 'tutors' | 'account';
-export type TopicTab = 'zusammenfassung' | 'uebungen';
+// 'uebersicht' = Themenseite mit Kurzfassung und Gliederung; von dort geht es
+// in die Zusammenfassung oder die Übungen.
+export type TopicTab = 'uebersicht' | 'zusammenfassung' | 'uebungen';
 
 export interface TopicDestination {
   tab?: TopicTab;

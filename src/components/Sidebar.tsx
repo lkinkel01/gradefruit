@@ -112,32 +112,9 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
       </button>
 
       <button className={styles.dashLink} onClick={() => onNavigate('dashboard')}>
-        Zum Dashboard
+        <span className={styles.dashIcon}><OverviewIcon /></span>
+        Dashboard
       </button>
-
-      {/* Kursstufe wird hier in der Navigation umgeschaltet (früher im Dashboard). */}
-      {levelChoosable ? (
-        <div className={styles.levelSeg} role="tablist" aria-label="Kursniveau wählen">
-          <button
-            role="tab"
-            aria-selected={level === 'gk'}
-            className={`${styles.levelBtn} ${level === 'gk' ? styles.levelOn : ''}`}
-            onClick={() => onChooseLevel('gk')}
-          >
-            Grundkurs
-          </button>
-          <button
-            role="tab"
-            aria-selected={level === 'lk'}
-            className={`${styles.levelBtn} ${level === 'lk' ? styles.levelOn : ''}`}
-            onClick={() => onChooseLevel('lk')}
-          >
-            Leistungskurs
-          </button>
-        </div>
-      ) : (
-        <div className={styles.levelBadge}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</div>
-      )}
 
       <div className={styles.navsec}>Themen</div>
       <nav className={styles.snav}>
@@ -167,19 +144,27 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                 aria-expanded={expanded}
                 onClick={() => {
                   if (active) {
-                    // Aktives Thema: Untermenü sofort ein-/ausklappen. Hover-Zustand
-                    // dabei zurücksetzen, sonst hielte der Hover es offen, bis die
-                    // Maus wegfährt.
-                    toggleCollapse(t.id);
+                    // Aktives Thema: alles einklappen und auf die Themenseite —
+                    // dort wird zwischen Zusammenfassung und Übungen gewählt.
+                    setCollapsedTopics(prev => new Set(prev).add(t.id));
+                    setCollapsedSubs(prev => {
+                      const next = new Set(prev);
+                      next.add(`${t.id}:zusammenfassung`);
+                      next.add(`${t.id}:uebungen`);
+                      return next;
+                    });
                     if (hoverTimer.current) { window.clearTimeout(hoverTimer.current); hoverTimer.current = null; }
                     setHoverTopic(null);
+                    if (subTimer.current) { window.clearTimeout(subTimer.current); subTimer.current = null; }
+                    setHoverSub(null);
+                    onNavigate(t.id, { tab: 'uebersicht', itemId: null });
                   } else {
                     setCollapsedTopics(prev => {
                       const next = new Set(prev);
                       next.delete(t.id);
                       return next;
                     });
-                    onNavigate(t.id, { tab: 'zusammenfassung', itemId: null });
+                    onNavigate(t.id, { tab: 'uebersicht', itemId: null });
                   }
                 }}
               >
@@ -284,6 +269,28 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
             <span className={styles.ti}>{item.label}</span>
           </button>
         ))}
+        {levelChoosable ? (
+          <div className={styles.levelSeg} role="tablist" aria-label="Kursniveau wählen">
+            <button
+              role="tab"
+              aria-selected={level === 'gk'}
+              className={`${styles.levelBtn} ${level === 'gk' ? styles.levelOn : ''}`}
+              onClick={() => onChooseLevel('gk')}
+            >
+              Grundkurs
+            </button>
+            <button
+              role="tab"
+              aria-selected={level === 'lk'}
+              className={`${styles.levelBtn} ${level === 'lk' ? styles.levelOn : ''}`}
+              onClick={() => onChooseLevel('lk')}
+            >
+              Leistungskurs
+            </button>
+          </div>
+        ) : (
+          <div className={styles.levelBadge}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</div>
+        )}
       </nav>
 
       <div className={styles.spacer} />
