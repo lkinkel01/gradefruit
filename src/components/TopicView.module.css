@@ -232,60 +232,58 @@
 }
 .summaryIntro { margin-bottom: 14px; color: var(--muted); font-size: 14.5px; line-height: 1.65; }
 .summaryDetails { padding-top: 16px; animation: contentReveal var(--dur-enter) var(--ease-out) both; }
-.formulas { display: flex; flex-direction: column; gap: 7px; }
-.formula {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  width: 100%; text-align: left; cursor: pointer;
-  font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
-  color: var(--ink);
-  background: var(--canvas); border: 1px solid transparent; border-radius: var(--radius-control);
-  padding: 10px 13px; line-height: 1.5;
-  min-height: 44px;
-  transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
-}
-.formula:active { transform: scale(.99); }
-.formula:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.formulaText { overflow-x: auto; }
-.formula svg { flex-shrink: 0; color: var(--faint); opacity: .55; }
 .summaryFoot { display: flex; justify-content: center; margin-top: 10px; }
 
-/* Inhalte leben in ruhigen Kästen; jeder Kasten kann direkt eine KI-Frage
-   auslösen. */
-.introBox,
-.contentBox {
+/* Inhalte stehen als EIN durchgehender Block. Die Abschnitte werden nur durch
+   feine Linien getrennt — keine grauen Kästen, keine Monospace-Schrift. Jeder
+   Abschnitt ist selbst antippbar und stellt dazu eine Frage. */
+.reader {
   margin-bottom: 16px;
-  padding: 16px 18px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--surface);
+  border-top: 1px solid var(--line);
 }
-.introBox { background: var(--surface-2); }
-.introBox p,
-.contentBox p {
+.readerBlock {
+  position: relative;
+  padding: 16px 2px 16px 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out);
+}
+.readerBlock:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: var(--radius-control); }
+.readerLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+.readerText {
   color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+}
+/* Formeln und Rechenschritte: gleiche Schriftfamilie wie der Fließtext, nur
+   etwas luftiger gesetzt — deutlich ruhiger als die frühere Monospace. */
+.readerMath {
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.75;
+  letter-spacing: .01em;
+  overflow-x: auto;
+}
+.readerResult { font-weight: 650; }
+
+.introBox {
+  margin-bottom: 16px;
+  padding: 14px 2px 16px 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.introBox p {
+  color: var(--muted);
   font-size: 15px;
   line-height: 1.65;
 }
-.boxAsk {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 12px;
-  padding: 7px 12px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-control);
-  background: var(--surface);
-  color: var(--accent-d);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 600;
-  min-height: 40px;
-  transition: transform var(--dur-press) var(--ease-press), border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
-}
-.boxAsk:active { transform: scale(.98); }
-.boxAsk:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.boxAsk svg { color: var(--accent-d); }
 
 /* Abgegrenzte Aktionszone: Lernhilfen + Lernstatus, getrennt vom Inhalt. */
 .actionZone {
@@ -307,13 +305,15 @@
   color: var(--faint);
 }
 
-/* „Nächste …"-Sprung als hervorgehobener CTA (voll breit). */
+/* „Nächste …"-Sprung als hervorgehobener CTA — nur so breit wie nötig, nicht
+   über die gesamte Spaltenbreite. */
 .nextCta {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   margin-top: 14px;
   text-align: left;
 }
@@ -347,23 +347,6 @@
 .chev { color: var(--faint); flex-shrink: 0; }
 
 .cardBody { padding: 2px 20px 18px; animation: contentReveal var(--dur-enter) var(--ease-out) both; }
-.taskBlock {
-  margin-bottom: 14px;
-  padding: 16px 17px;
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius-control);
-  background: var(--surface-2);
-}
-.taskLabel {
-  display: block;
-  margin-bottom: 6px;
-  color: var(--accent-d);
-  font-size: 11.5px;
-  font-weight: 750;
-  letter-spacing: .035em;
-}
-.taskQ { font-size: 15.5px; line-height: 1.65; }
 
 /* Lernhilfen-Leiste (KI · Tutor) innerhalb der Aktionszone */
 .rowActions {
@@ -399,30 +382,6 @@
 .solHead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 13px 0 6px; }
 .solTitle { font-size: 12px; font-weight: 650; letter-spacing: .01em; color: var(--muted); }
 .solHint { font-size: 12px; color: var(--faint); }
-.sstep {
-  display: flex; gap: 12px; align-items: flex-start;
-  padding: 12px 10px; margin: 0 -10px;
-  border-radius: var(--radius-control); cursor: pointer;
-  transition: background-color var(--dur-hover) var(--ease-out);
-}
-.sstep:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.sstep > svg { flex-shrink: 0; margin-top: 4px; color: var(--faint); }
-.stepNum {
-  flex: 0 0 25px; height: 25px; border-radius: var(--radius-control);
-  background: var(--accent); color: var(--accent-tx);
-  font-size: 12.5px; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-}
-.stepBody { flex: 1; }
-.stepLd { font-size: 13.5px; color: var(--muted); margin-bottom: 5px; }
-.stepMt { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 500; line-height: 1.6; }
-.stepGo { flex-shrink: 0; margin-top: 4px; color: var(--faint); opacity: 0; transition: opacity .15s, color .15s; }
-.result {
-  margin-top: 13px; padding: 13px 16px;
-  border: 1px solid var(--accent-soft); background: var(--accent-soft);
-  border-radius: var(--radius-card); font-family: 'JetBrains Mono', monospace;
-  font-size: 14px; font-weight: 600; color: var(--accent-d);
-}
 .mistakes {
   margin-top: 13px; padding: 12px 15px 13px;
   border: 1px solid color-mix(in srgb, var(--warn) 28%, transparent);
@@ -499,14 +458,12 @@
   }
   .indexRow:hover { background: var(--surface-2); }
   .indexRow:hover .indexArrow { color: var(--accent-d); transform: translateX(3px); }
-  .formula:hover { border-color: var(--accent); background: var(--accent-soft); }
-  .formula:hover svg { opacity: 1; color: var(--accent-d); }
   .card:not(.cardOpen):hover { border-color: var(--line-strong); transform: translateY(-1px); }
   .cardHead:hover .cardTitle { color: var(--accent-d); }
   .mini:hover { border-color: var(--faint); transform: translateY(-1px); }
   .mini:disabled:hover { border-color: var(--line); transform: none; }
-  .sstep:hover { background: var(--surface-2); }
-  .sstep:hover .stepGo { opacity: 1; color: var(--accent-d); }
+  .readerBlock:hover { background: var(--surface-2); }
+  .introBox:hover { background: var(--surface-2); }
   .statusBtn:hover { color: var(--ink); }
 }
 
@@ -515,9 +472,8 @@
   .headRow { align-items: flex-start; }
   .cardHead { padding: 13px 15px; }
   .cardBody { padding: 2px 15px 14px; }
-  .taskBlock { padding: 14px; }
   .lockCard { padding: 30px 20px 26px; }
-  .stepMt, .result, .formula { overflow-x: auto; }
+  .readerMath { overflow-x: auto; }
   .progressTrack { max-width: none; }
   .tabs { display: flex; width: 100%; }
   .tabBtn { flex: 1; padding-inline: 10px; }

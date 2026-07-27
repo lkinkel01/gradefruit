@@ -188,6 +188,21 @@ export default function TopicView({
     router.push('/feed');
   };
 
+  // Jeder Inhaltsabschnitt ist selbst anklickbar und stellt dazu eine Frage —
+  // deshalb braucht es keinen eigenen „Dazu eine Frage stellen"-Knopf mehr.
+  const askable = (snippet: string) => ({
+    role: 'button',
+    tabIndex: 0,
+    title: 'Antippen, um dazu eine Frage zu stellen',
+    onClick: () => onOpenAsk(topic.label, snippet),
+    onKeyDown: (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        onOpenAsk(topic.label, snippet);
+      }
+    },
+  });
+
   // Aktionsleiste ohne „Video" (Videos kommen später überall dazu) – nur
   // KI- und Tutor-Hilfe, klar abgegrenzt in einer eigenen Aktionszone.
   const actionBar = (opts: { askCtx: string; askSnippet: string }) => (
@@ -248,15 +263,8 @@ export default function TopicView({
   const renderSummaryIndex = () => (
     <div className={styles.contentIndex}>
       {summary?.intro && (
-        <div className={styles.introBox}>
+        <div className={styles.introBox} {...askable(summary.intro)}>
           <p>{summary.intro}</p>
-          <button
-            className={styles.boxAsk}
-            onClick={() => onOpenAsk(topic.label, summary.intro)}
-          >
-            <QuestionIcon size={13} />
-            Dazu eine Frage stellen
-          </button>
         </div>
       )}
       <div className={styles.indexList}>
@@ -306,29 +314,25 @@ export default function TopicView({
             <StatusDot status={status} />
           </header>
           <div className={styles.cardBody}>
-            {/* Inhalt direkt sichtbar, im Kasten – mit Frage-Möglichkeit. */}
-            <div className={styles.contentBox}>
-              <p>{selectedSummary.text}</p>
-              <button
-                className={styles.boxAsk}
-                onClick={() => onOpenAsk(topic.label, `Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`)}
+            {/* Ein durchgehender Textblock: Abschnitte sind nur durch feine
+                Linien getrennt und jeweils selbst antippbar. */}
+            <div className={styles.reader}>
+              <div
+                className={styles.readerBlock}
+                {...askable(`Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`)}
               >
-                <QuestionIcon size={13} />
-                Dazu eine Frage stellen
-              </button>
-            </div>
+                <p className={styles.readerText}>{selectedSummary.text}</p>
+              </div>
 
-            <div className={styles.formulas}>
               {selectedSummary.formulas.map((formula, formulaIndex) => (
-                <button
+                <div
                   key={formulaIndex}
-                  className={styles.formula}
-                  title="Diese Formel vom Coach erklären lassen"
-                  onClick={() => onOpenAsk(topic.label, `Erkläre mir diese Formel aus „${selectedSummary.title}“: ${formula}`)}
+                  className={styles.readerBlock}
+                  {...askable(`Erkläre mir diese Formel aus „${selectedSummary.title}“: ${formula}`)}
                 >
-                  <span className={styles.formulaText}>{formula}</span>
-                  <QuestionIcon size={14} />
-                </button>
+                  <span className={styles.readerLabel}>Formel {formulaIndex + 1}</span>
+                  <p className={styles.readerMath}>{formula}</p>
+                </div>
               ))}
             </div>
 
@@ -391,16 +395,11 @@ export default function TopicView({
           </header>
 
           <div className={styles.cardBody}>
-            <div className={styles.taskBlock}>
-              <span className={styles.taskLabel}>Aufgabe</span>
-              <p className={styles.taskQ}>{selectedTask.q}</p>
-              <button
-                className={styles.boxAsk}
-                onClick={() => onOpenAsk(topic.label, selectedTask.q)}
-              >
-                <QuestionIcon size={13} />
-                Dazu eine Frage stellen
-              </button>
+            <div className={styles.reader}>
+              <div className={styles.readerBlock} {...askable(selectedTask.q)}>
+                <span className={styles.readerLabel}>Aufgabe</span>
+                <p className={styles.readerText}>{selectedTask.q}</p>
+              </div>
             </div>
 
             <div className={styles.solRow}>
@@ -419,34 +418,28 @@ export default function TopicView({
                 {selectedTask.steps.length > 0 && (
                   <div className={styles.solution}>
                     <div className={styles.solHead}>
-                      <div className={styles.solTitle}>Schritt-für-Schritt-Lösung</div>
-                      <span className={styles.solHint}>Tippe auf einen Schritt für mehr Erklärung</span>
+                      <div className={styles.solTitle}>Lösung</div>
+                      <span className={styles.solHint}>Tippe auf einen Abschnitt, um dazu zu fragen</span>
                     </div>
-                    {selectedTask.steps.map((step, stepIndex) => (
-                      <div
-                        key={stepIndex}
-                        className={styles.sstep}
-                        style={{ animationDelay: `${stepIndex * 50}ms` }}
-                        role="button"
-                        tabIndex={0}
-                        title="Diesen Schritt vom Coach erklären lassen"
-                        onClick={() => onOpenAsk(topic.label, `Schritt ${stepIndex + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${selectedTask.q}`)}
-                        onKeyDown={event => {
-                          if (event.key === 'Enter' || event.key === ' ') {
-                            event.preventDefault();
-                            onOpenAsk(topic.label, `Schritt ${stepIndex + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${selectedTask.q}`);
-                          }
-                        }}
-                      >
-                        <div className={styles.stepNum}>{stepIndex + 1}</div>
-                        <div className={styles.stepBody}>
-                          <div className={styles.stepLd}>{step.label}</div>
-                          <div className={styles.stepMt}>{step.math}</div>
+                    <div className={styles.reader}>
+                      {selectedTask.steps.map((step, stepIndex) => (
+                        <div
+                          key={stepIndex}
+                          className={styles.readerBlock}
+                          style={{ animationDelay: `${stepIndex * 50}ms` }}
+                          {...askable(`Schritt ${stepIndex + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${selectedTask.q}`)}
+                        >
+                          <span className={styles.readerLabel}>Schritt {stepIndex + 1}: {step.label}</span>
+                          <p className={styles.readerMath}>{step.math}</p>
                         </div>
-                        <QuestionIcon size={15} />
-                      </div>
-                    ))}
-                    {selectedTask.result && <div className={styles.result}>{selectedTask.result}</div>}
+                      ))}
+                      {selectedTask.result && (
+                        <div className={styles.readerBlock} {...askable(`Erkläre mir das Ergebnis: ${selectedTask.result}`)}>
+                          <span className={styles.readerLabel}>Ergebnis</span>
+                          <p className={`${styles.readerMath} ${styles.readerResult}`}>{selectedTask.result}</p>
+                        </div>
+                      )}
+                    </div>
                     {selectedTask.mistakes && selectedTask.mistakes.length > 0 && (
                       <div className={styles.mistakes}>
                         <div className={styles.mistakesTitle}>Typische Fehler</div>

@@ -745,15 +745,15 @@
 .libraryIntro {
   display: grid;
   grid-template-columns: 1fr;
-  justify-items: center;
+  justify-items: start;
   gap: 22px;
   margin-bottom: 52px;
-  text-align: center;
+  text-align: left;
 }
 
 .libraryPromise p {
   max-width: 56ch;
-  margin-inline: auto;
+  margin-inline: 0;
   color: var(--muted);
   font-size: 16px;
   line-height: 1.65;
@@ -871,8 +871,8 @@
 .focusIntro { padding: 58px 52px 58px 0; text-align: center; }
 .focusIntro > p { margin-top: 24px; }
 
-.trustBlock { padding: 58px 0 58px 48px; border-left: 1px solid var(--line-strong); text-align: center; }
-.trustBlock > p { max-width: 50ch; margin: 12px auto 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.trustBlock { padding: 58px 0 58px 48px; border-left: 1px solid var(--line-strong); text-align: left; }
+.trustBlock > p { max-width: 50ch; margin: 12px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
 .trustFacts { display: flex; flex-direction: column; margin-top: 32px; }
 .trustFacts > div { display: flex; flex-direction: column; gap: 5px; padding: 17px 0; border-top: 1px solid var(--line); }
 .trustFacts > div:last-child { border-bottom: 1px solid var(--line); }
@@ -888,7 +888,7 @@
   align-items: baseline;
   padding: 29px 0;
   border-bottom: 1px solid var(--line-strong);
-  text-align: center;
+  text-align: left;
 }
 
 .subjectMarker,
@@ -1526,9 +1526,10 @@
   text-align: left;
 }
 .heroHighlights { justify-content: flex-start; }
-/* Der Haupt-Knopf steht mittig in der Textspalte. */
-.heroActions { justify-content: center; }
-.heroPrimaryAction { align-items: center; }
+/* Der Haupt-Knopf sitzt wieder links — bündig mit Eyebrow, Headline und
+   Stichpunkten, nur leicht eingerückt. */
+.heroActions { justify-content: flex-start; padding-left: 4px; }
+.heroPrimaryAction { align-items: flex-start; }
 
 /* Dark Mode: eigenes, dunkel aufgenommenes Motiv — deshalb KEINE nachträgliche
    Abdunklung mehr. Nur die Schleierfarbe wechselt auf die dunkle Seitenfarbe. */

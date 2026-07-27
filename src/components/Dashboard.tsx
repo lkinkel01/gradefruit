@@ -70,12 +70,9 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
           <span className={styles.cdDays}>{daysLeft ?? '—'}</span>
           <span className={styles.cdLabel}>Tage bis zur Prüfung</span>
         </p>
-        <p className={styles.cdMeta}>
-          <span className={styles.cdTitle}>Schriftliche Abschlussprüfung Mathematik · Hessen</span>
-          <span className={styles.cdDate}>
-            {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
-            {EXAM_DATE_IS_PRELIMINARY && ' · voraussichtlich'}
-          </span>
+        <p className={styles.cdDate}>
+          {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
+          {EXAM_DATE_IS_PRELIMINARY && ' · voraussichtlich'}
         </p>
       </div>
 
