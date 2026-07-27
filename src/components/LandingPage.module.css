@@ -1436,9 +1436,9 @@
   align-items: center;
   margin: 14px calc(50% - 50vw) 0;
   width: 100vw;
-  /* Höhe bewusst nah am Seitenverhältnis des Fotos (3:2): so bleibt die ganze
-     Szene — Laptop, Collegeblock und Stift — sichtbar statt seitlich beschnitten. */
-  min-height: min(74vh, 620px);
+  /* Höhe nah am Seitenverhältnis des Fotos (16:9), damit der Laptop nicht
+     seitlich beschnitten wird und der Bildschirm ganz im Bild bleibt. */
+  min-height: min(70vh, 580px);
   /* Kein senkrechtes Padding: so füllt das Bild die Sektion oben/unten ganz aus
      (der Innenabstand sitzt an der Textspalte). Links der Lesetext-Einzug. */
   padding: 0 0 0 max(24px, calc(50vw - 610px));
@@ -1495,9 +1495,9 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(to right, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 26%),
-    linear-gradient(to bottom, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 12%),
-    linear-gradient(to top, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 10%);
+    linear-gradient(to right, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 15%),
+    linear-gradient(to bottom, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 10%),
+    linear-gradient(to top, rgba(var(--scrim), 1) 0%, rgba(var(--scrim), 0) 9%);
 }
 .heroCopy {
   position: relative;

@@ -599,9 +599,9 @@ export default function LandingPage({
             <div className={styles.heroPhoto}>
               <img
                 src="/hero-lernplatz.jpg"
-                alt="Lernplatz mit aufgeklapptem Laptop, auf dem das Gradefruit-Dashboard läuft, daneben ein karierter Collegeblock und ein Stift."
-                width={1536}
-                height={1024}
+                alt="Aufgeklappter Laptop auf einem hellen Schreibtisch, auf dem Bildschirm läuft das Gradefruit-Dashboard mit Lernfortschritt."
+                width={2560}
+                height={1440}
                 loading="eager"
                 draggable={false}
               />
