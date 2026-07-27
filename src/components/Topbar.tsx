@@ -33,7 +33,8 @@ interface Props {
 
 export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
   const { user } = useAuth();
-  const initials = user ? (user.user_metadata?.full_name || user.email || 'U').slice(0, 2).toUpperCase() : null;
+  // Kürzel im Konto-Knopf: bewusst die Marke, nicht der Nutzername.
+  const initials = user ? 'GR' : null;
 
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -56,8 +57,9 @@ export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleD
     const apply = (nextY: number) => {
       const delta = nextY - lastScrollY.current;
       setScrolled(nextY > 12);
-      setHidden(nextY > 96 && delta > 3);
-      if (nextY < 20 || delta < -3) setHidden(false);
+      // Beim Scrollen verschwindet die Leiste komplett; sie kommt erst
+      // wieder, wenn man ganz oben ist.
+      setHidden(nextY > 8);
       lastScrollY.current = nextY;
     };
 

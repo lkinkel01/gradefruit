@@ -13,7 +13,8 @@ import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
 import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
 import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
 import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
-import { ArrowRightIcon, ChevronIcon, QuestionIcon, TutorIcon, UploadIcon } from './UiIcons';
+import { ArrowRightIcon, ChevronIcon, SparkIcon, TutorIcon, UploadIcon } from './UiIcons';
+import type { AskSource } from './AskDrawer';
 
 interface Task {
   id: string;
@@ -59,7 +60,7 @@ interface Props {
   tab: TopicTab;
   itemId: string | null;
   onOpenCheckout: (course: 'gk' | 'lk') => void;
-  onOpenAsk: (ctx: string, snippet: string) => void;
+  onOpenAsk: (ctx: string, snippet: string, source?: AskSource | null) => void;
   onNavigate: NavigateTo;
   onLocationChange: (tab: TopicTab, itemId: string | null, itemLabel: string | null) => void;
   onItemLabelChange: (itemLabel: string | null) => void;
@@ -192,6 +193,28 @@ export default function TopicView({
     router.push('/feed');
   };
 
+  // Eigene Textauswahl: Wer eine Stelle markiert, bekommt einen kleinen Knopf
+  // direkt daneben und kann gezielt dazu fragen. Ohne Auswahl passiert nichts —
+  // die Funktion stört das normale Lesen also nicht.
+  const [selection, setSelection] = useState<{ text: string; x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    const onSelect = () => {
+      const sel = window.getSelection();
+      const text = sel?.toString().trim() ?? '';
+      if (!sel || sel.rangeCount === 0 || text.length < 2) { setSelection(null); return; }
+      const node = sel.anchorNode;
+      const host = node instanceof Element ? node : node?.parentElement ?? null;
+      // Nur innerhalb der Inhaltsblöcke anbieten.
+      if (!host || !host.closest('[data-askable]')) { setSelection(null); return; }
+      const rect = sel.getRangeAt(0).getBoundingClientRect();
+      if (!rect.width && !rect.height) { setSelection(null); return; }
+      setSelection({ text, x: rect.left + rect.width / 2, y: rect.top });
+    };
+    document.addEventListener('selectionchange', onSelect);
+    return () => document.removeEventListener('selectionchange', onSelect);
+  }, []);
+
   // Fließtext in Absätze zerlegen: je Satz eine Zeile. So beginnt kein Satz
   // mitten in einer Zeile und lange Texte bleiben lesbar.
   const paragraphs = (text: string) =>
@@ -210,15 +233,16 @@ export default function TopicView({
 
   // Jeder Inhaltsabschnitt ist selbst anklickbar und stellt dazu eine Frage —
   // deshalb braucht es keinen eigenen „Dazu eine Frage stellen"-Knopf mehr.
-  const askable = (snippet: string) => ({
+  const askable = (snippet: string, source?: AskSource) => ({
+    'data-askable': true,
     role: 'button',
     tabIndex: 0,
     title: 'Antippen, um dazu eine Frage zu stellen',
-    onClick: () => onOpenAsk(topic.label, snippet),
+    onClick: () => onOpenAsk(topic.label, snippet, source),
     onKeyDown: (event: React.KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        onOpenAsk(topic.label, snippet);
+        onOpenAsk(topic.label, snippet, source);
       }
     },
   });
@@ -228,7 +252,7 @@ export default function TopicView({
   const actionBar = (opts: { askCtx: string; askSnippet: string }) => (
     <div className={styles.rowActions} aria-label="Weitere Lernhilfen">
       <button className={styles.mini} onClick={() => onOpenAsk(opts.askCtx, opts.askSnippet)}>
-        <QuestionIcon size={14} />
+        <SparkIcon size={14} />
         KI fragen
       </button>
       <button className={styles.mini} onClick={() => onNavigate('tutors')}>
@@ -265,7 +289,6 @@ export default function TopicView({
       {actionBar({ askCtx: opts.askCtx, askSnippet: opts.askSnippet })}
       {user && (
         <div className={styles.statusRow}>
-          <span className={styles.zoneLabel}>Lernstatus</span>
           {statusSegment(opts.status, opts.onSet)}
         </div>
       )}
@@ -326,6 +349,13 @@ export default function TopicView({
   const renderSummaryDetail = () => {
     if (!selectedSummary) return renderSummaryIndex();
     const status = summaryStatuses[summaryStatusKey(selectedSummary.title)] ?? 'none';
+    // Der Coach zeigt den ganzen Abschnitt und hebt den angetippten Teil hervor.
+    const summarySource = (highlight: number): AskSource => ({
+      number: selectedSummaryIndex + 1,
+      title: selectedSummary.title,
+      blocks: [selectedSummary.text, ...selectedSummary.formulas],
+      highlight,
+    });
 
     return (
       <div className={styles.detailPage}>
@@ -348,7 +378,10 @@ export default function TopicView({
             <div className={styles.reader}>
               <div
                 className={styles.readerBlock}
-                {...askable(`Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`)}
+                {...askable(
+                  `Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`,
+                  summarySource(0),
+                )}
               >
                 {richText(selectedSummary.text, styles.readerText)}
               </div>
@@ -357,7 +390,10 @@ export default function TopicView({
                 <div
                   key={formulaIndex}
                   className={styles.readerBlock}
-                  {...askable(`Erkläre mir diese Formel aus „${selectedSummary.title}“: ${formula}`)}
+                  {...askable(
+                    `Erkläre mir diese Formel aus „${selectedSummary.title}“: ${formula}`,
+                    summarySource(formulaIndex + 1),
+                  )}
                 >
                   <p className={styles.readerMath}>{formula}</p>
                 </div>
@@ -408,6 +444,17 @@ export default function TopicView({
     if (!selectedTask) return renderExerciseIndex();
     const status = statusOf(topicId, selectedTask.id);
     const solutionOpen = openSolutions.has(selectedTask.id);
+    const taskBlocks = [
+      selectedTask.q,
+      ...selectedTask.steps.map(step => `${step.label}: ${step.math}`),
+      ...(selectedTask.result ? [selectedTask.result] : []),
+    ];
+    const taskSource = (highlight: number): AskSource => ({
+      number: selectedTaskIndex + 1,
+      title: selectedTask.tag,
+      blocks: taskBlocks,
+      highlight,
+    });
 
     return (
       <div className={styles.detailPage}>
@@ -427,7 +474,7 @@ export default function TopicView({
 
           <div className={styles.cardBody}>
             <div className={styles.reader}>
-              <div className={styles.readerBlock} {...askable(selectedTask.q)}>
+              <div className={styles.readerBlock} {...askable(selectedTask.q, taskSource(0))}>
                 <span className={styles.readerLabel}>Aufgabe</span>
                 {richText(selectedTask.q, styles.readerText)}
               </div>
@@ -440,7 +487,7 @@ export default function TopicView({
                 aria-expanded={solutionOpen}
               >
                 <ChevronIcon direction={solutionOpen ? 'up' : 'down'} size={14} />
-                {solutionOpen ? 'Lösung verbergen' : 'Lösung'}
+                {solutionOpen ? 'Lösung verbergen' : 'Lösung anzeigen'}
               </button>
             </div>
 
@@ -458,14 +505,19 @@ export default function TopicView({
                           key={stepIndex}
                           className={styles.readerBlock}
                           style={{ animationDelay: `${stepIndex * 50}ms` }}
-                          {...askable(`Schritt ${stepIndex + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${selectedTask.q}`)}
+                          {...askable(
+                            `Schritt ${stepIndex + 1} (${step.label}): ${step.math}\n\naus der Aufgabe: ${selectedTask.q}`,
+                            taskSource(stepIndex + 1),
+                          )}
                         >
                           <span className={styles.readerLabel}>Schritt {stepIndex + 1}: {step.label}</span>
-                          <p className={styles.readerMath}>{step.math}</p>
+                          {step.math.split('\n').map(line => line.trim()).filter(Boolean).map((line, lineIndex) => (
+                            <p key={lineIndex} className={styles.readerMath}>{line}</p>
+                          ))}
                         </div>
                       ))}
                       {selectedTask.result && (
-                        <div className={styles.readerBlock} {...askable(`Erkläre mir das Ergebnis: ${selectedTask.result}`)}>
+                        <div className={styles.readerBlock} {...askable(`Erkläre mir das Ergebnis: ${selectedTask.result}`, taskSource(taskBlocks.length - 1))}>
                           <span className={styles.readerLabel}>Ergebnis</span>
                           <p className={`${styles.readerMath} ${styles.readerResult}`}>{selectedTask.result}</p>
                         </div>
@@ -527,6 +579,22 @@ export default function TopicView({
 
   return (
     <div className={styles.page}>
+      {selection && (
+        <button
+          type="button"
+          className={styles.selectAsk}
+          style={{ left: selection.x, top: selection.y }}
+          onMouseDown={event => event.preventDefault()}
+          onClick={() => {
+            onOpenAsk(topic.label, `Erkläre mir diese Stelle: „${selection.text}“`);
+            window.getSelection()?.removeAllRanges();
+            setSelection(null);
+          }}
+        >
+          <SparkIcon size={13} />
+          Dazu fragen
+        </button>
+      )}
       {!detailOpen && (
       <div className={styles.headRow}>
         <h1 className={styles.ph1}>{topic.label}</h1>
@@ -549,24 +617,9 @@ export default function TopicView({
       )}
 
       {!detailOpen && (
-      <div className={styles.tabs} role="tablist" aria-label="Bereich wählen">
-        <button
-          role="tab"
-          aria-selected={tab === 'zusammenfassung'}
-          className={`${styles.tabBtn} ${tab === 'zusammenfassung' ? styles.tabOn : ''}`}
-          onClick={() => selectTab('zusammenfassung')}
-        >
-          Zusammenfassung
-        </button>
-        <button
-          role="tab"
-          aria-selected={tab === 'uebungen'}
-          className={`${styles.tabBtn} ${tab === 'uebungen' ? styles.tabOn : ''}`}
-          onClick={() => selectTab('uebungen')}
-        >
-          Übungen · {tasks.length}
-        </button>
-      </div>
+        <p className={styles.areaTitle}>
+          {tab === 'zusammenfassung' ? 'Zusammenfassung' : `Übungen · ${tasks.length}`}
+        </p>
       )}
 
       {!hasAccess ? (

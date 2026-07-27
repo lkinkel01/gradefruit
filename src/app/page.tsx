@@ -14,7 +14,7 @@ import TutorsView from '@/components/TutorsView';
 import AccountView from '@/components/AccountView';
 import CheckoutModal from '@/components/CheckoutModal';
 import AuthModal from '@/components/AuthModal';
-import AskDrawer from '@/components/AskDrawer';
+import AskDrawer, { type AskSource } from '@/components/AskDrawer';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
@@ -72,6 +72,7 @@ export default function Home() {
   const [askOpen, setAskOpen] = useState(false);
   const [askCtx, setAskCtx] = useState('');
   const [askSnippet, setAskSnippet] = useState('');
+  const [askSource, setAskSource] = useState<AskSource | null>(null);
   const [notice, setNotice] = useState('');
   const [topicTab, setTopicTab] = useState<TopicTab>('zusammenfassung');
   const [topicItemId, setTopicItemId] = useState<string | null>(null);
@@ -167,9 +168,24 @@ export default function Home() {
   // Besitzt jemand genau einen Kurs, zählt der Kauf. Sonst die eigene Wahl.
   const level: 'gk' | 'lk' = owned && !ownedLk ? 'gk' : ownedLk && !owned ? 'lk' : prefLevel;
   const levelChoosable = owned === ownedLk; // niemand oder beide gekauft
+  // Grundkurs und Leistungskurs führen eigene Standorte: Wer die Stufe
+  // wechselt, landet dort, wo er in dieser Stufe zuletzt war.
+  const levelSpots = useRef<Record<'gk' | 'lk', { view: View; tab: TopicTab; itemId: string | null }>>({
+    gk: { view: 'dashboard', tab: 'zusammenfassung', itemId: null },
+    lk: { view: 'dashboard', tab: 'zusammenfassung', itemId: null },
+  });
+
   const chooseLevel = (l: 'gk' | 'lk') => {
+    if (l === level) return;
+    // Aktuellen Standort für die verlassene Stufe merken …
+    levelSpots.current[level] = { view, tab: topicTab, itemId: topicItemId };
     setPrefLevel(l);
     try { localStorage.setItem('gf-level', l); } catch { /* Speicher gesperrt */ }
+    // … und den zuletzt besuchten Standort der neuen Stufe wiederherstellen.
+    const spot = levelSpots.current[l];
+    navigate(spot.view, TOPIC_VIEWS.includes(spot.view)
+      ? { tab: spot.tab, itemId: spot.itemId, itemLabel: spot.itemId }
+      : undefined);
   };
 
   // Theme umschalten. WICHTIG (vor allem für Safari/WebKit): Erst die
@@ -324,9 +340,9 @@ export default function Home() {
     }
   };
 
-  const openAsk = (ctx: string, snippet: string) => {
+  const openAsk = (ctx: string, snippet: string, source?: AskSource | null) => {
     if (!user) { setAuthOpen(true); return; }
-    setAskCtx(ctx); setAskSnippet(snippet); setAskOpen(true);
+    setAskCtx(ctx); setAskSnippet(snippet); setAskSource(source ?? null); setAskOpen(true);
   };
 
   const openAuth = (mode: 'login' | 'register' = 'login') => {
@@ -461,7 +477,7 @@ export default function Home() {
         onAuthenticated={handleAuthenticated}
         initialMode={authMode}
       />
-      <AskDrawer open={askOpen} ctx={askCtx} snippet={askSnippet} onClose={() => setAskOpen(false)} />
+      <AskDrawer open={askOpen} ctx={askCtx} snippet={askSnippet} source={askSource} onClose={() => setAskOpen(false)} />
     </>
   );
 }

@@ -112,7 +112,6 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
       </button>
 
       <button className={styles.dashLink} onClick={() => onNavigate('dashboard')}>
-        <span className={styles.dashIcon}><OverviewIcon /></span>
         Zum Dashboard
       </button>
 
@@ -152,9 +151,9 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
           const expanded = (active && !collapsedTopics.has(t.id)) || hoverTopic === t.id;
           // Unterpunkte sind offen, wenn ihr Bereich aktiv (und nicht manuell
           // zugeklappt) ist ODER die Maus einen Moment darauf liegt.
-          const summaryOpen = (summaryActive && !collapsedSubs.has(`${t.id}:zusammenfassung`))
+          const summaryOpen = (summaryActive && (!!topicItemId || !collapsedSubs.has(`${t.id}:zusammenfassung`)))
             || hoverSub === `${t.id}:zusammenfassung`;
-          const exercisesOpen = (exercisesActive && !collapsedSubs.has(`${t.id}:uebungen`))
+          const exercisesOpen = (exercisesActive && (!!topicItemId || !collapsedSubs.has(`${t.id}:uebungen`)))
             || hoverSub === `${t.id}:uebungen`;
           return (
             <div
@@ -203,7 +202,9 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                   aria-current={summaryActive && !topicItemId ? 'page' : undefined}
                   aria-expanded={summaryOpen}
                   onClick={() => {
-                    if (summaryActive) toggleSub(`${t.id}:zusammenfassung`);
+                    // Steht ein einzelner Abschnitt offen, führt der Klick zurück
+                    // zur vollständigen Liste — sonst klappt er nur ein/aus.
+                    if (summaryActive && !topicItemId) toggleSub(`${t.id}:zusammenfassung`);
                     else onNavigate(t.id, { tab: 'zusammenfassung', itemId: null });
                   }}
                 >
@@ -240,7 +241,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                   aria-current={exercisesActive && !topicItemId ? 'page' : undefined}
                   aria-expanded={exercisesOpen}
                   onClick={() => {
-                    if (exercisesActive) toggleSub(`${t.id}:uebungen`);
+                    if (exercisesActive && !topicItemId) toggleSub(`${t.id}:uebungen`);
                     else onNavigate(t.id, { tab: 'uebungen', itemId: null });
                   }}
                 >

@@ -1,14 +1,25 @@
 'use client';
 import { useState, useEffect, useRef, type ChangeEvent } from 'react';
 import { useAuth } from '@/lib/AuthContext';
+import { SparkIcon } from './UiIcons';
 import styles from './AskDrawer.module.css';
 
 interface Message { role: 'user' | 'ai'; text: string; }
+
+/** Der Inhalt, aus dem die Frage stammt — wird im Coach vollständig gezeigt,
+ *  wobei der angeklickte Abschnitt hervorgehoben ist. */
+export interface AskSource {
+  number?: number;
+  title: string;
+  blocks: string[];
+  highlight: number;
+}
 
 interface Props {
   open: boolean;
   ctx: string;
   snippet: string;
+  source?: AskSource | null;
   onClose: () => void;
 }
 
@@ -62,7 +73,7 @@ function updateLastAi(list: Message[], text: string): Message[] {
   return copy;
 }
 
-export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
+export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props) {
   const { session } = useAuth();
   const [mode, setMode] = useState<'ki' | 'tutor'>('ki');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -171,7 +182,7 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
     if (mode === 'tutor') {
       setMessages(prev => [
         ...prev,
-        { role: 'ai', text: 'Persönliche Tutoren sind bald verfügbar. Solange beantwortet dir die KI deine Frage sofort – tippe dazu oben einfach auf „Sofort per KI".' },
+        { role: 'ai', text: 'Persönliche Tutoren kommen bald. Wechsle oben auf „KI-Assistent", dann bekommst du sofort eine Antwort.' },
       ]);
       return;
     }
@@ -253,49 +264,39 @@ export default function AskDrawer({ open, ctx, snippet, onClose }: Props) {
           <div className={styles.dctx}>{ctx || 'Mathe'}</div>
           <h2 id="coach-title">Gradefruit-Coach</h2>
           <p className={styles.dsub}>Dein persönlicher Lernassistent</p>
-          {snippet && <div className={styles.snippet}><span className={styles.snipLabel}>Aufgabe</span>{snippet}</div>}
+          {source ? (
+            <div className={styles.snippet}>
+              <div className={styles.srcHead}>
+                {typeof source.number === 'number' && <span className={styles.srcNum}>{source.number}</span>}
+                <span className={styles.srcTitle}>{source.title}</span>
+              </div>
+              {source.blocks.map((block, index) => (
+                <p
+                  key={index}
+                  className={`${styles.srcLine} ${index === source.highlight ? styles.srcOn : ''}`}
+                >
+                  {block}
+                </p>
+              ))}
+            </div>
+          ) : snippet ? (
+            <div className={styles.snippet}>{snippet}</div>
+          ) : null}
         </div>
 
         <div className={styles.seg}>
           <button className={mode === 'ki' ? styles.on : ''} onClick={() => setMode('ki')}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 3v2M5 8l1.5 1M19 8l-1.5 1"/><rect x="6" y="9" width="12" height="9" rx="3"/><path d="M9.5 13h.01M14.5 13h.01"/></svg>
-            Sofort per KI
+            <SparkIcon size={14} />
+            KI-Assistent
           </button>
           <button className={mode === 'tutor' ? styles.on : ''} onClick={() => setMode('tutor')}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 19a6.5 6.5 0 0 1 13 0"/></svg>
-            Tutor (bald)
+            Tutor
           </button>
-        </div>
-        <div className={styles.modeHint}>
-          {mode === 'ki' ? 'Sofortige Antwort auf Deutsch, Schritt für Schritt.' : 'Persönliche Tutoren kommen bald. Solange hilft dir die KI sofort weiter.'}
         </div>
 
         <div className={styles.dbody} ref={bodyRef}>
-          {messages.length === 0 && !busy && (
-            mode === 'ki' ? (
-              <div className={styles.starter}>
-                <button className={styles.presetsToggle} onClick={() => setShowPresets(s => !s)}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <polyline points={showPresets ? '18 15 12 9 6 15' : '6 9 12 15 18 9'} />
-                  </svg>
-                  Beispielfragen
-                </button>
-                {showPresets && (
-                  <div className={styles.presets}>
-                    {PRESETS.map(p => (
-                      <button key={p} className={styles.pchip} onClick={() => send(p)} disabled={busy}>{p}</button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className={styles.empty}>
-                Persönliche Tutoren sind bald verfügbar. Wechsle zu „Sofort per KI“,
-                dann helfe ich dir jetzt gleich weiter.
-              </div>
-            )
-          )}
-          {messages.map((m, i) => {
+                    {messages.map((m, i) => {
             const showTyping = m.role === 'ai' && m.text === '' && busy && i === messages.length - 1;
             return (
               <div key={i} className={`${styles.msg} ${m.role === 'user' ? styles.q : styles.a}`}>

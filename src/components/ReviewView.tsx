@@ -102,10 +102,6 @@ export default function ReviewView({ level, onNavigate }: Props) {
   return (
     <div className={styles.page}>
       <h1 className={styles.ph1}>Wiederholen</h1>
-      <p className={styles.blurb}>
-        Alle eingeordneten Aufgaben an einem Ort. Beginne mit dem, was noch
-        unklar ist.
-      </p>
 
       {/* Lernstufe */}
       <div className={styles.filterRow} role="tablist" aria-label="Lernstufe filtern">

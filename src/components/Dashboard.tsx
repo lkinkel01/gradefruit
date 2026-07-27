@@ -1,12 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { View, TOPICS, LernStatus } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { EXAM_DATE, EXAM_DATE_IS_PRELIMINARY, daysUntilExam } from '@/lib/exam';
 import { GrapefruitProgress } from './Logo';
-import { ArrowRightIcon, CalendarIcon, ReelIcon } from './UiIcons';
+import { ArrowRightIcon, CalendarIcon } from './UiIcons';
 import styles from './Dashboard.module.css';
 
 interface Props {
@@ -14,7 +13,6 @@ interface Props {
 }
 
 export default function Dashboard({ onNavigate }: Props) {
-  const router = useRouter();
   const { user } = useAuth();
   const { totalDone, totalLessons, topicDone, topicTotal, statusCounts } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
@@ -30,13 +28,6 @@ export default function Dashboard({ onNavigate }: Props) {
   const openReview = (status: Exclude<LernStatus, 'none'>) => {
     try { localStorage.setItem('gf-review-status', status); } catch { /* Speicher gesperrt */ }
     onNavigate('review');
-  };
-  const openReels = () => {
-    try {
-      localStorage.removeItem('gf-feed-topic');
-      sessionStorage.setItem('gf-feed-return', `${window.location.pathname}${window.location.search}${window.location.hash}`);
-    } catch { /* Speicher gesperrt */ }
-    router.push('/feed');
   };
 
   const statusTiles: { status: Exclude<LernStatus, 'none'>; label: string; num: number }[] = [
@@ -89,13 +80,6 @@ export default function Dashboard({ onNavigate }: Props) {
               <span className={styles.statGo}><ArrowRightIcon size={14} /></span>
             </button>
           ))}
-        </div>
-        <div className={styles.actions}>
-          <button className="btn primary" onClick={() => onNavigate('analysis')}>Weiterlernen</button>
-          <button className="btn light" onClick={openReels}>
-            <ReelIcon size={14} />
-            Reel-Modus
-          </button>
         </div>
       </section>
 

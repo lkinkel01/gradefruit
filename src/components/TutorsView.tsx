@@ -8,9 +8,6 @@ export default function TutorsView() {
   return (
     <div className={styles.page}>
       <h1 className={styles.ph1}>1:1 Nachhilfe</h1>
-      <p className={styles.pblurb}>
-        Persönliche Einzelstunden sind in Vorbereitung.
-      </p>
 
       <div className={styles.soonCard}>
         <div className={styles.soonBadge}>

@@ -30,8 +30,9 @@
 }
 .hidden {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transform: translate3d(0, calc(-100% - 28px), 0);
+  transform: translate3d(0, calc(-100% - 40px), 0);
 }
 
 .hamb {
@@ -136,7 +137,7 @@
   .darkBtn:hover { border-color: var(--line); background: var(--surface-2); color: var(--accent-d); }
   .avatarBtn:hover { background: var(--accent-d); }
   .loginBtn:hover { border-color: var(--ink); background: var(--ink); color: var(--canvas); }
-  .crumbLink:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+  .crumbLink:hover { color: var(--accent-d); }
 }
 
 @media (max-width: 900px) {
