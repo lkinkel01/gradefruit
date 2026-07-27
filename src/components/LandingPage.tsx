@@ -670,10 +670,10 @@ export default function LandingPage({
         <section className={`${styles.section} ${styles.coachSection}`} id="coach">
           <div className={styles.coachCopy}>
             <p className={styles.sectionName}>24/7 KI-Assistent</p>
-            <h2>Klare Antwort.<br />Zu jeder Frage.</h2>
+            <h2>Jede Frage.<br />Sofort geklärt.</h2>
             <p className={styles.sectionLead}>
               Der Coach kennt die Aufgabe, die Formel und den Rechenschritt, vor
-              dem du gerade sitzt. Du musst nichts noch einmal erklären — frag
+              dem du gerade sitzt. Du musst nichts noch einmal erklären. Frag
               einfach direkt an der Stelle nach.
             </p>
             <ul className={styles.capabilityList}>
@@ -681,7 +681,7 @@ export default function LandingPage({
                 <strong>Frag so, wie du denkst</strong>
                 <span>
                   Keine saubere Formulierung nötig, keine Angst vor einer dummen
-                  Frage. „Kapier ich nicht" reicht — der Coach fragt notfalls nach.
+                  Frage. „Kapier ich nicht" reicht völlig aus.
                 </span>
               </li>
               <li>
@@ -702,19 +702,12 @@ export default function LandingPage({
               </div>
               <div className={styles.chat}>
                 <p className={`${styles.bubble} ${styles.bubbleUser}`}>
-                  warum is bei schritt 2 aufeinmal 3(x²-4x+3) da ich versteh das nich
+                  warum = 0 ?
                 </p>
                 <div className={`${styles.bubble} ${styles.bubbleAi}`}>
                   <span className={styles.bubbleWho}><Logo size={18} /> Gradefruit-Coach</span>
-                  <p>Kein Problem — das ist nur Ausklammern, keine neue Regel.</p>
-                  <p>Du hattest <strong>f′(x) = 3x² − 12x + 9</strong>. In jedem Summanden steckt eine 3:</p>
-                  <p className={styles.bubbleMath}>3x² − 12x + 9 = 3·(x² − 4x + 3)</p>
-                  <p>Das macht die Nullstellen leichter: Der Faktor 3 wird nie null, also reicht x² − 4x + 3 = 0.</p>
-                </div>
-                <p className={`${styles.bubble} ${styles.bubbleUser}`}>ok und dann?</p>
-                <div className={`${styles.bubble} ${styles.bubbleAi}`}>
-                  <span className={styles.bubbleWho}><Logo size={18} /> Gradefruit-Coach</span>
-                  <p>Faktorisieren: <strong>(x − 1)(x − 3) = 0</strong> → x = 1 und x = 3. Das sind deine Kandidaten für die Extrempunkte.</p>
+                  <p>Weil die Steigung im Hoch- oder Tiefpunkt waagerecht ist.</p>
+                  <p>Genau dort gilt <strong>f′(x) = 0</strong>. Deshalb setzt du die Ableitung null und suchst die x-Werte.</p>
                 </div>
               </div>
             </div>
@@ -732,13 +725,10 @@ export default function LandingPage({
           </div>
           <div className={styles.methodList}>
             {LEARNING_METHODS.map(method => (
-              <article key={method.title} className={method.available ? styles.methodRow : `${styles.methodRow} ${styles.methodPlanned}`}>
+              <article key={method.title} className={styles.methodRow}>
                 <MethodIcon name={method.icon} />
                 <h3>{method.title}</h3>
                 <p>{method.desc}</p>
-                <span className={method.available ? styles.methodLive : styles.methodSoon}>
-                  {method.available ? 'Im Produkt' : 'In Vorbereitung'}
-                </span>
               </article>
             ))}
           </div>
@@ -747,7 +737,7 @@ export default function LandingPage({
         <section className={`${styles.section} ${styles.visualSection}`}>
           <div className={styles.visualCopy}>
             <p className={styles.sectionName}>Reel-Modus</p>
-            <h2>Swipen —<br />und dabei lernen.</h2>
+            <h2>Swipen.<br />Und dabei lernen.</h2>
             <p className={styles.sectionLead}>
               Mit Gradefruit lernst du im Swipe-Format, wie du es von TikTok und
               Instagram kennst. Nur dass hier keine Videos über den Bildschirm
@@ -755,7 +745,7 @@ export default function LandingPage({
               dran sind.
             </p>
             <p className={styles.visualNote}>
-              Welche Karte als Nächstes kommt, entscheidet dein Lernstand — nach
+              Welche Karte als Nächstes kommt, entscheidet dein Lernstand nach
               dem Prinzip der Spaced Repetition.
             </p>
           </div>

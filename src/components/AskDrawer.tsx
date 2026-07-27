@@ -13,6 +13,8 @@ export interface AskSource {
   title: string;
   blocks: string[];
   highlight: number;
+  /** Wenn nur eine Stelle markiert wurde: genau dieser Ausschnitt wird betont. */
+  mark?: string;
 }
 
 interface Props {
@@ -270,14 +272,28 @@ export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props
                 {typeof source.number === 'number' && <span className={styles.srcNum}>{source.number}</span>}
                 <span className={styles.srcTitle}>{source.title}</span>
               </div>
-              {source.blocks.map((block, index) => (
-                <p
-                  key={index}
-                  className={`${styles.srcLine} ${index === source.highlight ? styles.srcOn : ''}`}
-                >
-                  {block}
-                </p>
-              ))}
+              {source.blocks.map((block, index) => {
+                const active = index === source.highlight;
+                // Bei einer Textmarkierung nur den markierten Ausschnitt betonen,
+                // der Rest des Abschnitts bleibt ruhig lesbar.
+                if (active && source.mark) {
+                  const at = block.indexOf(source.mark);
+                  if (at >= 0) {
+                    return (
+                      <p key={index} className={styles.srcLine}>
+                        {block.slice(0, at)}
+                        <mark className={styles.srcMark}>{source.mark}</mark>
+                        {block.slice(at + source.mark.length)}
+                      </p>
+                    );
+                  }
+                }
+                return (
+                  <p key={index} className={`${styles.srcLine} ${active ? styles.srcOn : ''}`}>
+                    {block}
+                  </p>
+                );
+              })}
             </div>
           ) : snippet ? (
             <div className={styles.snippet}>{snippet}</div>

@@ -39,14 +39,18 @@
   min-height: 58px;
   margin-top: 12px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--line-strong) 72%, transparent);
-  border-radius: var(--radius-panel);
-  background: color-mix(in srgb, var(--surface) 48%, transparent);
-  -webkit-backdrop-filter: blur(28px) saturate(175%);
-  backdrop-filter: blur(28px) saturate(175%);
+  border: 1px solid color-mix(in srgb, var(--line-strong) 46%, transparent);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--surface) 34%, transparent);
+  /* Apple-artiges Glas: starke Unschärfe, kräftige Sättigung, minimal
+     aufgehellt — dazu eine feine Lichtkante oben und ein weicher Schatten. */
+  -webkit-backdrop-filter: blur(40px) saturate(190%) brightness(1.06);
+  backdrop-filter: blur(40px) saturate(190%) brightness(1.06);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--surface) 72%, transparent),
-    0 14px 44px color-mix(in srgb, var(--nav-shadow-strong) 58%, transparent);
+    inset 0 1px 0 color-mix(in srgb, #fff 62%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--ink) 6%, transparent),
+    0 1px 2px color-mix(in srgb, var(--nav-shadow-strong) 24%, transparent),
+    0 18px 50px color-mix(in srgb, var(--nav-shadow-strong) 46%, transparent);
   isolation: isolate;
   transform: translate3d(0, 0, 0);
   transition:
@@ -64,7 +68,8 @@
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface) 46%, transparent), transparent 66%);
+    linear-gradient(180deg, color-mix(in srgb, #fff 30%, transparent), transparent 58%),
+    radial-gradient(120% 140% at 50% -40%, color-mix(in srgb, #fff 22%, transparent), transparent 62%);
   content: '';
   opacity: 1;
   pointer-events: none;
@@ -625,8 +630,8 @@
   text-align: center;
 }
 
-.capabilityList { list-style: none; margin-top: 38px; }
-.capabilityList li { display: grid; justify-items: center; gap: 5px; padding: 18px 0; border-top: 1px solid var(--line); }
+.capabilityList { text-align: center; list-style: none; margin-top: 38px; }
+.capabilityList li { text-align: center; display: grid; justify-items: center; gap: 5px; padding: 18px 0; border-top: 1px solid var(--line); }
 .capabilityList li:last-child { border-bottom: 1px solid var(--line); }
 .capabilityList strong { font-size: 16px; }
 
@@ -1564,6 +1569,8 @@
   .heroHighlights { justify-content: center; margin-top: 22px; }
   .heroActions { justify-content: center; padding-left: 0; width: 100%; }
   .heroPrimaryAction { align-items: center; width: 100%; }
+  /* Knopf nicht über die volle Breite — etwas schmaler wirkt ruhiger. */
+  .heroActions :global(.btn) { width: auto; min-width: 0; padding-inline: 40px; }
   .heroVisual {
     order: 1;
     position: relative;
@@ -1728,5 +1735,20 @@
   .bubbleMath, .reelMath { font-size: 15px; }
   .reelPhone { width: min(240px, 72%); }
   .reelQ { font-size: 19px; }
-  .capabilityList li { padding: 14px 0; }
+  .capabilityList li { text-align: center; padding: 14px 0; }
+}
+
+/* Im Dunkelmodus trägt das Glas eine kühle statt weiße Lichtkante. */
+:global(body.dark) .nav {
+  border-color: color-mix(in srgb, #fff 12%, transparent);
+  background: color-mix(in srgb, var(--surface) 42%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 16%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, #000 30%, transparent),
+    0 20px 54px color-mix(in srgb, #000 62%, transparent);
+}
+:global(body.dark) .nav::before {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, #fff 9%, transparent), transparent 58%),
+    radial-gradient(120% 140% at 50% -40%, color-mix(in srgb, #fff 7%, transparent), transparent 62%);
 }

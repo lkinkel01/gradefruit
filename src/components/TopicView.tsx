@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { LernStatus, NavigateTo, STATUS_LABEL, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
@@ -197,6 +197,10 @@ export default function TopicView({
   // direkt daneben und kann gezielt dazu fragen. Ohne Auswahl passiert nichts —
   // die Funktion stört das normale Lesen also nicht.
   const [selection, setSelection] = useState<{ text: string; x: number; y: number } | null>(null);
+  // Merkt sich zu jedem Inhaltsblock seine Frage-Quelle, damit eine Markierung
+  // dieselbe vollständige Aufgabe zeigen kann wie ein Klick auf den Block.
+  const askRegistry = useRef(new Map<HTMLElement, { snippet: string; source?: AskSource }>());
+  const selectionHost = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     // Erst wenn die Maus losgelassen wird, prüfen wir die Auswahl. Während des
@@ -207,7 +211,9 @@ export default function TopicView({
       if (!sel || sel.rangeCount === 0 || text.length < 2) { setSelection(null); return; }
       const node = sel.anchorNode;
       const host = node instanceof Element ? node : node?.parentElement ?? null;
-      if (!host || !host.closest('[data-askable]')) { setSelection(null); return; }
+      const block = host?.closest('[data-askable]') as HTMLElement | null;
+      if (!block) { setSelection(null); return; }
+      selectionHost.current = block;
       const rect = sel.getRangeAt(0).getBoundingClientRect();
       if (!rect.width && !rect.height) { setSelection(null); return; }
       setSelection({ text, x: rect.left + rect.width / 2, y: rect.top });
@@ -241,6 +247,7 @@ export default function TopicView({
   // deshalb braucht es keinen eigenen „Dazu eine Frage stellen"-Knopf mehr.
   const askable = (snippet: string, source?: AskSource) => ({
     'data-askable': true,
+    ref: (el: HTMLElement | null) => { if (el) askRegistry.current.set(el, { snippet, source }); },
     role: 'button',
     tabIndex: 0,
     title: 'Antippen, um dazu eine Frage zu stellen',
@@ -632,7 +639,17 @@ export default function TopicView({
           style={{ left: selection.x, top: selection.y }}
           onMouseDown={event => event.preventDefault()}
           onClick={() => {
-            onOpenAsk(topic.label, `Erkläre mir diese Stelle: „${selection.text}“`);
+            // Es erscheint die ganze Aufgabe — markiert ist nur die Stelle,
+            // die du ausgewählt hast.
+            const entry = selectionHost.current ? askRegistry.current.get(selectionHost.current) : undefined;
+            const source = entry?.source
+              ? { ...entry.source, mark: selection.text }
+              : undefined;
+            onOpenAsk(
+              topic.label,
+              `Erkläre mir diese Stelle: „${selection.text}“${entry ? `\n\naus: ${entry.snippet}` : ''}`,
+              source,
+            );
             window.getSelection()?.removeAllRanges();
             setSelection(null);
           }}
