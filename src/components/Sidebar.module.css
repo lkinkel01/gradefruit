@@ -54,6 +54,45 @@
 .dashIcon { display: inline-flex; color: var(--accent); }
 .dashIcon svg { width: 18px; height: 18px; }
 
+/* Kursstufe: Umschalter direkt in der Navigation */
+.levelSeg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin: 12px 9px 4px;
+  padding: 3px;
+  border: 1px solid color-mix(in srgb, var(--side-tx) 16%, transparent);
+  border-radius: var(--radius-control);
+}
+.levelBtn {
+  min-height: 38px;
+  padding: 8px 6px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--side-faint);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.levelOn {
+  background: color-mix(in srgb, var(--side-tx) 14%, transparent);
+  color: var(--side-tx);
+}
+.levelBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.levelBadge {
+  margin: 12px 9px 4px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--side-tx) 16%, transparent);
+  border-radius: var(--radius-control);
+  color: var(--side-faint);
+  font-size: 12.5px;
+  font-weight: 650;
+  text-align: center;
+}
+
 .navsec {
   margin: 11px 9px 7px;
   color: var(--side-faint);

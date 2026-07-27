@@ -112,6 +112,7 @@ export default function TopicView({
   const { user } = useAuth();
   const { statusOf, setStatus } = useProgress();
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
+  const [mistakesOpen, setMistakesOpen] = useState(false);
   const [summaryStatuses, setSummaryStatuses] = useState<Record<string, LernStatus>>({});
   const isFree = topicId === 'analysis';
 
@@ -126,7 +127,9 @@ export default function TopicView({
   const selectedTask = tab === 'uebungen' ? tasks.find(task => task.id === itemId) : undefined;
   const selectedTaskIndex = selectedTask ? tasks.findIndex(task => task.id === selectedTask.id) : -1;
   const nextSummary = selectedSummaryIndex >= 0 ? summary?.sections[selectedSummaryIndex + 1] : undefined;
+  const prevSummary = selectedSummaryIndex > 0 ? summary?.sections[selectedSummaryIndex - 1] : undefined;
   const nextTask = selectedTaskIndex >= 0 ? tasks[selectedTaskIndex + 1] : undefined;
+  const prevTask = selectedTaskIndex > 0 ? tasks[selectedTaskIndex - 1] : undefined;
 
   useEffect(() => {
     onItemLabelChange(selectedSummary?.title ?? selectedTask?.tag ?? null);
@@ -176,6 +179,7 @@ export default function TopicView({
 
   const openTaskItem = (task: Task) => {
     setOpenSolutions(new Set());
+    setMistakesOpen(false);
     onLocationChange('uebungen', task.id, task.tag);
   };
 
@@ -187,6 +191,22 @@ export default function TopicView({
     } catch { /* Speicher gesperrt */ }
     router.push('/feed');
   };
+
+  // Fließtext in Absätze zerlegen: je Satz eine Zeile. So beginnt kein Satz
+  // mitten in einer Zeile und lange Texte bleiben lesbar.
+  const paragraphs = (text: string) =>
+    text
+      .split(/(?<=[.!?])\s+(?=[A-ZÄÖÜ„(])/)
+      .map(part => part.trim())
+      .filter(Boolean);
+
+  const richText = (text: string, className: string) => (
+    <>
+      {paragraphs(text).map((part, index) => (
+        <p key={index} className={className}>{part}</p>
+      ))}
+    </>
+  );
 
   // Jeder Inhaltsabschnitt ist selbst anklickbar und stellt dazu eine Frage —
   // deshalb braucht es keinen eigenen „Dazu eine Frage stellen"-Knopf mehr.
@@ -252,19 +272,33 @@ export default function TopicView({
     </div>
   );
 
-  const nextCta = (next: string | undefined, onNext: () => void, kind: 'Aufgabe' | 'Zusammenfassung') =>
-    next ? (
-      <button type="button" className={`btn primary ${styles.nextCta}`} onClick={onNext}>
-        <span>Nächste {kind}: {next}</span>
-        <ArrowRightIcon size={16} />
-      </button>
-    ) : null;
+  // Blättern: links der vorherige Eintrag, rechts der nächste — jeweils nur
+  // mit seinem eigenen Titel, ohne „Nächste Zusammenfassung: …"-Vorspann.
+  const pager = (
+    prev: { label: string; onGo: () => void } | null,
+    next: { label: string; onGo: () => void } | null,
+  ) => (prev || next) ? (
+    <div className={styles.pager}>
+      {prev ? (
+        <button type="button" className={`${styles.pagerBtn} ${styles.pagerPrev}`} onClick={prev.onGo}>
+          <span className={styles.pagerArrowBack} aria-hidden="true"><ArrowRightIcon size={16} /></span>
+          <span className={styles.pagerLabel}>{prev.label}</span>
+        </button>
+      ) : <span />}
+      {next ? (
+        <button type="button" className={`${styles.pagerBtn} ${styles.pagerNext}`} onClick={next.onGo}>
+          <span className={styles.pagerLabel}>{next.label}</span>
+          <ArrowRightIcon size={16} />
+        </button>
+      ) : <span />}
+    </div>
+  ) : null;
 
   const renderSummaryIndex = () => (
     <div className={styles.contentIndex}>
       {summary?.intro && (
         <div className={styles.introBox} {...askable(summary.intro)}>
-          <p>{summary.intro}</p>
+          {richText(summary.intro, '')}
         </div>
       )}
       <div className={styles.indexList}>
@@ -285,11 +319,6 @@ export default function TopicView({
             </button>
           );
         })}
-      </div>
-      <div className={styles.summaryFoot}>
-        <button className="btn primary" onClick={() => selectTab('uebungen')}>
-          Jetzt üben
-        </button>
       </div>
     </div>
   );
@@ -321,7 +350,7 @@ export default function TopicView({
                 className={styles.readerBlock}
                 {...askable(`Erkläre mir das Thema „${selectedSummary.title}“: ${selectedSummary.text}`)}
               >
-                <p className={styles.readerText}>{selectedSummary.text}</p>
+                {richText(selectedSummary.text, styles.readerText)}
               </div>
 
               {selectedSummary.formulas.map((formula, formulaIndex) => (
@@ -330,7 +359,6 @@ export default function TopicView({
                   className={styles.readerBlock}
                   {...askable(`Erkläre mir diese Formel aus „${selectedSummary.title}“: ${formula}`)}
                 >
-                  <span className={styles.readerLabel}>Formel {formulaIndex + 1}</span>
                   <p className={styles.readerMath}>{formula}</p>
                 </div>
               ))}
@@ -344,7 +372,10 @@ export default function TopicView({
             })}
           </div>
         </article>
-        {nextCta(nextSummary?.title, () => nextSummary && openSummaryItem(nextSummary), 'Zusammenfassung')}
+        {pager(
+          prevSummary ? { label: prevSummary.title, onGo: () => openSummaryItem(prevSummary) } : null,
+          nextSummary ? { label: nextSummary.title, onGo: () => openSummaryItem(nextSummary) } : null,
+        )}
       </div>
     );
   };
@@ -398,7 +429,7 @@ export default function TopicView({
             <div className={styles.reader}>
               <div className={styles.readerBlock} {...askable(selectedTask.q)}>
                 <span className={styles.readerLabel}>Aufgabe</span>
-                <p className={styles.readerText}>{selectedTask.q}</p>
+                {richText(selectedTask.q, styles.readerText)}
               </div>
             </div>
 
@@ -440,26 +471,37 @@ export default function TopicView({
                         </div>
                       )}
                     </div>
-                    {selectedTask.mistakes && selectedTask.mistakes.length > 0 && (
-                      <div className={styles.mistakes}>
-                        <div className={styles.mistakesTitle}>Typische Fehler</div>
-                        <ul className={styles.mistakesList}>
-                          {selectedTask.mistakes.map((mistake, mistakeIndex) => (
-                            <li key={mistakeIndex}>{mistake}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
                   </div>
                 )}
 
-                <button
-                  className={`${styles.mini} ${styles.checkOwn}`}
-                  onClick={() => onOpenAsk(topic.label, `Ich habe diese Aufgabe selbst gerechnet und möchte meine Lösung prüfen lassen (Foto oder PDF hochladen): ${selectedTask.q}`)}
-                >
-                  <UploadIcon size={14} />
-                  Eigene Lösung prüfen
-                </button>
+                {/* Typische Fehler stehen nicht mehr im Fluss, sondern lassen
+                    sich neben „Eigene Lösung prüfen" aufklappen. */}
+                <div className={styles.solTools}>
+                  {selectedTask.mistakes && selectedTask.mistakes.length > 0 && (
+                    <button
+                      className={styles.mini}
+                      aria-expanded={mistakesOpen}
+                      onClick={() => setMistakesOpen(open => !open)}
+                    >
+                      <ChevronIcon direction={mistakesOpen ? 'up' : 'down'} size={14} />
+                      Typische Fehler
+                    </button>
+                  )}
+                  <button
+                    className={styles.mini}
+                    onClick={() => onOpenAsk(topic.label, `Ich habe diese Aufgabe selbst gerechnet und möchte meine Lösung prüfen lassen (Foto oder PDF hochladen): ${selectedTask.q}`)}
+                  >
+                    <UploadIcon size={14} />
+                    Eigene Lösung prüfen
+                  </button>
+                </div>
+                {mistakesOpen && selectedTask.mistakes && selectedTask.mistakes.length > 0 && (
+                  <ul className={styles.mistakesList}>
+                    {selectedTask.mistakes.map((mistake, mistakeIndex) => (
+                      <li key={mistakeIndex}>{mistake}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
             )}
 
@@ -471,13 +513,21 @@ export default function TopicView({
             })}
           </div>
         </article>
-        {nextCta(nextTask?.tag, () => nextTask && openTaskItem(nextTask), 'Aufgabe')}
+        {pager(
+          prevTask ? { label: prevTask.tag, onGo: () => openTaskItem(prevTask) } : null,
+          nextTask ? { label: nextTask.tag, onGo: () => openTaskItem(nextTask) } : null,
+        )}
       </div>
     );
   };
 
+  // Ist ein Eintrag geöffnet, geht es direkt zum Inhalt: Titelzeile, Fortschritt
+  // und die Bereichs-Tabs bleiben dann ausgeblendet.
+  const detailOpen = Boolean(selectedSummary || selectedTask);
+
   return (
     <div className={styles.page}>
+      {!detailOpen && (
       <div className={styles.headRow}>
         <h1 className={styles.ph1}>{topic.label}</h1>
         {user && hasAccess && (
@@ -489,14 +539,16 @@ export default function TopicView({
           </button>
         )}
       </div>
+      )}
 
-      {hasAccess && (
+      {!detailOpen && hasAccess && (
         <div className={styles.progressRow}>
           <GrapefruitProgress pct={tasks.length ? (doneCount / tasks.length) * 100 : 0} size={26} />
           <span className={styles.progressLabel}>{doneCount} von {tasks.length} verstanden</span>
         </div>
       )}
 
+      {!detailOpen && (
       <div className={styles.tabs} role="tablist" aria-label="Bereich wählen">
         <button
           role="tab"
@@ -515,6 +567,7 @@ export default function TopicView({
           Übungen · {tasks.length}
         </button>
       </div>
+      )}
 
       {!hasAccess ? (
         <div className={styles.lockCard}>
@@ -538,12 +591,6 @@ export default function TopicView({
       ) : (
         selectedTask ? renderExerciseDetail() : renderExerciseIndex()
       )}
-
-      <div className={styles.topicFoot}>
-        <button className="btn primary" onClick={() => onOpenAsk(topic.label, '')}>
-          Frage stellen
-        </button>
-      </div>
     </div>
   );
 }

@@ -11,12 +11,9 @@ import styles from './Dashboard.module.css';
 
 interface Props {
   onNavigate: (v: View) => void;
-  level: 'gk' | 'lk';
-  choosable: boolean;
-  onChooseLevel: (l: 'gk' | 'lk') => void;
 }
 
-export default function Dashboard({ onNavigate, level, choosable, onChooseLevel }: Props) {
+export default function Dashboard({ onNavigate }: Props) {
   const router = useRouter();
   const { user } = useAuth();
   const { totalDone, totalLessons, topicDone, topicTotal, statusCounts } = useProgress();
@@ -50,48 +47,40 @@ export default function Dashboard({ onNavigate, level, choosable, onChooseLevel 
 
   return (
     <div className={`${styles.page} gf-stagger`}>
-      {/* Kopf: Begrüßung + Kurswahl — bewusst ruhig, ohne Zusatzsatz */}
+      {/* Kopf: nur die Begrüßung. Die Kursstufe wird in der Navigation
+          umgeschaltet, nicht mehr hier. */}
       <div className={styles.head}>
         <h1 className={styles.greet}>Guten Tag{firstName ? `, ${firstName}` : ''}.</h1>
-        {choosable ? (
-          <div className={styles.courseSeg} role="tablist" aria-label="Kursniveau wählen">
-            <button role="tab" aria-selected={level === 'gk'} className={`${styles.courseBtn} ${level === 'gk' ? styles.courseOn : ''}`} onClick={() => onChooseLevel('gk')}>Grundkurs</button>
-            <button role="tab" aria-selected={level === 'lk'} className={`${styles.courseBtn} ${level === 'lk' ? styles.courseOn : ''}`} onClick={() => onChooseLevel('lk')}>Leistungskurs</button>
-          </div>
-        ) : (
-          <span className={styles.courseBadge}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</span>
-        )}
-      </div>
-
-      {/* Prüfungstermin — ruhige Info-Zeile, kein dominanter Anker mehr */}
-      <div className={styles.countdown}>
-        <p className={styles.cdLine}>
-          <span className={styles.cdIcon} aria-hidden="true"><CalendarIcon size={18} /></span>
-          <span className={styles.cdDays}>{daysLeft ?? '—'}</span>
-          <span className={styles.cdLabel}>Tage bis zur Prüfung</span>
-        </p>
-        <p className={styles.cdDate}>
-          {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
-          {EXAM_DATE_IS_PRELIMINARY && ' · voraussichtlich'}
-        </p>
       </div>
 
       {/* Fortschritt und Lernstand — eine zusammengehörige, klickbare Einheit.
           Der Kopf öffnet die Wiederholen-Seite (die bestehende Detailansicht
           des Lernstands); die drei Stufen springen mit vorgewähltem Filter. */}
       <section className={styles.statusSec} aria-label="Fortschritt und Lernstand">
-        <button type="button" className={styles.progressCard} onClick={() => onNavigate('review')}>
-          <GrapefruitProgress pct={pct} size={88} />
-          <span className={styles.progressBody}>
-            <span className={styles.progressTitle}>Fortschritt und Lernstand</span>
-            <span className={styles.progressPct}>
-              <span className={styles.pctNum}>{pct}</span>
-              <span className={styles.pctUnit}>%</span>
+        {/* Eine Kachel, zwei Hälften: links der Countdown, rechts der Lernstand. */}
+        <div className={styles.overviewCard}>
+          <div className={styles.cdCol}>
+            <span className={styles.cdIcon} aria-hidden="true"><CalendarIcon size={18} /></span>
+            <span className={styles.cdDays}>{daysLeft ?? '—'}</span>
+            <span className={styles.cdLabel}>Tage bis zur Prüfung</span>
+            <span className={styles.cdDate}>
+              {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
+              {EXAM_DATE_IS_PRELIMINARY && ' · voraussichtlich'}
             </span>
-            <span className={styles.progressSub}>{totalDone} von {totalLessons} Aufgaben verstanden</span>
-          </span>
-          <span className={styles.progressGo} aria-hidden="true"><ArrowRightIcon size={16} /></span>
-        </button>
+          </div>
+          <button type="button" className={styles.progressCol} onClick={() => onNavigate('review')}>
+            <GrapefruitProgress pct={pct} size={72} />
+            <span className={styles.progressBody}>
+              <span className={styles.progressTitle}>Fortschritt und Lernstand</span>
+              <span className={styles.progressPct}>
+                <span className={styles.pctNum}>{pct}</span>
+                <span className={styles.pctUnit}>%</span>
+              </span>
+              <span className={styles.progressSub}>{totalDone} von {totalLessons} Aufgaben verstanden</span>
+            </span>
+            <span className={styles.progressGo} aria-hidden="true"><ArrowRightIcon size={16} /></span>
+          </button>
+        </div>
         <div className={styles.statRow}>
           {statusTiles.map(t => (
             <button key={t.status} type="button" className={styles.stat} onClick={() => openReview(t.status)}>

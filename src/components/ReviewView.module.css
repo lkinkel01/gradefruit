@@ -1,6 +1,6 @@
 .page { max-width: var(--page-max); margin: 0 auto; padding: var(--page-top) var(--page-gutter) var(--page-bottom); }
-.ph1 { margin-bottom: 8px; font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -0.035em; }
-.blurb { max-width: 58ch; margin-bottom: 26px; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.ph1 { margin-bottom: 8px; text-align: center; font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -0.035em; }
+.blurb { max-width: 58ch; margin: 0 auto 26px; text-align: center; color: var(--muted); font-size: 15px; line-height: 1.6; }
 
 .filterRow {
   max-width: 100%;
@@ -88,8 +88,7 @@
 .emptyText { max-width: 44ch; margin-bottom: 14px; color: var(--muted); font-size: 13.5px; line-height: 1.6; }
 
 @media (hover: hover) and (pointer: fine) {
-  .seg:hover { color: var(--ink); }
-  .chip:hover { border-color: var(--faint); color: var(--ink); }
+  .chip:hover { border-color: var(--faint); }
   .item:hover { background: var(--surface-2); }
   .item:hover .itemGo { color: var(--ink); transform: translateX(3px); }
 }

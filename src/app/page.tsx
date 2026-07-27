@@ -382,7 +382,7 @@ export default function Home() {
   const renderContent = () => {
     switch (view) {
       case 'dashboard':
-        return <Dashboard onNavigate={navigate} level={level} choosable={levelChoosable} onChooseLevel={chooseLevel} />;
+        return <Dashboard onNavigate={navigate} />;
       case 'analysis':
       case 'linalg':
       case 'stochastik':
@@ -409,7 +409,7 @@ export default function Home() {
       case 'review':
         return <ReviewView level={level} onNavigate={navigate} />;
       default:
-        return <Dashboard onNavigate={navigate} level={level} choosable={levelChoosable} onChooseLevel={chooseLevel} />;
+        return <Dashboard onNavigate={navigate} />;
     }
   };
 
@@ -428,6 +428,8 @@ export default function Home() {
           owned={owned}
           ownedLk={ownedLk}
           level={level}
+          levelChoosable={levelChoosable}
+          onChooseLevel={chooseLevel}
           onNavigate={navigate}
           onOpenCheckout={() => openCheckout('gk')}
         />

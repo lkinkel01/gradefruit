@@ -20,6 +20,8 @@ interface Props {
   owned: boolean;
   ownedLk: boolean;
   level: 'gk' | 'lk';
+  levelChoosable: boolean;
+  onChooseLevel: (l: 'gk' | 'lk') => void;
   onNavigate: NavigateTo;
   onOpenCheckout: () => void;
 }
@@ -45,7 +47,7 @@ const TASKS_BY_TOPIC = {
   stochastik: { gk: STOCHASTIK_TASKS, lk: STOCHASTIK_LK_TASKS },
 };
 
-export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, onNavigate, onOpenCheckout }: Props) {
+export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, levelChoosable, onChooseLevel, onNavigate, onOpenCheckout }: Props) {
   const { topicDone, topicTotal } = useProgress();
 
   // Eingeklappte Themen: Ein Klick auf das bereits aktive Thema klappt sein
@@ -59,22 +61,38 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
     else next.add(key);
     return next;
   });
-  // Hover öffnet das Untermenü erst nach einem kurzen Moment (160 ms), damit
-  // beim Vorbeifahren mit der Maus nichts versehentlich aufklappt.
+  // Hover öffnet Untermenüs erst, wenn die Maus einen Moment liegen bleibt
+  // (280 ms) — lang genug, dass beim Vorbeifahren nichts versehentlich
+  // aufklappt, kurz genug, dass es sich nicht zäh anfühlt.
+  const HOVER_DELAY = 280;
   const [hoverTopic, setHoverTopic] = useState<View | null>(null);
   const hoverTimer = useRef<number | null>(null);
+  // Dieselbe Logik eine Ebene tiefer: Zusammenfassung/Übungen klappen ihre
+  // Unterpunkte auch beim Verweilen auf. Schlüssel „id:tab".
+  const [hoverSub, setHoverSub] = useState<string | null>(null);
+  const subTimer = useRef<number | null>(null);
 
   const enterTopic = (id: View) => {
     if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    hoverTimer.current = window.setTimeout(() => setHoverTopic(id), 160);
+    hoverTimer.current = window.setTimeout(() => setHoverTopic(id), HOVER_DELAY);
   };
   const leaveTopic = () => {
     if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
     hoverTimer.current = null;
     setHoverTopic(null);
   };
+  const enterSub = (key: string) => {
+    if (subTimer.current) window.clearTimeout(subTimer.current);
+    subTimer.current = window.setTimeout(() => setHoverSub(key), HOVER_DELAY);
+  };
+  const leaveSub = () => {
+    if (subTimer.current) window.clearTimeout(subTimer.current);
+    subTimer.current = null;
+    setHoverSub(null);
+  };
   useEffect(() => () => {
     if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
+    if (subTimer.current) window.clearTimeout(subTimer.current);
   }, []);
 
   const toggleCollapse = (id: View) => {
@@ -98,6 +116,30 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
         Zum Dashboard
       </button>
 
+      {/* Kursstufe wird hier in der Navigation umgeschaltet (früher im Dashboard). */}
+      {levelChoosable ? (
+        <div className={styles.levelSeg} role="tablist" aria-label="Kursniveau wählen">
+          <button
+            role="tab"
+            aria-selected={level === 'gk'}
+            className={`${styles.levelBtn} ${level === 'gk' ? styles.levelOn : ''}`}
+            onClick={() => onChooseLevel('gk')}
+          >
+            Grundkurs
+          </button>
+          <button
+            role="tab"
+            aria-selected={level === 'lk'}
+            className={`${styles.levelBtn} ${level === 'lk' ? styles.levelOn : ''}`}
+            onClick={() => onChooseLevel('lk')}
+          >
+            Leistungskurs
+          </button>
+        </div>
+      ) : (
+        <div className={styles.levelBadge}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</div>
+      )}
+
       <div className={styles.navsec}>Themen</div>
       <nav className={styles.snav}>
         {TOPICS.map(t => {
@@ -108,6 +150,12 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
           const summaryActive = active && topicTab === 'zusammenfassung';
           const exercisesActive = active && topicTab === 'uebungen';
           const expanded = (active && !collapsedTopics.has(t.id)) || hoverTopic === t.id;
+          // Unterpunkte sind offen, wenn ihr Bereich aktiv (und nicht manuell
+          // zugeklappt) ist ODER die Maus einen Moment darauf liegt.
+          const summaryOpen = (summaryActive && !collapsedSubs.has(`${t.id}:zusammenfassung`))
+            || hoverSub === `${t.id}:zusammenfassung`;
+          const exercisesOpen = (exercisesActive && !collapsedSubs.has(`${t.id}:uebungen`))
+            || hoverSub === `${t.id}:uebungen`;
           return (
             <div
               key={t.id}
@@ -146,10 +194,14 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
               {/* Untermenü: im aktiven Thema offen (einklappbar per Klick auf
                   das Thema), sonst nach kurzem Hover-Moment. */}
               <div className={`${styles.flyout} ${expanded ? styles.flyoutPinned : ''}`}>
+                <div
+                  onMouseEnter={() => enterSub(`${t.id}:zusammenfassung`)}
+                  onMouseLeave={leaveSub}
+                >
                 <button
                   className={`${styles.flyItem} ${summaryActive && !topicItemId ? styles.flyOn : ''} ${summaryActive && topicItemId ? styles.flyParentOn : ''}`}
                   aria-current={summaryActive && !topicItemId ? 'page' : undefined}
-                  aria-expanded={summaryActive ? !collapsedSubs.has(`${t.id}:zusammenfassung`) : undefined}
+                  aria-expanded={summaryOpen}
                   onClick={() => {
                     if (summaryActive) toggleSub(`${t.id}:zusammenfassung`);
                     else onNavigate(t.id, { tab: 'zusammenfassung', itemId: null });
@@ -157,7 +209,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                 >
                   Zusammenfassung
                 </button>
-                {summaryActive && !collapsedSubs.has(`${t.id}:zusammenfassung`) && (
+                {summaryOpen && (
                   <div className={styles.sectionList} aria-label={`Themen in ${t.label}`}>
                     {sections.map(section => {
                       const sectionActive = topicItemId === section.title;
@@ -178,10 +230,15 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                     })}
                   </div>
                 )}
+                </div>
+                <div
+                  onMouseEnter={() => enterSub(`${t.id}:uebungen`)}
+                  onMouseLeave={leaveSub}
+                >
                 <button
                   className={`${styles.flyItem} ${exercisesActive && !topicItemId ? styles.flyOn : ''} ${exercisesActive && topicItemId ? styles.flyParentOn : ''}`}
                   aria-current={exercisesActive && !topicItemId ? 'page' : undefined}
-                  aria-expanded={exercisesActive ? !collapsedSubs.has(`${t.id}:uebungen`) : undefined}
+                  aria-expanded={exercisesOpen}
                   onClick={() => {
                     if (exercisesActive) toggleSub(`${t.id}:uebungen`);
                     else onNavigate(t.id, { tab: 'uebungen', itemId: null });
@@ -189,7 +246,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                 >
                   Übungen
                 </button>
-                {exercisesActive && !collapsedSubs.has(`${t.id}:uebungen`) && (
+                {exercisesOpen && (
                   <div className={styles.sectionList} aria-label={`Übungen in ${t.label}`}>
                     {tasks.map((task, taskIndex) => {
                       const taskActive = topicItemId === task.id;
@@ -211,6 +268,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                     })}
                   </div>
                 )}
+                </div>
               </div>
             </div>
           );

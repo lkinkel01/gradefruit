@@ -41,23 +41,39 @@ export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleD
 
   useEffect(() => {
     let frame = 0;
-    const onScroll = () => {
+    // Im Lernbereich scrollt nicht das Fenster, sondern <body> (globals.css
+    // setzt height:100% + overflow-x:hidden). Scroll-Ereignisse von Elementen
+    // steigen nicht auf — deshalb in der Capture-Phase am document lauschen
+    // und den Stand vom tatsächlichen Scroll-Container lesen.
+    const readY = (target: EventTarget | null) => {
+      if (target instanceof HTMLElement) return Math.max(0, target.scrollTop);
+      if (target === document || target === window) {
+        return Math.max(0, window.scrollY || document.documentElement.scrollTop || document.body.scrollTop);
+      }
+      return Math.max(0, window.scrollY);
+    };
+
+    const apply = (nextY: number) => {
+      const delta = nextY - lastScrollY.current;
+      setScrolled(nextY > 12);
+      setHidden(nextY > 96 && delta > 3);
+      if (nextY < 20 || delta < -3) setHidden(false);
+      lastScrollY.current = nextY;
+    };
+
+    const onScroll = (event: Event) => {
       if (frame) return;
+      const nextY = readY(event.target);
       frame = requestAnimationFrame(() => {
         frame = 0;
-        const nextY = Math.max(0, window.scrollY);
-        const delta = nextY - lastScrollY.current;
-        setScrolled(nextY > 12);
-        setHidden(nextY > 96 && delta > 3);
-        if (nextY < 20 || delta < -3) setHidden(false);
-        lastScrollY.current = nextY;
+        apply(nextY);
       });
     };
 
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    apply(Math.max(0, window.scrollY || document.body.scrollTop));
+    document.addEventListener('scroll', onScroll, { capture: true, passive: true });
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('scroll', onScroll, { capture: true } as EventListenerOptions);
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);

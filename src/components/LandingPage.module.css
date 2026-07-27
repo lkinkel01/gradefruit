@@ -1526,9 +1526,8 @@
   text-align: left;
 }
 .heroHighlights { justify-content: flex-start; }
-/* Der Haupt-Knopf sitzt wieder links — bündig mit Eyebrow, Headline und
-   Stichpunkten, nur leicht eingerückt. */
-.heroActions { justify-content: flex-start; padding-left: 4px; }
+/* Der Haupt-Knopf sitzt zwischen linkem Rand und Mitte der Textspalte. */
+.heroActions { justify-content: flex-start; padding-left: 14%; }
 .heroPrimaryAction { align-items: flex-start; }
 
 /* Dark Mode: eigenes, dunkel aufgenommenes Motiv — deshalb KEINE nachträgliche

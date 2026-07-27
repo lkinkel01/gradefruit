@@ -27,7 +27,7 @@ const TASKS: Record<TopicId, { gk: { id: string; tag: string; q: string; videoId
 };
 
 type StatusFilter = 'alle' | Exclude<LernStatus, 'none'>;
-const STATUS_FILTERS: StatusFilter[] = ['alle', 'wiederholen', 'unklar', 'verstanden'];
+const STATUS_FILTERS: StatusFilter[] = ['alle', 'unklar', 'wiederholen', 'verstanden'];
 
 // Ampel: grün = verstanden, gelb = wiederholen, rot = nicht verstanden.
 const STATUS_DOT: Record<Exclude<LernStatus, 'none'>, string> = {
@@ -161,7 +161,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
           {anyRated ? (
             <>
               <div className={styles.emptyTitle}>Nichts in dieser Auswahl</div>
-              <p className={styles.emptyText}>Ändere die Filter oben – oder lerne weiter und ordne neue Inhalte ein.</p>
+              <p className={styles.emptyText}>Ändere die Filter oben oder lerne weiter und ordne neue Inhalte ein.</p>
             </>
           ) : (
             <>
