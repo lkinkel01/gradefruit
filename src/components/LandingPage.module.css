@@ -1527,7 +1527,7 @@
 :global(body.dark) .hero { --scrim: 5, 5, 5; }
 :global(body.dark) .heroPhoto { border: 0; box-shadow: none; }
 :global(body.dark) .heroPhoto img {
-  filter: brightness(0.5) contrast(1.05) saturate(0.9);
+  filter: brightness(0.78) contrast(1.02) saturate(0.95);
 }
 /* Im Dunkelmodus steht das abgedunkelte Foto sonst als graues Rechteck auf dem
    Schwarz. Deshalb hier deutlich längere Verläufe an allen freien Kanten, damit
@@ -1548,13 +1548,20 @@
     flex-direction: column;
     align-items: stretch;
     min-height: 0;
-    /* Oben nur so viel Platz, dass die Navigationsleiste frei bleibt — vorher
-       stand der Eyebrow-Satz unnötig weit unter dem Menü. */
-    padding: 68px 24px 0;
+    padding: 0 24px 0;
   }
+  /* Mobil füllt der Textblock den ersten Bildschirm allein aus: Eyebrow,
+     Headline, Stichpunkte und der Kostenlos-testen-Knopf. Das Foto und die
+     Kennzahlen-Leiste kommen erst beim Runterscrollen. */
   .heroCopy {
+    display: flex;
+    flex-direction: column;
+    /* Text steht oben direkt unter der Navigationsleiste; der freie Rest des
+       Bildschirms sorgt dafür, dass das Foto erst beim Scrollen auftaucht. */
+    justify-content: flex-start;
+    min-height: 100svh;
     margin: 0;
-    padding: 0;
+    padding: 76px 0 28px;
     max-width: 560px;
   }
   .heroVisual {
@@ -1563,7 +1570,7 @@
     z-index: 0;
     width: 100vw;
     margin-left: -24px;
-    margin-top: 26px;
+    margin-top: 0;
     /* Seitenverhältnis des Fotos statt fester Höhe — dadurch ist das Bild auch
        mobil vollständig zu sehen und wird unten nicht abgeschnitten. */
     height: auto;
