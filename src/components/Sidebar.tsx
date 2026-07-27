@@ -10,7 +10,7 @@ import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
 import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
 import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
 import { BrandMark } from './BrandMark';
-import { CheckIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
+import { CheckIcon, CoursesIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -109,11 +109,6 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
       <button className={styles.brand} onClick={() => onNavigate('landing')} aria-label="Zur Startseite">
         <BrandMark size={24} />
         Gradefruit
-      </button>
-
-      <button className={styles.dashLink} onClick={() => onNavigate('dashboard')}>
-        <span className={styles.dashIcon}><OverviewIcon /></span>
-        Dashboard
       </button>
 
       <div className={styles.navsec}>Themen</div>
@@ -269,27 +264,18 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
             <span className={styles.ti}>{item.label}</span>
           </button>
         ))}
-        {levelChoosable ? (
-          <div className={styles.levelSeg} role="tablist" aria-label="Kursniveau wählen">
-            <button
-              role="tab"
-              aria-selected={level === 'gk'}
-              className={`${styles.levelBtn} ${level === 'gk' ? styles.levelOn : ''}`}
-              onClick={() => onChooseLevel('gk')}
-            >
-              Grundkurs
-            </button>
-            <button
-              role="tab"
-              aria-selected={level === 'lk'}
-              className={`${styles.levelBtn} ${level === 'lk' ? styles.levelOn : ''}`}
-              onClick={() => onChooseLevel('lk')}
-            >
-              Leistungskurs
-            </button>
-          </div>
-        ) : (
-          <div className={styles.levelBadge}>{level === 'lk' ? 'Leistungskurs' : 'Grundkurs'}</div>
+        {/* „Meine Kurse" erscheint nur, wenn wirklich mehr als ein Kurs
+            vorhanden ist — sonst gibt es nichts zu wechseln. */}
+        {levelChoosable && (
+          <button
+            className={styles.courseSwap}
+            onClick={() => onChooseLevel(level === 'gk' ? 'lk' : 'gk')}
+            title={`Wechseln zu ${level === 'gk' ? 'Leistungskurs' : 'Grundkurs'}`}
+          >
+            <span className={styles.icon}><CoursesIcon /></span>
+            <span className={styles.ti}>Meine Kurse</span>
+            <span className={styles.courseNow}>{level === 'lk' ? 'LK' : 'GK'}</span>
+          </button>
         )}
       </nav>
 

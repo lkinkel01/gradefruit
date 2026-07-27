@@ -135,3 +135,13 @@ export function SparkIcon({ size = 16 }: { size?: number }) {
     </svg>
   );
 }
+
+/** Meine Kurse: gestapelte Karten. */
+export function CoursesIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="3" y="7" width="14" height="12" rx="2.4" />
+      <path d="M7 4h11a2.4 2.4 0 0 1 2.4 2.4V16" />
+    </svg>
+  );
+}

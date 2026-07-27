@@ -669,28 +669,53 @@ export default function LandingPage({
 
         <section className={`${styles.section} ${styles.coachSection}`} id="coach">
           <div className={styles.coachCopy}>
-            <p className={styles.sectionName}>KI-Unterstützung im richtigen Moment</p>
-            <h2>Frag dort,<br />wo es hakt.</h2>
+            <p className={styles.sectionName}>24/7 KI-Assistent</p>
+            <h2>Klare Antwort.<br />Zu jeder Frage.</h2>
             <p className={styles.sectionLead}>
-              Der Coach kennt die Aufgabe, Formel oder Lösung vor dir. Du musst
-              den Zusammenhang nicht jedes Mal neu erklären.
+              Der Coach kennt die Aufgabe, die Formel und den Rechenschritt, vor
+              dem du gerade sitzt. Du musst nichts noch einmal erklären — frag
+              einfach direkt an der Stelle nach.
             </p>
             <ul className={styles.capabilityList}>
-              <li><strong>Schritte verstehen</strong><span>Direkt an einer Formel oder einem Rechenschritt nachfragen.</span></li>
-              <li><strong>Fehler klären</strong><span>Sehen, an welcher Stelle dein Ansatz falsch abgebogen ist.</span></li>
-              <li><strong>Eigene Lösung prüfen</strong><span>Deinen Rechenweg als Foto oder PDF besprechen.</span></li>
+              <li>
+                <strong>Frag so, wie du denkst</strong>
+                <span>
+                  Keine saubere Formulierung nötig, keine Angst vor einer dummen
+                  Frage. „Kapier ich nicht" reicht — der Coach fragt notfalls nach.
+                </span>
+              </li>
+              <li>
+                <strong>Rund um die Uhr</strong>
+                <span>Auch um 23 Uhr am Abend vor der Klausur. Ohne Termin, ohne Warten.</span>
+              </li>
+              <li>
+                <strong>Eigene Lösung prüfen</strong>
+                <span>Rechenweg als Foto oder PDF hochladen und Schritt für Schritt durchgehen lassen.</span>
+              </li>
             </ul>
           </div>
-          <div className={styles.coachStage} aria-label="Beispiel für eine Frage an den Gradefruit-Coach">
+          <div className={styles.coachStage} aria-label="Beispielgespräch mit dem Gradefruit-Coach">
             <div className={styles.coachShell}>
               <div className={styles.coachContext}>
-                <span>Analysis · Extremstellen</span>
-                <strong>f′(x) = 3x² − 3</strong>
+                <span>Analysis · Übung 3 · Kurvendiskussion</span>
+                <strong>f(x) = x³ − 6x² + 9x</strong>
               </div>
-              <p className={styles.coachQuestion}>Warum setze ich die Ableitung gleich null?</p>
-              <div className={styles.coachAnswer}>
-                <Logo size={28} />
-                <p>Weil du Stellen suchst, an denen die Steigung null ist. Danach prüfst du, ob dort wirklich ein Hoch- oder Tiefpunkt liegt.</p>
+              <div className={styles.chat}>
+                <p className={`${styles.bubble} ${styles.bubbleUser}`}>
+                  warum is bei schritt 2 aufeinmal 3(x²-4x+3) da ich versteh das nich
+                </p>
+                <div className={`${styles.bubble} ${styles.bubbleAi}`}>
+                  <span className={styles.bubbleWho}><Logo size={18} /> Gradefruit-Coach</span>
+                  <p>Kein Problem — das ist nur Ausklammern, keine neue Regel.</p>
+                  <p>Du hattest <strong>f′(x) = 3x² − 12x + 9</strong>. In jedem Summanden steckt eine 3:</p>
+                  <p className={styles.bubbleMath}>3x² − 12x + 9 = 3·(x² − 4x + 3)</p>
+                  <p>Das macht die Nullstellen leichter: Der Faktor 3 wird nie null, also reicht x² − 4x + 3 = 0.</p>
+                </div>
+                <p className={`${styles.bubble} ${styles.bubbleUser}`}>ok und dann?</p>
+                <div className={`${styles.bubble} ${styles.bubbleAi}`}>
+                  <span className={styles.bubbleWho}><Logo size={18} /> Gradefruit-Coach</span>
+                  <p>Faktorisieren: <strong>(x − 1)(x − 3) = 0</strong> → x = 1 und x = 3. Das sind deine Kandidaten für die Extrempunkte.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -698,8 +723,12 @@ export default function LandingPage({
 
         <section className={styles.section} id="lernweise">
           <div className={styles.sectionIntro}>
-            <h2>Nicht nur lesen.<br />Wirklich lernen.</h2>
-            <p>Jede Methode erfüllt einen klaren Zweck. Geplantes bleibt klar gekennzeichnet.</p>
+            <h2>Lernmethoden,<br />die nachweislich wirken.</h2>
+            <p>
+              Kein Bauchgefühl: Active Recall, Spaced Repetition und Interleaving
+              gehören zu den am besten untersuchten Lernstrategien der
+              Gedächtnisforschung. Gradefruit baut genau darauf auf.
+            </p>
           </div>
           <div className={styles.methodList}>
             {LEARNING_METHODS.map(method => (
@@ -717,26 +746,46 @@ export default function LandingPage({
 
         <section className={`${styles.section} ${styles.visualSection}`}>
           <div className={styles.visualCopy}>
-            <p className={styles.sectionName}>Visuelles Lernen</p>
-            <h2>Mathe wird sichtbar.</h2>
+            <p className={styles.sectionName}>Reel-Modus</p>
+            <h2>Swipen —<br />und dabei lernen.</h2>
             <p className={styles.sectionLead}>
-              Erklärvideos verbinden Stimme, Animation und Rechenweg. Danach
-              gehst du direkt in die passende Aufgabe.
+              Mit Gradefruit lernst du im Swipe-Format, wie du es von TikTok und
+              Instagram kennst. Nur dass hier keine Videos über den Bildschirm
+              laufen, sondern genau die Aufgaben und Formeln, die bei dir gerade
+              dran sind.
             </p>
-            <p className={styles.visualNote}>Klassisch ansehen oder im Reel-Modus weiterlernen.</p>
+            <p className={styles.visualNote}>
+              Welche Karte als Nächstes kommt, entscheidet dein Lernstand — nach
+              dem Prinzip der Spaced Repetition.
+            </p>
           </div>
-          <div className={styles.visualStage} aria-label="Visualisierung einer Funktionsanalyse">
-            <svg className={styles.graph} viewBox="0 0 520 320" role="img" aria-label="Kurve mit markiertem Tiefpunkt und Tangente">
-              <path className={styles.graphGrid} d="M40 56H492M40 112H492M40 168H492M40 224H492M40 280H492M96 32V292M176 32V292M256 32V292M336 32V292M416 32V292" />
-              <path className={styles.graphAxis} d="M40 168H492M256 32V292" />
-              <path className={styles.graphCurve} d="M48 76C108 86 138 140 180 198C217 249 253 252 290 197C333 132 370 77 482 73" />
-              <path className={styles.graphTangent} d="M150 226H342" />
-              <circle className={styles.graphPoint} cx="256" cy="224" r="7" />
-            </svg>
-            <div className={styles.graphCaption}>
-              <span>Schritt 3</span>
-              <strong>Tiefpunkt prüfen</strong>
-              <p>Die Steigung ist null. Jetzt entscheidet das Vorzeichen von f″(x).</p>
+          <div className={styles.visualStage} aria-label="Reel-Modus: Lernkarten im Hochformat zum Durchswipen">
+            <div className={styles.reelPhone}>
+              <div className={styles.reelCard}>
+                <div className={styles.reelTop}>
+                  <span className={styles.reelTag}>Analysis · Extrempunkte</span>
+                </div>
+                <div className={styles.reelBody}>
+                  <p className={styles.reelQ}>Wann liegt ein Hochpunkt vor?</p>
+                  <p className={styles.reelMath}>f′(x₀) = 0 und f″(x₀) &lt; 0</p>
+                  <p className={styles.reelHint}>Erst Steigung null, dann Vorzeichen prüfen.</p>
+                </div>
+                <div className={styles.reelStatus}>
+                  <span className={styles.reelDotGreen} />Verstanden
+                  <span className={styles.reelDotYellow} />Wiederholen
+                  <span className={styles.reelDotRed} />Unklar
+                </div>
+              </div>
+              <div className={`${styles.reelCard} ${styles.reelCardNext}`} aria-hidden="true">
+                <div className={styles.reelTop}><span className={styles.reelTag}>Analysis · Wendepunkte</span></div>
+                <div className={styles.reelBody}><p className={styles.reelQ}>Was gilt am Wendepunkt?</p></div>
+              </div>
+              <span className={styles.reelSwipe} aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 5v14" /><polyline points="6 13 12 19 18 13" />
+                </svg>
+                Weiterswipen
+              </span>
             </div>
           </div>
         </section>
