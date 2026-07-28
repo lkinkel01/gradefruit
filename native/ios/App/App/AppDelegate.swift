@@ -120,14 +120,6 @@ final class ScreenshotGuard {
         self.secureLayer = secureLayer
         applyGeometry()
 
-        // Bei Drehung oder Größenänderung die Maße nachziehen.
-        NotificationCenter.default.addObserver(
-            forName: UIDevice.orientationDidChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            self?.applyGeometry()
-        }
     }
 
     /// Die umgehängten Ebenen liegen außerhalb der automatischen Anordnung und
