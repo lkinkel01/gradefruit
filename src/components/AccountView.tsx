@@ -19,6 +19,25 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [portalBusy, setPortalBusy] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>((user?.user_metadata?.avatar_url as string) ?? '');
+
+  // Profilbild: klein gerechnet und direkt im Nutzerprofil abgelegt, damit
+  // dafür kein zusätzlicher Speicher nötig ist.
+  const handleAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const bitmap = await createImageBitmap(file);
+    const size = 256;
+    const canvas = document.createElement('canvas');
+    canvas.width = size; canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const side = Math.min(bitmap.width, bitmap.height);
+    ctx.drawImage(bitmap, (bitmap.width - side) / 2, (bitmap.height - side) / 2, side, side, 0, 0, size, size);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+    setAvatarUrl(dataUrl);
+    await supabase.auth.updateUser({ data: { avatar_url: dataUrl } });
+  };
 
   // Öffnet das Stripe-Kundenportal (Abo ansehen/ändern/kündigen)
   const openPortal = async () => {
@@ -55,54 +74,58 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
 
   if (!user) return null;
 
-  const initials = (name || user.email || 'U').slice(0, 2).toUpperCase();
-  const provider = user.app_metadata?.provider;
+  const firstName = (name || '').trim().split(/\s+/)[0];
+  const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+  const initials = parts.length >= 2
+    ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+    : (name || user.email || 'U').slice(0, 2).toUpperCase();
 
-  // Zugangs-Zeile pro Kurs (Grundkurs / Leistungskurs) – getrennt kaufbar.
-  const accessRow = (label: string, isOwned: boolean, coursePlan: string | null, course: 'gk' | 'lk') =>
-    !isOwned ? (
-      <div className={styles.planRow}>
-        <div>
-          <b>{label}: Gratis-Zugang</b>
-          <p>Analysis kannst du gratis ausprobieren. Der volle {label} enthält alle Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und deinen KI-Coach.</p>
-        </div>
-        <button className="btn primary btn sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={() => onOpenCheckout(course)}>
-          {label} freischalten
-        </button>
-      </div>
-    ) : coursePlan === 'subscription' ? (
-      <div className={styles.planRow}>
-        <div>
-          <b>{label}: Monats-Abo · aktiv ✓</b>
-          <p>Du hast vollen Zugang. Monatlich kündbar – verwalte oder kündige dein Abo jederzeit.</p>
-        </div>
-        <button className="btn light sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={openPortal} disabled={portalBusy}>
-          {portalBusy ? '…' : 'Abo verwalten'}
-        </button>
-      </div>
-    ) : (
-      <div className={styles.planRow}>
-        <div>
-          <b>{label}: Zugang aktiv</b>
-          <p>Du hast vollen Zugang bis zur Prüfung. Viel Erfolg beim Lernen!</p>
-        </div>
-      </div>
-    );
+  // Ein Kurs pro Zeile: nur der Kursname. Kurse ohne Zugang stehen grau
+  // darunter und tragen den Hinweis „inaktiv".
+  const COURSE_NAME = {
+    gk: 'Mathematik-Abiturvorbereitung 2027 · Grundkurs',
+    lk: 'Mathematik-Abiturvorbereitung 2027 · Leistungskurs',
+  } as const;
+
+  const courseRow = (course: 'gk' | 'lk', isOwned: boolean, coursePlan: string | null) => (
+    <div key={course} className={`${styles.courseRow} ${isOwned ? '' : styles.courseOff}`}>
+      <span className={styles.courseName}>{COURSE_NAME[course]}</span>
+      {isOwned ? (
+        coursePlan === 'subscription' ? (
+          <button className="btn light sm" style={{ fontSize: 13, flexShrink: 0 }} onClick={openPortal} disabled={portalBusy}>
+            {portalBusy ? '…' : 'Abo verwalten'}
+          </button>
+        ) : null
+      ) : (
+        <span className={styles.courseTag}>inaktiv</span>
+      )}
+    </div>
+  );
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.ph1}>Mein Konto</h1>
+      <h1 className={styles.ph1}>{firstName ? `${firstName}s Konto` : 'Mein Konto'}</h1>
 
       <div className={styles.card}>
-        <div className={styles.avatar}>{initials}</div>
+        <label className={styles.avatarWrap} title="Profilbild auswählen">
+          {avatarUrl
+            ? <img className={styles.avatarImg} src={avatarUrl} alt="" />
+            : <span className={styles.avatar}>{initials}</span>}
+          <span className={styles.avatarEdit}>Ändern</span>
+          <input type="file" accept="image/*" onChange={handleAvatar} hidden />
+        </label>
         <div className={styles.meta}>
           <div className={styles.metaName}>{name || '—'}</div>
           <div className={styles.metaEmail}>{user.email}</div>
         </div>
+        <button className={styles.signoutTop} onClick={handleSignOut}>
+          <LogoutIcon size={15} />
+          Abmelden
+        </button>
       </div>
 
       <div className={styles.section}>
-        <div className={styles.sectionTitle}>Profil bearbeiten</div>
+        <h2 className={styles.sectionTitle}>Profil bearbeiten</h2>
         <div className={styles.field}>
           <label>Name</label>
           <input value={name} onChange={e => setName(e.target.value)} />
@@ -117,28 +140,15 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
       </div>
 
       <div className={styles.section}>
-        <div className={styles.sectionTitle}>Anmeldung</div>
-        <div className={styles.infoRow}>
-          <span>Methode</span>
-          <span className={styles.tag}>{provider === 'google' ? 'Google' : 'E-Mail & Passwort'}</span>
-        </div>
+        <h2 className={styles.sectionTitle}>Zugang</h2>
         <div className={styles.infoRow}>
           <span>Registriert seit</span>
           <span>{new Date(user.created_at).toLocaleDateString('de-DE')}</span>
         </div>
-      </div>
-
-      <div className={styles.section}>
-        <div className={styles.sectionTitle}>Zugang</div>
-        {accessRow('Grundkurs', owned, plan, 'gk')}
-        {accessRow('Leistungskurs', ownedLk, planLk, 'lk')}
-      </div>
-
-      <div className={styles.danger}>
-        <button className={styles.signoutBtn} onClick={handleSignOut}>
-          <LogoutIcon size={15} />
-          Abmelden
-        </button>
+        <div className={styles.courseList}>
+          {courseRow('gk', owned, plan)}
+          {courseRow('lk', ownedLk, planLk)}
+        </div>
       </div>
     </div>
   );

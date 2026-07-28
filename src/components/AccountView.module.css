@@ -3,6 +3,7 @@
 .card {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 16px;
   margin-bottom: 28px;
   padding: 4px 0 24px;
@@ -79,4 +80,47 @@
 @media (max-width: 620px) {
   .page { --page-top: 30px; --page-bottom: 90px; }
   .planRow { flex-direction: column; }
+}
+
+/* Kopfkarte: Profilbild, Name/E-Mail, Abmelden rechts */
+.avatarWrap { position: relative; display: inline-flex; flex-shrink: 0; cursor: pointer; }
+.avatarImg { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; display: block; }
+.avatarEdit {
+  position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%);
+  padding: 2px 8px; border-radius: var(--radius-pill);
+  background: var(--ink); color: var(--canvas);
+  font-size: 10px; font-weight: 650; white-space: nowrap;
+  opacity: 0; transition: opacity var(--dur-hover) var(--ease-out);
+}
+.avatarWrap:hover .avatarEdit,
+.avatarWrap:focus-within .avatarEdit { opacity: 1; }
+.signoutTop {
+  margin-left: auto; flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: 8px;
+  min-height: 44px; padding: 10px 16px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-control);
+  background: var(--surface); color: var(--ink);
+  cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 600;
+  transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
+}
+.signoutTop:hover { border-color: var(--faint); background: var(--surface-2); }
+.signoutTop:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Kursliste: nur der Name; ohne Zugang grau mit Hinweis */
+.courseList { display: flex; flex-direction: column; margin-top: 6px; }
+.courseRow {
+  display: flex; align-items: center; gap: 12px;
+  padding: 15px 0; border-top: 1px solid var(--line);
+}
+.courseName { flex: 1; min-width: 0; color: var(--ink); font-size: 15px; font-weight: 600; }
+.courseOff .courseName { color: var(--faint); font-weight: 500; }
+.courseTag {
+  flex-shrink: 0; padding: 3px 10px; border-radius: var(--radius-pill);
+  background: var(--surface-2); color: var(--faint);
+  font-size: 11.5px; font-weight: 650;
+}
+
+@media (max-width: 560px) {
+  .signoutTop { width: 100%; justify-content: center; margin-left: 0; }
+  .courseRow { flex-wrap: wrap; }
 }
