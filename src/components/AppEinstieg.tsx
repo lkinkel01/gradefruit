@@ -32,7 +32,7 @@ export default function AppEinstieg({
 
         <div className={styles.knoepfe}>
           <button type="button" className="btn primary" onClick={onLogin}>Anmelden</button>
-          <button type="button" className="btn" onClick={onRegister}>Konto erstellen</button>
+          <button type="button" className="btn light" onClick={onRegister}>Konto erstellen</button>
         </div>
 
         <button type="button" className={styles.testen} onClick={onTesten}>
