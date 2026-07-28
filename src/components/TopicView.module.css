@@ -641,3 +641,20 @@
 @media (max-width: 760px) {
   .areaGrid { grid-template-columns: 1fr; }
 }
+
+/* Inhalte werden geladen oder fehlen (kein Zugang, Verbindungsproblem).
+   Ruhig und mittig — kein Alarm, nur eine klare Auskunft. */
+.stateCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 48px 20px;
+  text-align: center;
+}
+.stateText {
+  max-width: 44ch;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+}

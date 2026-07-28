@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
 import { ProgressProvider } from "@/lib/ProgressContext";
+import { ContentProvider } from "@/lib/ContentContext";
 
 export const metadata: Metadata = {
   title: "Gradefruit",
@@ -20,7 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <AuthProvider>
-          <ProgressProvider>{children}</ProgressProvider>
+          <ProgressProvider>
+            <ContentProvider>{children}</ContentProvider>
+          </ProgressProvider>
         </AuthProvider>
       </body>
     </html>

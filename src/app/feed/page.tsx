@@ -6,9 +6,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { LernStatus } from '@/lib/types';
 import { SCENES, Scene } from '@/lib/scenes';
-import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
-import { LINALG_TASKS } from '@/lib/linalgTasks';
-import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
+import { indexFor } from '@/lib/contentIndex';
 import { ScenePlayer } from '@/components/SceneModal';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './feed.module.css';
@@ -25,9 +23,10 @@ const TASK_SOURCES: {
   topicId: TopicId;
   tasks: { id: string; videoId?: string }[];
 }[] = [
-  { topicId: 'analysis', tasks: ANALYSIS_TASKS },
-  { topicId: 'linalg', tasks: LINALG_TASKS },
-  { topicId: 'stochastik', tasks: STOCHASTIK_TASKS },
+  // Nur die Zuordnung Video → Aufgabe; der Aufgabentext wird hier nie gezeigt.
+  { topicId: 'analysis', tasks: indexFor('analysis', 'gk').tasks },
+  { topicId: 'linalg', tasks: indexFor('linalg', 'gk').tasks },
+  { topicId: 'stochastik', tasks: indexFor('stochastik', 'gk').tasks },
 ];
 
 const STATUS_OPTIONS: { status: Exclude<LernStatus, 'none'>; label: string }[] = [

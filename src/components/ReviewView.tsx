@@ -4,12 +4,8 @@ import { View, TOPICS, LernStatus, STATUS_LABEL } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { GrapefruitProgress } from './Logo';
 import { ArrowRightIcon } from './UiIcons';
-import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
-import { LINALG_TASKS } from '@/lib/linalgTasks';
-import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
-import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
-import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
-import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
+import { indexFor } from '@/lib/contentIndex';
+import { useTopicContent } from '@/lib/ContentContext';
 import styles from './ReviewView.module.css';
 
 // Wiederholen: das Herz des Lernsystems. Jeder Inhalt lässt sich als
@@ -20,11 +16,9 @@ import styles from './ReviewView.module.css';
 
 type TopicId = 'analysis' | 'linalg' | 'stochastik';
 
-const TASKS: Record<TopicId, { gk: { id: string; tag: string; q: string; videoId?: string }[]; lk: { id: string; tag: string; q: string; videoId?: string }[] }> = {
-  analysis: { gk: ANALYSIS_TASKS, lk: ANALYSIS_LK_TASKS },
-  linalg: { gk: LINALG_TASKS, lk: LINALG_LK_TASKS },
-  stochastik: { gk: STOCHASTIK_TASKS, lk: STOCHASTIK_LK_TASKS },
-};
+// Diese Seite listet nur, was schon eingeordnet wurde — dafür genügen
+// Nummer und Überschrift aus dem Inhaltsverzeichnis. Der Aufgabentext selbst
+// wird erst beim Öffnen vom Server geholt.
 
 type StatusFilter = 'alle' | Exclude<LernStatus, 'none'>;
 const STATUS_FILTERS: StatusFilter[] = ['alle', 'unklar', 'wiederholen', 'verstanden'];
@@ -42,6 +36,18 @@ interface Props {
 }
 
 export default function ReviewView({ level, onNavigate }: Props) {
+  // Der Aufgabentext in der Vorschau kommt vom Server. Feste Reihenfolge,
+  // damit die Hook-Regeln eingehalten sind.
+  const analysisContent = useTopicContent('analysis', level);
+  const linalgContent = useTopicContent('linalg', level);
+  const stochastikContent = useTopicContent('stochastik', level);
+  const questionOf = (topicId: TopicId, taskId: string) => {
+    const source = topicId === 'analysis' ? analysisContent
+      : topicId === 'linalg' ? linalgContent
+      : stochastikContent;
+    return source.tasks.find(t => t.id === taskId)?.q ?? '';
+  };
+
   const { statusOf } = useProgress();
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('alle');
   const [topicFilter, setTopicFilter] = useState<Set<TopicId>>(new Set());
@@ -75,7 +81,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
   // Alle eingeordneten Inhalte der gewählten Stufe einsammeln
   const activeTopics = TOPICS.filter(t => topicFilter.size === 0 || topicFilter.has(t.id as TopicId));
   const items = activeTopics.flatMap(topic => {
-    const tasks = TASKS[topic.id as TopicId][level];
+    const tasks = indexFor(topic.id as TopicId, level).tasks;
     return tasks
       .map(task => ({ topic, task, status: statusOf(topic.id, task.id) }))
       .filter(x => x.status !== 'none')
@@ -96,7 +102,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
   };
 
   const anyRated = TOPICS.some(t =>
-    TASKS[t.id as TopicId][level].some(task => statusOf(t.id, task.id) !== 'none'),
+    indexFor(t.id as TopicId, level).tasks.some(task => statusOf(t.id, task.id) !== 'none'),
   );
 
   return (
@@ -144,7 +150,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
               <span className={styles.itemDot} style={{ background: topic.color }} />
               <span className={styles.itemBody}>
                 <span className={styles.itemTag}>{task.tag}</span>
-                <span className={styles.itemQ}>{task.q}</span>
+                <span className={styles.itemQ}>{questionOf(topic.id as TopicId, task.id)}</span>
               </span>
               <span className={`${styles.status} ${styles[`st_${status}`]}`}>{STATUS_LABEL[status as Exclude<LernStatus, 'none'>]}</span>
               <span className={styles.itemGo}><ArrowRightIcon size={15} /></span>

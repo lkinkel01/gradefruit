@@ -2,13 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavigateTo, TopicTab, View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
-import { SUMMARIES } from '@/lib/summaries';
-import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
-import { LINALG_TASKS } from '@/lib/linalgTasks';
-import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
-import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
-import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
-import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
+import { indexFor } from '@/lib/contentIndex';
 import { BrandMark } from './BrandMark';
 import { CheckIcon, ChevronIcon, CoursesIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
@@ -41,11 +35,6 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
   },
 ];
 
-const TASKS_BY_TOPIC = {
-  analysis: { gk: ANALYSIS_TASKS, lk: ANALYSIS_LK_TASKS },
-  linalg: { gk: LINALG_TASKS, lk: LINALG_LK_TASKS },
-  stochastik: { gk: STOCHASTIK_TASKS, lk: STOCHASTIK_LK_TASKS },
-};
 
 export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, levelChoosable, onChooseLevel, onNavigate, onOpenCheckout }: Props) {
   const { topicDone, topicTotal } = useProgress();
@@ -117,8 +106,8 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
         {TOPICS.map(t => {
           const active = view === t.id;
           const topicId = t.id as 'analysis' | 'linalg' | 'stochastik';
-          const sections = SUMMARIES[topicId][level].sections;
-          const tasks = TASKS_BY_TOPIC[topicId][level];
+          // Nur das Inhaltsverzeichnis — die Inhalte selbst kommen vom Server.
+          const { sections, tasks } = indexFor(topicId, level);
           const summaryActive = active && topicTab === 'zusammenfassung';
           const exercisesActive = active && topicTab === 'uebungen';
           const expanded = (active && !collapsedTopics.has(t.id)) || hoverTopic === t.id;

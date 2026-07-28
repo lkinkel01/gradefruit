@@ -96,16 +96,21 @@ DESIGN.md, Zustand in PROJECT_STATUS.md. Diese Datei verweist nur.
 ## Projektstruktur
 
 - `src/app/` — Seiten (App Router); API-Routen unter `src/app/api/…`
-  (`ask`, `checkout`, `stripe/webhook`, `stripe/portal`); `/feed` = Reel-Modus
+  (`ask`, `content`, `checkout`, `stripe/webhook`, `stripe/portal`,
+  `account/delete`); `/feed` = Reel-Modus
 - `src/components/` — UI-Komponenten, je mit `*.module.css`
-- `src/lib/` — Inhalte & Logik: `*Tasks.ts` (Aufgaben, 6 Dateien),
-  `summaries.ts` (Formelsammlungen), `scenes.ts` (Videos),
+- `src/server/content/` — **die Kursinhalte** (`*Tasks.ts`, 6 Dateien, und
+  `summaries.ts`); nur über `src/app/api/content/` erreichbar
+- `src/lib/` — Logik & Verzeichnis: `contentIndex.ts` (erzeugt, nur
+  Überschriften), `ContentContext.tsx` (lädt Inhalte nach), `scenes.ts`
+  (Videos),
   `ProgressContext.tsx` (Kauf-Status + Lernstufen), `exam.ts`
   (**einzige Quelle für den Prüfungstermin**), `types.ts` (Views, Topics,
   LernStatus); Server-Helfer `stripe.ts`, `supabaseAdmin.ts`
 - `supabase/` — SQL-Referenz: `schema.sql`, `stripe.sql`, `ai-rate-limit.sql`,
   `lessons-seed.sql`, `lk-course-seed.sql` (ausgeführt im Supabase-Dashboard)
 - `scripts/` — `generate-audio.mjs`, `check-webhook.mjs`,
+  `build-content-index.mjs`, `check-content-gate.mjs`,
   `create-test-user.mjs`, `delete-test-user.mjs`
 - `public/audio/` — mp3s der Erklärvideos
 - `.claude/` — Settings (Impeccable-Hook), `launch.json`, Skills;
@@ -118,11 +123,16 @@ DESIGN.md, Zustand in PROJECT_STATUS.md. Diese Datei verweist nur.
 Wer eine dieser Entscheidungen nicht kennt, baut mit hoher Wahrscheinlichkeit
 etwas falsch. Alle bewusst so getroffen — nicht „aufräumen":
 
-1. **Inhalte liegen client-seitig** (Aufgaben/Formeln/Videos in
-   `src/lib/*.ts`, an den Browser ausgeliefert). Folge: **Die Bezahlschranke
-   ist ein UX-Gate, keine harte Sicherheitsgrenze** — der Inhalt ist im
-   Browser einsehbar. Nicht behandeln, als wäre die Sperre sicher; das
-   Härten (server-seitiges Laden) ist ein bewusst offener Punkt für später.
+1. **Inhalte liegen server-seitig** (`src/server/content/`, mit `server-only`
+   abgeriegelt) und werden **einzeln über `GET /api/content?topic=…&level=…`
+   ausgeliefert — erst nach Zugangsprüfung** (angemeldet + Kauf, Analysis
+   gratis). Der Browser bekommt nur `src/lib/contentIndex.ts`: IDs und
+   Überschriften für die Navigation. **Die Bezahlschranke ist damit eine
+   echte Grenze**, nicht nur Oberfläche. Wer eine Inhaltsdatei aus einer
+   Client-Komponente importiert, bricht den Build — das ist Absicht.
+   Nach jeder Inhaltsänderung: `node scripts/build-content-index.mjs`.
+   Prüfen: `node --env-file=.env.local scripts/check-content-gate.mjs
+   <email> <passwort>` gibt `VERDICT:` aus (Dev-Server muss laufen).
 2. **Zugang schaltet ausschließlich der Stripe-Webhook frei**, nie
    clientseitig (siehe Sicherheitsregeln + Bezahlung). Der Client liest den
    Status nur, er setzt ihn nie.

@@ -4,52 +4,20 @@ import { useRouter } from 'next/navigation';
 import { LernStatus, NavigateTo, STATUS_LABEL, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
-import { GrapefruitProgress } from './Logo';
+import { GrapefruitProgress, GrapefruitSpinner } from './Logo';
 import styles from './TopicView.module.css';
-import { SUMMARIES } from '@/lib/summaries';
-import { ANALYSIS_TASKS } from '@/lib/analysisTasks';
-import { LINALG_TASKS } from '@/lib/linalgTasks';
-import { STOCHASTIK_TASKS } from '@/lib/stochastikTasks';
-import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
-import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
-import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
+import { indexFor, type ContentTopic } from '@/lib/contentIndex';
+import { useTopicContent } from '@/lib/ContentContext';
 import { ArrowRightIcon, ChevronIcon, SparkIcon, TutorIcon, UploadIcon } from './UiIcons';
 import type { AskSource } from './AskDrawer';
 
-interface Task {
-  id: string;
-  tag: string;
-  q: string;
-  src: string;
-  steps: { label: string; math: string }[];
-  result: string;
-  locked: boolean;
-  videoId?: string; // passendes Erklärvideo (Schlüssel aus scenes.ts)
-  mistakes?: string[];
-}
-
-const TOPIC_DATA: Record<string, { label: string; color: string; badge: string; gk: Task[]; lk: Task[] }> = {
-  analysis: {
-    label: 'Analysis',
-    color: 'var(--accent)',
-    badge: 'Pflichtbereich',
-    gk: ANALYSIS_TASKS,
-    lk: ANALYSIS_LK_TASKS,
-  },
-  linalg: {
-    label: 'Lineare Algebra & Geometrie',
-    color: 'var(--accent)',
-    badge: 'Wahlbereich',
-    gk: LINALG_TASKS,
-    lk: LINALG_LK_TASKS,
-  },
-  stochastik: {
-    label: 'Stochastik',
-    color: 'var(--accent)',
-    badge: 'Pflichtbereich',
-    gk: STOCHASTIK_TASKS,
-    lk: STOCHASTIK_LK_TASKS,
-  },
+// Aufgaben und Zusammenfassungen liegen nicht mehr im ausgelieferten
+// JavaScript, sondern kommen über /api/content — erst nach Zugangsprüfung.
+// Hier bleibt nur, was das Thema beschreibt.
+const TOPIC_DATA: Record<string, { label: string; color: string; badge: string }> = {
+  analysis: { label: 'Analysis', color: 'var(--accent)', badge: 'Pflichtbereich' },
+  linalg: { label: 'Lineare Algebra & Geometrie', color: 'var(--accent)', badge: 'Wahlbereich' },
+  stochastik: { label: 'Stochastik', color: 'var(--accent)', badge: 'Pflichtbereich' },
 };
 
 interface Props {
@@ -107,9 +75,12 @@ export default function TopicView({
 }: Props) {
   const router = useRouter();
   const topic = TOPIC_DATA[topicId as string];
-  const summary = topic
-    ? SUMMARIES[topicId as 'analysis' | 'linalg' | 'stochastik']?.[level]
-    : undefined;
+  // Inhaltsverzeichnis (im Browser) und Inhalte (vom Server) getrennt: Die
+  // Gliederung steht sofort, die Texte kommen nach der Zugangsprüfung.
+  const contentTopic = (topic ? topicId : 'analysis') as ContentTopic;
+  const idx = indexFor(contentTopic, level);
+  const content = useTopicContent(contentTopic, level);
+  const summary = content.summary ?? undefined;
   const { user } = useAuth();
   const { statusOf, setStatus } = useProgress();
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
@@ -117,7 +88,10 @@ export default function TopicView({
   const [summaryStatuses, setSummaryStatuses] = useState<Record<string, LernStatus>>({});
   const isFree = topicId === 'analysis';
 
-  const tasks = topic ? topic[level] : [];
+  // Listen und Zähler laufen über das Inhaltsverzeichnis — so bleibt die
+  // Navigation vollständig, auch während die Inhalte noch geladen werden.
+  const tasks = idx.tasks;
+  const sectionList = idx.sections;
   const doneCount = tasks.filter(t => statusOf(topicId, t.id) === 'verstanden').length;
   const selectedSummary = tab === 'zusammenfassung'
     ? summary?.sections.find(section => section.title === itemId)
@@ -125,10 +99,10 @@ export default function TopicView({
   const selectedSummaryIndex = selectedSummary
     ? summary?.sections.findIndex(section => section.title === selectedSummary.title) ?? -1
     : -1;
-  const selectedTask = tab === 'uebungen' ? tasks.find(task => task.id === itemId) : undefined;
+  const selectedTask = tab === 'uebungen' ? content.tasks.find(task => task.id === itemId) : undefined;
   const selectedTaskIndex = selectedTask ? tasks.findIndex(task => task.id === selectedTask.id) : -1;
-  const nextSummary = selectedSummaryIndex >= 0 ? summary?.sections[selectedSummaryIndex + 1] : undefined;
-  const prevSummary = selectedSummaryIndex > 0 ? summary?.sections[selectedSummaryIndex - 1] : undefined;
+  const nextSummary = selectedSummaryIndex >= 0 ? sectionList[selectedSummaryIndex + 1] : undefined;
+  const prevSummary = selectedSummaryIndex > 0 ? sectionList[selectedSummaryIndex - 1] : undefined;
   const nextTask = selectedTaskIndex >= 0 ? tasks[selectedTaskIndex + 1] : undefined;
   const prevTask = selectedTaskIndex > 0 ? tasks[selectedTaskIndex - 1] : undefined;
 
@@ -174,11 +148,11 @@ export default function TopicView({
     });
   };
 
-  const openSummaryItem = (section: NonNullable<typeof selectedSummary>) => {
+  const openSummaryItem = (section: { title: string }) => {
     onLocationChange('zusammenfassung', section.title, section.title);
   };
 
-  const openTaskItem = (task: Task) => {
+  const openTaskItem = (task: { id: string; tag: string }) => {
     setOpenSolutions(new Set());
     setMistakesOpen(false);
     onLocationChange('uebungen', task.id, task.tag);
@@ -337,6 +311,26 @@ export default function TopicView({
   ) : null;
 
   // Themenseite: kurz worum es geht, dazu die Gliederung beider Bereiche.
+  // Inhalte kommen jetzt vom Server. Solange das läuft — oder wenn der Zugang
+  // fehlt — zeigt die Seite das offen an, statt eine leere Liste zu rendern.
+  const renderLoading = () => (
+    <div className={styles.stateCard}>
+      <GrapefruitSpinner size={28} />
+      <p className={styles.stateText}>Inhalte werden geladen …</p>
+    </div>
+  );
+
+  const renderContentProblem = () => (
+    <div className={styles.stateCard}>
+      <p className={styles.stateText}>
+        {content.message ?? 'Die Inhalte konnten nicht geladen werden.'}
+      </p>
+      {content.state === 'error' && (
+        <button type="button" className="btn" onClick={content.reload}>Erneut versuchen</button>
+      )}
+    </div>
+  );
+
   const renderOverview = () => (
     <div className={styles.contentIndex}>
       {summary?.intro && (
@@ -348,10 +342,10 @@ export default function TopicView({
         <button type="button" className={styles.areaCard} onClick={() => selectTab('zusammenfassung')}>
           <span className={styles.areaCardHead}>
             <span className={styles.areaCardTitle}>Zusammenfassung</span>
-            <span className={styles.areaCardMeta}>{summary?.sections.length ?? 0} Abschnitte</span>
+            <span className={styles.areaCardMeta}>{sectionList.length} Abschnitte</span>
           </span>
           <ol className={styles.areaList}>
-            {summary?.sections.map(section => <li key={section.title}>{section.title}</li>)}
+            {sectionList.map(section => <li key={section.title}>{section.title}</li>)}
           </ol>
           <span className={styles.areaCardGo}>Zur Zusammenfassung <ArrowRightIcon size={15} /></span>
         </button>
@@ -378,7 +372,7 @@ export default function TopicView({
         </div>
       )}
       <div className={styles.indexList}>
-        {summary?.sections.map((section, index) => {
+        {sectionList.map((section, index) => {
           const status = summaryStatuses[summaryStatusKey(section.title)] ?? 'none';
           return (
             <button
@@ -702,9 +696,13 @@ export default function TopicView({
           </button>
           <p className={styles.lockHint}>Analysis kannst du kostenlos ausprobieren.</p>
         </div>
+      ) : content.state === 'locked' || content.state === 'error' || content.state === 'signin' ? (
+        renderContentProblem()
       ) : tab === 'uebersicht' ? (
         renderOverview()
-      ) : tab === 'zusammenfassung' && summary ? (
+      ) : itemId && content.state === 'loading' ? (
+        renderLoading()
+      ) : tab === 'zusammenfassung' ? (
         selectedSummary ? renderSummaryDetail() : renderSummaryIndex()
       ) : (
         selectedTask ? renderExerciseDetail() : renderExerciseIndex()
