@@ -1760,8 +1760,15 @@
     radial-gradient(120% 140% at 50% -40%, color-mix(in srgb, #fff 7%, transparent), transparent 62%);
 }
 
-/* Registrieren im Hero — nur mobil sichtbar, dort fehlt die Kopfzeile. */
-.heroRegister { display: none; }
+/* Registrieren im Hero — nur mobil sichtbar, dort fehlt die Kopfzeile.
+   Farben wie in der Kopfzeile: heller Modus schwarz mit weißer Schrift,
+   dunkler Modus weiß mit schwarzer Schrift. */
+.heroRegister {
+  display: none;
+  border: 1px solid var(--btn-ink);
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+}
 @media (max-width: 900px) {
   /* Beide Knöpfe nebeneinander: links testen, rechts registrieren. */
   .heroPrimaryAction {
@@ -1771,11 +1778,5 @@
     width: 100%;
   }
   .heroRegister { display: inline-flex; }
-  /* Wie in der Kopfzeile: hell = schwarz auf weiß-Schrift, dunkel = umgekehrt. */
-  .heroRegister {
-    border: 1px solid var(--btn-ink);
-    background: var(--btn-ink);
-    color: var(--btn-ink-tx);
-  }
   .heroActions :global(.btn) { flex: 1 1 0; min-width: 0; padding-inline: 14px; }
 }

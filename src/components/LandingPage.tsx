@@ -594,7 +594,7 @@ export default function LandingPage({
                 {/* Mobil ist die Kopfzeile eingeklappt — Abgemeldete bekommen
                     den Registrieren-Knopf deshalb direkt neben den Haupt-CTA. */}
                 {!isAuthed && (
-                  <button type="button" className={`btn big light ${styles.heroRegister}`} onClick={onRegister}>
+                  <button type="button" className={`btn big ${styles.heroRegister}`} onClick={onRegister}>
                     Registrieren
                   </button>
                 )}
