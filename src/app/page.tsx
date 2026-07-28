@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { NavigateTo, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
@@ -19,6 +20,7 @@ import Watermark from '@/components/Watermark';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import SignedOutNotice from '@/components/SignedOutNotice';
 import AppEinstieg from '@/components/AppEinstieg';
+import AppTabBar from '@/components/AppTabBar';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
@@ -62,6 +64,7 @@ function locationFor(view: View, tab: TopicTab, itemId: string | null): string {
 }
 
 export default function Home() {
+  const router = useRouter();
   const { user, loading, signOut, signedOutReason, clearSignedOutReason } = useAuth();
   // In der App ersetzt ein schlichter Einstieg die Werbeseite.
   const imApp = useImAppRahmen();
@@ -491,8 +494,10 @@ export default function Home() {
           {notice}
         </div>
       )}
-      <div className={styles.shell} key={themeKey}>
-        <Sidebar
+      {/* In der App ersetzt die untere Leiste die Seitenleiste: Sie liegt in
+          Daumenreichweite und versteckt die Navigation nicht hinter einem Knopf. */}
+      <div className={`${styles.shell} ${imApp ? styles.shellApp : ''}`} key={themeKey}>
+        {!imApp && <Sidebar
           view={view}
           topicTab={topicTab}
           topicItemId={topicItemId}
@@ -503,7 +508,7 @@ export default function Home() {
           onChooseLevel={chooseLevel}
           onNavigate={navigate}
           onOpenCheckout={() => openCheckout('gk')}
-        />
+        />}
         <div className={styles.content}>
           {/* Persönliches Wasserzeichen über allen Kursinhalten — Screenshots
               bleiben möglich, sind aber dem Konto zuzuordnen. */}
@@ -521,6 +526,14 @@ export default function Home() {
           {renderContent()}
         </div>
       </div>
+
+      {imApp && user && (
+        <AppTabBar
+          view={view}
+          onNavigate={navigate}
+          onReels={() => router.push('/feed')}
+        />
+      )}
 
       {navOpen && <div className={styles.navScrim} onClick={() => setNavOpen(false)} />}
 
