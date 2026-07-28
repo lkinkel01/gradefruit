@@ -336,6 +336,25 @@ export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props
                 {showTyping
                   ? <span className={styles.typing}><span /><span /><span /></span>
                   : m.text}
+                {/* Meldeweg für unangemessene Antworten. Apple verlangt bei
+                    KI-generierten Inhalten ausdrücklich eine solche
+                    Möglichkeit — und unabhängig davon sollte niemand mit einer
+                    schlechten Antwort alleine dastehen. */}
+                {m.role === 'ai' && m.text !== '' && (
+                  <button
+                    type="button"
+                    className={styles.report}
+                    onClick={() => {
+                      const betreff = encodeURIComponent('Unangemessene Antwort des KI-Coachs');
+                      const text = encodeURIComponent(
+                        `Diese Antwort war unangemessen:\n\n${m.text.slice(0, 1500)}\n\n(Was war das Problem?)\n`,
+                      );
+                      window.location.href = `mailto:leon.kinkel@gmail.com?subject=${betreff}&body=${text}`;
+                    }}
+                  >
+                    Antwort melden
+                  </button>
+                )}
               </div>
             );
           })}
