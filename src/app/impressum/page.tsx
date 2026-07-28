@@ -26,8 +26,11 @@ export default function ImpressumPage() {
 
       <div className={styles.notice}>
         <p>
-          <strong>Platzhalter ausfüllen:</strong> Alle rot markierten Felder müssen vor der
-          Veröffentlichung durch echte Angaben ersetzt werden. Siehe Checkliste am Seitenende.
+          <strong>Seite im Aufbau.</strong> Gradefruit ist noch nicht im regulären
+          Betrieb. Es können derzeit keine Kurse gekauft und keine Verträge
+          geschlossen werden. Die folgenden Angaben sind bereits eingetragen,
+          aber noch nicht rechtsverbindlich und werden vor dem Verkaufsstart
+          juristisch geprüft und finalisiert.
         </p>
       </div>
 
@@ -40,9 +43,9 @@ export default function ImpressumPage() {
       <div className={styles.section}>
         <h2>Anbieter</h2>
         <p>
-          <Ph>[Vollständiger Name]</Ph><br />
-          <Ph>[Straße und Hausnummer]</Ph><br />
-          <Ph>[PLZ Ort]</Ph><br />
+          Leon Kinkel<br />
+          Eichendorffweg 15<br />
+          65795 Hattersheim am Main<br />
           Deutschland
         </p>
       </div>
@@ -50,10 +53,7 @@ export default function ImpressumPage() {
       <div className={styles.section}>
         <h2>Kontakt</h2>
         <p>
-          E-Mail: <Ph>[E-Mail-Adresse]</Ph>
-        </p>
-        <p>
-          Telefon (optional): <Ph>[Telefonnummer oder „nicht öffentlich“]</Ph>
+          E-Mail: <a href="mailto:leon.kinkel@gmail.com">leon.kinkel@gmail.com</a>
         </p>
       </div>
 
@@ -63,7 +63,8 @@ export default function ImpressumPage() {
           Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:
         </p>
         <p>
-          <Ph>[USt-IdNr. — oder: „Nicht vorhanden. Kleinunternehmer gemäß § 19 UStG.“]</Ph>
+          Noch nicht vergeben. Die steuerliche Einordnung wird vor dem
+          Verkaufsstart ergänzt.
         </p>
       </div>
 
@@ -71,9 +72,9 @@ export default function ImpressumPage() {
         <h2>Verantwortlich für den Inhalt</h2>
         <p>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</p>
         <p>
-          <Ph>[Vollständiger Name]</Ph><br />
-          <Ph>[Straße und Hausnummer]</Ph><br />
-          <Ph>[PLZ Ort]</Ph>
+          Leon Kinkel<br />
+          Eichendorffweg 15<br />
+          65795 Hattersheim am Main
         </p>
       </div>
 

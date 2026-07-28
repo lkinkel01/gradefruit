@@ -26,8 +26,11 @@ export default function DatenschutzPage() {
 
       <div className={styles.notice}>
         <p>
-          <strong>Platzhalter ausfüllen:</strong> Alle rot markierten Felder müssen vor der
-          Veröffentlichung durch echte Angaben ersetzt werden. Siehe Checkliste am Seitenende.
+          <strong>Seite im Aufbau.</strong> Gradefruit ist noch nicht im
+          regulären Betrieb: Es können derzeit keine Kurse gekauft und keine
+          Verträge geschlossen werden. Die Angaben auf dieser Seite sind bereits
+          eingetragen, aber <strong>noch nicht rechtsverbindlich</strong> und
+          werden vor dem Verkaufsstart juristisch geprüft und finalisiert.
         </p>
       </div>
 
@@ -43,10 +46,10 @@ export default function DatenschutzPage() {
           Verantwortlicher im Sinne der DSGVO ist:
         </p>
         <p>
-          <Ph>[Vollständiger Name]</Ph><br />
-          <Ph>[Straße und Hausnummer]</Ph><br />
-          <Ph>[PLZ Ort]</Ph><br />
-          E-Mail: <Ph>[E-Mail-Adresse]</Ph>
+          Leon Kinkel<br />
+          Eichendorffweg 15<br />
+          65795 Hattersheim am Main<br />
+          E-Mail: leon.kinkel@gmail.com
         </p>
         <p>
           Ein Datenschutzbeauftragter ist nicht gesetzlich vorgeschrieben und wurde nicht bestellt.
@@ -192,7 +195,7 @@ export default function DatenschutzPage() {
         </ul>
         <p>
           Um dein Konto und alle zugehörigen Daten löschen zu lassen, sende eine E-Mail an{' '}
-          <Ph>[E-Mail-Adresse]</Ph>. Wir bearbeiten Anfragen innerhalb von 30 Tagen.
+          leon.kinkel@gmail.com. Wir bearbeiten Anfragen innerhalb von 30 Tagen.
         </p>
       </div>
 

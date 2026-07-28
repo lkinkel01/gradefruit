@@ -26,9 +26,11 @@ export default function WiderrufPage() {
 
       <div className={styles.notice}>
         <p>
-          <strong>Entwurf:</strong> Vor dem Verkaufsstart die rot markierten Felder ausfüllen und
-          den Text juristisch prüfen lassen. Er folgt dem gesetzlichen Muster, ist aber keine
-          Rechtsberatung.
+          <strong>Seite im Aufbau.</strong> Gradefruit ist noch nicht im
+          regulären Betrieb: Es können derzeit keine Kurse gekauft und keine
+          Verträge geschlossen werden. Die Angaben auf dieser Seite sind bereits
+          eingetragen, aber <strong>noch nicht rechtsverbindlich</strong> und
+          werden vor dem Verkaufsstart juristisch geprüft und finalisiert.
         </p>
       </div>
 
@@ -48,10 +50,10 @@ export default function WiderrufPage() {
           Um dein Widerrufsrecht auszuüben, musst du uns
         </p>
         <p>
-          <Ph>[Vollständiger Name]</Ph><br />
-          <Ph>[Straße und Hausnummer]</Ph><br />
-          <Ph>[PLZ Ort]</Ph><br />
-          E-Mail: <Ph>[E-Mail-Adresse]</Ph>
+          Leon Kinkel<br />
+          Eichendorffweg 15<br />
+          65795 Hattersheim am Main<br />
+          E-Mail: leon.kinkel@gmail.com
         </p>
         <p>
           mittels einer eindeutigen Erklärung (z. B. eine E-Mail) über deinen Entschluss, diesen
@@ -105,8 +107,8 @@ export default function WiderrufPage() {
         </p>
         <p>
           An:<br />
-          <Ph>[Vollständiger Name]</Ph>, <Ph>[Straße und Hausnummer]</Ph>, <Ph>[PLZ Ort]</Ph><br />
-          E-Mail: <Ph>[E-Mail-Adresse]</Ph>
+          Leon Kinkel, Eichendorffweg 15, 65795 Hattersheim am Main<br />
+          E-Mail: leon.kinkel@gmail.com
         </p>
         <p>
           Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den

@@ -26,16 +26,18 @@ export default function AgbPage() {
 
       <div className={styles.notice}>
         <p>
-          <strong>Entwurf:</strong> Diese AGB sind eine sorgfältige Vorlage, aber keine
-          Rechtsberatung. Vor dem Verkaufsstart die rot markierten Felder ausfüllen und den
-          gesamten Text juristisch prüfen lassen (Anwalt oder geprüfter Generator).
+          <strong>Seite im Aufbau.</strong> Gradefruit ist noch nicht im
+          regulären Betrieb: Es können derzeit keine Kurse gekauft und keine
+          Verträge geschlossen werden. Die Angaben auf dieser Seite sind bereits
+          eingetragen, aber <strong>noch nicht rechtsverbindlich</strong> und
+          werden vor dem Verkaufsstart juristisch geprüft und finalisiert.
         </p>
       </div>
 
       <header className={styles.header}>
         <div className={styles.eyebrow}>Rechtliches</div>
         <h1 className={styles.title}>Allgemeine Geschäftsbedingungen</h1>
-        <p className={styles.updated}>Stand: <Ph>[Datum vor Verkaufsstart eintragen]</Ph></p>
+        <p className={styles.updated}>Stand: Entwurf, noch nicht in Kraft</p>
       </header>
 
       <div className={styles.section}>
@@ -45,7 +47,7 @@ export default function AgbPage() {
           der Lernplattform Gradefruit (www.gradefruit.de) zwischen dem Anbieter
         </p>
         <p>
-          <Ph>[Vollständiger Name]</Ph>, <Ph>[Straße und Hausnummer]</Ph>, <Ph>[PLZ Ort]</Ph>,
+          Leon Kinkel, Eichendorffweg 15, 65795 Hattersheim am Main,
           Deutschland (siehe auch <Link href="/impressum">Impressum</Link>)
         </p>
         <p>und den Nutzerinnen und Nutzern der Plattform (nachfolgend „du“).</p>
@@ -93,7 +95,7 @@ export default function AgbPage() {
         <p>
           Es gelten die zum Zeitpunkt der Bestellung auf der Website angezeigten Preise. Alle
           Preise sind Endpreise in Euro
-          {' '}<Ph>[inkl. gesetzlicher Umsatzsteuer — ODER bei Kleinunternehmern: „Gemäß § 19
+          {' '}<Ph>[Steuerliche Angabe wird vor dem Verkaufsstart ergänzt — inkl. gesetzlicher Umsatzsteuer ODER bei Kleinunternehmern: „Gemäß § 19
           UStG wird keine Umsatzsteuer erhoben und ausgewiesen.“]</Ph>.
         </p>
         <p>
@@ -106,14 +108,14 @@ export default function AgbPage() {
         <h2>6. Laufzeit, Zugang und Kündigung</h2>
         <p>
           <strong>Einmalzahlung:</strong> Der Zugang gilt bis zum Ende des jeweiligen
-          Prüfungszeitraums, konkret bis zum <Ph>[Datum, z. B. 31.07.2027]</Ph>. Es entstehen
+          Prüfungszeitraums, konkret bis zum 31.07.2027. Es entstehen
           keine Folgekosten, der Zugang verlängert sich nicht automatisch.
         </p>
         <p>
           <strong>Monatsabo:</strong> Das Abo verlängert sich monatlich automatisch und ist
           jederzeit zum Ende des laufenden Abrechnungsmonats kündbar. Die Kündigung ist ohne
           Angabe von Gründen über das Stripe-Kundenportal möglich (erreichbar im Bereich „Mein
-          Konto“) oder per E-Mail an <Ph>[E-Mail-Adresse]</Ph>.
+          Konto“) oder per E-Mail an leon.kinkel@gmail.com.
         </p>
       </div>
 

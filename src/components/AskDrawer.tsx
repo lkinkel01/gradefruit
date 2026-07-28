@@ -76,6 +76,22 @@ function updateLastAi(list: Message[], text: string): Message[] {
 }
 
 export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props) {
+  // Die markierte Stelle soll sofort sichtbar sein — auch wenn sie weit unten
+  // in der Aufgabe steht. Sonst müsste man im Coach erst scrollen.
+  const markRef = useRef<HTMLParagraphElement | null>(null);
+  useEffect(() => {
+    if (!open || !source) return;
+    const frame = requestAnimationFrame(() => {
+      const el = markRef.current;
+      if (!el) return;
+      const box = el.closest('[data-src-scroll]') as HTMLElement | null;
+      if (!box) return;
+      const top = el.offsetTop - box.clientHeight / 2 + el.offsetHeight / 2;
+      box.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [open, source]);
+
   const { session } = useAuth();
   const [mode, setMode] = useState<'ki' | 'tutor'>('ki');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -267,20 +283,21 @@ export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props
           <h2 id="coach-title">Gradefruit-Coach</h2>
           <p className={styles.dsub}>Dein persönlicher Lernassistent</p>
           {source ? (
-            <div className={styles.snippet}>
+            <div className={styles.snippet} data-src-scroll>
               <div className={styles.srcHead}>
                 {typeof source.number === 'number' && <span className={styles.srcNum}>{source.number}</span>}
                 <span className={styles.srcTitle}>{source.title}</span>
               </div>
               {source.blocks.map((block, index) => {
                 const active = index === source.highlight;
+                const ref = active ? markRef : undefined;
                 // Bei einer Textmarkierung nur den markierten Ausschnitt betonen,
                 // der Rest des Abschnitts bleibt ruhig lesbar.
                 if (active && source.mark) {
                   const at = block.indexOf(source.mark);
                   if (at >= 0) {
                     return (
-                      <p key={index} className={styles.srcLine}>
+                      <p key={index} ref={ref} className={styles.srcLine}>
                         {block.slice(0, at)}
                         <mark className={styles.srcMark}>{source.mark}</mark>
                         {block.slice(at + source.mark.length)}
@@ -289,7 +306,7 @@ export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props
                   }
                 }
                 return (
-                  <p key={index} className={`${styles.srcLine} ${active ? styles.srcOn : ''}`}>
+                  <p key={index} ref={ref} className={`${styles.srcLine} ${active ? styles.srcOn : ''}`}>
                     {block}
                   </p>
                 );
