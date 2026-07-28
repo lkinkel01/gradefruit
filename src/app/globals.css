@@ -303,3 +303,12 @@ body.theme-switching *::after {
   /* Scroll-Reveal darf niemand aussperren: ohne Motion sofort sichtbar. */
   [data-reveal], [data-reveal] * { opacity: 1 !important; transform: none !important; }
 }
+
+/* Sicherheitsabstand oben — gemessen, nicht geraten.
+   In der App läuft die Seite im Vollbild unter der Statusleiste hindurch;
+   dort meldet env(safe-area-inset-top) rund 59 Punkte, im Browser 0. An den
+   Leisten selbst verpuffte der Wert (sie sind klebend positioniert), am
+   Seitenkörper wirkt er. */
+body {
+  padding-top: env(safe-area-inset-top, 0px);
+}

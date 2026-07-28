@@ -33,14 +33,11 @@
 /* Navigation */
 .nav {
   position: sticky;
-  /* env(safe-area-inset-top) ist im Browser 0 und ändert dort nichts. In der
-     App läuft die Seite unter der Statusleiste hindurch (Vollbild), und ohne
-     diesen Abstand lag die Uhrzeit auf dem Gradefruit-Schriftzug. */
-  top: calc(12px + env(safe-area-inset-top, 0px));
+  top: 12px;
   z-index: 40;
   width: 100%;
   min-height: 58px;
-  margin-top: calc(12px + env(safe-area-inset-top, 0px));
+  margin-top: 12px;
   overflow: hidden;
   border: 0;
   border-radius: 26px;
