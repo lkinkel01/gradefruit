@@ -18,6 +18,12 @@
   @media (prefers-color-scheme: dark) { body { background: #131315; color: #F7F7F8; } }
   h1 { margin: 0 0 10px; font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
   p { max-width: 32ch; margin: 0 auto; font-size: 15px; line-height: 1.6; opacity: .68; }
+  .repair { margin-top: 26px; font-size: 13px; opacity: .5; }
+  .link {
+    display: inline; margin: 0; padding: 0; min-height: 0;
+    border: 0; background: none; color: inherit;
+    font: inherit; text-decoration: underline; cursor: pointer;
+  }
   button {
     margin-top: 22px; min-height: 44px; padding: 12px 20px;
     border: 0; border-radius: 12px;
@@ -31,6 +37,24 @@
     <h1>Keine Verbindung</h1>
     <p>Gradefruit braucht gerade Internet. Sobald du wieder online bist, geht es genau dort weiter, wo du warst.</p>
     <button onclick="location.reload()">Erneut versuchen</button>
+    <!-- Notausstieg. Muss auf DIESER Seite stehen: Wenn die App nicht mehr
+         lädt, ist sie das Einzige, was der Nutzer noch sieht — der Ausschalter
+         in der App wäre dann unerreichbar. -->
+    <p class="repair">
+      Klappt es auch mit Internet nicht?
+      <button class="link" onclick="reparieren()">Zwischenspeicher leeren</button>
+    </p>
   </div>
+<script>
+  async function reparieren() {
+    try {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(r => r.unregister()));
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+    } catch (e) { /* Nichts zu leeren */ }
+    location.reload();
+  }
+</script>
 </body>
 </html>
