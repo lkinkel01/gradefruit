@@ -105,7 +105,12 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 /* Nichts darf die Seite seitlich breiter machen — sonst zoomt der mobile
-   Browser beim Seitenwechsel heraus bzw. schneidet Inhalte ab. */
+   Browser beim Seitenwechsel heraus bzw. schneidet Inhalte ab.
+   `overflow-x: clip` am <html> wirkt auch dort, wo `overflow-x: hidden` am
+   <body> allein nicht greift (iOS Safari weitet sonst den Layout-Viewport),
+   und erzeugt anders als `hidden` keinen Scroll-Container — sticky-Elemente
+   wie Navigation und Seitenleiste funktionieren also weiter. */
+html { overflow-x: clip; max-width: 100%; }
 * { min-width: 0; }
 img, svg, video, canvas { max-width: 100%; }
 html { scroll-behavior: smooth; }
