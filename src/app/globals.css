@@ -11,7 +11,7 @@
   --line: #E6E6E9;
   --line-strong: #D3D3D8;
   --accent: #FF7A00;
-  --accent-tx: #050505;
+  --accent-tx: #131315;
   --accent-d: #9A4200;
   --accent-soft: #FFF1E3;
   --accent-progress: #FFB36B;
@@ -230,21 +230,24 @@ h1, h2, h3, h4 {
 
 /* Dark Mode ist ein eigenes neutrales Materialsystem, keine Invertierung. */
 body.dark {
-  --canvas: #050505;
-  --surface: #0D0D0F;
-  --surface-2: #171719;
+  /* Angehobenes Neutralgrau statt Tiefschwarz: Tiefschwarz plus gesättigtes
+     Orange ist die Signatur aggressiver Werbe-Funnels. Ein paar Prozent
+     Helligkeit nehmen dem Kontrast die Härte, ohne die Ruhe zu verlieren. */
+  --canvas: #131315;
+  --surface: #1A1A1D;
+  --surface-2: #232326;
   --ink: #F8F8F9;
   --muted: #B6B6BD;
   --faint: #92939B;
-  --line: #252527;
-  --line-strong: #38383C;
+  --line: #2E2E32;
+  --line-strong: #414147;
   --accent-d: #FF9A3C;
-  --accent-tx: #050505;
+  --accent-tx: #131315;
   --accent-soft: #2A1608;
   --accent-progress: #6F3300;
   --green-soft: #102A1D;
-  --control: #1C1C1F;
-  --bubble-ai: #171719;
+  --control: #26262A;
+  --bubble-ai: #232326;
   --danger: #FF6B64;
   --danger-soft: #2A1110;
   --danger-line: #622824;

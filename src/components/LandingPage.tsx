@@ -723,11 +723,10 @@ export default function LandingPage({
 
         <section className={styles.section} id="lernweise">
           <div className={styles.sectionIntro}>
-            <h2>Lernmethoden,<br />die nachweislich wirken.</h2>
+            <h2>Lernmethoden aus der<br />Gedächtnisforschung.</h2>
             <p>
-              Kein Bauchgefühl: Active Recall, Spaced Repetition und Interleaving
-              gehören zu den am besten untersuchten Lernstrategien der
-              Gedächtnisforschung. Gradefruit baut genau darauf auf.
+              Active Recall, Spaced Repetition und Interleaving gehören zu den
+              am besten untersuchten Lernstrategien. Gradefruit baut darauf auf.
             </p>
           </div>
           <div className={styles.methodList}>
