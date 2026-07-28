@@ -1,10 +1,12 @@
 .topbar {
   position: sticky;
-  top: 12px;
+  /* Siehe LandingPage.module.css: im Browser 0, in der App der Abstand zur
+     Statusleiste. */
+  top: calc(12px + env(safe-area-inset-top, 0px));
   z-index: 20;
   width: calc(100% - 32px);
   height: 52px;
-  margin: 12px 16px 0;
+  margin: calc(12px + env(safe-area-inset-top, 0px)) 16px 0;
   display: flex;
   align-items: center;
   gap: 12px;
