@@ -5,7 +5,6 @@ import Capacitor
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    private var screenshotGuard: ScreenshotGuard?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         return true
@@ -26,13 +25,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Schutz beim ersten Aktivwerden einhängen — hier steht das Fenster
-        // sicher bereit, anders als beim Start. Die Klasse steht unten in dieser Datei.
-        if screenshotGuard == nil, let window = window {
-            let guardInstance = ScreenshotGuard(window: window)
-            guardInstance.start()
-            screenshotGuard = guardInstance
-        }
+    }
+
+    // Ab iOS 26 startet eine App ausschließlich über Szenen; den alten Weg über
+    // das AppDelegate-Fenster gibt es nicht mehr. Capacitors Vorlage benutzt
+    // noch den alten Weg — deshalb blieb der Bildschirm komplett leer, auch bei
+    // rein nativem Inhalt. Diese Angabe verbindet die App mit dem SceneDelegate.
+    func application(_ application: UIApplication, configurationForConnecting session: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        let config = UISceneConfiguration(name: "Default Configuration", sessionRole: session.role)
+        config.delegateClass = SceneDelegate.self
+        return config
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -158,5 +160,29 @@ final class ScreenshotGuard {
             coverView?.removeFromSuperview()
             coverView = nil
         }
+    }
+}
+
+
+/// Aufbau des Fensters für iOS 26 und neuer.
+///
+/// Hier entsteht das Fenster, hier hängt der Screenshot-Schutz — und zwar
+/// bevor irgendein Kursinhalt sichtbar wird.
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+
+    var window: UIWindow?
+    private var screenshotGuard: ScreenshotGuard?
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options: UIScene.ConnectionOptions) {
+        guard let windowScene = scene as? UIWindowScene else { return }
+
+        let newWindow = UIWindow(windowScene: windowScene)
+        newWindow.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+        newWindow.makeKeyAndVisible()
+        window = newWindow
+
+        let guardInstance = ScreenshotGuard(window: newWindow)
+        guardInstance.start()
+        screenshotGuard = guardInstance
     }
 }
