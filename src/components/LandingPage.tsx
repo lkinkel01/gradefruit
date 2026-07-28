@@ -801,7 +801,8 @@ export default function LandingPage({
                 Formelsammlungen, Aufgaben und Lösungen. Der Coach arbeitet mit
                 deinen Unterlagen. Du entscheidest, was privat bleibt.
               </p>
-              <a className="gf-arrow" href="#kurse">Gradefruit heute entdecken <Arrow /></a>
+              {/* Zeigt auf den Preisteil, den es in der App nicht gibt. */}
+              {!imApp && <a className="gf-arrow" href="#kurse">Gradefruit heute entdecken <Arrow /></a>}
             </div>
           </div>
 
@@ -931,7 +932,7 @@ export default function LandingPage({
             <button className={`btn big ${styles.continueButton}`} onClick={onEnter}>
               {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
             </button>
-            <a className="gf-arrow" href="#kurse">Kurse ansehen <Arrow /></a>
+            {!imApp && <a className="gf-arrow" href="#kurse">Kurse ansehen <Arrow /></a>}
           </div>
           <div className={styles.social}>
             <span className={styles.socialLabel}>Folge Gradefruit</span>
