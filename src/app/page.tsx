@@ -21,6 +21,7 @@ import { useImAppRahmen } from '@/lib/nativeApp';
 import SignedOutNotice from '@/components/SignedOutNotice';
 import AppEinstieg from '@/components/AppEinstieg';
 import AppTabBar from '@/components/AppTabBar';
+import AppHeader from '@/components/AppHeader';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
@@ -513,16 +514,35 @@ export default function Home() {
           {/* Persönliches Wasserzeichen über allen Kursinhalten — Screenshots
               bleiben möglich, sind aber dem Konto zuzuordnen. */}
           <Watermark />
-          <Topbar
-            view={view}
-            topicTab={topicTab}
-            topicItemLabel={topicItemLabel}
-            dark={dark}
-            onToggleDark={() => setTheme(!dark)}
-            onOpenNav={() => setNavOpen(n => !n)}
-            onNavigate={navigate}
-            onOpenAuth={() => openAuth('login')}
-          />
+          {imApp ? (
+            /* In der App tragen Pfad, Menü-Knopf und Dunkelmodus-Schalter
+               nichts bei: Die Navigation sitzt unten, das Thema bestimmt das
+               System. Es bleibt, was oben wirklich gebraucht wird. */
+            <AppHeader
+              view={view}
+              topicTab={topicTab}
+              topicItemLabel={topicItemLabel}
+              onZurueck={() => {
+                // Aus einer geöffneten Aufgabe zurück in die Liste, aus einer
+                // Liste zurück zur Themenseite, sonst aufs Dashboard.
+                if (topicItemId) navigate(view, { tab: topicTab, itemId: null, itemLabel: null });
+                else if (TOPIC_VIEWS.includes(view) && topicTab !== 'uebersicht') {
+                  navigate(view, { tab: 'uebersicht', itemId: null, itemLabel: null });
+                } else navigate('dashboard');
+              }}
+            />
+          ) : (
+            <Topbar
+              view={view}
+              topicTab={topicTab}
+              topicItemLabel={topicItemLabel}
+              dark={dark}
+              onToggleDark={() => setTheme(!dark)}
+              onOpenNav={() => setNavOpen(n => !n)}
+              onNavigate={navigate}
+              onOpenAuth={() => openAuth('login')}
+            />
+          )}
           {renderContent()}
         </div>
       </div>
