@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { createClient } from './supabase';
 
@@ -31,8 +31,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const claimOnNextUser = useRef(false);
-  const [signedOutReason, setSignedOutReason] = useState<SignedOutReason | null>(null);
+  // Der Grund muss ein Neuladen überstehen: Auf dem Handy wird die Seite beim
+  // Zurückwechseln oft komplett neu aufgebaut, und ein reiner React-Zustand
+  // wäre dann weg — der Hinweis erschien nie.
+  const REASON_KEY = 'gf-signed-out-reason';
+  const [signedOutReason, setReasonState] = useState<SignedOutReason | null>(null);
+  const setSignedOutReason = (reason: SignedOutReason | null) => {
+    setReasonState(reason);
+    try {
+      if (reason) sessionStorage.setItem(REASON_KEY, reason);
+      else sessionStorage.removeItem(REASON_KEY);
+    } catch { /* Speicher gesperrt */ }
+  };
+
+  // Beim Start einen gemerkten Grund zurückholen.
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem(REASON_KEY);
+      if (stored === 'other-device' || stored === 'idle') setReasonState(stored);
+    } catch { /* Speicher gesperrt */ }
+  }, []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -42,15 +60,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // Nur eine echte Anmeldung übernimmt das Gerät — ein Seitenaufruf mit
-      // bestehender Sitzung (INITIAL_SESSION) darf das andere Gerät nicht
-      // hinauswerfen.
-      // Den Hinweis hier NICHT löschen: Supabase meldet auch das Wiederher-
-      // stellen einer bestehenden Sitzung als SIGNED_IN, und das kam beim
-      // Zeitablauf-Abmelden zufällig nach dem Setzen des Grunds an — der
-      // Hinweis verschwand dadurch sofort wieder. Angezeigt wird er ohnehin
-      // nur im abgemeldeten Zustand; gelöscht wird er beim bewussten Anmelden.
-      if (event === 'SIGNED_IN') claimOnNextUser.current = true;
+      // Bewusst NICHTS am Geräte-Anspruch oder am Hinweis ändern: Supabase
+      // meldet auch das bloße Wiederherstellen einer bestehenden Sitzung als
+      // SIGNED_IN. Daran die Übernahme zu hängen war der eigentliche Fehler —
+      // dadurch riss sich jedes Gerät beim Neuladen den Anspruch zurück, und
+      // das andere Gerät flog statt seiner hinaus.
       setSession(session);
       setUser(session?.user ?? null);
     });
@@ -96,13 +110,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (data.device_id !== deviceId) kick();
     };
 
-    // Frische Anmeldung übernimmt das Gerät; ein bloßer Seitenaufruf prüft nur.
-    if (claimOnNextUser.current) {
-      claimOnNextUser.current = false;
-      void claim();
-    } else {
-      void verify();
-    }
+    // Nur eine bewusste Anmeldung übernimmt das Gerät. Die Anmeldemaske setzt
+    // dafür kurz vorher eine Einmal-Markierung; ein bloßer Seitenaufruf oder
+    // ein Neuladen findet sie nicht vor und prüft deshalb nur.
+    let deliberateSignIn = false;
+    try {
+      deliberateSignIn = sessionStorage.getItem('gf-claim-device') === '1';
+      if (deliberateSignIn) sessionStorage.removeItem('gf-claim-device');
+    } catch { /* Speicher gesperrt */ }
+
+    if (deliberateSignIn) void claim();
+    else void verify();
 
     const channel = supabase
       .channel(`active-device-${user.id}`)
@@ -117,9 +135,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Zusätzliche Absicherung, falls die Realtime-Verbindung abreißt.
     const poll = window.setInterval(() => { void verify(); }, 20_000);
 
+    // Der wichtigste Fall in der Praxis: Das Handy liegt in der Tasche,
+    // während man sich am Laptop anmeldet. Im Hintergrund friert das Handy
+    // Zeitgeber ein und trennt die Realtime-Verbindung — die Übernahme geht
+    // dabei verloren und wird auch nicht nachgeliefert. Deshalb wird beim
+    // Zurückkommen sofort neu geprüft, statt auf den nächsten Takt zu warten.
+    const recheck = () => {
+      if (document.visibilityState === 'visible') void verify();
+    };
+    document.addEventListener('visibilitychange', recheck);
+    window.addEventListener('focus', recheck);
+    window.addEventListener('pageshow', recheck);
+
     return () => {
       alive = false;
       window.clearInterval(poll);
+      document.removeEventListener('visibilitychange', recheck);
+      window.removeEventListener('focus', recheck);
+      window.removeEventListener('pageshow', recheck);
       void supabase.removeChannel(channel);
     };
   }, [supabase, user]);

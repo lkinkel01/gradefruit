@@ -65,10 +65,12 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
         email, password,
         options: { data: { full_name: name } },
       });
+      markDeliberateSignIn();
       if (error) setError(germanAuthError(error.message));
       else if (data.session) onAuthenticated(); // E-Mail-Bestätigung ist aus -> sofort eingeloggt
       else setInfo('Bestätigungs-E-Mail gesendet! Bitte überprüfe dein Postfach (auch den Spam-Ordner).');
     } else {
+      markDeliberateSignIn();
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       // Gerät direkt hier übernehmen, nicht über das SIGNED_IN-Ereignis:
       // dessen Zeitpunkt war nicht verlässlich, wodurch die Kennung des
@@ -99,8 +101,15 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
     setLoading(false);
   };
 
+  // Einmal-Markierung: Nur eine bewusste Anmeldung darf das Gerät übernehmen.
+  // AuthContext liest sie beim nächsten Durchlauf und verbraucht sie dabei.
+  const markDeliberateSignIn = () => {
+    try { sessionStorage.setItem('gf-claim-device', '1'); } catch { /* Speicher gesperrt */ }
+  };
+
   const handleGoogle = async () => {
     try { localStorage.setItem('gf-after-auth', 'dashboard'); } catch { /* Speicher gesperrt */ }
+    markDeliberateSignIn();
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${window.location.origin}/` },

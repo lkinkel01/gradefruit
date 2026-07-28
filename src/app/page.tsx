@@ -98,14 +98,19 @@ export default function Home() {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     };
 
-    frame = requestAnimationFrame(() => {
+    // Bewusst setTimeout statt requestAnimationFrame: In einem Tab, der im
+    // Hintergrund liegt, zeichnet der Browser nicht — ein Animationsbild kam
+    // dort nie an, und die App blieb dauerhaft auf „Einen Moment …" stehen.
+    // Der Zweck (einmal aussetzen, damit der Serverabgleich sauber bleibt)
+    // wird so genauso erreicht, nur eben auch ohne Bildaufbau.
+    frame = window.setTimeout(() => {
       applyLocation();
       setRouteReady(true);
-    });
+    }, 0);
     window.addEventListener('popstate', applyLocation);
     return () => {
       window.removeEventListener('popstate', applyLocation);
-      if (frame) cancelAnimationFrame(frame);
+      if (frame) window.clearTimeout(frame);
     };
   }, []);
 
