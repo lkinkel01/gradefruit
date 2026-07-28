@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import type { ContentLevel, ContentTopic } from './contentIndex';
+import { ladeOffline, loescheOffline, speichereOffline } from './offlineContent';
 
 // ===========================================================================
 // Kursinhalte im Browser — geladen, nicht mitgeliefert.
@@ -72,15 +73,22 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const inFlight = useRef<Set<string>>(new Set());
   const token = session?.access_token ?? null;
   const userId = user?.id ?? null;
+  // In einer Ref, damit die laufende Anfrage die aktuelle Kennung sieht, ohne
+  // dass `request` bei jedem Nutzerwechsel neu erzeugt wird.
+  const userIdRef = useRef<string | null>(userId);
+  userIdRef.current = userId;
 
   // Nutzerwechsel oder Abmelden: alles Geladene verwerfen. Sonst sähe der
   // nächste Nutzer am selben Gerät die Inhalte des vorigen.
   const lastUser = useRef<string | null>(null);
   useEffect(() => {
     if (lastUser.current !== userId) {
+      const vorher = lastUser.current;
       lastUser.current = userId;
       inFlight.current.clear();
       setCache({});
+      // Nutzerwechsel: nichts vom Vorgänger auf dem Gerät zurücklassen.
+      if (vorher !== null) void loescheOffline();
     }
   }, [userId]);
 
@@ -123,6 +131,12 @@ export function ContentProvider({ children }: { children: ReactNode }) {
             ...prev,
             [key]: { state: 'ready', tasks: body.tasks!, summary: body.summary!, message: null },
           }));
+          // Für den Offline-Zugriff verschlüsselt ablegen — nur für angemeldete
+          // Nutzer, denn die Ablage gehört immer genau einem Konto.
+          if (userIdRef.current) {
+            void speichereOffline(userIdRef.current, topic, level,
+              { tasks: body.tasks, summary: body.summary });
+          }
         } else {
           const state: ContentState = res.status === 403 ? 'locked' : res.status === 401 ? 'signin' : 'error';
           setCache(prev => ({
@@ -131,14 +145,27 @@ export function ContentProvider({ children }: { children: ReactNode }) {
           }));
         }
       } catch {
+        // Kein Netz: auf die Ablage auf dem Gerät zurückfallen.
+        const offline = userIdRef.current
+          ? await ladeOffline<{ tasks: ContentTask[]; summary: ContentSummary }>(
+              userIdRef.current, topic, level)
+          : null;
+
         setCache(prev => ({
           ...prev,
-          [key]: {
-            state: 'error',
-            tasks: [],
-            summary: null,
-            message: 'Die Inhalte konnten nicht geladen werden. Prüfe deine Verbindung.',
-          },
+          [key]: offline
+            ? {
+                state: 'ready',
+                tasks: offline.tasks,
+                summary: offline.summary,
+                message: 'Offline — zuletzt geladener Stand.',
+              }
+            : {
+                state: 'error',
+                tasks: [],
+                summary: null,
+                message: 'Die Inhalte konnten nicht geladen werden. Prüfe deine Verbindung.',
+              },
         }));
       } finally {
         inFlight.current.delete(key);
