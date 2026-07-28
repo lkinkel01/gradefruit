@@ -23,20 +23,20 @@
 
 .row span {
   color: var(--ink);
-  /* So schwach, dass es beim Lesen praktisch verschwindet, auf einem
-     Screenshot aber erkennbar bleibt. */
-  opacity: .045;
+  /* Auf dem Bildschirm unsichtbar — es soll beim Lernen nicht stören. */
+  opacity: 0;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: .04em;
 }
 
-:global(body.dark) .row span { opacity: .06; }
+
 
 @media print {
-  /* Beim Drucken und beim „Als PDF sichern" deutlich sichtbar. */
-  .row span { opacity: .3; }
+  /* Nur beim Drucken und beim „Als PDF sichern" sichtbar — dort ist das
+     Weitergeben am wahrscheinlichsten, und dort stört es niemanden. */
+  .row span { opacity: .28; }
 }
 
 @media (max-width: 700px) {
