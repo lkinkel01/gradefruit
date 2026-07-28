@@ -85,7 +85,10 @@ final class ScreenshotGuard {
     }
 
     func start() {
-        protectAgainstScreenshots()
+        // ABGESCHALTET: Der Screenshot-Kniff verschiebt die Fenstergeometrie und
+        // macht die App unbrauchbar (siehe Kommentar unten). Die
+        // Aufnahmeerkennung darunter ist davon unberührt und bleibt aktiv.
+        // protectAgainstScreenshots()
         observeScreenRecording()
         updateRecordingCover()
     }
@@ -94,21 +97,30 @@ final class ScreenshotGuard {
 
     /// Hängt die Inhaltsebene des Fensters in die geschützte Ebene eines
     /// sicheren Textfelds um. Sichtbar bleibt alles; auf dem Screenshot nicht.
+    ///
+    /// Entscheidend: Das Feld muss zuerst wirklich in der Anzeige hängen —
+    /// vorher existiert seine geschützte Ebene gar nicht, und das Umhängen
+    /// lief ins Leere (genau das war beim ersten Versuch der Fehler).
     private func protectAgainstScreenshots() {
         guard let window = window else { return }
 
         secureField.isSecureTextEntry = true
         secureField.isUserInteractionEnabled = false
+        secureField.translatesAutoresizingMaskIntoConstraints = false
+        window.addSubview(secureField)
+        NSLayoutConstraint.activate([
+            secureField.centerXAnchor.constraint(equalTo: window.centerXAnchor),
+            secureField.centerYAnchor.constraint(equalTo: window.centerYAnchor),
+        ])
+        window.layoutIfNeeded()
 
-        // Die geschützte Ebene liegt eine Stufe unter der Ebene des Textfelds.
-        guard let secureLayer = secureField.layer.sublayers?.first else { return }
-        secureLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
-
-        window.layer.superlayer?.addSublayer(secureLayer)
+        // Reihenfolge ist entscheidend: Erst die GANZE Ebene des Felds aus dem
+        // Fenster herausheben — sonst läge sie weiter unter der Fensterebene,
+        // und das Einhängen der Fensterebene darunter ergäbe einen Kreis. Genau
+        // daran ist die App vorher abgestürzt ("cycle in its layer tree").
+        window.layer.superlayer?.addSublayer(secureField.layer)
+        guard let secureLayer = secureField.layer.sublayers?.last else { return }
         secureLayer.addSublayer(window.layer)
-        // Ohne diese Bindung bliebe die Ebene bei Drehungen an der falschen Stelle.
-        secureLayer.frame = window.layer.frame
-        secureLayer.position = window.layer.position
     }
 
     // MARK: - Bildschirmaufnahme abdecken
