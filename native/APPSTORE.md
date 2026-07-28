@@ -11,8 +11,8 @@ kopieren, nichts neu erfinden.
 
 | Feld | Wert |
 |---|---|
-| App-Name (max. 30 Zeichen) | `Gradefruit Mathenachhilfe` (25) |
-| Untertitel (max. 30) | `Abitur Hessen 2027, GK und LK` (29) |
+| App-Name (max. 30 Zeichen) | `Gradefruit Abiturvorbereitung` (29) |
+| Untertitel (max. 30) | `Mathe Abitur Hessen 2027` (24) |
 | Bundle-ID | `de.gradefruit.app` |
 | Primäre Kategorie | Bildung |
 | Sekundäre Kategorie | Bildung › Nachschlagewerke |
