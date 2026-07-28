@@ -86,7 +86,11 @@ final class ScreenshotGuard {
     }
 
     func start() {
-        protectAgainstScreenshots()
+        // ABGESCHALTET — nachgewiesen wirkungslos: Der Simulator-Bildschirm und
+        // der iOS-Screenshot zeigen beide denselben Inhalt. Die weißen
+        // Screenshots der vorigen Versuche waren kein Schutz, sondern eine noch
+        // nicht fertig gezeichnete Seite.
+        // protectAgainstScreenshots()
         observeScreenRecording()
         updateRecordingCover()
     }
