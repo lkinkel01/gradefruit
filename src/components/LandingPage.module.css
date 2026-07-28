@@ -187,9 +187,10 @@
 }
 
 .continueButton {
-  /* Gedeckteres Orange: die grelle Vollfläche wirkte wie ein Werbe-Banner. */
-  border: 1px solid color-mix(in srgb, var(--brand-rind-deep) 68%, var(--ink));
-  background: color-mix(in srgb, var(--brand-rind-deep) 88%, var(--ink));
+  /* Fester Ton, unabhängig vom Modus: vorher wurde mit --ink gemischt, wodurch
+     der Knopf hell und dunkel unterschiedlich aussah. */
+  border: 1px solid #C24E12;
+  background: #DC5A15;
   color: #fff;
   box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 12%, transparent);
   transition:
@@ -1770,5 +1771,11 @@
     width: 100%;
   }
   .heroRegister { display: inline-flex; }
+  /* Wie in der Kopfzeile: hell = schwarz auf weiß-Schrift, dunkel = umgekehrt. */
+  .heroRegister {
+    border: 1px solid var(--btn-ink);
+    background: var(--btn-ink);
+    color: var(--btn-ink-tx);
+  }
   .heroActions :global(.btn) { flex: 1 1 0; min-width: 0; padding-inline: 14px; }
 }
