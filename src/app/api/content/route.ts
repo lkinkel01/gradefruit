@@ -50,6 +50,12 @@ export async function GET(req: Request) {
     return json({ error: 'bad_request', message: 'Unbekanntes Thema oder unbekannte Kursstufe.' }, 400);
   }
 
+  // Analysis ist die kostenlose Probe und muss auch ohne Konto lesbar sein —
+  // die Startseite schickt Gäste über „Kostenlos testen" genau dorthin.
+  if (topic === FREE_TOPIC) {
+    return json({ tasks: tasksFor(topic, level), summary: summaryFor(topic, level) }, 200);
+  }
+
   const authHeader = req.headers.get('authorization') ?? '';
   const token = authHeader.toLowerCase().startsWith('bearer ') ? authHeader.slice(7).trim() : '';
   if (!token) {
@@ -67,7 +73,7 @@ export async function GET(req: Request) {
 
   // Kaufprüfung. Die Abfrage läuft mit dem Token des Nutzers, greift also durch
   // die Zeilen-Sicherheit (RLS) nur auf dessen eigene Käufe zu.
-  if (topic !== FREE_TOPIC) {
+  {
     // `purchases.course_id` ist die UUID aus `courses` — erst den Kurs über
     // seinen Slug auflösen, dann den Kauf dazu suchen.
     const { data: course, error: courseError } = await supabase

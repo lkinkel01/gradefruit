@@ -97,17 +97,10 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     const key = keyOf(topic, level);
     if (inFlight.current.has(key)) return;
 
-    if (!token) {
-      // Ohne Anmeldung gibt es keine Inhalte — das entscheidet ohnehin der
-      // Server, hier sparen wir uns nur die vergebliche Anfrage.
-      if (!authLoading) {
-        setCache(prev => (prev[key]?.state === 'signin' ? prev : {
-          ...prev,
-          [key]: { state: 'signin', tasks: [], summary: null, message: null },
-        }));
-      }
-      return;
-    }
+    // Nicht vorab abbrechen, wenn kein Token da ist: Der Server entscheidet,
+    // was ohne Konto sichtbar ist (Analysis als kostenlose Probe). Solange die
+    // Anmeldung noch geprüft wird, warten wir aber.
+    if (authLoading) return;
 
     setCache(prev => {
       if (!force && prev[key] && prev[key].state !== 'signin') return prev;
@@ -118,7 +111,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     (async () => {
       try {
         const res = await fetch(`/api/content?topic=${topic}&level=${level}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
           cache: 'no-store',
         });
         const body = await res.json().catch(() => null) as
