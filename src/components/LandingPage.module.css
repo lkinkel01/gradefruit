@@ -33,7 +33,10 @@
 /* Navigation */
 .nav {
   position: sticky;
-  top: 12px;
+  /* Der Abstand am Seitenkörper wirkt nur im Fluss. Sobald die Leiste klebt,
+     zählt allein dieser Wert — ohne den Sicherheitsabstand rutschte sie beim
+     Scrollen wieder unter die Uhrzeit. */
+  top: calc(12px + env(safe-area-inset-top, 0px));
   z-index: 40;
   width: 100%;
   min-height: 58px;
