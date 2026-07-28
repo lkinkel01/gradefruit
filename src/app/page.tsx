@@ -16,7 +16,6 @@ import CheckoutModal from '@/components/CheckoutModal';
 import AuthModal from '@/components/AuthModal';
 import AskDrawer, { type AskSource } from '@/components/AskDrawer';
 import Watermark from '@/components/Watermark';
-import ScreenGuard from '@/components/ScreenGuard';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
@@ -458,9 +457,6 @@ export default function Home() {
           {/* Persönliches Wasserzeichen über allen Kursinhalten — Screenshots
               bleiben möglich, sind aber dem Konto zuzuordnen. */}
           <Watermark />
-          {/* Sperrt den Inhalt, sobald das Fenster den Fokus verliert — das
-              passiert unter anderem beim Start der macOS-Screenshot-Auswahl. */}
-          <ScreenGuard />
           <Topbar
             view={view}
             topicTab={topicTab}
