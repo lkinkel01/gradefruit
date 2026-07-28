@@ -16,6 +16,7 @@ import CheckoutModal from '@/components/CheckoutModal';
 import AuthModal from '@/components/AuthModal';
 import AskDrawer, { type AskSource } from '@/components/AskDrawer';
 import Watermark from '@/components/Watermark';
+import SignedOutNotice from '@/components/SignedOutNotice';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
@@ -59,7 +60,7 @@ function locationFor(view: View, tab: TopicTab, itemId: string | null): string {
 }
 
 export default function Home() {
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, signedOutReason, clearSignedOutReason } = useAuth();
   const { owned, ownedLk, refresh } = useProgress();
 
   const [view, setView] = useState<View>('landing');
@@ -353,6 +354,17 @@ export default function Home() {
     setAuthMode(mode); setAuthOpen(true);
   };
 
+  // Erzwungenes Abmelden (anderes Gerät oder Zeitablauf): zurück auf die
+  // Startseite, damit niemand vor einer halb leeren Lernoberfläche sitzt.
+  useEffect(() => {
+    if (!signedOutReason || user) return;
+    setNavOpen(false);
+    setView('landing');
+    // Auch die URL zurücksetzen, sonst stellt der Standort-Effekt beim
+    // nächsten Durchlauf wieder die alte Ansicht her.
+    window.history.replaceState({}, '', window.location.pathname);
+  }, [signedOutReason, user]);
+
   const handleAuthenticated = () => {
     setAuthOpen(false);
     try { localStorage.removeItem('gf-after-auth'); } catch { /* Speicher gesperrt */ }
@@ -387,6 +399,11 @@ export default function Home() {
           onRegister={() => openAuth('register')}
           onOpenCheckout={(course) => user ? openCheckout(course) : openAuth('register')}
           onSignOut={handleSignOut}
+        />
+        <SignedOutNotice
+          reason={user ? null : signedOutReason}
+          onSignIn={() => { clearSignedOutReason(); openAuth('login'); }}
+          onClose={clearSignedOutReason}
         />
         <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} course={checkoutCourse} />
         <AuthModal
@@ -473,6 +490,11 @@ export default function Home() {
 
       {navOpen && <div className={styles.navScrim} onClick={() => setNavOpen(false)} />}
 
+      <SignedOutNotice
+        reason={user ? null : signedOutReason}
+        onSignIn={() => { clearSignedOutReason(); openAuth('login'); }}
+        onClose={clearSignedOutReason}
+      />
       <CheckoutModal
         open={checkoutOpen}
         onClose={() => setCheckoutOpen(false)}

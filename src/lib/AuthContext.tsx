@@ -3,14 +3,28 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState, ReactN
 import { User, Session } from '@supabase/supabase-js';
 import { createClient } from './supabase';
 
+/** Warum jemand abgemeldet wurde, ohne selbst auf „Abmelden" zu klicken. */
+export type SignedOutReason = 'other-device' | 'idle';
+
 interface AuthCtx {
   user: User | null;
   session: Session | null;
   loading: boolean;
   signOut: () => Promise<void>;
+  // Damit die Oberfläche erklären kann, was passiert ist, statt kommentarlos
+  // in den abgemeldeten Zustand zu fallen.
+  signedOutReason: SignedOutReason | null;
+  clearSignedOutReason: () => void;
 }
 
-const Ctx = createContext<AuthCtx>({ user: null, session: null, loading: true, signOut: async () => {} });
+const Ctx = createContext<AuthCtx>({
+  user: null,
+  session: null,
+  loading: true,
+  signOut: async () => {},
+  signedOutReason: null,
+  clearSignedOutReason: () => {},
+});
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const supabase = useMemo(() => createClient(), []);
@@ -18,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const claimOnNextUser = useRef(false);
+  const [signedOutReason, setSignedOutReason] = useState<SignedOutReason | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -30,6 +45,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Nur eine echte Anmeldung übernimmt das Gerät — ein Seitenaufruf mit
       // bestehender Sitzung (INITIAL_SESSION) darf das andere Gerät nicht
       // hinauswerfen.
+      // Den Hinweis hier NICHT löschen: Supabase meldet auch das Wiederher-
+      // stellen einer bestehenden Sitzung als SIGNED_IN, und das kam beim
+      // Zeitablauf-Abmelden zufällig nach dem Setzen des Grunds an — der
+      // Hinweis verschwand dadurch sofort wieder. Angezeigt wird er ohnehin
+      // nur im abgemeldeten Zustand; gelöscht wird er beim bewussten Anmelden.
       if (event === 'SIGNED_IN') claimOnNextUser.current = true;
       setSession(session);
       setUser(session?.user ?? null);
@@ -59,6 +79,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const kick = () => {
       if (!alive) return;
       alive = false;
+      setSignedOutReason('other-device');
       void supabase.auth.signOut();
     };
 
@@ -122,16 +143,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const check = () => {
       if (!expired()) return;
       try { localStorage.removeItem(KEY); } catch { /* Speicher gesperrt */ }
+      setSignedOutReason('idle');
       void supabase.auth.signOut();
     };
 
+    // Zuerst prüfen, dann erst die Frist neu setzen. Andersherum (touch vor
+    // check) überschrieb der Seitenaufruf selbst die letzte Aktivität — wer den
+    // Tab drei Stunden geschlossen hatte, blieb dadurch angemeldet.
+    if (expired()) {
+      check();
+      return;
+    }
     touch();
     const events: (keyof WindowEventMap)[] = ['pointerdown', 'keydown', 'scroll', 'focus'];
     events.forEach(e => window.addEventListener(e, touch, { passive: true }));
     const onVisible = () => { if (document.visibilityState === 'visible') check(); };
     document.addEventListener('visibilitychange', onVisible);
     const timer = window.setInterval(check, 60_000);
-    check();
 
     return () => {
       events.forEach(e => window.removeEventListener(e, touch));
@@ -141,10 +169,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [supabase, user]);
 
   const signOut = async () => {
+    setSignedOutReason(null);
     await supabase.auth.signOut();
   };
 
-  return <Ctx.Provider value={{ user, session, loading, signOut }}>{children}</Ctx.Provider>;
+  const clearSignedOutReason = () => setSignedOutReason(null);
+
+  return (
+    <Ctx.Provider value={{ user, session, loading, signOut, signedOutReason, clearSignedOutReason }}>
+      {children}
+    </Ctx.Provider>
+  );
 }
 
 export const useAuth = () => useContext(Ctx);
