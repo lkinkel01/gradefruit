@@ -595,8 +595,24 @@
     padding: 15px;
   }
   .detailHeader .headStatus { grid-column: 2; justify-self: start; }
-  .statusSeg { width: 100%; }
-  .statusBtn { min-height: 44px; flex: 1; padding-inline: 7px; }
+  /* Die drei Lernstufen untereinander: „Nicht verstanden" passte nebeneinander
+     nicht in die Zeile und wurde abgeschnitten. */
+  .statusSeg { display: flex; flex-direction: column; width: 100%; gap: 3px; }
+  .statusBtn {
+    width: 100%;
+    min-height: 46px;
+    justify-content: flex-start;
+    padding-inline: 12px;
+    white-space: normal;
+  }
+  /* Lange Formeln dürfen die Seite nicht breiter machen. */
+  .reader, .readerBlock { max-width: 100%; }
+  .readerText, .readerMath { overflow-wrap: anywhere; }
+  .actionZone { padding: 14px 12px; }
+  .rowActions :global(button), .solTools :global(button) { flex: 1 1 auto; }
+  .pagerBtn { max-width: 100%; }
+  .pager { gap: 8px; }
+  .areaTitle { font-size: 20px; }
 }
 
 /* Knopf zur markierten Textstelle — erscheint nur bei aktiver Auswahl. */

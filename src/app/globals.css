@@ -104,6 +104,10 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
+/* Nichts darf die Seite seitlich breiter machen — sonst zoomt der mobile
+   Browser beim Seitenwechsel heraus bzw. schneidet Inhalte ab. */
+* { min-width: 0; }
+img, svg, video, canvas { max-width: 100%; }
 html { scroll-behavior: smooth; }
 body {
   background: var(--canvas);
