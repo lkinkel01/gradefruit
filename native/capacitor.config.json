@@ -1,0 +1,11 @@
+{
+  "appId": "de.gradefruit.app",
+  "appName": "Gradefruit",
+  "webDir": "www",
+  "server": {
+    "url": "https://www.gradefruit.de",
+    "cleartext": false
+  },
+  "ios": { "contentInset": "always" },
+  "android": { "allowMixedContent": false }
+}

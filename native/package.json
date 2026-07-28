@@ -1,0 +1,17 @@
+{
+  "name": "gradefruit-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Native Hülle um www.gradefruit.de — nur dafür da, den Screenshot-Schutz des Betriebssystems zu aktivieren.",
+  "scripts": {
+    "sync": "cap sync",
+    "open:ios": "cap open ios",
+    "open:android": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/cli": "^8.4.2",
+    "@capacitor/core": "^8.4.2",
+    "@capacitor/ios": "^8.4.2"
+  }
+}
