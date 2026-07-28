@@ -353,8 +353,21 @@ export default function LandingPage({
       .map(item => document.getElementById(item.id))
       .filter((element): element is HTMLElement => Boolean(element));
 
-    const onScroll = () => {
-      const nextY = Math.max(0, window.scrollY);
+    // Woher der Scrollwert kommt, ist je nach Umgebung verschieden: im Browser
+    // das Fenster, im Web-Bereich der App unter Umständen ein Element. Deshalb
+    // wird beides abgefragt, statt sich auf window.scrollY zu verlassen — genau
+    // dieser Unterschied hat die Leiste in der App stehen lassen.
+    const scrollWert = (ziel?: EventTarget | null) => {
+      const vomFenster = window.scrollY;
+      if (vomFenster > 0) return vomFenster;
+      const vomDokument = document.scrollingElement?.scrollTop ?? 0;
+      if (vomDokument > 0) return vomDokument;
+      const element = ziel as HTMLElement | null;
+      return element && typeof element.scrollTop === 'number' ? element.scrollTop : 0;
+    };
+
+    const onScroll = (event?: Event) => {
+      const nextY = Math.max(0, scrollWert(event?.target));
       if (navPinnedAtY.current !== null && Math.abs(nextY - navPinnedAtY.current) < 48) {
         // Leiste wurde gerade über den Menü-Knopf geöffnet: stehen lassen.
       } else {
@@ -381,10 +394,14 @@ export default function LandingPage({
     sectionElements.forEach(element => observer.observe(element));
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+    // Zusätzlich in der Erfassungsphase am Dokument: Scroll-Ereignisse aus
+    // einzelnen Elementen steigen nicht auf und kämen am Fenster nie an.
+    document.addEventListener('scroll', onScroll, { capture: true, passive: true });
 
     return () => {
       observer.disconnect();
       window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('scroll', onScroll, { capture: true });
     };
   }, [mobileNavOpen]);
 
