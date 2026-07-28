@@ -39,18 +39,22 @@
   min-height: 58px;
   margin-top: 12px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--line-strong) 46%, transparent);
-  border-radius: 22px;
-  background: color-mix(in srgb, var(--surface) 34%, transparent);
-  /* Apple-artiges Glas: starke Unschärfe, kräftige Sättigung, minimal
-     aufgehellt — dazu eine feine Lichtkante oben und ein weicher Schatten. */
-  -webkit-backdrop-filter: blur(40px) saturate(190%) brightness(1.06);
-  backdrop-filter: blur(40px) saturate(190%) brightness(1.06);
+  border: 0;
+  border-radius: 26px;
+  background: color-mix(in srgb, var(--surface) 26%, transparent);
+  /* Liquid Glass: sehr starke Unschärfe mit kräftiger Sättigung, dazu ein
+     doppelter Innenrand (helle Oberkante, dunkle Unterkante) statt einer
+     durchgehenden Linie — so wirkt die Leiste wie eine Scheibe über dem
+     Inhalt und nicht wie eine Box mit Rahmen. */
+  -webkit-backdrop-filter: blur(52px) saturate(210%) brightness(1.08);
+  backdrop-filter: blur(52px) saturate(210%) brightness(1.08);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #fff 62%, transparent),
-    inset 0 -1px 0 color-mix(in srgb, var(--ink) 6%, transparent),
-    0 1px 2px color-mix(in srgb, var(--nav-shadow-strong) 24%, transparent),
-    0 18px 50px color-mix(in srgb, var(--nav-shadow-strong) 46%, transparent);
+    inset 0 0 0 1px color-mix(in srgb, #fff 40%, transparent),
+    inset 0 1.5px 0 color-mix(in srgb, #fff 78%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--ink) 8%, transparent),
+    inset 0 -18px 30px -22px color-mix(in srgb, var(--ink) 26%, transparent),
+    0 1px 1px color-mix(in srgb, var(--nav-shadow-strong) 18%, transparent),
+    0 22px 60px -12px color-mix(in srgb, var(--nav-shadow-strong) 52%, transparent);
   isolation: isolate;
   transform: translate3d(0, 0, 0);
   transition:
@@ -1740,12 +1744,13 @@
 
 /* Im Dunkelmodus trägt das Glas eine kühle statt weiße Lichtkante. */
 :global(body.dark) .nav {
-  border-color: color-mix(in srgb, #fff 12%, transparent);
-  background: color-mix(in srgb, var(--surface) 42%, transparent);
+  background: color-mix(in srgb, var(--surface) 34%, transparent);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #fff 16%, transparent),
-    inset 0 -1px 0 color-mix(in srgb, #000 30%, transparent),
-    0 20px 54px color-mix(in srgb, #000 62%, transparent);
+    inset 0 0 0 1px color-mix(in srgb, #fff 10%, transparent),
+    inset 0 1.5px 0 color-mix(in srgb, #fff 20%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, #000 44%, transparent),
+    inset 0 -18px 30px -22px color-mix(in srgb, #000 40%, transparent),
+    0 24px 64px -14px color-mix(in srgb, #000 68%, transparent);
 }
 :global(body.dark) .nav::before {
   background:

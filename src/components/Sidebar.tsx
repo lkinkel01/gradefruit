@@ -10,7 +10,7 @@ import { ANALYSIS_LK_TASKS } from '@/lib/analysisLkTasks';
 import { LINALG_LK_TASKS } from '@/lib/linalgLkTasks';
 import { STOCHASTIK_LK_TASKS } from '@/lib/stochastikLkTasks';
 import { BrandMark } from './BrandMark';
-import { CheckIcon, CoursesIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
+import { CheckIcon, ChevronIcon, CoursesIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -70,6 +70,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
   // Dieselbe Logik eine Ebene tiefer: Zusammenfassung/Übungen klappen ihre
   // Unterpunkte auch beim Verweilen auf. Schlüssel „id:tab".
   const [hoverSub, setHoverSub] = useState<string | null>(null);
+  const [coursesOpen, setCoursesOpen] = useState(false);
   const subTimer = useRef<number | null>(null);
 
   const enterTopic = (id: View) => {
@@ -264,18 +265,42 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
             <span className={styles.ti}>{item.label}</span>
           </button>
         ))}
-        {/* „Meine Kurse" erscheint nur, wenn wirklich mehr als ein Kurs
-            vorhanden ist — sonst gibt es nichts zu wechseln. */}
+        {/* „Meine Kurse" klappt die gekauften Kurse aus; der aktuelle ist
+            markiert. Erscheint nur, wenn es wirklich mehr als einen gibt. */}
         {levelChoosable && (
-          <button
-            className={styles.courseSwap}
-            onClick={() => onChooseLevel(level === 'gk' ? 'lk' : 'gk')}
-            title={`Wechseln zu ${level === 'gk' ? 'Leistungskurs' : 'Grundkurs'}`}
-          >
-            <span className={styles.icon}><CoursesIcon /></span>
-            <span className={styles.ti}>Meine Kurse</span>
-            <span className={styles.courseNow}>{level === 'lk' ? 'LK' : 'GK'}</span>
-          </button>
+          <>
+            <button
+              className={styles.courseSwap}
+              aria-expanded={coursesOpen}
+              onClick={() => setCoursesOpen(open => !open)}
+            >
+              <span className={styles.icon}><CoursesIcon /></span>
+              <span className={styles.ti}>Meine Kurse</span>
+              <span className={`${styles.courseChev} ${coursesOpen ? styles.courseChevOpen : ''}`} aria-hidden="true">
+                <ChevronIcon direction="down" size={14} />
+              </span>
+            </button>
+            {coursesOpen && (
+              <div className={styles.courseList}>
+                {([
+                  { id: 'gk' as const, label: 'Grundkurs' },
+                  { id: 'lk' as const, label: 'Leistungskurs' },
+                ]).map(course => (
+                  <button
+                    key={course.id}
+                    className={`${styles.courseItem} ${level === course.id ? styles.courseItemOn : ''}`}
+                    aria-current={level === course.id ? 'true' : undefined}
+                    onClick={() => onChooseLevel(course.id)}
+                  >
+                    {course.label}
+                    {level === course.id && (
+                      <span className={styles.courseTick} aria-hidden="true"><CheckIcon size={11} /></span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </nav>
 
