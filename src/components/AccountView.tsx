@@ -67,6 +67,37 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
     setTimeout(() => setSaved(false), 2000);
   };
 
+  // Konto löschen: bewusst zweistufig und mit Tippbestätigung, weil der
+  // Schritt nicht rückgängig zu machen ist.
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [confirmText, setConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+
+  const handleDelete = async () => {
+    if (deleting || confirmText.trim().toUpperCase() !== 'LÖSCHEN') return;
+    if (!session?.access_token) return;
+    setDeleting(true);
+    setDeleteError('');
+    try {
+      const res = await fetch('/api/account/delete', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        setDeleteError(data?.message ?? 'Das Konto konnte nicht gelöscht werden.');
+        setDeleting(false);
+        return;
+      }
+      await signOut();
+      onNavigate('landing');
+    } catch {
+      setDeleteError('Das Konto konnte nicht gelöscht werden. Bitte prüfe deine Verbindung.');
+      setDeleting(false);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut();
     onNavigate('landing');
@@ -148,6 +179,53 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
           {courseRow('gk', owned, plan)}
           {courseRow('lk', ownedLk, planLk)}
         </div>
+      </div>
+
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Konto löschen</h2>
+        {!deleteOpen ? (
+          <>
+            <p className={styles.dangerText}>
+              Dein Konto und alle zugehörigen Daten werden endgültig entfernt.
+              Ein laufendes Abo wird dabei automatisch beendet.
+            </p>
+            <button className={styles.dangerBtn} onClick={() => setDeleteOpen(true)}>
+              Konto löschen
+            </button>
+          </>
+        ) : (
+          <>
+            <p className={styles.dangerText}>
+              Das lässt sich nicht rückgängig machen. Dein Lernfortschritt und dein
+              Zugang gehen verloren. Tippe zur Bestätigung <b>LÖSCHEN</b> ein.
+            </p>
+            <div className={styles.field}>
+              <input
+                value={confirmText}
+                onChange={e => setConfirmText(e.target.value)}
+                placeholder="LÖSCHEN"
+                aria-label="Zur Bestätigung LÖSCHEN eingeben"
+              />
+            </div>
+            {deleteError && <p className={styles.dangerError}>{deleteError}</p>}
+            <div className={styles.dangerActions}>
+              <button
+                className={styles.dangerBtn}
+                onClick={handleDelete}
+                disabled={deleting || confirmText.trim().toUpperCase() !== 'LÖSCHEN'}
+              >
+                {deleting ? 'Wird gelöscht …' : 'Endgültig löschen'}
+              </button>
+              <button
+                className="btn light sm"
+                onClick={() => { setDeleteOpen(false); setConfirmText(''); setDeleteError(''); }}
+                disabled={deleting}
+              >
+                Abbrechen
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
