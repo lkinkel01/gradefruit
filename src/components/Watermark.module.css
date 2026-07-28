@@ -1,0 +1,45 @@
+/* Liegt über dem Inhalt, fängt aber keine Klicks ab — Lesen, Markieren und
+   Tippen funktionieren unverändert. */
+.mark {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  transform: rotate(-24deg) scale(1.6);
+  transform-origin: center;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  gap: 8vw;
+  white-space: nowrap;
+}
+
+.row span {
+  color: var(--ink);
+  /* So schwach, dass es beim Lesen praktisch verschwindet, auf einem
+     Screenshot aber erkennbar bleibt. */
+  opacity: .045;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+
+:global(body.dark) .row span { opacity: .06; }
+
+@media print {
+  /* Beim Drucken und beim „Als PDF sichern" deutlich sichtbar. */
+  .row span { opacity: .3; }
+}
+
+@media (max-width: 700px) {
+  .row span { font-size: 11px; }
+  .row { gap: 12vw; }
+}

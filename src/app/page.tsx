@@ -15,6 +15,7 @@ import AccountView from '@/components/AccountView';
 import CheckoutModal from '@/components/CheckoutModal';
 import AuthModal from '@/components/AuthModal';
 import AskDrawer, { type AskSource } from '@/components/AskDrawer';
+import Watermark from '@/components/Watermark';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
@@ -453,6 +454,9 @@ export default function Home() {
           onOpenCheckout={() => openCheckout('gk')}
         />
         <div className={styles.content}>
+          {/* Persönliches Wasserzeichen über allen Kursinhalten — Screenshots
+              bleiben möglich, sind aber dem Konto zuzuordnen. */}
+          <Watermark />
           <Topbar
             view={view}
             topicTab={topicTab}
