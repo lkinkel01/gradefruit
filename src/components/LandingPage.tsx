@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useImAppRahmen } from '@/lib/nativeApp';
 import styles from './LandingPage.module.css';
 import { BrandMark } from './BrandMark';
 import { Logo } from './Logo';
@@ -332,6 +333,8 @@ export default function LandingPage({
 }: Props) {
   const [days, setDays] = useState<number | null>(null);
   const [activeSection, setActiveSection] = useState<LandingSectionId | null>(null);
+  // In der App darf es keinen Kaufweg geben — dann entfällt der Preisteil.
+  const imApp = useImAppRahmen();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
   // Nach einem Klick auf den schwebenden Menü-Knopf bleibt die Leiste stehen,
@@ -887,6 +890,7 @@ export default function LandingPage({
           </div>
         </section>
 
+        {!imApp && (
         <section className={styles.section} id="kurse">
           <div className={styles.sectionIntro}>
             <h2>Ein Zugang.<br />Bis zur Prüfung.</h2>
@@ -901,6 +905,7 @@ export default function LandingPage({
             Ob Einmalzahlung oder Abo, entscheidest du im nächsten Schritt.
           </p>
         </section>
+        )}
 
         <section className={`${styles.section} ${styles.faqSection}`}>
           <div className={styles.faqIntro}>

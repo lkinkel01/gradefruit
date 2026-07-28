@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 // Erkennt, ob Gradefruit gerade in der nativen App läuft, und kapselt die
 // Lernerinnerungen.
 //
@@ -63,4 +65,18 @@ export async function erinnerungLoeschen(): Promise<void> {
     await LocalNotifications.cancel({ notifications: [{ id: NOTIFICATION_ID }] });
   } catch { /* Nichts zu löschen */ }
   try { localStorage.removeItem(KEY); } catch { /* Speicher gesperrt */ }
+}
+
+/**
+ * Wie `imAppRahmen()`, aber als Hook — und erst nach dem ersten Rendern wahr.
+ *
+ * Wichtig so: Auf dem Server weiß niemand, ob die Seite später in der App
+ * läuft. Würde direkt beim Rendern etwas ausgeblendet, käme es zu einer
+ * Abweichung zwischen Server und Browser. Deshalb startet der Wert auf false
+ * und wird nach dem Einhängen korrigiert.
+ */
+export function useImAppRahmen(): boolean {
+  const [inApp, setInApp] = useState(false);
+  useEffect(() => { setInApp(imAppRahmen()); }, []);
+  return inApp;
 }

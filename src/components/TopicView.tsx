@@ -8,6 +8,7 @@ import { GrapefruitProgress, GrapefruitSpinner } from './Logo';
 import styles from './TopicView.module.css';
 import { indexFor, type ContentTopic } from '@/lib/contentIndex';
 import { useTopicContent } from '@/lib/ContentContext';
+import { useImAppRahmen } from '@/lib/nativeApp';
 import OfflineToggle from './OfflineToggle';
 import { ArrowRightIcon, ChevronIcon, SparkIcon, TutorIcon, UploadIcon } from './UiIcons';
 import type { AskSource } from './AskDrawer';
@@ -81,6 +82,8 @@ export default function TopicView({
   const contentTopic = (topic ? topicId : 'analysis') as ContentTopic;
   const idx = indexFor(contentTopic, level);
   const content = useTopicContent(contentTopic, level);
+  // In der App keine Kauf-Aufforderung — siehe Sidebar.
+  const imApp = useImAppRahmen();
   const summary = content.summary ?? undefined;
   const { user } = useAuth();
   const { statusOf, setStatus } = useProgress();
@@ -697,10 +700,21 @@ export default function TopicView({
             Alle {topic.label}-Inhalte im {levelLabel}: Zusammenfassung mit Formeln,
             Aufgaben mit Schritt-für-Schritt-Lösungen, Erklärvideos und dein KI-Coach.
           </p>
-          <button className="btn primary" onClick={() => onOpenCheckout(level)}>
-            {levelLabel} freischalten
-          </button>
-          <p className={styles.lockHint}>Analysis kannst du kostenlos ausprobieren.</p>
+          {imApp ? (
+            /* In der App führt hier kein Kaufweg hin — nur die sachliche
+               Auskunft, dass dieser Bereich nicht zum Zugang gehört. */
+            <p className={styles.lockHint}>
+              Dieser Bereich gehört nicht zu deinem Zugang. Analysis kannst du
+              frei nutzen.
+            </p>
+          ) : (
+            <>
+              <button className="btn primary" onClick={() => onOpenCheckout(level)}>
+                {levelLabel} freischalten
+              </button>
+              <p className={styles.lockHint}>Analysis kannst du kostenlos ausprobieren.</p>
+            </>
+          )}
         </div>
       ) : content.state === 'locked' || content.state === 'error' || content.state === 'signin' ? (
         renderContentProblem()

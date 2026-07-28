@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { NavigateTo, TopicTab, View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { indexFor } from '@/lib/contentIndex';
+import { useImAppRahmen } from '@/lib/nativeApp';
 import { BrandMark } from './BrandMark';
 import { CheckIcon, ChevronIcon, CoursesIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
@@ -38,6 +39,9 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
 
 export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, levelChoosable, onChooseLevel, onNavigate, onOpenCheckout }: Props) {
   const { topicDone, topicTotal } = useProgress();
+  // In der App darf nirgends zum Kauf aufgefordert werden — Apples Regel für
+  // Apps ohne eigenen In-App-Kauf. Im Browser bleibt alles wie bisher.
+  const imApp = useImAppRahmen();
 
   // Eingeklappte Themen: Ein Klick auf das bereits aktive Thema klappt sein
   // Untermenü zu (und wieder auf), ohne zu navigieren.
@@ -295,7 +299,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
 
       <div className={styles.spacer} />
 
-      {!(owned || ownedLk) && (
+      {!(owned || ownedLk) && !imApp && (
         <div className={styles.unlockCard}>
           <p>Alle Aufgaben, Lösungen und Erklärvideos – bis zur Prüfung.</p>
           <button className="btn primary btn sm" onClick={onOpenCheckout}>
