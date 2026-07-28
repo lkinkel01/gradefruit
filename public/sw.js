@@ -9,9 +9,12 @@
 // statischen Dateien, die Next.js unter /_next/static/ ausliefert. Die sind mit
 // einer Prüfsumme im Namen versehen, ändern sich also bei jeder Version.
 
-const VERSION = 'gf-v1';
+const VERSION = 'gf-v2';
 const SHELL = `${VERSION}-shell`;
 const OFFLINE_URL = '/offline.html';
+// Das zuletzt geladene Seitengerüst. Ohne das startet die App ohne Netz gar
+// nicht — und käme nie dazu, die abgelegten Kursinhalte zu lesen.
+const SHELL_URL = '/';
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -69,16 +72,26 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Seitenaufrufe: erst das Netz (damit Änderungen sofort ankommen), bei
-  // fehlender Verbindung die Ausweichseite.
+  // Seitenaufrufe: erst das Netz, damit Änderungen sofort ankommen. Jede
+  // erfolgreiche Antwort wird als Gerüst hinterlegt. Ohne Verbindung kommt
+  // dieses Gerüst — damit startet die App und kann die abgelegten Inhalte
+  // lesen. Erst wenn noch nie eines geladen wurde, die Ausweichseite.
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match(OFFLINE_URL).then(
-        hit => hit ?? new Response('Keine Verbindung.', {
-          status: 503,
-          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-        }),
-      )),
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(SHELL).then(cache => cache.put(SHELL_URL, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(SHELL_URL)
+          .then(hit => hit ?? caches.match(OFFLINE_URL))
+          .then(hit => hit ?? new Response('Keine Verbindung.', {
+            status: 503,
+            headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+          }))),
     );
   }
 });
