@@ -1,0 +1,46 @@
+/* Ruhig und knapp — der erste Bildschirm der App, keine Verkaufsfläche. */
+.seite {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 32px 24px calc(32px + env(safe-area-inset-bottom, 0px));
+  background: var(--canvas);
+}
+
+.mitte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+}
+
+.titel {
+  margin-top: 4px;
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.text { color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+.knoepfe { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 18px; }
+.knoepfe :global(.btn) { width: 100%; justify-content: center; }
+
+.testen {
+  margin-top: 6px;
+  padding: 10px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  text-decoration: underline;
+}
+.testen:hover { color: var(--ink); }
+.testen:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

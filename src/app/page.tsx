@@ -16,7 +16,9 @@ import CheckoutModal from '@/components/CheckoutModal';
 import AuthModal from '@/components/AuthModal';
 import AskDrawer, { type AskSource } from '@/components/AskDrawer';
 import Watermark from '@/components/Watermark';
+import { useImAppRahmen } from '@/lib/nativeApp';
 import SignedOutNotice from '@/components/SignedOutNotice';
+import AppEinstieg from '@/components/AppEinstieg';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
@@ -61,6 +63,8 @@ function locationFor(view: View, tab: TopicTab, itemId: string | null): string {
 
 export default function Home() {
   const { user, loading, signOut, signedOutReason, clearSignedOutReason } = useAuth();
+  // In der App ersetzt ein schlichter Einstieg die Werbeseite.
+  const imApp = useImAppRahmen();
   const { owned, ownedLk, refresh } = useProgress();
 
   const [view, setView] = useState<View>('landing');
@@ -390,6 +394,31 @@ export default function Home() {
   }
 
   if (view === 'landing') {
+    // Wer die App installiert hat, muss nicht mehr überzeugt werden — statt der
+    // Werbeseite der kurze Weg hinein. Im Browser unverändert.
+    if (imApp && !user) {
+      return (
+        <>
+          <AppEinstieg
+            onLogin={() => openAuth('login')}
+            onRegister={() => openAuth('register')}
+            onTesten={() => navigate('analysis')}
+          />
+          <SignedOutNotice
+            reason={signedOutReason}
+            onSignIn={() => { clearSignedOutReason(); openAuth('login'); }}
+            onClose={clearSignedOutReason}
+          />
+          <AuthModal
+            open={authOpen}
+            onClose={() => setAuthOpen(false)}
+            onAuthenticated={handleAuthenticated}
+            initialMode={authMode}
+          />
+        </>
+      );
+    }
+
     return (
       <>
         <LandingPage

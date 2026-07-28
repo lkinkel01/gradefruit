@@ -453,12 +453,18 @@
 .closing h2 {
   color: var(--ink);
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: clamp(38px, 5.4vw, 66px);
+  /* Untergrenze von 38 auf 32: „Gedächtnisforschung." braucht bei 38 Punkten
+     rund 360 Punkte Breite, auf einem 393 Punkte breiten Gerät stehen nach
+     Seitenrand aber nur etwa 345 zur Verfügung — das Wort lief hinaus.
+     Trennung als zusätzliche Sicherung für andere lange Komposita. */
+  font-size: clamp(32px, 5.4vw, 66px);
   font-optical-sizing: auto;
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: .98;
   text-wrap: balance;
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .sectionIntro > p,
