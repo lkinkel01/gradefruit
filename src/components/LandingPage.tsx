@@ -533,7 +533,7 @@ export default function LandingPage({
             ) : (
               <>
                 <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
-                <button className={`btn sm ${styles.continueButton}`} onClick={onEnter}>Kostenlos testen</button>
+                <button className={`btn sm ${styles.continueButton}`} onClick={onRegister}>Registrieren</button>
               </>
             )}
           </div>
@@ -591,17 +591,12 @@ export default function LandingPage({
                 >
                   {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
                 </button>
-                {/* Mobil ist die Kopfzeile eingeklappt — Abgemeldete brauchen
-                    hier direkt einen Weg zu Konto und Anmeldung. */}
+                {/* Mobil ist die Kopfzeile eingeklappt — Abgemeldete bekommen
+                    den Registrieren-Knopf deshalb direkt neben den Haupt-CTA. */}
                 {!isAuthed && (
-                  <div className={styles.heroAuth}>
-                    <button type="button" className={`btn light ${styles.heroAuthBtn}`} onClick={onRegister}>
-                      Registrieren
-                    </button>
-                    <button type="button" className={styles.heroAuthLink} onClick={onLogin}>
-                      Anmelden
-                    </button>
-                  </div>
+                  <button type="button" className={`btn big light ${styles.heroRegister}`} onClick={onRegister}>
+                    Registrieren
+                  </button>
                 )}
               </div>
             </div>
