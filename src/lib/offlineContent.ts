@@ -133,3 +133,34 @@ export async function loescheOffline(): Promise<void> {
     db.close();
   } catch { /* Nichts zu räumen */ }
 }
+
+/** Liegt dieses Thema bereits offline bereit? */
+export async function hatOffline(userId: string, topic: string, level: string): Promise<boolean> {
+  try {
+    const db = await openDb();
+    const vorhanden = await new Promise<boolean>((resolve) => {
+      const tx = db.transaction(STORE, 'readonly');
+      const request = tx.objectStore(STORE).getKey(entryId(userId, topic, level));
+      request.onsuccess = () => resolve(request.result !== undefined);
+      request.onerror = () => resolve(false);
+    });
+    db.close();
+    return vorhanden;
+  } catch {
+    return false;
+  }
+}
+
+/** Entfernt ein einzelnes Thema wieder vom Gerät. */
+export async function entferneThemaOffline(userId: string, topic: string, level: string): Promise<void> {
+  try {
+    const db = await openDb();
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(STORE, 'readwrite');
+      tx.objectStore(STORE).delete(entryId(userId, topic, level));
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+  } catch { /* Nichts zu entfernen */ }
+}

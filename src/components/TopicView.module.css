@@ -658,3 +658,6 @@
   font-size: 14.5px;
   line-height: 1.6;
 }
+
+/* „Für offline speichern" — steht unter den Bereichskarten, bewusst ruhig. */
+.offlineRow { display: flex; justify-content: center; margin-top: 22px; }

@@ -8,6 +8,7 @@ import { GrapefruitProgress, GrapefruitSpinner } from './Logo';
 import styles from './TopicView.module.css';
 import { indexFor, type ContentTopic } from '@/lib/contentIndex';
 import { useTopicContent } from '@/lib/ContentContext';
+import OfflineToggle from './OfflineToggle';
 import { ArrowRightIcon, ChevronIcon, SparkIcon, TutorIcon, UploadIcon } from './UiIcons';
 import type { AskSource } from './AskDrawer';
 
@@ -360,6 +361,11 @@ export default function TopicView({
           </ol>
           <span className={styles.areaCardGo}>Zu den Übungen <ArrowRightIcon size={15} /></span>
         </button>
+      </div>
+      {/* Thema bewusst aufs Gerät laden, statt nur das, was zufällig schon
+          geöffnet war. */}
+      <div className={styles.offlineRow}>
+        <OfflineToggle topic={contentTopic} level={level} />
       </div>
     </div>
   );
