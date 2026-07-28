@@ -5,7 +5,9 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  padding: 18px 14px;
+  /* Die Seitenleiste steht fest und ignoriert den Abstand am Seitenkörper —
+     ohne diesen Wert lag die Uhrzeit auf dem Gradefruit-Schriftzug. */
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 14px 18px;
   border-right: 1px solid var(--side-3);
   background: var(--side);
   color: var(--side-tx);

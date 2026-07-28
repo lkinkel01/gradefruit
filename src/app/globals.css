@@ -312,3 +312,20 @@ body.theme-switching *::after {
 body {
   padding-top: env(safe-area-inset-top, 0px);
 }
+
+/* Streifen hinter der Statusleiste.
+   Die App läuft im Vollbild: Der Bereich hinter Uhrzeit und Akku ist
+   durchsichtig, und beim Scrollen wanderten Überschriften sichtbar darunter
+   hindurch. Ein deckender Streifen in Seitenfarbe schließt das. Im Browser ist
+   der Wert 0, der Streifen also nicht vorhanden. */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 90;
+  background: var(--canvas);
+  pointer-events: none;
+}
