@@ -591,6 +591,18 @@ export default function LandingPage({
                 >
                   {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
                 </button>
+                {/* Mobil ist die Kopfzeile eingeklappt — Abgemeldete brauchen
+                    hier direkt einen Weg zu Konto und Anmeldung. */}
+                {!isAuthed && (
+                  <div className={styles.heroAuth}>
+                    <button type="button" className={`btn light ${styles.heroAuthBtn}`} onClick={onRegister}>
+                      Registrieren
+                    </button>
+                    <button type="button" className={styles.heroAuthLink} onClick={onLogin}>
+                      Anmelden
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

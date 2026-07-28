@@ -143,16 +143,30 @@
   .head { flex-direction: column; align-items: center; gap: 14px; }
 }
 @media (max-width: 560px) {
-  .page { --page-top: 26px; --page-bottom: 90px; }
-  .courseSeg { width: 100%; }
-  .courseBtn { flex: 1; }
+  .page { --page-top: 20px; --page-bottom: 90px; }
+  /* Mobil deutlich kompakter: Begrüßung kleiner, Kachel flacher, damit die
+     Themenliste ohne langes Scrollen sichtbar wird. */
+  .greet { font-size: 26px; }
+  .head { margin-bottom: 14px; }
+  .statusSec { padding: 8px 0 4px; }
+  .cdCol { flex-direction: row; align-items: baseline; justify-content: center; gap: 8px; padding: 14px 16px; flex-wrap: wrap; }
+  .cdIcon { display: none; }
+  .cdDays { font-size: 24px; }
+  .cdLabel { font-size: 13px; }
+  .cdDate { width: 100%; margin-top: 2px; }
+  .progressCol { padding: 16px; }
+  .pctNum { font-size: 26px; }
+  .statRow { grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
+  .stat { padding: 12px 4px; min-height: 56px; }
+  .statNum { font-size: 19px; }
+  .statLabel { font-size: 11px; }
+  .statGo { display: none; }
+  .secLabel { margin: 22px 0 2px; }
+  .topicRow { gap: 12px; padding: 14px 4px; min-height: 62px; }
+  .topicName { font-size: 17px; }
   .overviewCard { grid-template-columns: 1fr; }
   .cdCol { border-right: 0; border-bottom: 1px solid var(--line); }
-  .progressCol { flex-direction: column; gap: 14px; padding: 20px 16px; }
+  .progressCol { flex-direction: row; gap: 14px; padding: 16px; }
   .progressGo { display: none; }
-  .statRow { grid-template-columns: 1fr; }
-  .stat { flex-direction: row; justify-content: center; align-items: baseline; gap: 10px; min-height: 52px; border-left: none; border-top: 1px solid var(--line); padding: 14px 0; }
-  .stat:first-child { border-top: none; }
-  .statGo { top: 14px; }
   .topicCount { display: none; }
 }

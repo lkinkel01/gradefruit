@@ -1757,3 +1757,30 @@
     linear-gradient(180deg, color-mix(in srgb, #fff 9%, transparent), transparent 58%),
     radial-gradient(120% 140% at 50% -40%, color-mix(in srgb, #fff 7%, transparent), transparent 62%);
 }
+
+/* Anmelden/Registrieren im Hero — nur mobil sichtbar, dort fehlt die Kopfzeile. */
+.heroAuth { display: none; }
+@media (max-width: 900px) {
+  .heroAuth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .heroAuthBtn { padding-inline: 26px; }
+  .heroAuthLink {
+    min-height: 44px;
+    padding: 8px 6px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .heroAuthLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
