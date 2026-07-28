@@ -70,12 +70,8 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
       else setInfo('Bestätigungs-E-Mail gesendet! Bitte überprüfe dein Postfach (auch den Spam-Ordner).');
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      // Nur ein Gerät gleichzeitig: Die neue Anmeldung beendet alle anderen
-      // Sitzungen dieses Kontos — wer vorher woanders angemeldet war, fliegt
-      // dort heraus.
-      if (!error) {
-        try { await supabase.auth.signOut({ scope: 'others' }); } catch { /* Sitzung bleibt gültig */ }
-      }
+      // Das Übernehmen des Geräts passiert zentral im AuthContext, sobald das
+      // SIGNED_IN-Ereignis eintrifft — hier ist nichts weiter nötig.
       if (error) {
         setError(/email not confirmed/i.test(error.message)
           ? 'Bitte bestätige zuerst deine E-Mail – der Link ist in deinem Postfach.'
