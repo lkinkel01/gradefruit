@@ -11,8 +11,8 @@ kopieren, nichts neu erfinden.
 
 | Feld | Wert |
 |---|---|
-| App-Name (max. 30 Zeichen) | `Gradefruit — Mathe-Abi` |
-| Untertitel (max. 30) | `Hessen 2027, GK und LK` |
+| App-Name (max. 30 Zeichen) | `Gradefruit Mathenachhilfe` (25) |
+| Untertitel (max. 30) | `Abitur Hessen 2027, GK und LK` (29) |
 | Bundle-ID | `de.gradefruit.app` |
 | Primäre Kategorie | Bildung |
 | Sekundäre Kategorie | Bildung › Nachschlagewerke |
@@ -65,7 +65,7 @@ orientiert — keine kopierten Prüfungsaufgaben.
 ## Schlüsselwörter (max. 100 Zeichen, Komma-getrennt, keine Leerzeichen)
 
 ```
-mathe,abitur,hessen,abi2027,analysis,stochastik,lineare,algebra,lernen,formeln
+mathe,nachhilfe,abitur,hessen,abi2027,analysis,stochastik,algebra,lernen,formeln
 ```
 
 ## Hinweise für die Prüfung (App Review Notes)
@@ -89,7 +89,14 @@ Die App ist keine reine Web-Ansicht. Native Funktionen:
    Lernerinnerung mit eigener Uhrzeit einstellen. Sie wird auf dem Gerät
    geplant und erscheint auch bei geschlossener App.
 
-3. (Widget mit Prüfungs-Countdown — beim Einreichen ergänzen, sobald gebaut)
+3. KI-Coach: Der Coach beantwortet ausschließlich Fragen zu Mathematik und
+   zum Lernen. Anstößige, sexuelle, gewaltverherrlichende Ausgaben sind im
+   Systemtext ausgeschlossen, ebenso medizinische, rechtliche und finanzielle
+   Ratschläge. Unter jeder Antwort steht „Antwort melden", das eine Mail an den
+   Betreiber öffnet. Bei Anzeichen einer seelischen Notlage verweist der Coach
+   auf die Telefonseelsorge.
+
+4. (Widget mit Prüfungs-Countdown — beim Einreichen ergänzen, sobald gebaut)
 
 Käufe: (Vor dem Einreichen klären — siehe Abschnitt unten.)
 ```
