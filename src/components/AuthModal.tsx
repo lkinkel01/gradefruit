@@ -70,8 +70,26 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
       else setInfo('Bestätigungs-E-Mail gesendet! Bitte überprüfe dein Postfach (auch den Spam-Ordner).');
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      // Das Übernehmen des Geräts passiert zentral im AuthContext, sobald das
-      // SIGNED_IN-Ereignis eintrifft — hier ist nichts weiter nötig.
+      // Gerät direkt hier übernehmen, nicht über das SIGNED_IN-Ereignis:
+      // dessen Zeitpunkt war nicht verlässlich, wodurch die Kennung des
+      // zweiten Geräts nie in der Tabelle landete.
+      if (!error) {
+        const { data: { user: signedIn } } = await supabase.auth.getUser();
+        if (signedIn) {
+          let deviceId = '';
+          try {
+            deviceId = localStorage.getItem('gf-device-id') ?? '';
+            if (!deviceId) { deviceId = crypto.randomUUID(); localStorage.setItem('gf-device-id', deviceId); }
+          } catch { /* Speicher gesperrt */ }
+          if (deviceId) {
+            const { error: claimError } = await supabase.from('active_device').upsert(
+              { user_id: signedIn.id, device_id: deviceId, updated_at: new Date().toISOString() },
+              { onConflict: 'user_id' },
+            );
+            if (claimError) console.warn('Geräteübernahme fehlgeschlagen:', claimError.message);
+          }
+        }
+      }
       if (error) {
         setError(/email not confirmed/i.test(error.message)
           ? 'Bitte bestätige zuerst deine E-Mail – der Link ist in deinem Postfach.'

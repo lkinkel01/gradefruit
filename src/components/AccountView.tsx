@@ -74,7 +74,6 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
 
   if (!user) return null;
 
-  const firstName = (name || '').trim().split(/\s+/)[0];
   const parts = (name || '').trim().split(/\s+/).filter(Boolean);
   const initials = parts.length >= 2
     ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
@@ -104,7 +103,7 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.ph1}>{firstName ? `${firstName}s Konto` : 'Mein Konto'}</h1>
+      <h1 className={styles.ph1}>Dein Gradefruit-Konto</h1>
 
       <div className={styles.card}>
         <label className={styles.avatarWrap} title="Profilbild auswählen">
