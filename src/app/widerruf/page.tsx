@@ -51,7 +51,7 @@ export default function WiderrufPage() {
         </p>
         <p>
           Leon Kinkel<br />
-          Eichendorffweg 15<br />
+          Eichendorffring 15<br />
           65795 Hattersheim am Main<br />
           E-Mail: leon.kinkel@gmail.com
         </p>
@@ -107,7 +107,7 @@ export default function WiderrufPage() {
         </p>
         <p>
           An:<br />
-          Leon Kinkel, Eichendorffweg 15, 65795 Hattersheim am Main<br />
+          Leon Kinkel, Eichendorffring 15, 65795 Hattersheim am Main<br />
           E-Mail: leon.kinkel@gmail.com
         </p>
         <p>

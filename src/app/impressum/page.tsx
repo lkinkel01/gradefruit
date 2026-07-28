@@ -44,7 +44,7 @@ export default function ImpressumPage() {
         <h2>Anbieter</h2>
         <p>
           Leon Kinkel<br />
-          Eichendorffweg 15<br />
+          Eichendorffring 15<br />
           65795 Hattersheim am Main<br />
           Deutschland
         </p>
@@ -73,7 +73,7 @@ export default function ImpressumPage() {
         <p>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</p>
         <p>
           Leon Kinkel<br />
-          Eichendorffweg 15<br />
+          Eichendorffring 15<br />
           65795 Hattersheim am Main
         </p>
       </div>

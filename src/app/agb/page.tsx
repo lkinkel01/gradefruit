@@ -47,7 +47,7 @@ export default function AgbPage() {
           der Lernplattform Gradefruit (www.gradefruit.de) zwischen dem Anbieter
         </p>
         <p>
-          Leon Kinkel, Eichendorffweg 15, 65795 Hattersheim am Main,
+          Leon Kinkel, Eichendorffring 15, 65795 Hattersheim am Main,
           Deutschland (siehe auch <Link href="/impressum">Impressum</Link>)
         </p>
         <p>und den Nutzerinnen und Nutzern der Plattform (nachfolgend „du“).</p>

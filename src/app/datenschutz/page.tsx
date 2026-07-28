@@ -47,7 +47,7 @@ export default function DatenschutzPage() {
         </p>
         <p>
           Leon Kinkel<br />
-          Eichendorffweg 15<br />
+          Eichendorffring 15<br />
           65795 Hattersheim am Main<br />
           E-Mail: leon.kinkel@gmail.com
         </p>
