@@ -79,48 +79,68 @@ final class ScreenshotGuard {
     private weak var window: UIWindow?
     private var coverView: UIView?
     private let secureField = UITextField()
+    private var secureLayer: CALayer?
 
     init(window: UIWindow?) {
         self.window = window
     }
 
     func start() {
-        // ABGESCHALTET: Der Screenshot-Kniff verschiebt die Fenstergeometrie und
-        // macht die App unbrauchbar (siehe Kommentar unten). Die
-        // Aufnahmeerkennung darunter ist davon unberührt und bleibt aktiv.
-        // protectAgainstScreenshots()
+        protectAgainstScreenshots()
         observeScreenRecording()
         updateRecordingCover()
     }
 
     // MARK: - Screenshots ins Leere laufen lassen
 
-    /// Hängt die Inhaltsebene des Fensters in die geschützte Ebene eines
-    /// sicheren Textfelds um. Sichtbar bleibt alles; auf dem Screenshot nicht.
+    /// Hängt die Inhaltsebene in die geschützte Ebene eines sicheren
+    /// Textfelds um. Auf dem Bildschirm bleibt alles sichtbar, auf einem
+    /// Screenshot lässt iOS diese Ebene grundsätzlich aus. Denselben Weg geht
+    /// WhatsApp bei „einmal ansehen".
     ///
-    /// Entscheidend: Das Feld muss zuerst wirklich in der Anzeige hängen —
-    /// vorher existiert seine geschützte Ebene gar nicht, und das Umhängen
-    /// lief ins Leere (genau das war beim ersten Versuch der Fehler).
+    /// Zwei Fallstricke, an denen die vorigen Versuche gescheitert sind:
+    /// 1. Das Feld muss in der Anzeige hängen, sonst gibt es die geschützte
+    ///    Ebene gar nicht.
+    /// 2. Erst die GANZE Feldebene heraufheben, dann die Inhaltsebene darunter
+    ///    hängen — andersherum entsteht ein Kreis und die App stürzt ab.
+    /// 3. Nach dem Umhängen greift keine automatische Anordnung mehr; ohne
+    ///    ausdrücklich gesetzte Maße saß der Inhalt verschoben.
     private func protectAgainstScreenshots() {
         guard let window = window else { return }
 
         secureField.isSecureTextEntry = true
         secureField.isUserInteractionEnabled = false
-        secureField.translatesAutoresizingMaskIntoConstraints = false
         window.addSubview(secureField)
-        NSLayoutConstraint.activate([
-            secureField.centerXAnchor.constraint(equalTo: window.centerXAnchor),
-            secureField.centerYAnchor.constraint(equalTo: window.centerYAnchor),
-        ])
         window.layoutIfNeeded()
 
-        // Reihenfolge ist entscheidend: Erst die GANZE Ebene des Felds aus dem
-        // Fenster herausheben — sonst läge sie weiter unter der Fensterebene,
-        // und das Einhängen der Fensterebene darunter ergäbe einen Kreis. Genau
-        // daran ist die App vorher abgestürzt ("cycle in its layer tree").
         window.layer.superlayer?.addSublayer(secureField.layer)
         guard let secureLayer = secureField.layer.sublayers?.last else { return }
         secureLayer.addSublayer(window.layer)
+
+        self.secureLayer = secureLayer
+        applyGeometry()
+
+        // Bei Drehung oder Größenänderung die Maße nachziehen.
+        NotificationCenter.default.addObserver(
+            forName: UIDevice.orientationDidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.applyGeometry()
+        }
+    }
+
+    /// Die umgehängten Ebenen liegen außerhalb der automatischen Anordnung und
+    /// brauchen ihre Maße ausdrücklich — sonst sitzt der Inhalt versetzt.
+    private func applyGeometry() {
+        guard let window = window else { return }
+        let bounds = window.bounds
+        secureField.frame = bounds
+        secureField.layer.frame = bounds
+        secureLayer?.frame = bounds
+        window.layer.frame = bounds
+        window.layer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        window.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
     }
 
     // MARK: - Bildschirmaufnahme abdecken
