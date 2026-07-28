@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { createClient } from '@/lib/supabase';
+import LernErinnerung from './LernErinnerung';
 import styles from './AccountView.module.css';
 import { LogoutIcon } from './UiIcons';
 
@@ -180,6 +181,10 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
           {courseRow('lk', ownedLk, planLk)}
         </div>
       </div>
+
+      {/* Erscheint nur in der App — im Browser gibt es dafür keine
+          verlässliche Entsprechung. */}
+      <LernErinnerung />
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Konto löschen</h2>

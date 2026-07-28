@@ -1,0 +1,32 @@
+/* Nur in der App sichtbar — deshalb ruhig eingebettet, kein Aufmacher. */
+.box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 26px;
+  padding: 18px 0 0;
+  border-top: 1px solid var(--line-strong);
+}
+.text { flex: 1; min-width: 220px; }
+.title { display: block; color: var(--ink); font-size: 15px; font-weight: 650; }
+.body { margin-top: 3px; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+.hinweis { margin-top: 7px; color: var(--danger); font-size: 13px; line-height: 1.5; }
+
+.actions { display: flex; align-items: center; gap: 10px; }
+.zeit {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+}
+.zeit:disabled { opacity: .55; }
+
+@media (max-width: 560px) {
+  .actions { width: 100%; }
+  .actions :global(.btn) { flex: 1; }
+}
