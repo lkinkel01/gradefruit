@@ -31,13 +31,18 @@ async function plugin() {
   return LocalNotifications;
 }
 
-/** Richtet die tägliche Erinnerung ein. Gibt zurück, ob es geklappt hat. */
-export async function erinnerungSetzen(zeit: string): Promise<boolean> {
+/**
+ * Richtet die tägliche Erinnerung ein. Gibt bei Erfolg null zurück, sonst den
+ * Grund — sonst steht man vor einem Knopf, der einfach nichts tut.
+ */
+export async function erinnerungSetzen(zeit: string): Promise<string | null> {
   try {
     const LocalNotifications = await plugin();
 
     const erlaubnis = await LocalNotifications.requestPermissions();
-    if (erlaubnis.display !== 'granted') return false;
+    if (erlaubnis.display !== 'granted') {
+      return 'Mitteilungen sind für Gradefruit nicht erlaubt. Das lässt sich in den Einstellungen deines Geräts ändern.';
+    }
 
     const [stunde, minute] = zeit.split(':').map(Number);
     await LocalNotifications.cancel({ notifications: [{ id: NOTIFICATION_ID }] });
@@ -52,9 +57,10 @@ export async function erinnerungSetzen(zeit: string): Promise<boolean> {
     });
 
     try { localStorage.setItem(KEY, zeit); } catch { /* Speicher gesperrt */ }
-    return true;
-  } catch {
-    return false;
+    return null;
+  } catch (fehler) {
+    const text = fehler instanceof Error ? fehler.message : String(fehler);
+    return `Die Erinnerung konnte nicht eingerichtet werden: ${text}`;
   }
 }
 

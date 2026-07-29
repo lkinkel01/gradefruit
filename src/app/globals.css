@@ -329,3 +329,12 @@ body::before {
   background: var(--canvas);
   pointer-events: none;
 }
+
+/* Kein seitliches Verrutschen.
+   In der App scrollt der Seitenkörper, nicht das Dokument — die Sperre am
+   <html> allein reichte deshalb nicht. Ohne das ließ sich die Seite seitlich
+   schieben und blieb versetzt stehen: „Lernen" wurde zu „ernen". */
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}

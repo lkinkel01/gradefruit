@@ -31,11 +31,9 @@ export default function LernErinnerung() {
       setHinweis(null);
       return;
     }
-    const geklappt = await erinnerungSetzen(zeit);
-    setAktiv(geklappt);
-    setHinweis(geklappt
-      ? null
-      : 'Dafür müssen Mitteilungen für Gradefruit erlaubt sein — das steht in den Einstellungen deines Geräts.');
+    const fehler = await erinnerungSetzen(zeit);
+    setAktiv(!fehler);
+    setHinweis(fehler);
   };
 
   return (
