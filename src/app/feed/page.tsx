@@ -122,7 +122,9 @@ export default function FeedPage() {
   // Der helle Streifen hinter der Statusleiste passt nicht zum dunklen
   // Reel-Modus — hier reicht das eigene Dunkel bis nach oben durch.
   useEffect(() => {
-    document.documentElement.style.setProperty('--top-strip', 'transparent');
+    // Nicht 'transparent': darunter liegt der native Fensterhintergrund, und der
+    // ist hell — genau deshalb blieb der Balken weiß. Also die Reel-Farbe setzen.
+    document.documentElement.style.setProperty('--top-strip', '#050505');
     return () => { document.documentElement.style.removeProperty('--top-strip'); };
   }, []);
 
