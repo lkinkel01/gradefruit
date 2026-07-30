@@ -18,6 +18,7 @@ import AuthModal from '@/components/AuthModal';
 import AskDrawer, { type AskSource } from '@/components/AskDrawer';
 import Watermark from '@/components/Watermark';
 import { useImAppRahmen } from '@/lib/nativeApp';
+import { useZurueckWischen } from '@/lib/zurueckWischen';
 import SignedOutNotice from '@/components/SignedOutNotice';
 import AppEinstieg from '@/components/AppEinstieg';
 import AppTabBar from '@/components/AppTabBar';
@@ -379,6 +380,19 @@ export default function Home() {
     window.history.replaceState({}, '', window.location.pathname);
   }, [signedOutReason, user]);
 
+  // Ein Schritt zurück: aus einer geöffneten Aufgabe in die Liste, aus einer
+  // Liste auf die Themenseite, sonst nach Lernen. Kopfzeile und Wischen teilen
+  // sich diesen Weg, damit beide sich gleich verhalten.
+  const einenSchrittZurueck = () => {
+    if (topicItemId) navigate(view, { tab: topicTab, itemId: null, itemLabel: null });
+    else if (TOPIC_VIEWS.includes(view) && topicTab !== 'uebersicht') {
+      navigate(view, { tab: 'uebersicht', itemId: null, itemLabel: null });
+    } else if (view !== 'dashboard') navigate('dashboard');
+  };
+
+  // Von der linken Kante nach rechts wischen führt zurück — nur in der App.
+  useZurueckWischen(imApp && !!user, einenSchrittZurueck);
+
   const handleAuthenticated = () => {
     setAuthOpen(false);
     try { localStorage.removeItem('gf-after-auth'); } catch { /* Speicher gesperrt */ }
@@ -524,14 +538,7 @@ export default function Home() {
               view={view}
               topicTab={topicTab}
               topicItemLabel={topicItemLabel}
-              onZurueck={() => {
-                // Aus einer geöffneten Aufgabe zurück in die Liste, aus einer
-                // Liste zurück zur Themenseite, sonst aufs Dashboard.
-                if (topicItemId) navigate(view, { tab: topicTab, itemId: null, itemLabel: null });
-                else if (TOPIC_VIEWS.includes(view) && topicTab !== 'uebersicht') {
-                  navigate(view, { tab: 'uebersicht', itemId: null, itemLabel: null });
-                } else navigate('dashboard');
-              }}
+              onZurueck={einenSchrittZurueck}
             />
           ) : (
             <Topbar
