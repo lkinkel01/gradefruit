@@ -10,9 +10,11 @@ import { LogoutIcon } from './UiIcons';
 interface Props {
   onNavigate: (v: string) => void;
   onOpenCheckout: (course: 'gk' | 'lk') => void;
+  dark: boolean;
+  onToggleDark: () => void;
 }
 
-export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
+export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggleDark }: Props) {
   const { user, session, signOut } = useAuth();
   const { owned, ownedLk, plan, planLk } = useProgress();
   const supabase = createClient();
@@ -139,9 +141,11 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
 
       <div className={styles.card}>
         <label className={styles.avatarWrap} title="Profilbild auswählen">
-          {avatarUrl
-            ? <img className={styles.avatarImg} src={avatarUrl} alt="" />
-            : <span className={styles.avatar}>{initials}</span>}
+          {/* Bewusst immer die Initialen-Kachel: Ein von außen mitgebrachtes
+              Profilbild (etwa aus einem Google-Konto) sah fremd aus und zeigte
+              nur einen Buchstaben. Die Kachel trägt dieselben Initialen wie
+              oben rechts, in Gradefruits Orange. */}
+          <span className={styles.avatar}>{initials}</span>
           <span className={styles.avatarEdit}>Ändern</span>
           <input type="file" accept="image/*" onChange={handleAvatar} hidden />
         </label>
@@ -153,6 +157,26 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
           <LogoutIcon size={15} />
           Abmelden
         </button>
+      </div>
+
+      {/* Erinnerung und Erscheinungsbild stehen bewusst oben: Das sind die
+          Schalter, die man tatsächlich benutzt. Profil und Zugang darunter. */}
+      <LernErinnerung />
+
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Erscheinungsbild</h2>
+        <div className={styles.infoRow}>
+          <span>Dunkler Modus</span>
+          <button
+            type="button"
+            className={`${styles.themeBtn} ${dark ? styles.themeBtnOn : ''}`}
+            role="switch"
+            aria-checked={dark}
+            onClick={onToggleDark}
+          >
+            <span className={styles.themeKnob} />
+          </button>
+        </div>
       </div>
 
       <div className={styles.section}>
@@ -181,10 +205,6 @@ export default function AccountView({ onNavigate, onOpenCheckout }: Props) {
           {courseRow('lk', ownedLk, planLk)}
         </div>
       </div>
-
-      {/* Erscheint nur in der App — im Browser gibt es dafür keine
-          verlässliche Entsprechung. */}
-      <LernErinnerung />
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Konto löschen</h2>

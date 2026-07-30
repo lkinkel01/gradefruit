@@ -140,3 +140,33 @@
 .dangerBtn:hover:not(:disabled) { background: var(--danger-soft); }
 .dangerBtn:disabled { opacity: .5; cursor: default; }
 .dangerBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Hell/Dunkel: ein Schalter im Stil des Systems, nicht ein Knopf mit Text.
+   Muss überall erreichbar sein — in der App gibt es oben keine Leiste mehr. */
+.themeBtn {
+  position: relative;
+  width: 51px;
+  height: 31px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--line-strong);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out);
+}
+.themeBtnOn { background: var(--accent); }
+.themeBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.themeKnob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+  transition: transform var(--dur-hover) var(--ease-out);
+}
+.themeBtnOn .themeKnob { transform: translateX(20px); }

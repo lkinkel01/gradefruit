@@ -482,7 +482,7 @@ export default function Home() {
       case 'themen': return <ThemenView owned={owned} ownedLk={ownedLk} onNavigate={navigate} />;
       case 'videos': return <VideosView />;
       case 'tutors': return <TutorsView />;
-      case 'account': return <AccountView onNavigate={(v) => navigate(v as View)} onOpenCheckout={openCheckout} />;
+      case 'account': return <AccountView onNavigate={(v) => navigate(v as View)} onOpenCheckout={openCheckout} dark={dark} onToggleDark={() => setTheme(!dark)} />;
       case 'review':
         return <ReviewView level={level} onNavigate={navigate} />;
       default:
