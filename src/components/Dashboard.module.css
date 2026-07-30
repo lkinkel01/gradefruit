@@ -139,8 +139,64 @@
   .topicRow:hover .topicGo { transform: translateX(4px); color: var(--ink); }
 }
 
+/* ===========================================================================
+   App-Fassung der Startseite.
+
+   Im Browser teilt sich diese Seite den Bildschirm mit Seitenleiste und
+   Kopfzeile — dort ordnet die Kachel den Blick. In der App gehört der ganze
+   Bildschirm ihr allein, und die Kachel-Optik war genau das, was sie nach
+   Webseite aussehen ließ: ein Kasten mit Rand, mittig ausgerichtet, zwei
+   Spalten gequetscht.
+
+   Hier gilt stattdessen die editoriale Regel aus DESIGN.md: linksbündig,
+   Haarlinien statt Ränder, und die Tage bis zur Prüfung als übergroße Zahl —
+   das Motiv der Marke, nicht eine Zeile unter vielen.
+   =========================================================================== */
+.app .head { justify-content: flex-start; margin-bottom: 20px; text-align: left; }
+.app .greet { font-size: 27px; letter-spacing: -.03em; }
+
+.app .statusSec { padding: 0; }
+.app .overviewCard {
+  display: block;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.app .cdCol {
+  flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: flex-start;
+  gap: 0 14px; padding: 0 0 20px; text-align: left;
+  border-right: 0; border-bottom: 1px solid var(--line-strong);
+}
+.app .cdIcon { display: none; }
+.app .cdDays { font-size: clamp(62px, 21vw, 88px); line-height: .84; letter-spacing: -.045em; }
+.app .cdLabel { font-size: 15px; font-weight: 600; color: var(--ink); }
+/* Volle Breite heißt: eigene Zeile unter Zahl und Beschriftung. */
+.app .cdDate { width: 100%; margin-top: 7px; font-size: 12.5px; }
+
+.app .progressCol {
+  justify-content: flex-start; text-align: left; gap: 16px;
+  padding: 18px 34px 18px 0; border-bottom: 1px solid var(--line);
+}
+.app .progressBody { align-items: flex-start; }
+.app .progressGo { display: block; right: 0; }
+
+.app .statRow { margin-top: 0; border-top: 0; }
+/* Enges Innenmaß mit Absicht: „Nicht verstanden" ist die längste Beschriftung
+   und soll auf 375 px in einer Zeile stehen — bricht sie um, stehen die drei
+   Zahlen nicht mehr auf einer Linie. Die Mindesthöhe fängt den Umbruch auf
+   noch schmaleren Geräten ab, ohne dass die Reihe verspringt. */
+.app .stat { align-items: flex-start; text-align: left; padding: 16px 8px; min-height: 76px; }
+.app .stat:first-child { padding-left: 0; }
+.app .statNum { font-size: 26px; }
+.app .statLabel { font-size: 11px; }
+
+.app .secLabel { margin: 30px 0 2px; }
+
 @media (max-width: 700px) {
   .head { flex-direction: column; align-items: center; gap: 14px; }
+  .app .head { align-items: flex-start; }
 }
 @media (max-width: 560px) {
   .page { --page-top: 20px; --page-bottom: 90px; }

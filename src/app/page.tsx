@@ -124,6 +124,16 @@ export default function Home() {
     };
   }, []);
 
+  // In der App ist „landing" für Angemeldete kein Ziel. Die Werbeseite gehört
+  // ins Netz, wo Leute den Kurs noch nicht kennen; wer die App geöffnet hat,
+  // will lernen. Ohne das öffnete die App mit Hero, Preisen und dem Menü-Knopf
+  // der Webseite — und sah damit aus wie eine Webseite im Rahmen.
+  useEffect(() => {
+    if (!imApp || !user || loading || !routeReady || view !== 'landing') return;
+    setView('dashboard');
+    window.history.replaceState({}, '', locationFor('dashboard', 'zusammenfassung', null));
+  }, [imApp, user, loading, routeReady, view]);
+
   // Ein bewusster Login führt zur Übersicht. Eine bereits vorhandene Session
   // verändert den aktuellen URL-Standort dagegen nicht. Deep-Links aus dem
   // Reel-Modus werden weiterhin einmalig konsumiert.
@@ -421,6 +431,18 @@ export default function Home() {
   }
 
   if (view === 'landing') {
+    // Angemeldet und in der App: Die Werbeseite ist hier fehl am Platz — sie ist
+    // für Leute gebaut, die den Kurs noch nicht kennen, und bringt die ganze
+    // Webseiten-Oberfläche mit (Menü-Knopf, Preise, Hero). Der Effekt oben
+    // schaltet gleich auf „Lernen"; für den einen Frame dazwischen zeigen wir
+    // nichts davon.
+    if (imApp && user) {
+      return (
+        <div className={styles.loading}>
+          <GrapefruitSpinner label="Einen Moment …" />
+        </div>
+      );
+    }
     // Wer die App installiert hat, muss nicht mehr überzeugt werden — statt der
     // Werbeseite der kurze Weg hinein. Im Browser unverändert.
     if (imApp && !user) {

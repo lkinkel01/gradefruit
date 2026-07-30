@@ -591,6 +591,16 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   es keine Seitenleiste, dadurch waren beide Seiten schlicht unerreichbar.
   Zurück führt von dort nach „Konto", nicht auf die Startseite; die doppelten
   Überschriften (Kopfzeile + Seitentitel) sind weg.
+- ✅ **Die App öffnet nicht mehr auf der Werbeseite (30.07.2026, live):** Die
+  App-Fassung der Startseite griff nur für Gäste — angemeldet bekam man die
+  echte Landingpage samt Hero, Preisen und Webseiten-Menü. In der App ist
+  `landing` für Angemeldete jetzt kein Ziel mehr; der Einstieg ist „Lernen".
+- ✅ **Startseite der App editorial statt Kachel (30.07.2026, live):** Die
+  Übersichts-Kachel war im App-Vollbild das, was am meisten nach Webseite
+  aussah. In der App jetzt nach der Regel aus DESIGN.md: Tage bis zur Prüfung
+  als übergroße Bricolage-Zahl, Haarlinien statt Rändern, linksbündig. Der
+  Browser behält die Kachel — dort teilt sich die Seite den Platz mit
+  Seitenleiste und Kopfzeile.
 
 ## Bekannte Probleme / offen
 

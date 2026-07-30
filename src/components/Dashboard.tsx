@@ -6,6 +6,7 @@ import { useProgress } from '@/lib/ProgressContext';
 import { EXAM_DATE, EXAM_DATE_IS_PRELIMINARY, daysUntilExam } from '@/lib/exam';
 import { GrapefruitProgress } from './Logo';
 import { ArrowRightIcon, CalendarIcon } from './UiIcons';
+import { useImAppRahmen } from '@/lib/nativeApp';
 import styles from './Dashboard.module.css';
 
 interface Props {
@@ -14,6 +15,10 @@ interface Props {
 
 export default function Dashboard({ onNavigate }: Props) {
   const { user } = useAuth();
+  // In der App trägt der Bildschirm nur diese eine Seite — dort darf der
+  // Countdown die Fläche nehmen, die ihm laut DESIGN.md zusteht (Zahl als
+  // Motiv, Haarlinien statt Karten). Im Browser bleibt alles wie bisher.
+  const imApp = useImAppRahmen();
   const { totalDone, totalLessons, topicDone, topicTotal, statusCounts } = useProgress();
   const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
 
@@ -37,7 +42,7 @@ export default function Dashboard({ onNavigate }: Props) {
   ];
 
   return (
-    <div className={`${styles.page} gf-stagger`}>
+    <div className={`${styles.page} ${imApp ? styles.app : ''} gf-stagger`}>
       {/* Kopf: nur die Begrüßung. Die Kursstufe wird in der Navigation
           umgeschaltet, nicht mehr hier. */}
       <div className={styles.head}>
