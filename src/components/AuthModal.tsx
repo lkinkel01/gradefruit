@@ -32,7 +32,11 @@ function germanAuthError(msg: string): string {
 export default function AuthModal({ open, onClose, onAuthenticated, initialMode = 'login' }: Props) {
   const supabase = createClient();
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
+  // Beim Anmelden ein Feld für beides: E-Mail oder Benutzername. Was davon
+  // gemeint ist, entscheidet das @ — und der Server löst es auf.
+  const [kennung, setKennung] = useState('');
   const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
@@ -56,6 +60,38 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
     };
   }, [open, initialMode]);
 
+  /**
+   * Meldet mit E-Mail oder Benutzername an. Gibt bei Erfolg null zurück,
+   * sonst den anzuzeigenden Text.
+   *
+   * Der Umweg über den Server ist nötig, weil Supabase nur E-Mail-Adressen
+   * kennt; ein Benutzername muss dort erst aufgelöst werden. Zurück kommt nur
+   * die fertige Sitzung — die aufgelöste Adresse verlässt den Server nie.
+   */
+  const anmelden = async (eingabe: string, passwort: string): Promise<string | null> => {
+    try {
+      const res = await fetch('/api/anmelden', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ kennung: eingabe, passwort }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.access_token) {
+        return data?.error === 'email_not_confirmed'
+          ? data.message
+          : 'E-Mail/Benutzername oder Passwort falsch.';
+      }
+      const { error } = await supabase.auth.setSession({
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+      });
+      if (error) return 'Anmeldung fehlgeschlagen. Bitte versuch es erneut.';
+      return null;
+    } catch {
+      return 'Keine Verbindung. Bitte prüfe dein Internet und versuch es erneut.';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); reset();
@@ -66,12 +102,28 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
         options: { data: { full_name: name } },
       });
       markDeliberateSignIn();
-      if (error) setError(germanAuthError(error.message));
-      else if (data.session) onAuthenticated(); // E-Mail-Bestätigung ist aus -> sofort eingeloggt
+      if (error) { setError(germanAuthError(error.message)); setLoading(false); return; }
+
+      // Der Benutzername kommt nach der Registrierung in die Profilzeile, die
+      // der Datenbank-Auslöser gerade angelegt hat. Schlägt das fehl (Name
+      // vergeben), bleibt das Konto trotzdem bestehen — die Anmeldung per
+      // E-Mail funktioniert, und der Name lässt sich unter „Mein Konto"
+      // nachtragen. Ein halb angelegtes Konto wäre das schlechtere Ergebnis.
+      if (data.session && username.trim()) {
+        const { error: nameFehler } = await supabase
+          .from('users')
+          .update({ username: username.trim() })
+          .eq('id', data.session.user.id);
+        if (nameFehler) {
+          setInfo('Dein Konto ist angelegt. Der Benutzername war schon vergeben — du kannst unter „Mein Konto" einen anderen wählen.');
+        }
+      }
+
+      if (data.session) onAuthenticated(); // E-Mail-Bestätigung ist aus -> sofort eingeloggt
       else setInfo('Bestätigungs-E-Mail gesendet! Bitte überprüfe dein Postfach (auch den Spam-Ordner).');
     } else {
       markDeliberateSignIn();
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const error = await anmelden(kennung, password);
       // Gerät direkt hier übernehmen, nicht über das SIGNED_IN-Ereignis:
       // dessen Zeitpunkt war nicht verlässlich, wodurch die Kennung des
       // zweiten Geräts nie in der Tabelle landete.
@@ -92,11 +144,8 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
           }
         }
       }
-      if (error) {
-        setError(/email not confirmed/i.test(error.message)
-          ? 'Bitte bestätige zuerst deine E-Mail – der Link ist in deinem Postfach.'
-          : 'E-Mail oder Passwort falsch.');
-      } else onAuthenticated();
+      if (error) setError(error);
+      else onAuthenticated();
     }
     setLoading(false);
   };
@@ -138,19 +187,62 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
 
           <form onSubmit={handleSubmit}>
             {mode === 'register' && (
+              <>
+                <div className={styles.field}>
+                  <label htmlFor="auth-name">Name</label>
+                  <input id="auth-name" name="name" type="text" value={name} onChange={e => setName(e.target.value)} autoComplete="name" required />
+                </div>
+                <div className={styles.field}>
+                  <label htmlFor="auth-email">E-Mail</label>
+                  <input id="auth-email" name="email" type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" required />
+                </div>
+                <div className={styles.field}>
+                  <label htmlFor="auth-username">Benutzername</label>
+                  <input
+                    id="auth-username"
+                    name="username"
+                    type="text"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                    autoComplete="username"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    pattern="[A-Za-z0-9._\-]{3,24}"
+                    required
+                  />
+                  <span className={styles.fieldHint}>3–24 Zeichen, keine Leer- oder Sonderzeichen. Damit kannst du dich später auch ohne E-Mail anmelden.</span>
+                </div>
+              </>
+            )}
+            {mode === 'login' && (
               <div className={styles.field}>
-                <label htmlFor="auth-name">Name</label>
-                <input id="auth-name" type="text" value={name} onChange={e => setName(e.target.value)} autoComplete="name" required />
+                <label htmlFor="auth-kennung">E-Mail oder Benutzername</label>
+                {/* Bewusst `type="text"`: Ein Benutzername ist keine Adresse,
+                    `type="email"` würde ihn als ungültig abweisen. `inputMode`
+                    holt auf dem Handy trotzdem die Tastatur mit dem @ hervor,
+                    und `autocomplete="username"` ist das Kennwort-Feldpaar, auf
+                    das iOS und die Passwortspeicher hören. */}
+                <input
+                  id="auth-kennung"
+                  name="username"
+                  type="text"
+                  inputMode="email"
+                  value={kennung}
+                  onChange={e => setKennung(e.target.value)}
+                  autoComplete="username"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  required
+                />
               </div>
             )}
-            <div className={styles.field}>
-              <label htmlFor="auth-email">E-Mail</label>
-              <input id="auth-email" type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" required />
-            </div>
             <div className={styles.field}>
               <label htmlFor="auth-password">Passwort</label>
               <input
                 id="auth-password"
+                name="password"
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}

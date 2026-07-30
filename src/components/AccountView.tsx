@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { createClient } from '@/lib/supabase';
@@ -26,8 +26,28 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
   const [name, setName] = useState(user?.user_metadata?.full_name ?? '');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  // Benutzername: zweiter Weg zur Anmeldung. Steht in `public.users`, nicht in
+  // den Anmeldedaten — Supabase kennt dort nur E-Mail und Passwort.
+  const [benutzername, setBenutzername] = useState('');
+  const [nameFehler, setNameFehler] = useState('');
   const [portalBusy, setPortalBusy] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>((user?.user_metadata?.avatar_url as string) ?? '');
+
+  // Den gespeicherten Benutzernamen nachladen. Er steckt nicht in der Sitzung,
+  // sondern in der Profilzeile — RLS gibt nur die eigene heraus.
+  useEffect(() => {
+    if (!user) return;
+    let abgebrochen = false;
+    void supabase
+      .from('users')
+      .select('username')
+      .eq('id', user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!abgebrochen && data?.username) setBenutzername(data.username);
+      });
+    return () => { abgebrochen = true; };
+  }, [user, supabase]);
 
   // Profilbild: klein gerechnet und direkt im Nutzerprofil abgelegt, damit
   // dafür kein zusätzlicher Speicher nötig ist.
@@ -69,7 +89,31 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
 
   const handleSave = async () => {
     setSaving(true);
+    setNameFehler('');
     await supabase.auth.updateUser({ data: { full_name: name } });
+
+    if (user) {
+      const gewuenscht = benutzername.trim();
+      const { error } = await supabase
+        .from('users')
+        .update({ username: gewuenscht || null })
+        .eq('id', user.id);
+      if (error) {
+        // 23505 = schon vergeben, 23514 = Form stimmt nicht (siehe
+        // supabase/username.sql). Alles andere ist unerwartet und soll auch so
+        // klingen, statt einen falschen Grund zu behaupten.
+        setNameFehler(
+          error.code === '23505'
+            ? 'Dieser Benutzername ist schon vergeben. Bitte wähle einen anderen.'
+            : error.code === '23514'
+              ? '3–24 Zeichen, erlaubt sind Buchstaben, Ziffern, Punkt, Unterstrich und Bindestrich.'
+              : 'Der Benutzername konnte nicht gespeichert werden. Bitte versuch es erneut.',
+        );
+        setSaving(false);
+        return;
+      }
+    }
+
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -210,6 +254,22 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
         <div className={styles.field}>
           <label>Name</label>
           <input value={name} onChange={e => setName(e.target.value)} />
+        </div>
+        <div className={styles.field}>
+          <label htmlFor="konto-benutzername">Benutzername</label>
+          <input
+            id="konto-benutzername"
+            value={benutzername}
+            onChange={e => { setBenutzername(e.target.value); setNameFehler(''); }}
+            autoComplete="username"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
+            placeholder="noch keiner"
+          />
+          <span className={`${styles.feldHinweis} ${nameFehler ? styles.feldFehler : ''}`}>
+            {nameFehler || 'Damit kannst du dich anmelden, ohne deine E-Mail einzutippen.'}
+          </span>
         </div>
         <div className={styles.field}>
           <label>E-Mail</label>

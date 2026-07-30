@@ -595,6 +595,22 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   App-Fassung der Startseite griff nur für Gäste — angemeldet bekam man die
   echte Landingpage samt Hero, Preisen und Webseiten-Menü. In der App ist
   `landing` für Angemeldete jetzt kein Ziel mehr; der Einstieg ist „Lernen".
+- ✅ **Anmeldung mit E-Mail ODER Benutzername (31.07.2026, live):** Ein Feld für
+  beides — das @ entscheidet. Supabase kennt nur E-Mail-Adressen, die
+  Übersetzung passiert deshalb server-seitig in `POST /api/anmelden`: Dort wird
+  nachgeschlagen UND angemeldet, und zurück geht nur die fertige Sitzung. Eine
+  Route, die zu einem Namen die Adresse liefert, wäre eine Maschine zum
+  Absammeln von E-Mail-Adressen. Falscher Name und falsches Passwort sehen
+  identisch aus. Neu: `public.users.username` (eindeutig ohne Rücksicht auf
+  Groß-/Kleinschreibung, kein @ erlaubt — daran hängt die Unterscheidung);
+  Pflichtfeld bei der Registrierung, nachtragbar unter „Mein Konto".
+  SQL in `supabase/username.sql`, bereits ausgeführt.
+- ✅ **Passwort-Vorschlag des iPhones in der App (31.07.2026, live):** Im Browser
+  füllt iOS gespeicherte Zugangsdaten aus, in der App nicht — dort rückt das
+  System sie nur heraus, wenn App und Domain nachweislich zusammengehören. Die
+  Domain-Hälfte des Nachweises liegt jetzt unter
+  `/.well-known/apple-app-site-association`. Die App-Hälfte (Berechtigung
+  „Associated Domains") braucht das Entwicklerprogramm und fehlt noch.
 - ✅ **Startseite der App editorial statt Kachel (30.07.2026, live):** Die
   Übersichts-Kachel war im App-Vollbild das, was am meisten nach Webseite
   aussah. In der App jetzt nach der Regel aus DESIGN.md: Tage bis zur Prüfung

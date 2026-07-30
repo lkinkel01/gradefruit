@@ -52,6 +52,11 @@
 .infoRow span:first-child { color: var(--muted); }
 .tag { color: var(--ink); font-size: 12.5px; font-weight: 600; }
 
+/* Hinweis unter einem Feld — trägt im Fehlerfall denselben Platz, damit die
+   Zeile beim Fehler nicht wegspringt. */
+.feldHinweis { display: block; margin-top: 6px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+.feldFehler { color: var(--danger); }
+
 /* Zeile, die auf eine andere Seite führt — Symbol, Beschriftung, Pfeil.
    Bewusst über die volle Breite antippbar statt nur der Text. */
 .linkRow {
