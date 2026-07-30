@@ -1,0 +1,42 @@
+/* Ruhiges Pulsieren, keine wandernde Glanzstelle: Das lenkt weniger ab und
+   sieht bei langsamer Verbindung nicht nach Hektik aus. */
+.zeile {
+  display: block;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--surface-2);
+  animation: pulsieren 1.4s var(--ease-out) infinite;
+}
+
+.liste { display: flex; flex-direction: column; }
+
+.reihe {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.punkt {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  animation: pulsieren 1.4s var(--ease-out) infinite;
+}
+
+.text { flex: 1; min-width: 0; }
+
+.block { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+
+@keyframes pulsieren {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+
+/* Wer Bewegung reduziert haben will, bekommt einen stillen Platzhalter. */
+@media (prefers-reduced-motion: reduce) {
+  .zeile, .punkt { animation: none; }
+}

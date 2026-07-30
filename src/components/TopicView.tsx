@@ -4,12 +4,13 @@ import { useRouter } from 'next/navigation';
 import { LernStatus, NavigateTo, STATUS_LABEL, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
-import { GrapefruitProgress, GrapefruitSpinner } from './Logo';
+import { GrapefruitProgress } from './Logo';
 import styles from './TopicView.module.css';
 import { indexFor, type ContentTopic } from '@/lib/contentIndex';
 import { useTopicContent } from '@/lib/ContentContext';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import OfflineToggle from './OfflineToggle';
+import { SkeletonListe, SkeletonText } from './Skeleton';
 import { ArrowRightIcon, ChevronIcon, SparkIcon, TutorIcon, UploadIcon } from './UiIcons';
 import type { AskSource } from './AskDrawer';
 
@@ -322,11 +323,11 @@ export default function TopicView({
   // Themenseite: kurz worum es geht, dazu die Gliederung beider Bereiche.
   // Inhalte kommen jetzt vom Server. Solange das läuft — oder wenn der Zugang
   // fehlt — zeigt die Seite das offen an, statt eine leere Liste zu rendern.
+  // Platzhalter in der Form des Kommenden statt eines Kreisels: Beim Öffnen
+  // einer Aufgabe steht schon der Rahmen, beim Öffnen einer Liste stehen schon
+  // die Zeilen. Eine weiße Fläche wirkt am Handy wie ein Fehler.
   const renderLoading = () => (
-    <div className={styles.stateCard}>
-      <GrapefruitSpinner size={28} />
-      <p className={styles.stateText}>Inhalte werden geladen …</p>
-    </div>
+    itemId ? <SkeletonText zeilen={5} /> : <SkeletonListe anzahl={7} />
   );
 
   const renderContentProblem = () => (
