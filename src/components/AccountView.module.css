@@ -51,6 +51,31 @@
 .infoRow:last-child { border-bottom: none; }
 .infoRow span:first-child { color: var(--muted); }
 .tag { color: var(--ink); font-size: 12.5px; font-weight: 600; }
+
+/* Zeile, die auf eine andere Seite führt — Symbol, Beschriftung, Pfeil.
+   Bewusst über die volle Breite antippbar statt nur der Text. */
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  transition: opacity var(--dur-hover) var(--ease-out);
+}
+.linkRow:last-child { border-bottom: none; }
+.linkRow:active { opacity: .55; }
+.linkRow svg { flex-shrink: 0; color: var(--muted); }
+.linkLabel { flex: 1; }
+.linkRow:hover { color: var(--accent-d); }
+.linkRow:hover svg { color: var(--accent-d); }
 .planRow { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 4px 0 18px; }
 .planRow + .planRow { padding-top: 18px; border-top: 1px solid var(--line); }
 .planRow b { display: block; margin-bottom: 4px; font-size: 15px; }

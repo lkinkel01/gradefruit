@@ -293,6 +293,10 @@ export default function Home() {
   }, [owned, ownedLk, notice]);
 
   const openCheckout = (course: 'gk' | 'lk' = 'gk') => {
+    // In der App darf nirgends ein Kaufweg auftauchen — das ist die Bedingung
+    // dafür, dass Apple die App ohne eigenen In-App-Kauf zulässt (Weg B).
+    // Letzte Absicherung: Sollte ein Pfad hier doch landen, passiert nichts.
+    if (imApp) return;
     // Kaufen geht nur mit Konto – Gäste zuerst zur Registrierung schicken.
     if (!user) { openAuth('register'); return; }
     setCheckoutCourse(course);
@@ -387,6 +391,10 @@ export default function Home() {
     if (topicItemId) navigate(view, { tab: topicTab, itemId: null, itemLabel: null });
     else if (TOPIC_VIEWS.includes(view) && topicTab !== 'uebersicht') {
       navigate(view, { tab: 'uebersicht', itemId: null, itemLabel: null });
+    } else if (view === 'videos' || view === 'tutors') {
+      // Beide sind in der App nur über „Konto" erreichbar — zurück führt
+      // dorthin zurück, nicht auf die Startseite.
+      navigate('account');
     } else if (view !== 'dashboard') navigate('dashboard');
   };
 

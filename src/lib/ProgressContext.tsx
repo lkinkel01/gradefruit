@@ -149,7 +149,14 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     async (topicSlug: string, lessonSlug: string, next: ProgressState) => {
       if (!user) return;
       const id = lessonId[`${topicSlug}/${lessonSlug}`];
-      if (!id) return;
+      if (!id) {
+        // Fehlt zu einer Aufgabe die Lektion, lässt sich ihr Status nicht
+        // speichern — und der Tipp bliebe wortlos wirkungslos. Genau so gingen
+        // 54 Aufgaben lange unter. Die Daten sind repariert; neue Inhalte
+        // brauchen `node --env-file=.env.local scripts/seed-lessons.mjs`.
+        console.warn(`Gradefruit: Keine Lektion für ${topicSlug}/${lessonSlug} — Lernstatus wird nicht gespeichert.`);
+        return;
+      }
 
       const current = progress[id] ?? { understood: false, saved: false };
 

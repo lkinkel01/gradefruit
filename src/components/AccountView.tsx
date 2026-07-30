@@ -5,7 +5,8 @@ import { useProgress } from '@/lib/ProgressContext';
 import { createClient } from '@/lib/supabase';
 import LernErinnerung from './LernErinnerung';
 import styles from './AccountView.module.css';
-import { LogoutIcon } from './UiIcons';
+import { LogoutIcon, PlayIcon, TutorIcon, ArrowRightIcon } from './UiIcons';
+import { useImAppRahmen } from '@/lib/nativeApp';
 
 interface Props {
   onNavigate: (v: string) => void;
@@ -16,6 +17,10 @@ interface Props {
 
 export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggleDark }: Props) {
   const { user, session, signOut } = useAuth();
+  // In der App gibt es keine Seitenleiste. Erklärvideos und 1:1 Nachhilfe wären
+  // dort sonst überhaupt nicht erreichbar — deshalb hängen sie unter „Konto",
+  // so wie WhatsApp alles Seltenere in die Einstellungen legt.
+  const imApp = useImAppRahmen();
   const { owned, ownedLk, plan, planLk } = useProgress();
   const supabase = createClient();
   const [name, setName] = useState(user?.user_metadata?.full_name ?? '');
@@ -178,6 +183,27 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           </button>
         </div>
       </div>
+
+      {imApp && (
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Mehr</h2>
+          {/* Erklärvideos gehören zum bezahlten Kurs. Ohne Zugang bleibt die
+              Zeile weg, statt in einen Kaufhinweis zu führen — in der App darf
+              es keinen geben. */}
+          {(owned || ownedLk) && (
+            <button type="button" className={styles.linkRow} onClick={() => onNavigate('videos')}>
+              <PlayIcon size={17} />
+              <span className={styles.linkLabel}>Erklärvideos</span>
+              <ArrowRightIcon size={16} />
+            </button>
+          )}
+          <button type="button" className={styles.linkRow} onClick={() => onNavigate('tutors')}>
+            <TutorIcon size={17} />
+            <span className={styles.linkLabel}>1:1 Nachhilfe</span>
+            <ArrowRightIcon size={16} />
+          </button>
+        </div>
+      )}
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Profil bearbeiten</h2>

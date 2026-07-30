@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { SCENES, Scene } from '@/lib/scenes';
 import SceneModal from './SceneModal';
 import styles from './VideosView.module.css';
+import { useImAppRahmen } from '@/lib/nativeApp';
 
 const VIDEOS = [
   { id: 'v1', title: 'Ableitung – Grundregeln', sub: 'Analysis · 8 Min.', color: '#FF7A00', badge: 'Analysis' },
@@ -14,6 +15,8 @@ const VIDEOS = [
 ];
 
 export default function VideosView() {
+  // Der Titel steht in der App bereits in der Kopfzeile.
+  const imApp = useImAppRahmen();
   const [active, setActive] = useState<Scene | null>(null);
   const [notice, setNotice] = useState('');
 
@@ -29,7 +32,7 @@ export default function VideosView() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.ph1}>Erklärvideos</h1>
+      {!imApp && <h1 className={styles.ph1}>Erklärvideos</h1>}
       <p className={styles.pblurb}>Kurze, klare Erklärungen zu jedem Abiturthema.</p>
       {VIDEOS.map(v => {
         const ready = !!SCENES[v.id];

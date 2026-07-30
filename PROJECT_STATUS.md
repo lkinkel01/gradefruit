@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-26 (neues Hero-Motiv: KI-Foto mit echtem Dashboard auf dem Laptop-Bildschirm)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-29 (Sprint 11: Inhalte server-seitig, Offline-Zugriff, native App-Hülle)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -16,36 +16,61 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 - **Live:** www.gradefruit.de (Vercel, Auto-Deploy bei jedem Push auf `main`)
 - **Repo:** github.com/lkinkel01/gradefruit (Branch `main`)
 
-## Aktueller Stand (Kurzfassung, Stand Sprint 10)
+## Aktueller Stand (Kurzfassung, Stand Sprint 11)
 
 **Das Produkt ist funktional komplett für den Verkaufsstart** — es fehlt nur
-der Live-Gang (Rechtstexte-Platzhalter + Stripe TEST→LIVE, siehe „Bekannte
-Probleme").
+der Live-Gang (Stripe TEST→LIVE, Rechtstexte juristisch prüfen). Seit Sprint 11
+kommt die **native App** dazu, die noch nicht veröffentlicht ist.
 
-- **Landing** (`/`): Premium-Einstieg „Alles für dein Mathe-Abitur. Ein
-  System.", geführter Lernweg, kontextueller Coach, Lernmethoden mit klarer
-  Trennung zwischen vorhanden und geplant, visuelles Lernen, Hessen-/GK-/LK-
-  Fokus, Kurse (GK 79 €/14,90 · LK 99 €/17,90), FAQ und Closing.
-- **Lernbereich:** 3 Themen × Zusammenfassung | Übungen in einer gemeinsamen
-  einspaltigen Akkordeon-Logik. Zusammenfassungsabschnitte sind direkt über
-  Sidebar und Breadcrumb erreichbar. Lernhilfen und Status erscheinen erst
-  nach dem bewussten Öffnen des Inhalts; klickbare Formeln/Schritte öffnen den
-  Coach, „Eigene Lösung prüfen" nutzt den vorhandenen Foto/PDF-Upload.
-- **Wiederholungssystem:** drei Lernstufen (Verstanden / Wiederholen / Nicht
-  verstanden) pro Aufgabe; Wiederholen-Seite mit Filtern Stufe × Themen;
-  Dashboard-Kacheln springen mit Vorauswahl dorthin.
-- **Reel-Modus** (`/feed`, nur eingeloggt): vertikaler Video-Feed mit
-  Autoplay und direkter Lernstatus-Auswahl. Die Lernbühne nutzt die verfügbare
-  Breite ohne seitliche Aktionsleiste; unten bleiben nur Zurück und Übersicht.
-- **Fortschritt** überall als sich füllende **Grapefruit**
-  (`GrapefruitProgress`).
-- **Konto & Kauf:** Auth (E-Mail + Google), Checkout mit Pflicht-Checkbox
-  (§ 356 BGB) + MwSt.-Ausweis, Webhook schaltet frei (inkl. Refund-Entzug),
-  Kundenportal, Konto-Seite.
-- **Design:** modernes Weiß, tiefes Schwarz und eine Grapefruit-Akzentfarbe,
-  Dark Mode, mobil optimiert — eigenständiges Grapefruit-Zeichen, schwebende
-  Glas-Navigation mit richtungsabhängigem Ein-/Ausblenden und ein
-  durchgängiges editoriales Flächen-, Icon- und Interaktionssystem.
+- **Landing** (`/`): Premium-Einstieg, geführter Lernweg, kontextueller Coach,
+  Lernmethoden, Kurse (GK 79 €/14,90 · LK 99 €/17,90), FAQ, Closing.
+- **Lernbereich:** 3 Themen × Zusammenfassung | Übungen; Lernhilfen und Status
+  erst nach dem Öffnen; klickbare Formeln/Schritte öffnen den Coach.
+- **Wiederholungssystem:** drei Lernstufen pro Aufgabe, Wiederholen-Seite mit
+  Filtern, Dashboard-Kacheln springen mit Vorauswahl dorthin.
+- **Reel-Modus** (`/feed`): vertikaler Video-Feed mit Autoplay und
+  Lernstatus-Auswahl.
+- **Konto & Kauf:** Auth (E-Mail + Google), Checkout, Webhook schaltet frei,
+  Kundenportal, Kontoseite mit Löschfunktion.
+
+### Neu in Sprint 11 — Sicherheit und Zugriff
+
+- **Inhalte liegen server-seitig** (`src/server/content/`, `server-only`) und
+  kommen einzeln über `GET /api/content` — erst nach Zugangsprüfung. Der
+  Browser bekommt nur `src/lib/contentIndex.ts` (IDs und Überschriften).
+  **Die Bezahlschranke ist damit eine echte Grenze**, keine Oberfläche mehr.
+- **Ein-Geräte-Sperre repariert:** Der Anspruch hing am SIGNED_IN-Ereignis,
+  das Supabase auch beim bloßen Wiederherstellen einer Sitzung sendet — jedes
+  Neuladen riss ihn zurück und warf das andere Gerät hinaus. Übernahme jetzt
+  nur bei bewusster Anmeldung.
+- **Automatisches Abmelden repariert:** `touch()` lief vor `check()`, der
+  Seitenaufruf überschrieb also die Frist, die er prüfen wollte.
+- **Erzwungenes Abmelden erklärt sich:** Hinweis auf der Startseite statt
+  wortlosem Rauswurf.
+- **Offline:** Service Worker (Gerüst + Ausweichseite, **niemals `/api/`**),
+  verschlüsselte Ablage gekaufter Inhalte auf dem Gerät, „Für offline
+  speichern" je Thema. Ablage gehört einem Konto und wird beim Abmelden
+  gelöscht.
+- **KI-Coach abgesichert:** Themengrenzen, keine anstößigen Ausgaben, keine
+  medizinischen/rechtlichen Ratschläge, Verweis auf die Telefonseelsorge bei
+  Notlagen, „Antwort melden" unter jeder Antwort.
+- **Lektionen vollständig:** 54 der 133 Aufgaben hatten keine Zeile in
+  `lessons`; ihr Lernstatus konnte nie gespeichert werden (stiller Abbruch in
+  `ProgressContext`). Behoben, Skript `scripts/seed-lessons.mjs` hält es
+  künftig konsistent.
+
+### Neu in Sprint 11 — App
+
+- **Web-App installierbar** (Manifest + Apple-Angaben): Home-Bildschirm-Icon,
+  Vollbildstart, auch auf dem iPhone. Kostenlos, ohne Store.
+- **Native Hülle** in `native/` (Capacitor): iOS und Android bauen und starten.
+  Android setzt `FLAG_SECURE` (ungetestet), iOS-Screenshot-Schutz **belegt
+  wirkungslos** und deshalb abgeschaltet.
+- **App-Oberfläche:** untere Navigationsleiste (Lernen · Themen · Wiederholen ·
+  Reels · Konto), schlanke Kopfzeile mit Zurück, Zurück-Wischen von der
+  linken Kante, Übergänge, Platzhalter statt weißer Flächen, Vibration beim
+  Einordnen, kein Kaufweg in der App (Apple-Regel), Countdown-Widget.
+- **Lokale Lernerinnerung** über die App-Brücke, mit Uhrzeit.
 
 ## Tech Stack
 - **Next.js 16.2.9** (App Router, Turbopack) + **TypeScript**
@@ -503,41 +528,122 @@ Probleme").
   (hell + dunkel Desktop, 390 px mobil).
   **Nachbau möglich:** Bildschirm-Ecken in der Quelle sind
   TL(761,209) TR(1208,248) BR(1150,634) BL(709,551).
-- ⚠️ **Nebenbefund (nicht behoben):** Die App hängt bei „Einen Moment …",
-  wenn der Tab nicht sichtbar gezeichnet wird — `setRouteReady(true)` läuft in
-  `requestAnimationFrame` (`src/app/page.tsx`), und rAF feuert in
-  Hintergrund-Tabs nicht. Für echte Nutzer harmlos, aber es kann automatisierte
-  Tests und Screenshot-Werkzeuge blockieren.
+- ✅ **Nebenbefund behoben (29.07.2026):** Die App hing bei „Einen Moment …",
+  wenn der Tab nicht sichtbar gezeichnet wurde — `setRouteReady(true)` lief in
+  `requestAnimationFrame`, und das feuert in Hintergrund-Tabs nicht. Jetzt
+  `setTimeout`: gleiche Wirkung, aber auch ohne Bildaufbau.
+
+### Sprint 11 — Inhalte hinter eine echte Grenze, Offline, native App (27.–29.07.2026)
+
+- ✅ **Inhalte liegen jetzt server-seitig** (`src/server/content/`, mit
+  `server-only` abgeriegelt). Ausgeliefert werden sie einzeln über
+  `GET /api/content?topic=…&level=…` — **erst nach Zugangsprüfung**. Der Browser
+  bekommt nur `src/lib/contentIndex.ts`: IDs und Überschriften für die
+  Navigation. Damit ist die Bezahlschranke eine **echte Grenze** und nicht mehr
+  Oberfläche: Vorher lagen alle Lösungswege im JavaScript-Paket und ließen sich
+  ohne Kauf auslesen. Wer eine Inhaltsdatei aus einer Client-Komponente
+  importiert, **bricht den Build** — Absicht.
+  Geprüft: kein Aufgabentext mehr im ausgelieferten Paket.
+- ✅ **Analysis bleibt für Gäste frei** — die kostenlose Probe wird **vor** der
+  Anmeldeprüfung ausgeliefert. (Fiel erst auf, als Leon als Gast „Die Inhalte
+  konnten nicht geladen werden" sah.)
+- ✅ **Offline lernen:** Themen lassen sich aufs Gerät laden, liegen dort
+  **AES-GCM-verschlüsselt** in IndexedDB (`src/lib/offlineContent.ts`), sind an
+  das Konto gebunden und werden beim Abmelden gelöscht. Dazu ein Service Worker
+  (`public/sw.js`) für die App-Hülle — der `/api/`-Pfad wird **nie**
+  zwischengespeichert. Eine eigene `public/offline.html` trägt ihren eigenen
+  Notschalter, weil der Notschalter der App unerreichbar ist, wenn die App nicht
+  startet.
+- ✅ **Anmeldung entschärft:** Die Geräte-Bindung greift nur noch bei einer
+  **bewussten** Anmeldung — Supabase meldet auch wiederhergestellte Sitzungen
+  als „angemeldet", was zuvor fremde Geräte abmeldete. Die Leerlauf-Sperre
+  prüft jetzt **vor** dem Weiterzählen.
+- ✅ **Native App-Hülle (Capacitor 8, iOS über SPM).** Läuft auf Leons iPhone 14
+  als richtige App. Wichtige Punkte: iOS 26 verlangt den **UIScene**-Ablauf
+  (Capacitors Vorlage nutzt noch den alten Weg — daher eigener `SceneDelegate`);
+  `contentInset: "never"`, damit die Seite unter die Statusleiste reicht;
+  Sicherheitsabstände über `env(safe-area-inset-*)`.
+- ✅ **App-Bedienung wie eine App, nicht wie eine Webseite:** untere Leiste im
+  WhatsApp-Stil (Lernen · Themen · Wiederholen · Reels · Konto), Zurück-Wischen
+  von links, Übergänge zwischen Bereichen, Ladeplatzhalter statt Spinner,
+  Konto-Seite mit Kürzel-Bild und Einstellungen oben, App-Symbol = Logo.
+- ✅ **Tägliche Lernerinnerung** funktioniert (ein **und** aus, Uhrzeit
+  änderbar). Ursache des langen Ärgers: Ein- und Ausschalten liefen über
+  **verschiedene Wege** zur Mitteilungs-Funktion; jetzt beide über die
+  App-Brücke.
+- ✅ **Prüfungs-Countdown als iOS-Widget** gebaut (Zieldatum 05.05.2027).
+- ✅ **54 fehlende Lektionen ergänzt** (79 → 133). Zu jeder Aufgabe gibt es
+  jetzt eine Lektion; vorher ging der Lernstatus von 54 Aufgaben **wortlos**
+  verloren. Neu: `scripts/seed-lessons.mjs` (nur additiv, mehrfach ausführbar)
+  und `scripts/check-content.mjs` (Inhalts-Prüfung, aktuell 0 Funde).
+- ✅ **Seitliches Verrutschen behoben** — Ursache war das unsichtbare
+  Wasserzeichen: Die Drehung saß am festen Rahmen, dessen Kasten dadurch über
+  den Bildschirm hinausragte („Lernen" wurde zu „ernen").
+- ❌ **iOS-Screenshot-Sperre verworfen.** Vier Umsetzungen, alle belegt
+  wirkungslos (oder mit kaputter Darstellung erkauft). Apples eigene Sperre in
+  WhatsApp steckt in Apples Systemschicht, an die eine App nicht herankommt.
+  Abgeschaltet; das Wasserzeichen beim Drucken bleibt.
+- ✅ **Entscheidung Apple-Provision: Weg B** — kein Kaufweg in der App. Der
+  Checkout lässt sich in der App jetzt auch technisch nicht mehr öffnen (letzte
+  Absicherung in `page.tsx`), und Zeilen, die dorthin führen würden, tauchen
+  gar nicht erst auf.
+- ✅ **Erklärvideos und 1:1 Nachhilfe unter „Konto → Mehr"** — in der App gibt
+  es keine Seitenleiste, dadurch waren beide Seiten schlicht unerreichbar.
+  Zurück führt von dort nach „Konto", nicht auf die Startseite; die doppelten
+  Überschriften (Kopfzeile + Seitentitel) sind weg.
 
 ## Bekannte Probleme / offen
-- 🔴 **Verkaufsstart-Blocker (Leon):** Impressum, AGB und Widerruf enthalten
-  rote Platzhalter (Name, Adresse, E-Mail, USt-Status §19, Zugangs-Enddatum,
-  AGB-Stand) → ausfüllen + juristisch prüfen lassen. Danach Stripe TEST→LIVE
-  — **Schritt-für-Schritt-Checkliste in [HANDOUT.md](HANDOUT.md)**.
-- 🟡 **Fortschritts-Zähler** („x/79 Aufgaben" in Sidebar/Übersicht) zählen die
-  DB-Tabelle `lessons` (79 Einträge), nicht die 133 echten Aufgaben aus den
-  Task-Dateien. Angleichen = kleine DB-/Kontext-Arbeit (eigener Sprint).
-- 🔴 **Stripe im TEST-Modus** — echte Kunden können NICHT zahlen. Umstellung auf
-  LIVE (Live-Keys in Vercel + Live-Webhook inkl. `charge.refunded`) = **größter
-  Go-Live-Schritt für echten Umsatz.**
-- 🟠 **Dark Mode in Safari** — Fix deployed (Elemente werden beim Umschalten neu
-  aufgebaut, WebKit-Bug). **Von Leon in Safari zu verifizieren.**
-- 🟠 **Inhalte client-seitig** — im Browser einsehbar; server-seitiges Laden würde
-  die Bezahlschranke härten.
+
+**Verkauf**
+- 🔴 **Stripe im TEST-Modus** — echte Kunden können nicht zahlen. Umstellung auf
+  LIVE (Live-Schlüssel in Vercel + Live-Webhook inkl. `charge.refunded`) ist der
+  größte Schritt zu echtem Umsatz.
+- 🔴 **LK-Preise fehlen lokal** (`STRIPE_PRICE_LK_ONE_TIME`,
+  `STRIPE_PRICE_LK_MONTHLY`) — in Vercel für den Live-Gang nötig.
+- 🟠 **Rechtstexte** tragen den Hinweis „noch nicht rechtsverbindlich, Seite im
+  Aufbau". Vor dem Verkaufsstart juristisch prüfen lassen.
+
+**App (nicht veröffentlicht)**
+- 🔴 **iOS-Screenshot-Schutz funktioniert nicht.** Vier Umsetzungen geprüft,
+  alle belegt wirkungslos oder schädlich; abgeschaltet. Android `FLAG_SECURE`
+  ist der verlässliche Teil, aber **ungetestet** — braucht ein Android-Gerät.
+- 🟠 **Apple-Provision ungeklärt.** Entscheidung gefallen: kein Kaufweg in der
+  App (Weg B). Umgesetzt, aber Apples Auslegung bleibt ein Restrisiko.
+- 🟠 **Store-Veröffentlichung offen** — braucht Entwicklerprogramm (99 $/Jahr).
+  Alle Texte liegen fertig in [native/APPSTORE.md](native/APPSTORE.md);
+  Screenshots fehlen.
+- 🟡 **1:1 Nachhilfe** ist in der App nicht erreichbar (fehlt unter Konto).
+- 🟡 Vieles an der App-Oberfläche ist **gebaut, aber nicht von Claude geprüft** —
+  im Simulator sind Wischen und Tippen unzuverlässig. Rückmeldung per
+  Screenshot ist der schnellste Weg.
+
+**Sonstiges**
+- 🟡 **Zusammenfassungs-Fortschritt liegt nur lokal** (`gf-summary-status`) —
+  geht beim Gerätewechsel verloren. Braucht ein serverseitiges Datenmodell.
+- 🟡 **Ein Erklärvideo (`l1`) hängt an keiner Aufgabe.**
+- 🟡 **Stiller Abbruch bleibt möglich:** `ProgressContext` bricht wortlos ab,
+  wenn zu einer Aufgabe die Lektion fehlt. Die Daten sind jetzt vollständig,
+  aber neue Inhalte brauchen `scripts/seed-lessons.mjs`.
 
 ## Nächste sinnvolle Schritte
-1. Safari-Dark-Mode verifizieren (Leon) — Sprint-10-Design zusätzlich prüfen.
-2. **Stripe TEST → LIVE** schalten (echter Umsatz), davor AGB/Widerruf/MwSt-Ausweis.
-3. Sprint-11-Kandidaten (bewusst aufgehoben): Lernstufen auch für
-   Zusammenfassungs-Abschnitte/Formeln (braucht neue DB-Tabelle/Spalten),
-   echtes Spaced-Repetition-Scheduling (Fälligkeits-Daten) und Interleaving-
-   Mix auf der Wiederholen-Seite, LK-Karten im Reel-Modus (Feed nutzt bisher
-   GK-Inhalte), eigenständigere Fließtext-Schrift (Inter ist austauschbar,
-   Schibsted Grotesk bleibt Display).
-4. Übersichts-Zähler an echte Aufgabenzahlen angleichen (DB `lessons` = 79
-   vs. 133 Aufgaben in den Task-Dateien; eigener kleiner DB-Sprint).
-5. Mehr Aufgaben / Themen-Tiefe; weitere Erklärvideos produzieren und verknüpfen.
-6. (Optional) Inhalte server-seitig laden (Härtung der Bezahlschranke).
+
+1. **App auf dem iPhone durchgehen** und alles, was sich falsch anfühlt, per
+   Screenshot melden — die App-Oberfläche ist der am wenigsten geprüfte Teil.
+2. **Stripe TEST → LIVE** schalten, davor Rechtstexte prüfen lassen.
+3. **Testen lassen:** Web-App auf den Home-Bildschirm (kostenlos, sofort) oder
+   TestFlight (braucht die 99 $, aber keine Store-Freigabe).
+4. Zusammenfassungs-Fortschritt in die Datenbank heben.
+5. Mehr Aufgaben, mehr Erklärvideos; `l1` einer Aufgabe zuordnen.
+6. Android-Screenshot-Sperre auf einem echten Gerät prüfen.
+
+### Prüfskripte
+
+| Befehl | Prüft |
+|---|---|
+| `node scripts/check-content.mjs` | Inhalte in sich stimmig (Index, Videos, Vollständigkeit) |
+| `node --env-file=.env.local scripts/seed-lessons.mjs` | Hat jede Aufgabe eine Lektion? |
+| `node --env-file=.env.local scripts/check-content-gate.mjs <mail> <pw>` | Greift die Bezahlschranke? |
+| `node --env-file=.env.local scripts/check-webhook.mjs` | Stripe-Webhook |
 
 ## Arbeitsteilung & Regeln
 - **Claude Code**: kennt Codebasis, setzt um, committet/pusht **nur auf ausdrückliche
