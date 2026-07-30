@@ -478,6 +478,9 @@
 /* Titel unten wie ein Creator-Name — im Fluss unter dem Inhalt, damit er
    Formel und Schritte nie überdeckt. */
 .reelMeta {
+  /* Platz fuer die runden Knoepfe darunter (52px) plus Sicherheitsabstand —
+     vorher lag der Zuruecktpfeil auf der Beschriftung. */
+  padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
   position: relative;
   z-index: 7;
   flex: none;

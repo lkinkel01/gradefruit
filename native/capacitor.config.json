@@ -6,6 +6,11 @@
     "url": "https://www.gradefruit.de",
     "cleartext": false
   },
-  "ios": { "contentInset": "always" },
-  "android": { "allowMixedContent": false }
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#F7F7F8"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
 }

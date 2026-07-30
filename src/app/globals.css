@@ -326,7 +326,9 @@ body::before {
   right: 0;
   height: env(safe-area-inset-top, 0px);
   z-index: 90;
-  background: var(--canvas);
+  /* Der Reel-Modus setzt --top-strip auf transparent, damit dort sein eigenes
+     Dunkel durchreicht statt einer hellen Kappe. */
+  background: var(--top-strip, var(--canvas));
   pointer-events: none;
 }
 

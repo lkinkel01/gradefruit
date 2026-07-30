@@ -119,6 +119,13 @@ export default function FeedPage() {
   const [topic, setTopic] = useState<TopicId | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
 
+  // Der helle Streifen hinter der Statusleiste passt nicht zum dunklen
+  // Reel-Modus — hier reicht das eigene Dunkel bis nach oben durch.
+  useEffect(() => {
+    document.documentElement.style.setProperty('--top-strip', 'transparent');
+    return () => { document.documentElement.style.removeProperty('--top-strip'); };
+  }, []);
+
   useEffect(() => {
     if (!loading && !user) router.replace('/');
   }, [loading, user, router]);
