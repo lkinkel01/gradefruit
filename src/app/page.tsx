@@ -22,6 +22,7 @@ import SignedOutNotice from '@/components/SignedOutNotice';
 import AppEinstieg from '@/components/AppEinstieg';
 import AppTabBar from '@/components/AppTabBar';
 import AppHeader from '@/components/AppHeader';
+import ThemenView from '@/components/ThemenView';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './page.module.css';
 
@@ -30,11 +31,11 @@ import styles from './page.module.css';
 // zeigt Gästen nur die Vorschau-Sperre mit Kauf-Hinweis.
 // 'tutors' ist eine reine Info-Seite (Nachhilfe „bald verfügbar") – kein Kauf nötig.
 // 'review' (Wiederholen) ist persönlicher Lernfortschritt – nie hinter der Bezahlschranke.
-const FREE_VIEWS: View[] = ['dashboard', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors', 'review'];
+const FREE_VIEWS: View[] = ['dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors', 'review'];
 // Themen-Seiten mit eigener Bezahlschranke – Eingeloggte dürfen sie immer öffnen
 // (die Sperre pro Kursstufe steckt direkt in der Themenseite).
 const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
-const APP_VIEWS: View[] = ['landing', 'dashboard', 'analysis', 'linalg', 'stochastik', 'videos', 'review', 'tutors', 'account'];
+const APP_VIEWS: View[] = ['landing', 'dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'videos', 'review', 'tutors', 'account'];
 
 interface LocationState {
   view: View;
@@ -478,6 +479,7 @@ export default function Home() {
             onItemLabelChange={setTopicItemLabel}
           />
         );
+      case 'themen': return <ThemenView owned={owned} ownedLk={ownedLk} onNavigate={navigate} />;
       case 'videos': return <VideosView />;
       case 'tutors': return <TutorsView />;
       case 'account': return <AccountView onNavigate={(v) => navigate(v as View)} onOpenCheckout={openCheckout} />;

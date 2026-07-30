@@ -266,7 +266,12 @@ export default function TopicView({
           key={button.status}
           className={`${styles.statusBtn} ${status === button.status ? styles[`statusOn_${button.status}`] : ''}`}
           aria-pressed={status === button.status}
-          onClick={() => onSet(status === button.status ? 'none' : button.status)}
+          onClick={() => {
+            // Kurzes haptisches Echo: In einer App bestätigt sich eine
+            // Einordnung durch Fühlen, nicht nur durch Sehen.
+            try { navigator.vibrate?.(12); } catch { /* Gerät ohne Vibration */ }
+            onSet(status === button.status ? 'none' : button.status);
+          }}
         >
           <span className={styles.statusBtnDot} style={{ background: STATUS_DOT[button.status] }} aria-hidden="true" />
           {button.label}
@@ -661,7 +666,7 @@ export default function TopicView({
           Frage stellen
         </button>
       )}
-      {!detailOpen && (
+      {!detailOpen && !imApp && (
       <div className={styles.headRow}>
         <h1 className={styles.ph1}>{topic.label}</h1>
         {user && hasAccess && !imApp && (

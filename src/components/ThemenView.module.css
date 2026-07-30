@@ -1,0 +1,27 @@
+/* Eine Liste, keine Kachelwand: In einer App tippt man durch Zeilen. */
+.seite { padding: 6px 0 0; }
+
+.liste { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+
+.zeile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 68px;
+  padding: 14px 20px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+.zeile:active { background: var(--surface-2); }
+
+.text { flex: 1; min-width: 0; }
+.name { display: block; font-size: 16.5px; font-weight: 650; letter-spacing: -0.015em; }
+.meta { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; }
+
+.schloss { display: inline-flex; color: var(--faint); }

@@ -1,4 +1,4 @@
-export type View = 'landing' | 'dashboard' | 'analysis' | 'linalg' | 'stochastik' | 'videos' | 'review' | 'tutors' | 'account';
+export type View = 'landing' | 'dashboard' | 'themen' | 'analysis' | 'linalg' | 'stochastik' | 'videos' | 'review' | 'tutors' | 'account';
 // 'uebersicht' = Themenseite mit Kurzfassung und Gliederung; von dort geht es
 // in die Zusammenfassung oder die Übungen.
 export type TopicTab = 'uebersicht' | 'zusammenfassung' | 'uebungen';

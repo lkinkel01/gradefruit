@@ -15,6 +15,7 @@ import styles from './AppHeader.module.css';
  */
 const TITEL: Partial<Record<View, string>> = {
   dashboard: 'Lernen',
+  themen: 'Themen',
   review: 'Wiederholen',
   account: 'Mein Konto',
   tutors: '1:1 Nachhilfe',
@@ -23,7 +24,7 @@ const TITEL: Partial<Record<View, string>> = {
   stochastik: 'Stochastik',
 };
 
-const HAUPTSEITEN: View[] = ['dashboard', 'review', 'account'];
+const HAUPTSEITEN: View[] = ['dashboard', 'themen', 'review', 'account'];
 
 export default function AppHeader({
   view,
