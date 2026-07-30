@@ -22,12 +22,71 @@ type Baustein = {
   cancel: (opts: unknown) => Promise<unknown>;
 };
 
+// Der Wortlaut der Mitteilung. Oben steht die Marke, darunter der Grund
+// weiterzumachen — der eigentliche Nutzen des Kurses in einem Satz.
+const TITEL = 'Gradefruit';
+const TEXT = 'Jeden Tag ein bisschen schlägt alles auf einmal.';
+
+// iOS merkt sich den Wortlaut beim Planen, nicht beim Anzeigen: Eine schon
+// laufende Erinnerung zeigt weiter den alten Text, auch wenn er hier längst
+// geändert ist. Deshalb trägt der Text eine Nummer — steigt sie, plant die App
+// beim nächsten Öffnen still neu.
+const TEXT_STAND = 2;
+const STAND_KEY = 'gf-erinnerung-text';
+
 function baustein(): Baustein | null {
   if (typeof window === 'undefined') return null;
   const cap = (window as unknown as {
     Capacitor?: { Plugins?: Record<string, unknown> };
   }).Capacitor;
   return (cap?.Plugins?.LocalNotifications as Baustein | undefined) ?? null;
+}
+
+/**
+ * Plant die tägliche Erinnerung — die einzige Stelle, die den Wortlaut kennt.
+ * Sowohl das Einschalten von Hand als auch das stille Nachziehen laufen hier
+ * durch, damit die Mitteilung nicht in zwei Fassungen existiert.
+ */
+async function planen(plugin: Baustein, zeit: string) {
+  const [stunde, minute] = zeit.split(':').map(Number);
+  await plugin.cancel({ notifications: [{ id: 1 }] });
+  await plugin.schedule({
+    notifications: [{
+      id: 1,
+      title: TITEL,
+      body: TEXT,
+      schedule: { on: { hour: stunde, minute }, repeats: true },
+    }],
+  });
+  try {
+    localStorage.setItem('gf-erinnerung', zeit);
+    localStorage.setItem(STAND_KEY, String(TEXT_STAND));
+  } catch { /* Speicher gesperrt */ }
+}
+
+/**
+ * Zieht einen geänderten Wortlaut bei einer bereits laufenden Erinnerung nach.
+ *
+ * Ohne das würde jemand, der die Erinnerung vor der Textänderung eingeschaltet
+ * hat, bis in alle Ewigkeit den alten Satz bekommen — iOS speichert ihn beim
+ * Planen. Läuft bewusst stumm: kein Erlaubnis-Fenster (nur `check`, nie
+ * `request`), keine Meldung, kein Ladezustand. Der Nutzer hat nichts angetippt.
+ */
+async function textNachziehen() {
+  if (!imAppRahmen()) return;
+  const zeit = gespeicherteZeit();
+  if (!zeit) return;
+  try {
+    if (localStorage.getItem(STAND_KEY) === String(TEXT_STAND)) return;
+  } catch { return; }
+
+  const plugin = baustein();
+  if (!plugin) return;
+  try {
+    const erlaubnis = await plugin.checkPermissions();
+    if (erlaubnis.display !== 'granted') return;
+    await planen(plugin, zeit);
+  } catch { /* Beim nächsten Öffnen der nächste Versuch. */ }
 }
 
 export default function LernErinnerung() {
@@ -41,6 +100,7 @@ export default function LernErinnerung() {
     setInApp(imAppRahmen());
     const gespeichert = gespeicherteZeit();
     if (gespeichert) { setZeit(gespeichert); setAktiv(true); }
+    void textNachziehen();
   }, []);
 
   if (!inApp) return null;
@@ -61,18 +121,7 @@ export default function LernErinnerung() {
         return;
       }
 
-      const [stunde, minute] = neueZeit.split(':').map(Number);
-      await plugin.cancel({ notifications: [{ id: 1 }] });
-      await plugin.schedule({
-        notifications: [{
-          id: 1,
-          title: 'Zeit für Mathe',
-          body: 'Ein paar Aufgaben heute bringen dich näher ans Abi.',
-          schedule: { on: { hour: stunde, minute }, repeats: true },
-        }],
-      });
-
-      try { localStorage.setItem('gf-erinnerung', neueZeit); } catch { /* Speicher gesperrt */ }
+      await planen(plugin, neueZeit);
       setAktiv(true);
     } catch (fehler) {
       const text = fehler instanceof Error ? fehler.message : String(fehler);

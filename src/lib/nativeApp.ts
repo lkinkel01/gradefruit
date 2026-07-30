@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
-// Erkennt, ob Gradefruit gerade in der nativen App läuft, und kapselt die
-// Lernerinnerungen.
+// Erkennt, ob Gradefruit gerade in der nativen App läuft.
 //
-// Derselbe Code für alle: Im Browser meldet `imAppRahmen()` schlicht false und
-// die Erinnerungen erscheinen gar nicht erst. In der App steht Capacitors
-// Brücke im Fenster bereit, und die Erinnerungen sind echte System-
-// Mitteilungen — sie kommen auch, wenn die App geschlossen ist.
+// Derselbe Code für alle: Im Browser meldet `imAppRahmen()` schlicht false, und
+// alles Native bleibt unsichtbar. In der App steht Capacitors Brücke im Fenster
+// bereit.
 //
-// Bewusst LOKALE Mitteilungen: Sie brauchen weder einen Push-Dienst noch
-// Apples Push-Zertifikate, funktionieren offline und geben keine Daten aus der
-// Hand. Für eine tägliche Lernerinnerung ist das genau richtig.
+// Hier standen einmal auch `erinnerungSetzen`/`erinnerungLoeschen`, die den
+// Mitteilungs-Baustein per `import` holten. Genau dieser Weg hat in der App nie
+// gegriffen — er war der Grund, warum sich die Erinnerung anschalten, aber nie
+// abschalten ließ. Ersetzt durch den Brücken-Weg in `LernErinnerung.tsx`; die
+// toten Fassungen sind entfernt, damit niemand versehentlich den Text dort
+// pflegt, wo er nichts bewirkt.
 
 const KEY = 'gf-erinnerung';
-const NOTIFICATION_ID = 1;
 
 export function imAppRahmen(): boolean {
   if (typeof window === 'undefined') return false;
@@ -24,53 +24,6 @@ export function imAppRahmen(): boolean {
 /** Gespeicherte Uhrzeit als "HH:MM", oder null wenn keine Erinnerung läuft. */
 export function gespeicherteZeit(): string | null {
   try { return localStorage.getItem(KEY); } catch { return null; }
-}
-
-async function plugin() {
-  const { LocalNotifications } = await import('@capacitor/local-notifications');
-  return LocalNotifications;
-}
-
-/**
- * Richtet die tägliche Erinnerung ein. Gibt bei Erfolg null zurück, sonst den
- * Grund — sonst steht man vor einem Knopf, der einfach nichts tut.
- */
-export async function erinnerungSetzen(zeit: string): Promise<string | null> {
-  try {
-    const LocalNotifications = await plugin();
-
-    const erlaubnis = await LocalNotifications.requestPermissions();
-    if (erlaubnis.display !== 'granted') {
-      return 'Mitteilungen sind für Gradefruit nicht erlaubt. Das lässt sich in den Einstellungen deines Geräts ändern.';
-    }
-
-    const [stunde, minute] = zeit.split(':').map(Number);
-    await LocalNotifications.cancel({ notifications: [{ id: NOTIFICATION_ID }] });
-    await LocalNotifications.schedule({
-      notifications: [{
-        id: NOTIFICATION_ID,
-        title: 'Zeit für Mathe',
-        body: 'Ein paar Aufgaben heute bringen dich näher ans Abi.',
-        // `repeats` mit `on` heißt: jeden Tag zu dieser Uhrzeit.
-        schedule: { on: { hour: stunde, minute }, repeats: true, allowWhileIdle: true },
-      }],
-    });
-
-    try { localStorage.setItem(KEY, zeit); } catch { /* Speicher gesperrt */ }
-    return null;
-  } catch (fehler) {
-    const text = fehler instanceof Error ? fehler.message : String(fehler);
-    return `Die Erinnerung konnte nicht eingerichtet werden: ${text}`;
-  }
-}
-
-/** Schaltet die Erinnerung wieder ab. */
-export async function erinnerungLoeschen(): Promise<void> {
-  try {
-    const LocalNotifications = await plugin();
-    await LocalNotifications.cancel({ notifications: [{ id: NOTIFICATION_ID }] });
-  } catch { /* Nichts zu löschen */ }
-  try { localStorage.removeItem(KEY); } catch { /* Speicher gesperrt */ }
 }
 
 /**

@@ -4,9 +4,13 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  margin: 26px 0 28px;
-  padding: 18px 0 0;
-  border-top: 1px solid var(--line-strong);
+  /* Keine eigene Linie oben: Der Block steht in „Mein Konto" direkt unter dem
+     Profil, und dessen Karte schließt bereits mit einer Linie ab. Beide
+     zusammen ergaben zwei Striche mit einer leeren Zeile dazwischen — es sah
+     aus wie ein Abschnitt, den jemand vergessen hat zu füllen. */
+  margin: 0 0 28px;
+  padding: 0 0 28px;
+  border-bottom: 1px solid var(--line-strong);
 }
 .text { flex: 1; min-width: 220px; }
 .title { display: block; color: var(--ink); font-size: 15px; font-weight: 650; }
