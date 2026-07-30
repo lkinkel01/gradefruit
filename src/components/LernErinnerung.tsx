@@ -56,7 +56,7 @@ export default function LernErinnerung() {
           disabled={aktiv}
           aria-label="Uhrzeit der Erinnerung"
         />
-        <button type="button" className="btn" onClick={() => void umschalten()}>
+        <button type="button" className="btn light" onClick={() => void umschalten()}>
           {aktiv ? 'Ausschalten' : 'Einschalten'}
         </button>
       </div>

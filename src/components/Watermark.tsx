@@ -23,6 +23,7 @@ export default function Watermark() {
 
   return (
     <div className={styles.mark} aria-hidden="true">
+      <div className={styles.flaeche}>
       {rows.map((_, index) => (
         <div key={index} className={styles.row}>
           <span>{label}</span>
@@ -30,6 +31,7 @@ export default function Watermark() {
           <span>{label}</span>
         </div>
       ))}
+      </div>
     </div>
   );
 }
