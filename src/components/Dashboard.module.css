@@ -170,7 +170,7 @@
   border-right: 0; border-bottom: 1px solid var(--line-strong);
 }
 .app .cdIcon { display: none; }
-.app .cdDays { font-size: clamp(62px, 21vw, 88px); line-height: .84; letter-spacing: -.045em; }
+.app .cdDays { font-size: clamp(44px, 14.5vw, 58px); line-height: .9; letter-spacing: -.04em; }
 .app .cdLabel { font-size: 15px; font-weight: 600; color: var(--ink); }
 /* Volle Breite heißt: eigene Zeile unter Zahl und Beschriftung. */
 .app .cdDate { width: 100%; margin-top: 7px; font-size: 12.5px; }

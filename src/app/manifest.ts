@@ -16,7 +16,9 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: '/',
     scope: '/',
     display: 'standalone',
-    orientation: 'portrait',
+    // Bewusst keine feste Ausrichtung: Auf dem Rechner läuft dieselbe App in
+    // einem breiten Fenster, und „portrait" würde dort einen Hochkant-Streifen
+    // verlangen. Das Handy hält sich ohnehin von selbst an Hochformat.
     lang: 'de',
     // Muss der Seitenfarbe entsprechen, sonst blitzt beim Start ein fremder
     // Farbton auf. Werte aus globals.css (--canvas hell).
@@ -26,6 +28,9 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml' },
       { src: '/apple-icon', sizes: '180x180', type: 'image/png' },
+      // Windows und Chrome greifen für Taskleiste, Startmenü und das
+      // Installationsfenster auf diese Größe zurück.
+      { src: '/icon-512', sizes: '512x512', type: 'image/png' },
     ],
   };
 }

@@ -19,7 +19,7 @@ import AskDrawer, { type AskSource } from '@/components/AskDrawer';
 import Watermark from '@/components/Watermark';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import { useZurueckWischen } from '@/lib/zurueckWischen';
-import SignedOutNotice from '@/components/SignedOutNotice';
+import SignedOutNotice, { TEXT as SIGNED_OUT_TEXT } from '@/components/SignedOutNotice';
 import AppEinstieg from '@/components/AppEinstieg';
 import AppTabBar from '@/components/AppTabBar';
 import AppHeader from '@/components/AppHeader';
@@ -448,15 +448,16 @@ export default function Home() {
     if (imApp && !user) {
       return (
         <>
+          {/* Der Hinweis nach einer unfreiwilligen Abmeldung ist hier kein
+              Zettel über der Seite: Er trug ein eigenes „Wieder anmelden",
+              während direkt darunter schon „Anmelden" stand. In der App
+              übernimmt der Einstiegsbildschirm selbst die Erklärung. */}
           <AppEinstieg
-            onLogin={() => openAuth('login')}
+            onLogin={() => { clearSignedOutReason(); openAuth('login'); }}
             onRegister={() => openAuth('register')}
             onTesten={() => navigate('analysis')}
-          />
-          <SignedOutNotice
-            reason={signedOutReason}
-            onSignIn={() => { clearSignedOutReason(); openAuth('login'); }}
-            onClose={clearSignedOutReason}
+            hinweis={signedOutReason ? SIGNED_OUT_TEXT[signedOutReason] : null}
+            onHinweisSchliessen={clearSignedOutReason}
           />
           <AuthModal
             open={authOpen}

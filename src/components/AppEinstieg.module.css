@@ -31,6 +31,26 @@
 
 .text { color: var(--muted); font-size: 15px; line-height: 1.6; }
 
+/* Der Hinweis nach einer unfreiwilligen Abmeldung. Er steht im selben Bild wie
+   der übrige Einstieg — abgesetzt nur durch eine Haarlinie, nicht durch einen
+   Kasten, damit er nicht wieder wie ein aufgelegter Zettel wirkt. */
+.hinweis {
+  width: 100%;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-strong);
+}
+.hinweisTitel {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.hinweisText { color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+
 .knoepfe { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 18px; }
 .knoepfe :global(.btn) { width: 100%; justify-content: center; }
 

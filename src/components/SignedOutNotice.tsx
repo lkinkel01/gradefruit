@@ -5,7 +5,11 @@ import styles from './SignedOutNotice.module.css';
 
 // Wer nicht selbst auf „Abmelden" geklickt hat, soll erfahren, warum er
 // plötzlich abgemeldet ist. Ohne diesen Hinweis wirkt es wie ein Fehler.
-const TEXT: Record<SignedOutReason, { title: string; body: string }> = {
+//
+// Exportiert, weil die App denselben Wortlaut braucht: Dort ist der Hinweis
+// kein Zettel über der Seite, sondern der Einstiegsbildschirm selbst
+// (siehe AppEinstieg). Zwei Fassungen desselben Textes würden auseinanderlaufen.
+export const TEXT: Record<SignedOutReason, { title: string; body: string }> = {
   'other-device': {
     title: 'Auf einem anderen Gerät angemeldet',
     body: 'Dein Konto wird gerade auf einem anderen Gerät verwendet. Pro Konto ist immer nur ein Gerät gleichzeitig angemeldet.',
