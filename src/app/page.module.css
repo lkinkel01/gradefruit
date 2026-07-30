@@ -33,4 +33,4 @@
 
 /* App-Modus: keine Seitenleiste, dafür Platz für die untere Navigationsleiste. */
 .shellApp { grid-template-columns: 1fr; }
-.shellApp .content { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+.shellApp .content { padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }

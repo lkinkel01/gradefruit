@@ -1,5 +1,7 @@
-/* Fest am unteren Rand, über allem außer Overlays. Der Sicherheitsabstand
-   unten hält die Leiste über der Home-Anzeige des iPhones. */
+/* Schwebende Leiste im Stil, den WhatsApp auf dem iPhone verwendet: nicht am
+   Rand klebend, sondern eingerückt und abgerundet, mit durchscheinendem
+   Hintergrund. Der aktive Punkt sitzt auf einer gefüllten Kachel statt nur
+   farbig zu sein — das liest sich auf einen Blick. */
 .leiste {
   position: fixed;
   left: 0;
@@ -8,31 +10,47 @@
   z-index: 80;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--line);
-  background: var(--surface);
+  gap: 2px;
+  /* Eingerückt, damit sie schwebt. Unten der Sicherheitsabstand, damit sie
+     über der Home-Anzeige des iPhones bleibt. */
+  margin: 0 12px calc(6px + env(safe-area-inset-bottom, 0px));
+  padding: 6px;
+  border: 1px solid var(--glass-line);
+  border-radius: 26px;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .14);
 }
 
 .ziel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  min-height: 48px;
-  padding: 6px 2px;
+  justify-content: center;
+  gap: 3px;
+  min-height: 50px;
+  padding: 6px 2px 5px;
   border: 0;
+  border-radius: 20px;
   background: none;
-  color: var(--faint);
+  color: var(--muted);
   cursor: pointer;
   font-family: inherit;
   font-size: 11px;
   font-weight: 550;
   letter-spacing: -0.005em;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
-.ziel:active { opacity: .6; }
-.ziel:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 10px; }
+.ziel:active { transform: scale(.96); }
+.ziel:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
-.icon { display: block; width: 23px; height: 23px; }
+.icon { display: block; width: 22px; height: 22px; }
 .icon svg { width: 100%; height: 100%; }
 
-.aktiv { color: var(--accent-d); }
+/* Aktiver Punkt: gefüllte Kachel, wie bei WhatsApp der ausgewählte Reiter. */
+.aktiv {
+  background: var(--accent-soft);
+  color: var(--accent-d);
+  font-weight: 650;
+}
