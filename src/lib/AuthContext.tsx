@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { createClient } from './supabase';
 
@@ -10,6 +10,19 @@ interface AuthCtx {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  /** Frei gewählter Benutzername (zweiter Anmeldeweg), oder null. */
+  username: string | null;
+  /**
+   * Der Name, mit dem angesprochen wird — oder null.
+   *
+   * Reihenfolge: erst der selbst angegebene Name, dann der Benutzername. Ist
+   * beides leer, wird bewusst NICHT angesprochen („Guten Tag." statt „Guten
+   * Tag, gradefruit.leon@…"). Aus einer E-Mail einen Vornamen zu raten wäre
+   * die schlechtere Wahl: Es trifft oft daneben und wirkt zudringlich.
+   */
+  anzeigeName: string | null;
+  /** Nach dem Ändern in „Mein Konto" den Benutzernamen neu einlesen. */
+  refreshProfil: () => Promise<void>;
   signOut: () => Promise<void>;
   // Damit die Oberfläche erklären kann, was passiert ist, statt kommentarlos
   // in den abgemeldeten Zustand zu fallen.
@@ -21,6 +34,9 @@ const Ctx = createContext<AuthCtx>({
   user: null,
   session: null,
   loading: true,
+  username: null,
+  anzeigeName: null,
+  refreshProfil: async () => {},
   signOut: async () => {},
   signedOutReason: null,
   clearSignedOutReason: () => {},
@@ -31,6 +47,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  // Der Benutzername steht in `public.users`, nicht in der Sitzung — einmal je
+  // Anmeldung geholt, damit ihn nicht jede Komponente einzeln nachfragen muss.
+  const [username, setUsername] = useState<string | null>(null);
+
+  const ladeProfil = useCallback(async (id: string | undefined) => {
+    if (!id) { setUsername(null); return; }
+    const { data } = await supabase.from('users').select('username').eq('id', id).maybeSingle();
+    setUsername((data?.username as string | undefined) ?? null);
+  }, [supabase]);
+
+  useEffect(() => { void ladeProfil(user?.id); }, [user?.id, ladeProfil]);
+
+  const refreshProfil = useCallback(() => ladeProfil(user?.id), [ladeProfil, user?.id]);
+
+  // Angesprochen wird mit dem selbst gewählten Namen; fehlt der, mit dem
+  // Benutzernamen; fehlt beides, gar nicht.
+  const eigenerName = (user?.user_metadata?.full_name as string | undefined)?.trim();
+  const anzeigeName = eigenerName || username || null;
+
   // Der Grund muss ein Neuladen überstehen: Auf dem Handy wird die Seite beim
   // Zurückwechseln oft komplett neu aufgebaut, und ein reiner React-Zustand
   // wäre dann weg — der Hinweis erschien nie.
@@ -209,7 +244,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const clearSignedOutReason = () => setSignedOutReason(null);
 
   return (
-    <Ctx.Provider value={{ user, session, loading, signOut, signedOutReason, clearSignedOutReason }}>
+    <Ctx.Provider value={{ user, session, loading, username, anzeigeName, refreshProfil, signOut, signedOutReason, clearSignedOutReason }}>
       {children}
     </Ctx.Provider>
   );

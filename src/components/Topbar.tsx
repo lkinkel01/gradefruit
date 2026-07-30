@@ -32,12 +32,14 @@ interface Props {
 }
 
 export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleDark, onOpenNav, onNavigate, onOpenAuth }: Props) {
-  const { user } = useAuth();
+  const { user, anzeigeName } = useAuth();
   // Kürzel: Vor- und Nachname (Leon Kinkel → LK). Ohne Nachnamen die ersten
-  // beiden Buchstaben des Vornamens (Leon → LE); sonst aus der E-Mail.
+  // beiden Buchstaben des Vornamens (Leon → LE); ohne Namen der Benutzername;
+  // ohne beides die E-Mail. Anders als bei der Begrüßung braucht die Kachel
+  // zwingend etwas — sie wäre sonst leer.
   const initials = (() => {
     if (!user) return null;
-    const name = (user.user_metadata?.full_name as string | undefined)?.trim();
+    const name = anzeigeName?.trim();
     if (name) {
       const parts = name.split(/\s+/).filter(Boolean);
       if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();

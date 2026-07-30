@@ -40,7 +40,14 @@
    zweiten Mal zäh an, und eine Querbewegung würde mit dem Zurück-Wischen
    konkurrieren. */
 .uebergang {
-  animation: bereichEin 180ms var(--ease-out) both;
+  /* Bewusst OHNE `both`. Dieses Element umschließt den gesamten Inhalt der App.
+     Mit `both` gilt vor dem Start der Animation deren Anfangsbild — und das ist
+     `opacity: 0`. Läuft die Animation dann aus irgendeinem Grund nicht an (die
+     App zeichnet beim Starten noch nicht, das Fenster ist im Hintergrund), steht
+     der Nutzer vor einem weißen Bildschirm, ohne dass irgendetwas kaputt wäre.
+     Ohne `both` ist der Ruhezustand sichtbar: Die Animation kann die Darstellung
+     verschönern, aber nie verhindern. */
+  animation: bereichEin 180ms var(--ease-out);
 }
 
 @keyframes bereichEin {

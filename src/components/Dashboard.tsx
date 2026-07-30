@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function Dashboard({ onNavigate }: Props) {
-  const { user } = useAuth();
+  const { anzeigeName } = useAuth();
   // In der App trägt der Bildschirm nur diese eine Seite — dort darf der
   // Countdown die Fläche nehmen, die ihm laut DESIGN.md zusteht (Zahl als
   // Motiv, Haarlinien statt Karten). Im Browser bleibt alles wie bisher.
@@ -28,7 +28,10 @@ export default function Dashboard({ onNavigate }: Props) {
     return () => cancelAnimationFrame(frame);
   }, []);
 
-  const firstName = (user?.user_metadata?.full_name as string | undefined)?.trim().split(' ')[0];
+  // Nur der erste Bestandteil: „Leon Kinkel" wird zu „Leon". Ist gar nichts
+  // hinterlegt, bleibt die Begrüßung unpersönlich — aus einer E-Mail einen
+  // Vornamen zu raten trifft oft daneben.
+  const anrede = anzeigeName?.trim().split(/\s+/)[0];
 
   const openReview = (status: Exclude<LernStatus, 'none'>) => {
     try { localStorage.setItem('gf-review-status', status); } catch { /* Speicher gesperrt */ }
@@ -46,7 +49,7 @@ export default function Dashboard({ onNavigate }: Props) {
       {/* Kopf: nur die Begrüßung. Die Kursstufe wird in der Navigation
           umgeschaltet, nicht mehr hier. */}
       <div className={styles.head}>
-        <h1 className={styles.greet}>Guten Tag{firstName ? `, ${firstName}` : ''}.</h1>
+        <h1 className={styles.greet}>Guten Tag{anrede ? `, ${anrede}` : ''}.</h1>
       </div>
 
       {/* Fortschritt und Lernstand — eine zusammengehörige, klickbare Einheit.

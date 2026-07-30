@@ -9,7 +9,16 @@
 // statischen Dateien, die Next.js unter /_next/static/ ausliefert. Die sind mit
 // einer Prüfsumme im Namen versehen, ändern sich also bei jeder Version.
 
-const VERSION = 'gf-v2';
+// Die Nummer hochzählen, wenn ein zwischengespeichertes Gerüst Ärger machen
+// könnte: `activate` löscht dann alles, was nicht mit der neuen Nummer beginnt.
+//
+// Warum das nötig sein kann: Das Gerüst (die HTML-Seite) verweist auf
+// JavaScript-Dateien mit einer Prüfsumme im Namen. Nach mehreren
+// Veröffentlichungen an einem Tag kann ein älteres Gerüst im Speicher liegen,
+// dessen Dateien es auf dem Server nicht mehr gibt — die Seite lädt dann, findet
+// ihren Code nicht und bleibt weiß. Ein Sprung der Nummer räumt das ab.
+// v3: nach den Veröffentlichungen vom 30./31.07.2026.
+const VERSION = 'gf-v3';
 const SHELL = `${VERSION}-shell`;
 const OFFLINE_URL = '/offline.html';
 // Das zuletzt geladene Seitengerüst. Ohne das startet die App ohne Netz gar

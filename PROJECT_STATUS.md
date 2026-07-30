@@ -595,6 +595,14 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   App-Fassung der Startseite griff nur für Gäste — angemeldet bekam man die
   echte Landingpage samt Hero, Preisen und Webseiten-Menü. In der App ist
   `landing` für Angemeldete jetzt kein Ziel mehr; der Einstieg ist „Lernen".
+- ✅ **Registrierung in zwei Schritten, Ansprache freiwillig (31.07.2026, live):**
+  Schritt 1 verlangt nur E-Mail und Passwort; die Bedingungen fürs Passwort
+  (8 Zeichen, ein Buchstabe, eine Ziffer) stehen dabei und haken sich beim
+  Tippen ab. Schritt 2 fragt **freiwillig** nach Name und Benutzername, mit
+  „Überspringen". Angesprochen wird mit dem Namen, sonst mit dem Benutzernamen,
+  sonst **gar nicht** („Guten Tag." statt eines geratenen Vornamens aus der
+  E-Mail). Die Reihenfolge steckt an einer Stelle: `anzeigeName` im
+  AuthContext.
 - ✅ **Anmeldung mit E-Mail ODER Benutzername (31.07.2026, live):** Ein Feld für
   beides — das @ entscheidet. Supabase kennt nur E-Mail-Adressen, die
   Übersetzung passiert deshalb server-seitig in `POST /api/anmelden`: Dort wird
@@ -603,7 +611,7 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Absammeln von E-Mail-Adressen. Falscher Name und falsches Passwort sehen
   identisch aus. Neu: `public.users.username` (eindeutig ohne Rücksicht auf
   Groß-/Kleinschreibung, kein @ erlaubt — daran hängt die Unterscheidung);
-  Pflichtfeld bei der Registrierung, nachtragbar unter „Mein Konto".
+  freiwillig, nachtragbar unter „Mein Konto".
   SQL in `supabase/username.sql`, bereits ausgeführt.
 - ✅ **Passwort-Vorschlag des iPhones in der App (31.07.2026, live):** Im Browser
   füllt iOS gespeicherte Zugangsdaten aus, in der App nicht — dort rückt das

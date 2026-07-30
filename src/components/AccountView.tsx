@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggleDark }: Props) {
-  const { user, session, signOut } = useAuth();
+  const { user, session, signOut, username: gespeicherterName, anzeigeName, refreshProfil } = useAuth();
   // In der App gibt es keine Seitenleiste. Erklärvideos und 1:1 Nachhilfe wären
   // dort sonst überhaupt nicht erreichbar — deshalb hängen sie unter „Konto",
   // so wie WhatsApp alles Seltenere in die Einstellungen legt.
@@ -33,21 +33,9 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
   const [portalBusy, setPortalBusy] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>((user?.user_metadata?.avatar_url as string) ?? '');
 
-  // Den gespeicherten Benutzernamen nachladen. Er steckt nicht in der Sitzung,
-  // sondern in der Profilzeile — RLS gibt nur die eigene heraus.
-  useEffect(() => {
-    if (!user) return;
-    let abgebrochen = false;
-    void supabase
-      .from('users')
-      .select('username')
-      .eq('id', user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (!abgebrochen && data?.username) setBenutzername(data.username);
-      });
-    return () => { abgebrochen = true; };
-  }, [user, supabase]);
+  // Der Benutzername kommt aus dem Auth-Kontext (dort einmal je Anmeldung
+  // geholt), das Feld übernimmt ihn beim ersten Rendern.
+  useEffect(() => { setBenutzername(gespeicherterName ?? ''); }, [gespeicherterName]);
 
   // Profilbild: klein gerechnet und direkt im Nutzerprofil abgelegt, damit
   // dafür kein zusätzlicher Speicher nötig ist.
@@ -114,6 +102,9 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
       }
     }
 
+    // Damit Begrüßung und Kürzel sofort mitziehen, statt erst beim nächsten
+    // Laden.
+    await refreshProfil();
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -157,10 +148,14 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
 
   if (!user) return null;
 
-  const parts = (name || '').trim().split(/\s+/).filter(Boolean);
+  // Reihenfolge wie bei der Begrüßung: Name, sonst Benutzername. Anders als die
+  // Begrüßung darf die Kachel aber nicht leer bleiben — deshalb zuletzt die
+  // E-Mail.
+  const kachelName = (anzeigeName || '').trim();
+  const parts = kachelName.split(/\s+/).filter(Boolean);
   const initials = parts.length >= 2
     ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-    : (name || user.email || 'U').slice(0, 2).toUpperCase();
+    : (kachelName || user.email || 'U').slice(0, 2).toUpperCase();
 
   // Ein Kurs pro Zeile: nur der Kursname. Kurse ohne Zugang stehen grau
   // darunter und tragen den Hinweis „inaktiv".
@@ -199,7 +194,7 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           <input type="file" accept="image/*" onChange={handleAvatar} hidden />
         </label>
         <div className={styles.meta}>
-          <div className={styles.metaName}>{name || '—'}</div>
+          <div className={styles.metaName}>{anzeigeName || 'Ohne Namen'}</div>
           <div className={styles.metaEmail}>{user.email}</div>
         </div>
         <button className={styles.signoutTop} onClick={handleSignOut}>
@@ -252,8 +247,17 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Profil bearbeiten</h2>
         <div className={styles.field}>
-          <label>Name</label>
-          <input value={name} onChange={e => setName(e.target.value)} />
+          <label htmlFor="konto-name">Name</label>
+          <input
+            id="konto-name"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            autoComplete="name"
+            placeholder="Wie sollen wir dich ansprechen?"
+          />
+          <span className={styles.feldHinweis}>
+            Freiwillig. Ohne Namen und Benutzernamen wirst du nicht persönlich angesprochen.
+          </span>
         </div>
         <div className={styles.field}>
           <label htmlFor="konto-benutzername">Benutzername</label>
