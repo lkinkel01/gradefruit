@@ -66,13 +66,16 @@ export default function AppTabBar({
   view,
   onNavigate,
   onReels,
+  dunkel = false,
 }: {
   view: View;
   onNavigate: (v: View) => void;
   onReels: () => void;
+  /** Der Reel-Modus ist immer dunkel, unabhängig vom gewählten Erscheinungsbild. */
+  dunkel?: boolean;
 }) {
   return (
-    <nav className={styles.leiste} aria-label="Hauptnavigation">
+    <nav className={`${styles.leiste} ${dunkel ? styles.dunkel : ''}`} aria-label="Hauptnavigation">
       {ZIELE.map(ziel => {
         const aktiv = ziel.view === view;
         return (

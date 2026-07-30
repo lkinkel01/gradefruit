@@ -34,3 +34,20 @@
 /* App-Modus: keine Seitenleiste, dafür Platz für die untere Navigationsleiste. */
 .shellApp { grid-template-columns: 1fr; }
 .shellApp .content { padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+
+/* Übergang beim Wechsel zwischen Bereichen — nur in der App.
+   Bewusst kurz und ohne seitliche Bewegung: Ein langer Effekt fühlt sich beim
+   zweiten Mal zäh an, und eine Querbewegung würde mit dem Zurück-Wischen
+   konkurrieren. */
+.uebergang {
+  animation: bereichEin 180ms var(--ease-out) both;
+}
+
+@keyframes bereichEin {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uebergang { animation: none; }
+}

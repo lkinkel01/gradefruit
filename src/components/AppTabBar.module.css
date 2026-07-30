@@ -54,3 +54,14 @@
   color: var(--accent-d);
   font-weight: 650;
 }
+
+/* Reel-Modus: Der Bildschirm ist dort immer schwarz, unabhängig davon, ob der
+   Nutzer hell oder dunkel gewählt hat. Die Leiste muss mitgehen, sonst leuchtet
+   ein weißer Balken ins Video. */
+.dunkel {
+  border-color: rgba(255, 255, 255, .14);
+  background: rgba(22, 22, 24, .72);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, .45);
+}
+.dunkel .ziel { color: rgba(255, 255, 255, .62); }
+.dunkel .aktiv { background: rgba(255, 255, 255, .14); color: #fff; }

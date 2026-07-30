@@ -552,7 +552,11 @@ export default function Home() {
               onOpenAuth={() => openAuth('login')}
             />
           )}
-          {renderContent()}
+          {/* Der Schlüssel sorgt dafür, dass beim Bereichswechsel neu
+              eingeblendet wird — ohne ihn liefe die Animation nur einmal. */}
+          {imApp
+            ? <div key={view} className={styles.uebergang}>{renderContent()}</div>
+            : renderContent()}
         </div>
       </div>
 

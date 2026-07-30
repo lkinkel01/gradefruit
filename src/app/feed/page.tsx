@@ -8,6 +8,8 @@ import { LernStatus } from '@/lib/types';
 import { SCENES, Scene } from '@/lib/scenes';
 import { indexFor } from '@/lib/contentIndex';
 import { ScenePlayer } from '@/components/SceneModal';
+import AppTabBar from '@/components/AppTabBar';
+import { useImAppRahmen } from '@/lib/nativeApp';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './feed.module.css';
 
@@ -114,6 +116,9 @@ function BackIcon() {
 export default function FeedPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
+  // In der App bleibt die Navigation auch im Reel-Modus erreichbar — so macht
+  // es Instagram, und ohne sie ist der Reel-Modus eine Sackgasse.
+  const imApp = useImAppRahmen();
   const { statusOf, setStatus } = useProgress();
   const [index, setIndex] = useState(0);
   const [topic, setTopic] = useState<TopicId | null>(null);
@@ -251,6 +256,15 @@ export default function FeedPage() {
           );
         })}
       </div>
+
+      {imApp && (
+        <AppTabBar
+          view={'videos' as never}
+          onNavigate={(ziel) => router.push(`/?view=${ziel}`)}
+          onReels={() => { /* schon hier */ }}
+          dunkel
+        />
+      )}
 
       <nav className={styles.bottomNav} aria-label="Reel-Navigation">
         <button onClick={goBack} aria-label="Zurück">
