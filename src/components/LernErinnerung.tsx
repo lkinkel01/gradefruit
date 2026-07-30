@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { erinnerungLoeschen, gespeicherteZeit, imAppRahmen } from '@/lib/nativeApp';
+import { gespeicherteZeit, imAppRahmen } from '@/lib/nativeApp';
 import styles from './LernErinnerung.module.css';
 
 /**
@@ -45,7 +45,7 @@ export default function LernErinnerung() {
 
   if (!inApp) return null;
 
-  const einschalten = async () => {
+  const neuPlanen = async (neueZeit: string) => {
     setLaeuft(true);
     setMeldung(null);
     try {
@@ -61,7 +61,7 @@ export default function LernErinnerung() {
         return;
       }
 
-      const [stunde, minute] = zeit.split(':').map(Number);
+      const [stunde, minute] = neueZeit.split(':').map(Number);
       await plugin.cancel({ notifications: [{ id: 1 }] });
       await plugin.schedule({
         notifications: [{
@@ -72,7 +72,7 @@ export default function LernErinnerung() {
         }],
       });
 
-      try { localStorage.setItem('gf-erinnerung', zeit); } catch { /* Speicher gesperrt */ }
+      try { localStorage.setItem('gf-erinnerung', neueZeit); } catch { /* Speicher gesperrt */ }
       setAktiv(true);
     } catch (fehler) {
       const text = fehler instanceof Error ? fehler.message : String(fehler);
@@ -83,9 +83,22 @@ export default function LernErinnerung() {
   };
 
   const ausschalten = async () => {
-    await erinnerungLoeschen();
-    setAktiv(false);
+    setLaeuft(true);
     setMeldung(null);
+    try {
+      // Über dieselbe Brücke wie das Einschalten. Vorher lief das Löschen über
+      // den Import-Weg — also über genau den, der von Anfang an nicht griff.
+      // Deshalb ließ sich die Erinnerung anschalten, aber nie abschalten.
+      const plugin = baustein();
+      if (plugin) await plugin.cancel({ notifications: [{ id: 1 }] });
+      try { localStorage.removeItem('gf-erinnerung'); } catch { /* Speicher gesperrt */ }
+      setAktiv(false);
+    } catch (fehler) {
+      const text = fehler instanceof Error ? fehler.message : String(fehler);
+      setMeldung(`Ausschalten hat nicht geklappt: ${text}`);
+    } finally {
+      setLaeuft(false);
+    }
   };
 
   return (
@@ -104,15 +117,20 @@ export default function LernErinnerung() {
           type="time"
           className={styles.zeit}
           value={zeit}
-          onChange={event => setZeit(event.target.value)}
-          disabled={aktiv || laeuft}
+          onChange={event => {
+            setZeit(event.target.value);
+            // Läuft die Erinnerung schon, gilt die neue Zeit sofort — sonst
+            // müsste man erst aus- und wieder einschalten.
+            if (aktiv) void neuPlanen(event.target.value);
+          }}
+          disabled={laeuft}
           aria-label="Uhrzeit der Erinnerung"
         />
         <button
           type="button"
           className="btn light"
           disabled={laeuft}
-          onClick={() => void (aktiv ? ausschalten() : einschalten())}
+          onClick={() => void (aktiv ? ausschalten() : neuPlanen(zeit))}
         >
           {laeuft ? 'Moment …' : aktiv ? 'Ausschalten' : 'Einschalten'}
         </button>
