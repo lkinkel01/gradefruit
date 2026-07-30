@@ -202,10 +202,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const touch = () => {
       try { localStorage.setItem(KEY, String(Date.now())); } catch { /* Speicher gesperrt */ }
     };
+    // Der Zeitpunkt der Anmeldung zählt als Aktivität — man kann nicht seit
+    // zwei Stunden untätig sein, wenn man sich gerade angemeldet hat.
+    //
+    // Das ist keine Feinheit: Ohne diesen Vergleich entschied allein der
+    // Zeitstempel der VORIGEN Sitzung. Nach jeder Pause von mehr als zwei
+    // Stunden wurde man deshalb in derselben Sekunde wieder abgemeldet, in der
+    // die Anmeldung gelang — und weil die Sitzung dabei sofort wieder wegfiel,
+    // konnte auch die Geräteübernahme nicht mehr schreiben.
+    const anmeldung = user.last_sign_in_at ? Date.parse(user.last_sign_in_at) : 0;
     const expired = () => {
       try {
         const raw = localStorage.getItem(KEY);
-        return !!raw && Date.now() - Number(raw) > LIMIT;
+        if (!raw) return false;
+        const zuletzt = Math.max(Number(raw), anmeldung);
+        return Date.now() - zuletzt > LIMIT;
       } catch { return false; }
     };
     const check = () => {

@@ -205,7 +205,19 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
   // Einmal-Markierung: Nur eine bewusste Anmeldung darf das Gerät übernehmen.
   // AuthContext liest sie beim nächsten Durchlauf und verbraucht sie dabei.
   const markDeliberateSignIn = () => {
-    try { sessionStorage.setItem('gf-claim-device', '1'); } catch { /* Speicher gesperrt */ }
+    try {
+      sessionStorage.setItem('gf-claim-device', '1');
+      // Wer sich gerade anmeldet, IST aktiv.
+      //
+      // Ohne diese Zeile galt der Zeitstempel der VORIGEN Sitzung. Lag der über
+      // zwei Stunden zurück — also nach jeder normalen Pause —, schlug die
+      // Leerlauf-Sperre in demselben Moment zu, in dem die Anmeldung gelang:
+      // Der Server stellte die Sitzung aus, der Browser warf sie sofort wieder
+      // weg und zeigte „Automatisch abgemeldet". Schlimmer noch, die
+      // Geräteübernahme kam nicht mehr dazu zu schreiben, weshalb danach auch
+      // noch das andere Gerät als angemeldet galt.
+      localStorage.setItem('gf-last-activity', String(Date.now()));
+    } catch { /* Speicher gesperrt */ }
   };
 
   const handleGoogle = async () => {
