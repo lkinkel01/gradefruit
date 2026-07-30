@@ -1,6 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
+import { bewussteAnmeldung } from '@/lib/anmeldung';
+import { PASSWORT_REGELN } from '@/lib/passwort';
 import styles from './AuthModal.module.css';
 import modalStyles from './Modal.module.css';
 
@@ -29,20 +31,9 @@ function germanAuthError(msg: string): string {
   return 'Registrierung fehlgeschlagen. Bitte prüfe deine Angaben und versuch es erneut.';
 }
 
-/**
- * Die Bedingungen fürs Passwort — als Liste, damit sie sowohl geprüft als auch
- * angezeigt werden können. Beides aus derselben Quelle: Eine Regel, die nur im
- * Text steht, läuft irgendwann der Prüfung davon.
- */
-const PASSWORT_REGELN: { text: string; erfuellt: (p: string) => boolean }[] = [
-  { text: 'Mindestens 8 Zeichen', erfuellt: p => p.length >= 8 },
-  { text: 'Mindestens ein Buchstabe', erfuellt: p => /\p{L}/u.test(p) },
-  { text: 'Mindestens eine Ziffer', erfuellt: p => /\d/.test(p) },
-];
-
 export default function AuthModal({ open, onClose, onAuthenticated, initialMode = 'login' }: Props) {
   const supabase = createClient();
-  const [mode, setMode] = useState<'login' | 'register'>(initialMode);
+  const [mode, setMode] = useState<'login' | 'register' | 'vergessen'>(initialMode);
   // Beim Anmelden ein Feld für beides: E-Mail oder Benutzername. Was davon
   // gemeint ist, entscheidet das @ — und der Server löst es auf.
   const [kennung, setKennung] = useState('');
@@ -60,6 +51,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
 
   const reset = () => { setError(''); setInfo(''); };
   const registrierSchritt2 = mode === 'register' && schritt === 2;
+  const vergessen = mode === 'vergessen';
 
   // Beim Öffnen dem gewünschten Modus folgen. Ohne das bliebe das Fenster im
   // Modus des ERSTEN Öffnens hängen ("Registrieren" öffnete den Login).
@@ -145,6 +137,17 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
     e.preventDefault();
     setLoading(true); reset();
 
+    if (vergessen) {
+      // Bewusst IMMER dieselbe Antwort, egal ob es die Adresse gibt. Sonst
+      // wäre das Formular eine Auskunft darüber, wer hier ein Konto hat.
+      await supabase.auth.resetPasswordForEmail(kennung.trim(), {
+        redirectTo: `${window.location.origin}/passwort-neu`,
+      });
+      setInfo('Wenn es zu dieser Adresse ein Konto gibt, ist die E-Mail unterwegs. Schau auch im Spam-Ordner nach.');
+      setLoading(false);
+      return;
+    }
+
     if (mode === 'register') {
       if (schritt === 1) {
         const offen = PASSWORT_REGELN.filter(r => !r.erfuellt(password));
@@ -204,21 +207,8 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
 
   // Einmal-Markierung: Nur eine bewusste Anmeldung darf das Gerät übernehmen.
   // AuthContext liest sie beim nächsten Durchlauf und verbraucht sie dabei.
-  const markDeliberateSignIn = () => {
-    try {
-      sessionStorage.setItem('gf-claim-device', '1');
-      // Wer sich gerade anmeldet, IST aktiv.
-      //
-      // Ohne diese Zeile galt der Zeitstempel der VORIGEN Sitzung. Lag der über
-      // zwei Stunden zurück — also nach jeder normalen Pause —, schlug die
-      // Leerlauf-Sperre in demselben Moment zu, in dem die Anmeldung gelang:
-      // Der Server stellte die Sitzung aus, der Browser warf sie sofort wieder
-      // weg und zeigte „Automatisch abgemeldet". Schlimmer noch, die
-      // Geräteübernahme kam nicht mehr dazu zu schreiben, weshalb danach auch
-      // noch das andere Gerät als angemeldet galt.
-      localStorage.setItem('gf-last-activity', String(Date.now()));
-    } catch { /* Speicher gesperrt */ }
-  };
+  // Einmal-Markierung + Aktivitäts-Zeitstempel, siehe src/lib/anmeldung.ts.
+  const markDeliberateSignIn = bewussteAnmeldung;
 
   const handleGoogle = async () => {
     try { localStorage.setItem('gf-after-auth', 'dashboard'); } catch { /* Speicher gesperrt */ }
@@ -239,10 +229,12 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
           <button type="button" className={modalStyles.mclose} onClick={onClose} aria-label="Dialog schließen">✕</button>
           <div className={`${modalStyles.ptag} ${styles.ptag}`}>Gradefruit · Mathematik-Abitur Hessen 2027</div>
           <h2 id="auth-title">
-            {mode === 'login' ? 'Anmelden' : registrierSchritt2 ? 'Fast fertig' : 'Registrieren'}
+            {vergessen ? 'Passwort vergessen' : mode === 'login' ? 'Anmelden' : registrierSchritt2 ? 'Fast fertig' : 'Registrieren'}
           </h2>
           <p>
-            {mode === 'login'
+            {vergessen
+              ? 'Wir schicken dir einen Link, mit dem du ein neues Passwort setzen kannst.'
+              : mode === 'login'
               ? 'Mit deinem Konto einloggen.'
               : registrierSchritt2
                 ? 'Beides ist freiwillig — du kannst es auch später unter „Mein Konto" nachtragen.'
@@ -252,7 +244,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
         <div className={modalStyles.mbody}>
           {/* Im zweiten Schritt ist das Konto schon angelegt — ein zweiter
               Anmeldeweg hätte dort nichts mehr zu suchen. */}
-          {!registrierSchritt2 && (
+          {!registrierSchritt2 && !vergessen && (
             <>
               <button className={styles.googleBtn} onClick={handleGoogle} type="button">
                 <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.14 0 5.95 1.08 8.17 2.85l6.09-6.09C34.46 3.08 29.5 1 24 1 14.82 1 7.07 6.49 3.64 14.21l7.1 5.52C12.47 13.37 17.77 9.5 24 9.5z"/><path fill="#4285F4" d="M46.6 24.5c0-1.64-.15-3.22-.42-4.75H24v9h12.73c-.55 2.98-2.22 5.5-4.73 7.2l7.25 5.63C43.4 37.44 46.6 31.4 46.6 24.5z"/><path fill="#FBBC05" d="M10.74 28.27A14.55 14.55 0 0 1 9.5 24c0-1.49.25-2.93.69-4.28l-7.1-5.51A23.94 23.94 0 0 0 0 24c0 3.86.92 7.51 2.55 10.73l8.19-6.46z"/><path fill="#34A853" d="M24 47c5.5 0 10.12-1.82 13.49-4.95l-7.25-5.63c-2.01 1.35-4.58 2.08-6.24 2.08-6.23 0-11.52-3.86-13.26-9.23l-8.19 6.46C7.07 41.51 14.82 47 24 47z"/></svg>
@@ -263,9 +255,11 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
           )}
 
           <form onSubmit={handleSubmit}>
-            {mode === 'login' && (
+            {(mode === 'login' || vergessen) && (
               <div className={styles.field}>
-                <label htmlFor="auth-kennung">E-Mail oder Benutzername</label>
+                <label htmlFor="auth-kennung">
+                  {vergessen ? 'E-Mail' : 'E-Mail oder Benutzername'}
+                </label>
                 {/* Bewusst `type="text"`: Ein Benutzername ist keine Adresse,
                     `type="email"` würde ihn als ungültig abweisen. `inputMode`
                     holt auf dem Handy trotzdem die Tastatur mit dem @ hervor,
@@ -294,7 +288,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
               </div>
             )}
 
-            {!registrierSchritt2 && (
+            {!registrierSchritt2 && !vergessen && (
               <div className={styles.field}>
                 <label htmlFor="auth-password">Passwort</label>
                 <input
@@ -365,7 +359,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
             {info && <div className={styles.info}>{info}</div>}
 
             <button className="btn primary" style={{ width: '100%', marginTop: 8 }} type="submit" disabled={loading}>
-              {loading ? '…' : mode === 'login' ? 'Anmelden' : registrierSchritt2 ? 'Fertig' : 'Weiter'}
+              {loading ? '…' : vergessen ? 'Link schicken' : mode === 'login' ? 'Anmelden' : registrierSchritt2 ? 'Fertig' : 'Weiter'}
             </button>
 
             {registrierSchritt2 && (
@@ -378,9 +372,28 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
                 Überspringen
               </button>
             )}
+
+            {mode === 'login' && (
+              <button
+                type="button"
+                className={styles.ueberspringen}
+                onClick={() => { setMode('vergessen'); reset(); }}
+              >
+                Passwort vergessen?
+              </button>
+            )}
+            {vergessen && (
+              <button
+                type="button"
+                className={styles.ueberspringen}
+                onClick={() => { setMode('login'); reset(); }}
+              >
+                Zurück zum Anmelden
+              </button>
+            )}
           </form>
 
-          <div className={styles.switchMode} hidden={registrierSchritt2}>
+          <div className={styles.switchMode} hidden={registrierSchritt2 || vergessen}>
             {mode === 'login' ? (
               <>Noch kein Konto?{' '}<button onClick={() => { setMode('register'); setSchritt(1); reset(); }}>Registrieren</button></>
             ) : (

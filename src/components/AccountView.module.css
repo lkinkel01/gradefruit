@@ -57,6 +57,16 @@
 .feldHinweis { display: block; margin-top: 6px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
 .feldFehler { color: var(--danger); }
 
+/* Passwort-Bedingungen, gleiches Bild wie in der Registrierung. */
+.regeln { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.regeln li {
+  display: flex; align-items: baseline; gap: 7px;
+  color: var(--faint); font-size: 12px; line-height: 1.45;
+  transition: color var(--dur-hover) var(--ease-out);
+}
+.regeln li span { width: 9px; flex-shrink: 0; text-align: center; }
+.regelOk { color: var(--ink); }
+
 /* Zeile, die auf eine andere Seite führt — Symbol, Beschriftung, Pfeil.
    Bewusst über die volle Breite antippbar statt nur der Text. */
 .linkRow {

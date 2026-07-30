@@ -595,6 +595,17 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   App-Fassung der Startseite griff nur für Gäste — angemeldet bekam man die
   echte Landingpage samt Hero, Preisen und Webseiten-Menü. In der App ist
   `landing` für Angemeldete jetzt kein Ziel mehr; der Einstieg ist „Lernen".
+- ✅ **Passwort ändern und zurücksetzen (31.07.2026, live):** Beides gab es
+  vorher nicht — wer sein Passwort vergaß, kam nicht mehr an sein Konto.
+  „Passwort vergessen?" in der Anmeldemaske schickt einen Link (Antwort ist
+  immer dieselbe, egal ob es die Adresse gibt — sonst wäre das Formular eine
+  Auskunft darüber, wer hier ein Konto hat). Der Link landet auf der echten
+  Route `/passwort-neu`, die alle drei Nachweis-Formen von Supabase behandelt
+  (`code`, `token_hash`, Sitzung im Anker). Unter „Mein Konto" lässt sich das
+  Passwort auch direkt ändern.
+  ⚠️ **In Supabase muss `https://www.gradefruit.de/passwort-neu` unter
+  Authentication → URL Configuration → Redirect URLs stehen**, sonst führt der
+  Link nur auf die Startseite.
 - ✅ **Registrierung in zwei Schritten, Ansprache freiwillig (31.07.2026, live):**
   Schritt 1 verlangt nur E-Mail und Passwort; die Bedingungen fürs Passwort
   (8 Zeichen, ein Buchstabe, eine Ziffer) stehen dabei und haken sich beim

@@ -7,6 +7,7 @@ import LernErinnerung from './LernErinnerung';
 import styles from './AccountView.module.css';
 import { LogoutIcon, PlayIcon, TutorIcon, ArrowRightIcon } from './UiIcons';
 import { useImAppRahmen } from '@/lib/nativeApp';
+import { PASSWORT_REGELN } from '@/lib/passwort';
 
 interface Props {
   onNavigate: (v: string) => void;
@@ -31,6 +32,14 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
   const [benutzername, setBenutzername] = useState('');
   const [nameFehler, setNameFehler] = useState('');
   const [portalBusy, setPortalBusy] = useState(false);
+  // Passwort ändern — bewusst eingeklappt: Man tut es selten, und ein
+  // dauerhaft offenes Passwortfeld im Konto lädt zum Verwechseln ein.
+  const [pwOffen, setPwOffen] = useState(false);
+  const [pwNeu, setPwNeu] = useState('');
+  const [pwWdh, setPwWdh] = useState('');
+  const [pwMeldung, setPwMeldung] = useState('');
+  const [pwFehler, setPwFehler] = useState(false);
+  const [pwLaeuft, setPwLaeuft] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>((user?.user_metadata?.avatar_url as string) ?? '');
 
   // Der Benutzername kommt aus dem Auth-Kontext (dort einmal je Anmeldung
@@ -108,6 +117,26 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  };
+
+  const passwortAendern = async () => {
+    setPwMeldung(''); setPwFehler(false);
+    if (PASSWORT_REGELN.some(r => !r.erfuellt(pwNeu))) {
+      setPwMeldung('Das Passwort erfüllt noch nicht alle Bedingungen.'); setPwFehler(true); return;
+    }
+    if (pwNeu !== pwWdh) {
+      setPwMeldung('Die beiden Passwörter stimmen nicht überein.'); setPwFehler(true); return;
+    }
+    setPwLaeuft(true);
+    const { error } = await supabase.auth.updateUser({ password: pwNeu });
+    setPwLaeuft(false);
+    if (error) {
+      setPwMeldung('Das hat nicht geklappt. Melde dich neu an und versuch es dann noch einmal.');
+      setPwFehler(true);
+      return;
+    }
+    setPwNeu(''); setPwWdh('');
+    setPwMeldung('Passwort geändert.');
   };
 
   // Konto löschen: bewusst zweistufig und mit Tippbestätigung, weil der
@@ -282,6 +311,64 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
         <button className="btn primary" onClick={handleSave} disabled={saving} style={{ marginTop: 4 }}>
           {saved ? '✓ Gespeichert' : saving ? '…' : 'Speichern'}
         </button>
+      </div>
+
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Passwort</h2>
+        {!pwOffen ? (
+          <button type="button" className="btn light sm" onClick={() => setPwOffen(true)}>
+            Passwort ändern
+          </button>
+        ) : (
+          <>
+            <div className={styles.field}>
+              <label htmlFor="pw-neu">Neues Passwort</label>
+              <input
+                id="pw-neu"
+                type="password"
+                value={pwNeu}
+                onChange={e => { setPwNeu(e.target.value); setPwMeldung(''); }}
+                autoComplete="new-password"
+              />
+              <ul className={styles.regeln}>
+                {PASSWORT_REGELN.map(regel => {
+                  const ok = regel.erfuellt(pwNeu);
+                  return (
+                    <li key={regel.text} className={ok ? styles.regelOk : undefined}>
+                      <span aria-hidden="true">{ok ? '✓' : '·'}</span>
+                      {regel.text}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="pw-wdh">Noch einmal</label>
+              <input
+                id="pw-wdh"
+                type="password"
+                value={pwWdh}
+                onChange={e => { setPwWdh(e.target.value); setPwMeldung(''); }}
+                autoComplete="new-password"
+              />
+            </div>
+            {pwMeldung && (
+              <p className={`${styles.feldHinweis} ${pwFehler ? styles.feldFehler : ''}`}>{pwMeldung}</p>
+            )}
+            <div className={styles.dangerActions}>
+              <button className="btn primary" onClick={passwortAendern} disabled={pwLaeuft}>
+                {pwLaeuft ? '…' : 'Speichern'}
+              </button>
+              <button
+                className="btn light sm"
+                onClick={() => { setPwOffen(false); setPwNeu(''); setPwWdh(''); setPwMeldung(''); }}
+                disabled={pwLaeuft}
+              >
+                Abbrechen
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       <div className={styles.section}>

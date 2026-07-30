@@ -1,0 +1,65 @@
+/* Eine Seite mit genau einer Aufgabe — entsprechend ruhig aufgebaut,
+   im selben Bild wie der App-Einstieg. */
+.seite {
+  min-height: calc(100dvh - env(safe-area-inset-top, 0px));
+  display: grid;
+  place-items: center;
+  padding: 32px 24px calc(32px + env(safe-area-inset-bottom, 0px));
+  background: var(--canvas);
+}
+
+.mitte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+}
+
+.titel {
+  margin-top: 4px;
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.text { color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+.form { width: 100%; margin-top: 10px; text-align: left; }
+.form :global(.btn) { width: 100%; justify-content: center; margin-top: 4px; }
+
+.feld { margin-bottom: 14px; }
+.feld label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.feld input {
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  outline: none;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  transition: border-color var(--dur-hover) var(--ease-out);
+}
+.feld input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+/* Wie in der Registrierung: Die Bedingungen stehen dabei und haken sich ab. */
+.regeln { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.regeln li {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  color: var(--faint);
+  font-size: 12px;
+  line-height: 1.45;
+  transition: color var(--dur-hover) var(--ease-out);
+}
+.regeln li span { width: 9px; flex-shrink: 0; text-align: center; }
+.regelOk { color: var(--ink); }
+
+.fehler { margin: 0 0 12px; color: var(--danger); font-size: 13.5px; line-height: 1.5; }
