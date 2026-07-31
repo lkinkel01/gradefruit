@@ -72,35 +72,58 @@ aus — die müssen genau so stehen bleiben.
 
 ### „Reset Password"
 
+Zweisprachig: Deutsch zuerst, Englisch darunter, getrennt durch eine feine
+Linie. Wer Deutsch liest, hört nach dem ersten Block auf; wer nicht, findet
+darunter dasselbe. Ein Sprachumschalter wäre in einer E-Mail nicht möglich.
+
 **Betreff:**
 
 ```
-Neues Passwort für Gradefruit
+Neues Passwort für Gradefruit · Reset your Gradefruit password
 ```
 
 **Inhalt:**
 
 ```html
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#050505;">
-  <p style="font-size:20px;font-weight:700;letter-spacing:-0.02em;margin:0 0 24px;">Gradefruit</p>
+  <p style="font-size:20px;font-weight:700;letter-spacing:-0.02em;margin:0 0 28px;">Gradefruit</p>
 
   <p style="font-size:15px;line-height:1.6;margin:0 0 20px;">
     Du hast ein neues Passwort angefordert. Über den Knopf unten kannst du eines setzen.
   </p>
 
-  <p style="margin:0 0 24px;">
+  <p style="margin:0 0 20px;">
     <a href="{{ .ConfirmationURL }}"
        style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
       Neues Passwort setzen
     </a>
   </p>
 
-  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 8px;">
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 6px;">
     Der Link gilt eine Stunde und lässt sich nur einmal verwenden.
   </p>
-  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 24px;">
-    Wenn du das nicht warst, kannst du diese E-Mail ignorieren — dein Passwort
-    bleibt unverändert.
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 28px;">
+    Wenn du das nicht warst, kannst du diese E-Mail ignorieren — dein Passwort bleibt unverändert.
+  </p>
+
+  <hr style="border:none;border-top:1px solid #E6E6E9;margin:0 0 28px;">
+
+  <p style="font-size:15px;line-height:1.6;margin:0 0 20px;">
+    You asked for a new password. Use the button below to set one.
+  </p>
+
+  <p style="margin:0 0 20px;">
+    <a href="{{ .ConfirmationURL }}"
+       style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
+      Set a new password
+    </a>
+  </p>
+
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 6px;">
+    The link is valid for one hour and can only be used once.
+  </p>
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 28px;">
+    If this wasn't you, you can ignore this email — your password stays as it is.
   </p>
 
   <p style="font-size:12.5px;line-height:1.6;color:#6E7078;margin:0;border-top:1px solid #E6E6E9;padding-top:16px;">
@@ -118,29 +141,45 @@ falls sie später eingeschaltet wird.
 **Betreff:**
 
 ```
-Willkommen bei Gradefruit — bitte bestätigen
+Willkommen bei Gradefruit · Welcome to Gradefruit
 ```
 
 **Inhalt:**
 
 ```html
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#050505;">
-  <p style="font-size:20px;font-weight:700;letter-spacing:-0.02em;margin:0 0 24px;">Gradefruit</p>
+  <p style="font-size:20px;font-weight:700;letter-spacing:-0.02em;margin:0 0 28px;">Gradefruit</p>
 
   <p style="font-size:15px;line-height:1.6;margin:0 0 20px;">
     Schön, dass du da bist. Ein Klick noch, dann geht es los.
   </p>
 
-  <p style="margin:0 0 24px;">
+  <p style="margin:0 0 20px;">
     <a href="{{ .ConfirmationURL }}"
        style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
       E-Mail bestätigen
     </a>
   </p>
 
-  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 24px;">
-    Wenn du dich nicht bei Gradefruit angemeldet hast, kannst du diese E-Mail
-    ignorieren.
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 28px;">
+    Wenn du dich nicht bei Gradefruit angemeldet hast, kannst du diese E-Mail ignorieren.
+  </p>
+
+  <hr style="border:none;border-top:1px solid #E6E6E9;margin:0 0 28px;">
+
+  <p style="font-size:15px;line-height:1.6;margin:0 0 20px;">
+    Good to have you here. One click and you're in.
+  </p>
+
+  <p style="margin:0 0 20px;">
+    <a href="{{ .ConfirmationURL }}"
+       style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
+      Confirm email
+    </a>
+  </p>
+
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 28px;">
+    If you didn't sign up for Gradefruit, you can ignore this email.
   </p>
 
   <p style="font-size:12.5px;line-height:1.6;color:#6E7078;margin:0;border-top:1px solid #E6E6E9;padding-top:16px;">
