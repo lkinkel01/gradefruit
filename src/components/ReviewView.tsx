@@ -6,6 +6,7 @@ import { GrapefruitProgress } from './Logo';
 import { ArrowRightIcon } from './UiIcons';
 import { indexFor } from '@/lib/contentIndex';
 import { useTopicContent } from '@/lib/ContentContext';
+import { useImAppRahmen } from '@/lib/nativeApp';
 import styles from './ReviewView.module.css';
 
 // Wiederholen: das Herz des Lernsystems. Jeder Inhalt lässt sich als
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export default function ReviewView({ level, onNavigate }: Props) {
+  const imApp = useImAppRahmen();
   // Der Aufgabentext in der Vorschau kommt vom Server. Feste Reihenfolge,
   // damit die Hook-Regeln eingehalten sind.
   const analysisContent = useTopicContent('analysis', level);
@@ -107,7 +109,8 @@ export default function ReviewView({ level, onNavigate }: Props) {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.ph1}>Wiederholen</h1>
+      {/* In der App steht der Titel schon in der Kopfzeile. */}
+      {!imApp && <h1 className={styles.ph1}>Wiederholen</h1>}
 
       {/* Lernstufe */}
       <div className={styles.filterRow} role="tablist" aria-label="Lernstufe filtern">

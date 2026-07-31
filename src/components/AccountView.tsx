@@ -251,8 +251,6 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.ph1}>Dein Gradefruit-Konto</h1>
-
       <div className={styles.card}>
         {/* Ohne Bild die Initialen-Kachel, mit Bild das Bild. Das kleine
             Kamera-Zeichen sitzt immer da: Vorher war nichts zu sehen, was
@@ -271,6 +269,14 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           <div className={styles.metaEmail}>{user.email}</div>
           {bildFehler && <div className={styles.bildFehler}>{bildFehler}</div>}
         </div>
+      </div>
+
+      {/* Profil zuerst, Abmelden darunter: Das eine tut man gelegentlich, das
+          andere selten. Instagram legt es genauso an. */}
+      <div className={styles.kopfKnoepfe}>
+        <button type="button" className="btn light" onClick={() => onNavigate('profil')}>
+          Profil bearbeiten
+        </button>
         <button className={styles.signoutTop} onClick={handleSignOut}>
           <LogoutIcon size={15} />
           Abmelden
@@ -284,7 +290,7 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Erscheinungsbild</h2>
         <div className={styles.infoRow}>
-          <span>Dunkler Modus</span>
+          <span>Dark Mode</span>
           <button
             type="button"
             className={`${styles.themeBtn} ${dark ? styles.themeBtnOn : ''}`}
@@ -317,46 +323,6 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           </button>
         </div>
       )}
-
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Profil bearbeiten</h2>
-        <div className={styles.field}>
-          <label htmlFor="konto-name">Name</label>
-          <input
-            id="konto-name"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            autoComplete="name"
-            placeholder="Wie sollen wir dich ansprechen?"
-          />
-          <span className={styles.feldHinweis}>
-            Freiwillig. Ohne Namen und Benutzernamen wirst du nicht persönlich angesprochen.
-          </span>
-        </div>
-        <div className={styles.field}>
-          <label htmlFor="konto-benutzername">Benutzername</label>
-          <input
-            id="konto-benutzername"
-            value={benutzername}
-            onChange={e => { setBenutzername(e.target.value); setNameFehler(''); }}
-            autoComplete="username"
-            autoCapitalize="none"
-            autoCorrect="off"
-            spellCheck={false}
-            placeholder="noch keiner"
-          />
-          <span className={`${styles.feldHinweis} ${nameFehler ? styles.feldFehler : ''}`}>
-            {nameFehler || 'Damit kannst du dich anmelden, ohne deine E-Mail einzutippen.'}
-          </span>
-        </div>
-        <div className={styles.field}>
-          <label>E-Mail</label>
-          <input value={user.email ?? ''} disabled title="E-Mail kann nicht geändert werden" />
-        </div>
-        <button className="btn primary" onClick={handleSave} disabled={saving} style={{ marginTop: 4 }}>
-          {saved ? '✓ Gespeichert' : saving ? '…' : 'Speichern'}
-        </button>
-      </div>
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Passwort</h2>
@@ -422,10 +388,16 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           <span>Registriert seit</span>
           <span>{new Date(user.created_at).toLocaleDateString('de-DE')}</span>
         </div>
-        <div className={styles.courseList}>
-          {courseRow('gk', owned, plan)}
-          {courseRow('lk', ownedLk, planLk)}
-        </div>
+        {/* Nur was man wirklich hat. Zwei Zeilen „inaktiv" sind kein Zugang,
+            sondern eine Preisliste an der falschen Stelle. */}
+        {(owned || ownedLk) ? (
+          <div className={styles.courseList}>
+            {owned && courseRow('gk', true, plan)}
+            {ownedLk && courseRow('lk', true, planLk)}
+          </div>
+        ) : (
+          <p className={styles.keinKurs}>Noch kein Kurs freigeschaltet.</p>
+        )}
       </div>
 
       <div className={styles.section}>

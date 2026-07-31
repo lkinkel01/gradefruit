@@ -13,6 +13,7 @@ import VideosView from '@/components/VideosView';
 import ReviewView from '@/components/ReviewView';
 import TutorsView from '@/components/TutorsView';
 import AccountView from '@/components/AccountView';
+import ProfilView from '@/components/ProfilView';
 import CheckoutModal from '@/components/CheckoutModal';
 import AuthModal from '@/components/AuthModal';
 import AskDrawer, { type AskSource } from '@/components/AskDrawer';
@@ -32,11 +33,11 @@ import styles from './page.module.css';
 // zeigt Gästen nur die Vorschau-Sperre mit Kauf-Hinweis.
 // 'tutors' ist eine reine Info-Seite (Nachhilfe „bald verfügbar") – kein Kauf nötig.
 // 'review' (Wiederholen) ist persönlicher Lernfortschritt – nie hinter der Bezahlschranke.
-const FREE_VIEWS: View[] = ['dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors', 'review'];
+const FREE_VIEWS: View[] = ['dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors', 'review', 'profil'];
 // Themen-Seiten mit eigener Bezahlschranke – Eingeloggte dürfen sie immer öffnen
 // (die Sperre pro Kursstufe steckt direkt in der Themenseite).
 const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
-const APP_VIEWS: View[] = ['landing', 'dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'videos', 'review', 'tutors', 'account'];
+const APP_VIEWS: View[] = ['landing', 'dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'videos', 'review', 'tutors', 'account', 'profil'];
 
 interface LocationState {
   view: View;
@@ -401,7 +402,7 @@ export default function Home() {
     if (topicItemId) navigate(view, { tab: topicTab, itemId: null, itemLabel: null });
     else if (TOPIC_VIEWS.includes(view) && topicTab !== 'uebersicht') {
       navigate(view, { tab: 'uebersicht', itemId: null, itemLabel: null });
-    } else if (view === 'videos' || view === 'tutors') {
+    } else if (view === 'videos' || view === 'tutors' || view === 'profil') {
       // Beide sind in der App nur über „Konto" erreichbar — zurück führt
       // dorthin zurück, nicht auf die Startseite.
       navigate('account');
@@ -527,6 +528,7 @@ export default function Home() {
       case 'themen': return <ThemenView owned={owned} ownedLk={ownedLk} onNavigate={navigate} />;
       case 'videos': return <VideosView />;
       case 'tutors': return <TutorsView />;
+      case 'profil': return <ProfilView onFertig={() => navigate('account')} />;
       case 'account': return <AccountView onNavigate={(v) => navigate(v as View)} onOpenCheckout={openCheckout} dark={dark} onToggleDark={() => setTheme(!dark)} />;
       case 'review':
         return <ReviewView level={level} onNavigate={navigate} />;

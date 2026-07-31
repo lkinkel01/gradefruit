@@ -152,8 +152,8 @@
    Haarlinien statt Ränder, und die Tage bis zur Prüfung als übergroße Zahl —
    das Motiv der Marke, nicht eine Zeile unter vielen.
    =========================================================================== */
-.app .head { justify-content: flex-start; margin-bottom: 20px; text-align: left; }
-.app .greet { font-size: 27px; letter-spacing: -.03em; }
+.app .head { justify-content: center; margin-bottom: 18px; text-align: center; }
+.app .greet { font-size: 25px; letter-spacing: -.03em; }
 
 .app .statusSec { padding: 0; }
 .app .overviewCard {
@@ -165,30 +165,29 @@
 }
 
 .app .cdCol {
-  flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: flex-start;
-  gap: 0 14px; padding: 0 0 20px; text-align: left;
+  flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: center;
+  gap: 0 12px; padding: 0 0 20px; text-align: center;
   border-right: 0; border-bottom: 1px solid var(--line-strong);
 }
 .app .cdIcon { display: none; }
-.app .cdDays { font-size: clamp(44px, 14.5vw, 58px); line-height: .9; letter-spacing: -.04em; }
+.app .cdDays { font-size: clamp(36px, 11vw, 46px); line-height: 1; letter-spacing: -.035em; }
 .app .cdLabel { font-size: 15px; font-weight: 600; color: var(--ink); }
 /* Volle Breite heißt: eigene Zeile unter Zahl und Beschriftung. */
-.app .cdDate { width: 100%; margin-top: 7px; font-size: 12.5px; }
+.app .cdDate { width: 100%; margin-top: 6px; font-size: 12.5px; text-align: center; }
 
 .app .progressCol {
-  justify-content: flex-start; text-align: left; gap: 16px;
+  justify-content: center; text-align: center; gap: 16px;
   padding: 18px 34px 18px 0; border-bottom: 1px solid var(--line);
 }
-.app .progressBody { align-items: flex-start; }
+.app .progressBody { align-items: center; }
 .app .progressGo { display: block; right: 0; }
 
 .app .statRow { margin-top: 0; border-top: 0; }
 /* Enges Innenmaß mit Absicht: „Nicht verstanden" ist die längste Beschriftung
-   und soll auf 375 px in einer Zeile stehen — bricht sie um, stehen die drei
+   und soll auf 375 px in einer Zeile stehen. Bricht sie um, stehen die drei
    Zahlen nicht mehr auf einer Linie. Die Mindesthöhe fängt den Umbruch auf
    noch schmaleren Geräten ab, ohne dass die Reihe verspringt. */
-.app .stat { align-items: flex-start; text-align: left; padding: 16px 8px; min-height: 76px; }
-.app .stat:first-child { padding-left: 0; }
+.app .stat { align-items: center; text-align: center; padding: 16px 6px; min-height: 76px; }
 .app .statNum { font-size: 26px; }
 .app .statLabel { font-size: 11px; }
 
@@ -196,7 +195,6 @@
 
 @media (max-width: 700px) {
   .head { flex-direction: column; align-items: center; gap: 14px; }
-  .app .head { align-items: flex-start; }
 }
 @media (max-width: 560px) {
   .page { --page-top: 20px; --page-bottom: 90px; }

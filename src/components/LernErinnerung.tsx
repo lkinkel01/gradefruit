@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { gespeicherteZeit, imAppRahmen } from '@/lib/nativeApp';
+import { erinnerungsText } from '@/lib/erinnerungstexte';
+import { daysUntilExam } from '@/lib/exam';
+import { useProgress } from '@/lib/ProgressContext';
 import styles from './LernErinnerung.module.css';
 
 /**
@@ -22,17 +25,31 @@ type Baustein = {
   cancel: (opts: unknown) => Promise<unknown>;
 };
 
-// Der Wortlaut der Mitteilung. Oben steht die Marke, darunter der Grund
-// weiterzumachen — der eigentliche Nutzen des Kurses in einem Satz.
+// Oben steht immer die Marke. Der Satz darunter richtet sich nach dem Stand
+// des Nutzers und wird bei jedem Planen neu bestimmt (siehe
+// src/lib/erinnerungstexte.ts).
 const TITEL = 'Gradefruit';
-const TEXT = 'Jeden Tag ein bisschen schlägt alles auf einmal.';
+
+// Wann war der Nutzer zuletzt da? Wird beim Öffnen der App gesetzt und dient
+// nur der Mitteilung — der Wert bleibt auf dem Gerät.
+const BESUCH_KEY = 'gf-letzter-besuch';
 
 // iOS merkt sich den Wortlaut beim Planen, nicht beim Anzeigen: Eine schon
 // laufende Erinnerung zeigt weiter den alten Text, auch wenn er hier längst
 // geändert ist. Deshalb trägt der Text eine Nummer — steigt sie, plant die App
 // beim nächsten Öffnen still neu.
-const TEXT_STAND = 2;
+const TEXT_STAND = 3;
 const STAND_KEY = 'gf-erinnerung-text';
+
+/** Tage seit dem letzten Öffnen der App. Ohne Eintrag: 0 (heute da gewesen). */
+function tageSeitBesuch(): number {
+  try {
+    const roh = localStorage.getItem(BESUCH_KEY);
+    if (!roh) return 0;
+    const tage = Math.floor((Date.now() - Number(roh)) / 86_400_000);
+    return Number.isFinite(tage) && tage > 0 ? tage : 0;
+  } catch { return 0; }
+}
 
 function baustein(): Baustein | null {
   if (typeof window === 'undefined') return null;
@@ -47,14 +64,14 @@ function baustein(): Baustein | null {
  * Sowohl das Einschalten von Hand als auch das stille Nachziehen laufen hier
  * durch, damit die Mitteilung nicht in zwei Fassungen existiert.
  */
-async function planen(plugin: Baustein, zeit: string) {
+async function planen(plugin: Baustein, zeit: string, prozent: number) {
   const [stunde, minute] = zeit.split(':').map(Number);
   await plugin.cancel({ notifications: [{ id: 1 }] });
   await plugin.schedule({
     notifications: [{
       id: 1,
       title: TITEL,
-      body: TEXT,
+      body: erinnerungsText({ prozent, tageWeg: tageSeitBesuch(), tageBisPruefung: daysUntilExam() }),
       schedule: { on: { hour: stunde, minute }, repeats: true },
     }],
   });
@@ -72,7 +89,7 @@ async function planen(plugin: Baustein, zeit: string) {
  * Planen. Läuft bewusst stumm: kein Erlaubnis-Fenster (nur `check`, nie
  * `request`), keine Meldung, kein Ladezustand. Der Nutzer hat nichts angetippt.
  */
-async function textNachziehen() {
+async function textNachziehen(prozent: number) {
   if (!imAppRahmen()) return;
   const zeit = gespeicherteZeit();
   if (!zeit) return;
@@ -85,11 +102,13 @@ async function textNachziehen() {
   try {
     const erlaubnis = await plugin.checkPermissions();
     if (erlaubnis.display !== 'granted') return;
-    await planen(plugin, zeit);
+    await planen(plugin, zeit, prozent);
   } catch { /* Beim nächsten Öffnen der nächste Versuch. */ }
 }
 
 export default function LernErinnerung() {
+  const { totalDone, totalLessons } = useProgress();
+  const prozent = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
   const [inApp, setInApp] = useState(false);
   const [zeit, setZeit] = useState('17:00');
   const [aktiv, setAktiv] = useState(false);
@@ -100,7 +119,13 @@ export default function LernErinnerung() {
     setInApp(imAppRahmen());
     const gespeichert = gespeicherteZeit();
     if (gespeichert) { setZeit(gespeichert); setAktiv(true); }
-    void textNachziehen();
+    void textNachziehen(prozent);
+    // Besuch vermerken, NACHDEM der Text geplant wurde: Sonst wäre „Tage weg"
+    // beim eigenen Öffnen immer 0 und die Abwesenheits-Sätze kämen nie vor.
+    try { localStorage.setItem(BESUCH_KEY, String(Date.now())); } catch { /* Speicher gesperrt */ }
+    // Absichtlich nur beim ersten Rendern: Der Prozentwert kommt kurz darauf
+    // nach, das Nachziehen darf deshalb nicht bei jeder Änderung neu laufen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!inApp) return null;
@@ -121,7 +146,7 @@ export default function LernErinnerung() {
         return;
       }
 
-      await planen(plugin, neueZeit);
+      await planen(plugin, neueZeit, prozent);
       setAktiv(true);
     } catch (fehler) {
       const text = fehler instanceof Error ? fehler.message : String(fehler);
