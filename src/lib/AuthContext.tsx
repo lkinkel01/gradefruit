@@ -100,21 +100,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Fällt die Prüfung durch, wird die Sitzung verworfen. Abgemeldet zu sein
     // ist ein ehrlicher Zustand; angemeldet zu scheinen und nichts zu können
     // ist keiner.
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (data.session) {
-        const { error } = await supabase.auth.getUser();
-        if (error) {
-          await supabase.auth.signOut();
-          setSession(null);
-          setUser(null);
-          setLoading(false);
-          return;
+    // ABER: Diese Prüfung darf den Start unter keinen Umständen aufhalten.
+    // In ihrer ersten Fassung tat sie genau das — ohne Zeitgrenze und ohne
+    // Auffangnetz. Hing die Anfrage oder warf sie, lief `setLoading(false)` nie,
+    // und die Seite stand endlos auf „Einen Moment …". Ein Startvorgang, der auf
+    // das Netz wartet, muss immer einen Ausgang haben.
+    //
+    // Deshalb: höchstens vier Sekunden, und jeder Ausgang setzt `loading` auf
+    // false. Läuft die Zeit ab, gilt die gespeicherte Sitzung weiter — eine
+    // lahme Verbindung ist kein Grund, jemanden hinauszuwerfen. Abgemeldet wird
+    // nur, wenn der Server die Sitzung ausdrücklich zurückweist.
+    const start = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+
+        if (data.session) {
+          const abgelaufen = Symbol('zeit');
+          const ergebnis = await Promise.race([
+            supabase.auth.getUser().catch(() => null),
+            new Promise<symbol>(fertig => setTimeout(() => fertig(abgelaufen), 4000)),
+          ]);
+
+          if (ergebnis !== abgelaufen && ergebnis && typeof ergebnis === 'object' && 'error' in ergebnis && ergebnis.error) {
+            await supabase.auth.signOut().catch(() => {});
+            setSession(null);
+            setUser(null);
+            return;
+          }
         }
+
+        setSession(data.session);
+        setUser(data.session?.user ?? null);
+      } catch {
+        // Nicht einmal die gespeicherte Sitzung ließ sich lesen. Dann eben ohne.
+        setSession(null);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
+    };
+    void start();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       // Bewusst NICHTS am Geräte-Anspruch oder am Hinweis ändern: Supabase
