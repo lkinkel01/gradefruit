@@ -43,17 +43,25 @@ export default function PasswortNeu() {
     let abgebrochen = false;
 
     /**
-     * Gibt es trotz gescheitertem Einlösen bereits eine gültige Sitzung?
+     * Gibt es trotz gescheitertem Einlösen bereits eine GÜLTIGE Sitzung?
      *
      * Der Fall ist nicht ausgedacht: Safari lädt Adressen aus der Adresszeile
      * vorab, und dabei läuft diese Seite samt Einlösen schon einmal durch. Beim
-     * eigentlichen Aufruf ist der Nachweis dann verbraucht — von einem selbst,
+     * eigentlichen Aufruf ist der Nachweis dann verbraucht, von einem selbst,
      * eine Sekunde vorher. Die Sitzung aus dem ersten Durchlauf liegt aber noch
      * da und ist genau so viel wert.
+     *
+     * Geprüft wird mit `getUser()`, nicht mit `getSession()`. Letzteres liest nur
+     * den Speicher des Browsers, und dort kann eine längst tote Sitzung liegen.
+     * Genau die hat der erste Anlauf gefunden: Das Formular erschien, und erst
+     * das Speichern scheiterte. Ein Formular anzubieten, das nicht speichern
+     * kann, ist schlimmer als eine ehrliche Absage.
      */
-    const sitzungVorhanden = async () => {
+    const sitzungGueltig = async () => {
       const { data } = await supabase.auth.getSession();
-      return !!data.session;
+      if (!data.session) return false;
+      const { error } = await supabase.auth.getUser();
+      return !error;
     };
 
     const einloesen = async () => {
@@ -82,7 +90,7 @@ export default function PasswortNeu() {
         const { error } = await supabase.auth.setSession({ access_token, refresh_token });
         // Anker entfernen, damit die Token nicht im Verlauf stehen bleiben.
         window.history.replaceState({}, '', window.location.pathname);
-        const ok = !error || await sitzungVorhanden();
+        const ok = !error || await sitzungGueltig();
         if (!abgebrochen) {
           if (!ok && error) setTechnisch(error.message);
           setBereit(ok);
@@ -95,7 +103,7 @@ export default function PasswortNeu() {
       const code = params.get('code');
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
-        const ok = !error || await sitzungVorhanden();
+        const ok = !error || await sitzungGueltig();
         if (!abgebrochen) {
           if (!ok && error) setTechnisch(error.message);
           setBereit(ok);
@@ -108,7 +116,7 @@ export default function PasswortNeu() {
       const tokenHash = params.get('token_hash');
       if (tokenHash) {
         const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' });
-        const ok = !error || await sitzungVorhanden();
+        const ok = !error || await sitzungGueltig();
         if (!abgebrochen) {
           if (!ok && error) setTechnisch(error.message);
           setBereit(ok);
@@ -148,7 +156,7 @@ export default function PasswortNeu() {
     setLaeuft(true);
     const { error } = await supabase.auth.updateUser({ password: passwort });
     if (error) {
-      setFehler('Das hat nicht geklappt. Fordere den Link bitte neu an — er gilt nur eine Stunde.');
+      setFehler('Das hat nicht geklappt. Bitte fordere einen neuen Link an.');
       setLaeuft(false);
       return;
     }
