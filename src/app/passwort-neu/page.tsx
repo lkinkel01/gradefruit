@@ -29,6 +29,10 @@ export default function PasswortNeu() {
   // für den Nutzer gleich an, verlangen aber Verschiedenes von ihm — deshalb
   // sagt die Seite, was sie vorgefunden hat, statt pauschal „gilt nicht mehr".
   const [grund, setGrund] = useState<'verbraucht' | 'ohne-nachweis' | 'unbekannt'>('unbekannt');
+  // Der Wortlaut, den Supabase genannt hat. Steht klein unter der Meldung:
+  // Ohne ihn ist jede Fehlersuche ein Ratespiel per Screenshot, und genau darin
+  // sind hier schon zwei Anläufe verlorengegangen.
+  const [technisch, setTechnisch] = useState('');
   const [passwort, setPasswort] = useState('');
   const [wiederholung, setWiederholung] = useState('');
   const [fehler, setFehler] = useState('');
@@ -45,6 +49,7 @@ export default function PasswortNeu() {
       // Sagt die Adresse selbst, dass es schiefging (abgelaufen, schon
       // benutzt), ist jeder weitere Versuch sinnlos.
       if (anker.get('error') || params.get('error')) {
+        setTechnisch(anker.get('error_code') || params.get('error_code') || anker.get('error') || params.get('error') || '');
         setGrund('verbraucht');
         setBereit(false); setPruefen(false);
         return;
@@ -63,7 +68,11 @@ export default function PasswortNeu() {
         const { error } = await supabase.auth.setSession({ access_token, refresh_token });
         // Anker entfernen, damit die Token nicht im Verlauf stehen bleiben.
         window.history.replaceState({}, '', window.location.pathname);
-        if (!abgebrochen) { setBereit(!error); setPruefen(false); }
+        if (!abgebrochen) {
+          if (error) setTechnisch(error.message);
+          setBereit(!error);
+          setPruefen(false);
+        }
         return;
       }
 
@@ -79,7 +88,11 @@ export default function PasswortNeu() {
       const tokenHash = params.get('token_hash');
       if (tokenHash) {
         const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' });
-        if (!abgebrochen) { setBereit(!error); setPruefen(false); }
+        if (!abgebrochen) {
+          if (error) setTechnisch(error.message);
+          setBereit(!error);
+          setPruefen(false);
+        }
         return;
       }
 
@@ -147,6 +160,7 @@ export default function PasswortNeu() {
             <button type="button" className="btn primary" onClick={() => router.push('/')}>
               Neuen Link anfordern
             </button>
+            {technisch && <p className={styles.technisch}>Grund: {technisch}</p>}
           </>
         )}
 

@@ -88,7 +88,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    // `getSession()` liest nur den Speicher des Browsers und glaubt ihm. Ob die
+    // Sitzung serverseitig überhaupt noch gilt, prüft erst `getUser()`.
+    //
+    // Ohne diese Prüfung entsteht der schlimmste Zustand von allen: Die App
+    // hält den Nutzer für angemeldet, schickt bei jeder Abfrage einen
+    // ungültigen Ausweis mit, und der Server lehnt alles ab. Sichtbar wird das
+    // nicht als Fehler, sondern als leere App — „0 von 0 Aufgaben", alle Themen
+    // gesperrt, kein Kauf gefunden. Genau das hat Leon gesehen.
+    //
+    // Fällt die Prüfung durch, wird die Sitzung verworfen. Abgemeldet zu sein
+    // ist ein ehrlicher Zustand; angemeldet zu scheinen und nichts zu können
+    // ist keiner.
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (data.session) {
+        const { error } = await supabase.auth.getUser();
+        if (error) {
+          await supabase.auth.signOut();
+          setSession(null);
+          setUser(null);
+          setLoading(false);
+          return;
+        }
+      }
       setSession(data.session);
       setUser(data.session?.user ?? null);
       setLoading(false);

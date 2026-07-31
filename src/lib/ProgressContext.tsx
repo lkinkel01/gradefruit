@@ -82,9 +82,16 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       setReady(false);
 
       // 1) Lektionen + zugehörige Themen laden (für alle lesbar)
-      const { data: lessons } = await supabase
+      const { data: lessons, error: lessonsError } = await supabase
         .from('lessons')
         .select('id, slug, topics(slug)');
+
+      // Scheitert das, zeigt die App „0 von 0 Aufgaben" und wirkt schlicht
+      // leer — ohne Hinweis, dass etwas schiefging. Der häufigste Grund ist ein
+      // abgelaufener Ausweis; dagegen prüft AuthContext die Sitzung beim Start.
+      if (lessonsError) {
+        console.warn('Gradefruit: Lektionen konnten nicht geladen werden:', lessonsError.message);
+      }
 
       const idMap: Record<string, string> = {};
       const byTopic: Record<string, string[]> = {};
