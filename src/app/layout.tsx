@@ -43,6 +43,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `try{if(localStorage.getItem('gf-theme')==='dark')document.body.classList.add('dark')}catch(e){}`,
           }}
         />
+        {/* Auffangnetz für den Link aus der „Passwort vergessen"-Mail.
+            Ist die Zieladresse in Supabase nicht freigegeben, schickt Supabase
+            den Nutzer stattdessen auf die Startseite — mitsamt dem Nachweis im
+            Anker der Adresse. Ohne diese Weiterleitung landet er dann auf der
+            Werbeseite und kann kein neues Passwort setzen, obwohl alles
+            Nötige mitgeliefert wurde. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(location.pathname==='/'&&location.hash.indexOf('type=recovery')>-1)location.replace('/passwort-neu'+location.hash)}catch(e){}`,
+          }}
+        />
         {/* Notbremse gegen den weißen Bildschirm.
             ---------------------------------------------------------------
             Der schlimmste Fehler dieser App ist der, aus dem niemand mehr
