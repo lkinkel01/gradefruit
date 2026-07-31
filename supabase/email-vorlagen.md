@@ -83,6 +83,15 @@ abgerufen, danach im Browser weiterhin gültig.
 
 ### „Reset Password"
 
+> **Zum Kopieren die Datei nehmen, nicht diesen Block:**
+> [supabase/email-reset-password.html](email-reset-password.html) → auf GitHub
+> „Raw" öffnen → alles markieren → kopieren.
+>
+> Grund: Wer aus einer dargestellten Ansicht kopiert (Chat, Markdown-Vorschau),
+> holt sich Markdown-Reste mit. Beim ersten Versuch stand dadurch
+> `[www.gradefruit.de](https://www.gradefruit.de)` wörtlich in der Fußzeile.
+> Die rohe Datei enthält genau das, was ins Feld gehört, und sonst nichts.
+
 Zweisprachig: Deutsch zuerst, Englisch darunter, getrennt durch eine feine
 Linie. Wer Deutsch liest, hört nach dem ersten Block auf; wer nicht, findet
 darunter dasselbe. Ein Sprachumschalter wäre in einer E-Mail nicht möglich.
