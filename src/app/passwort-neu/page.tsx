@@ -25,6 +25,10 @@ export default function PasswortNeu() {
   const [supabase] = useState(() => createClient());
   const [pruefen, setPruefen] = useState(true);
   const [bereit, setBereit] = useState(false);
+  // Warum es nicht ging. „Verbraucht" und „gar kein Nachweis dabei" fühlen sich
+  // für den Nutzer gleich an, verlangen aber Verschiedenes von ihm — deshalb
+  // sagt die Seite, was sie vorgefunden hat, statt pauschal „gilt nicht mehr".
+  const [grund, setGrund] = useState<'verbraucht' | 'ohne-nachweis' | 'unbekannt'>('unbekannt');
   const [passwort, setPasswort] = useState('');
   const [wiederholung, setWiederholung] = useState('');
   const [fehler, setFehler] = useState('');
@@ -41,6 +45,7 @@ export default function PasswortNeu() {
       // Sagt die Adresse selbst, dass es schiefging (abgelaufen, schon
       // benutzt), ist jeder weitere Versuch sinnlos.
       if (anker.get('error') || params.get('error')) {
+        setGrund('verbraucht');
         setBereit(false); setPruefen(false);
         return;
       }
@@ -80,7 +85,13 @@ export default function PasswortNeu() {
 
       // Letzte Möglichkeit: Der Client hatte die Sitzung schon selbst übernommen.
       const { data } = await supabase.auth.getSession();
-      if (!abgebrochen) { setBereit(!!data.session); setPruefen(false); }
+      if (!abgebrochen) {
+        // Nichts in der Adresse und keine Sitzung: Der Aufruf kam nicht aus der
+        // E-Mail, sondern etwa aus dem Verlauf oder einem Lesezeichen.
+        if (!data.session) setGrund('ohne-nachweis');
+        setBereit(!!data.session);
+        setPruefen(false);
+      }
     };
 
     void einloesen();
@@ -129,8 +140,9 @@ export default function PasswortNeu() {
         {!pruefen && !bereit && !fertig && (
           <>
             <p className={styles.text}>
-              Dieser Link gilt nicht mehr. Sie sind eine Stunde lang gültig und
-              lassen sich nur einmal verwenden.
+              {grund === 'ohne-nachweis'
+                ? 'Diese Seite wurde ohne Link geöffnet. Klick den Knopf direkt in der E-Mail an, nicht einen Eintrag aus dem Verlauf oder den Lesezeichen.'
+                : 'Dieser Link wurde schon geöffnet oder ist abgelaufen. Jeder Link gilt eine Stunde und lässt sich genau einmal verwenden — auch ein erster Versuch, bei dem nichts zu klappen schien, verbraucht ihn.'}
             </p>
             <button type="button" className="btn primary" onClick={() => router.push('/')}>
               Neuen Link anfordern
