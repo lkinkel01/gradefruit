@@ -603,9 +603,18 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Route `/passwort-neu`, die alle drei Nachweis-Formen von Supabase behandelt
   (`code`, `token_hash`, Sitzung im Anker). Unter „Mein Konto" lässt sich das
   Passwort auch direkt ändern.
-  ⚠️ **In Supabase muss `https://www.gradefruit.de/passwort-neu` unter
-  Authentication → URL Configuration → Redirect URLs stehen**, sonst führt der
-  Link nur auf die Startseite.
+  ⚠️ **Zwei Einstellungen fehlen noch in Supabase:**
+  `https://www.gradefruit.de/passwort-neu` unter Authentication → URL
+  Configuration → Redirect URLs (sonst führt der Link nur auf die Startseite),
+  und ein eigener Mailversand — ohne den kommen die Mails von Supabase und sind
+  auf wenige pro Stunde begrenzt. Anleitung + fertige Texte:
+  [supabase/email-vorlagen.md](supabase/email-vorlagen.md).
+- ✅ **Service Worker: nur die Startseite darf das Gerüst sein (31.07.2026,
+  live):** Vorher wurde JEDE erfolgreiche Seitenantwort unter dem Schlüssel „/"
+  abgelegt. Wer zuletzt `/passwort-neu` offen hatte, bekam beim nächsten Aufruf
+  von gradefruit.de dessen Seite — Adresse richtig, Inhalt falsch. Geprüft im
+  Produktions-Build: Nach `/passwort-neu` liegt nur `offline.html` im Speicher,
+  nach `/` das richtige Gerüst.
 - ✅ **Registrierung in zwei Schritten, Ansprache freiwillig (31.07.2026, live):**
   Schritt 1 verlangt nur E-Mail und Passwort; die Bedingungen fürs Passwort
   (8 Zeichen, ein Buchstabe, eine Ziffer) stehen dabei und haken sich beim

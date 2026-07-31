@@ -18,7 +18,9 @@
 // dessen Dateien es auf dem Server nicht mehr gibt — die Seite lädt dann, findet
 // ihren Code nicht und bleibt weiß. Ein Sprung der Nummer räumt das ab.
 // v3: nach den Veröffentlichungen vom 30./31.07.2026.
-const VERSION = 'gf-v3';
+// v4: räumt die vergifteten Gerüste ab — bis hierhin konnte unter „/" die
+//     zuletzt besuchte Unterseite liegen (siehe unten beim Seitenaufruf).
+const VERSION = 'gf-v4';
 const SHELL = `${VERSION}-shell`;
 const OFFLINE_URL = '/offline.html';
 // Das zuletzt geladene Seitengerüst. Ohne das startet die App ohne Netz gar
@@ -81,15 +83,23 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Seitenaufrufe: erst das Netz, damit Änderungen sofort ankommen. Jede
-  // erfolgreiche Antwort wird als Gerüst hinterlegt. Ohne Verbindung kommt
-  // dieses Gerüst — damit startet die App und kann die abgelegten Inhalte
-  // lesen. Erst wenn noch nie eines geladen wurde, die Ausweichseite.
+  // Seitenaufrufe: erst das Netz, damit Änderungen sofort ankommen. Ohne
+  // Verbindung kommt das hinterlegte Gerüst — damit startet die App und kann
+  // die abgelegten Inhalte lesen. Erst wenn noch nie eines geladen wurde, die
+  // Ausweichseite.
   if (request.mode === 'navigate') {
+    // NUR die Startseite darf das Gerüst sein.
+    //
+    // Vorher wurde JEDE erfolgreiche Seitenantwort unter dem Schlüssel „/"
+    // abgelegt. Wer zuletzt `/passwort-neu` geöffnet hatte, bekam beim nächsten
+    // Aufruf von gradefruit.de dessen Seite serviert — die Adresse stimmte, der
+    // Inhalt nicht. Ein Gerüst, das irgendeine Unterseite sein kann, ist kein
+    // Gerüst.
+    const istStartseite = new URL(request.url).pathname === SHELL_URL;
     event.respondWith(
       fetch(request)
         .then(response => {
-          if (response.ok) {
+          if (response.ok && istStartseite) {
             const copy = response.clone();
             caches.open(SHELL).then(cache => cache.put(SHELL_URL, copy));
           }

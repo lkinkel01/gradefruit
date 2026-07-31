@@ -1,0 +1,163 @@
+# E-Mails: Absender und Wortlaut
+
+Stand: 31.07.2026
+
+## Warum das nicht nur eine Frage des Aussehens ist
+
+Ohne eigenen Versanddienst verschickt Supabase die E-Mails über seinen
+**eingebauten Mailer**. Der ist ausdrücklich nur zum Entwickeln gedacht und
+**auf wenige Nachrichten pro Stunde begrenzt**. Beim Verkaufsstart hieße das:
+Mehrere Leute setzen ihr Passwort zurück, und ab dem dritten kommt schlicht
+nichts mehr an — ohne Fehlermeldung, ohne dass jemand es merkt.
+
+Der eigene Absender löst also zwei Dinge auf einmal: Die Mail kommt von
+Gradefruit, und sie kommt überhaupt.
+
+---
+
+## Schritt 1 — Versanddienst wählen und Domain bestätigen
+
+Empfehlung: **Brevo** (ehemals Sendinblue). Server in der EU, kostenlos bis
+300 Mails am Tag — das reicht für Gradefruit weit über den Start hinaus, und die
+EU-Server passen zur Datenschutzerklärung. Alternative: **Resend**, einfacher
+eingerichtet, aber US-Server.
+
+1. Bei brevo.com ein Konto anlegen.
+2. Dort **Senders, Domains & Dedicated IPs** → **Domains** → **Add a domain** →
+   `gradefruit.de` eintragen.
+3. Brevo zeigt drei bis vier **DNS-Einträge** an (Brevo-Code, DKIM, DMARC).
+4. Die trägst du bei **Hostinger** ein: Domains → gradefruit.de → **DNS/Nameserver**
+   → für jeden Eintrag auf **Eintrag hinzufügen**, Typ und Werte genau
+   übernehmen.
+5. Zurück bei Brevo auf **Verify** / **Authenticate** klicken. Kann bis zu einer
+   Stunde dauern, bis die DNS-Änderungen wirken.
+6. Unter **SMTP & API** → **SMTP** stehen dann Server, Port, Login und
+   Passwort. Die brauchst du im nächsten Schritt.
+
+> **Wichtig:** Ohne bestätigte Domain landen die Mails im Spam. Der Schritt ist
+> nicht optional.
+
+---
+
+## Schritt 2 — In Supabase eintragen
+
+1. supabase.com → dein Projekt
+2. Links **Authentication** → **Emails** → Reiter **SMTP Settings**
+3. **Enable Custom SMTP** einschalten
+4. Ausfüllen:
+
+| Feld | Wert |
+|---|---|
+| Sender email | `noreply@gradefruit.de` |
+| Sender name | `Gradefruit` |
+| Host | (aus Brevo, z. B. `smtp-relay.brevo.com`) |
+| Port | `587` |
+| Username | (aus Brevo) |
+| Password | (aus Brevo) |
+
+5. **Save**
+
+Danach kommt jede E-Mail von `noreply@gradefruit.de` mit dem Absendernamen
+Gradefruit.
+
+---
+
+## Schritt 3 — Wortlaut eintragen
+
+**Authentication** → **Emails** → Reiter **Templates**. Für jede Vorlage den
+Betreff oben und den HTML-Text unten ersetzen.
+
+Die geschweiften Ausdrücke (`{{ .ConfirmationURL }}`) füllt Supabase selbst
+aus — die müssen genau so stehen bleiben.
+
+### „Reset Password"
+
+**Betreff:**
+
+```
+Neues Passwort für Gradefruit
+```
+
+**Inhalt:**
+
+```html
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#050505;">
+  <p style="font-size:20px;font-weight:700;letter-spacing:-0.02em;margin:0 0 24px;">Gradefruit</p>
+
+  <p style="font-size:15px;line-height:1.6;margin:0 0 20px;">
+    Du hast ein neues Passwort angefordert. Über den Knopf unten kannst du eines setzen.
+  </p>
+
+  <p style="margin:0 0 24px;">
+    <a href="{{ .ConfirmationURL }}"
+       style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
+      Neues Passwort setzen
+    </a>
+  </p>
+
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 8px;">
+    Der Link gilt eine Stunde und lässt sich nur einmal verwenden.
+  </p>
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 24px;">
+    Wenn du das nicht warst, kannst du diese E-Mail ignorieren — dein Passwort
+    bleibt unverändert.
+  </p>
+
+  <p style="font-size:12.5px;line-height:1.6;color:#6E7078;margin:0;border-top:1px solid #E6E6E9;padding-top:16px;">
+    Gradefruit · Vorbereitung auf das schriftliche Mathe-Abitur in Hessen 2027<br>
+    <a href="https://www.gradefruit.de" style="color:#6E7078;">www.gradefruit.de</a>
+  </p>
+</div>
+```
+
+### „Confirm signup"
+
+Wird derzeit nicht verschickt (die Bestätigung ist aus), sollte aber stimmen,
+falls sie später eingeschaltet wird.
+
+**Betreff:**
+
+```
+Willkommen bei Gradefruit — bitte bestätigen
+```
+
+**Inhalt:**
+
+```html
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;color:#050505;">
+  <p style="font-size:20px;font-weight:700;letter-spacing:-0.02em;margin:0 0 24px;">Gradefruit</p>
+
+  <p style="font-size:15px;line-height:1.6;margin:0 0 20px;">
+    Schön, dass du da bist. Ein Klick noch, dann geht es los.
+  </p>
+
+  <p style="margin:0 0 24px;">
+    <a href="{{ .ConfirmationURL }}"
+       style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
+      E-Mail bestätigen
+    </a>
+  </p>
+
+  <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 24px;">
+    Wenn du dich nicht bei Gradefruit angemeldet hast, kannst du diese E-Mail
+    ignorieren.
+  </p>
+
+  <p style="font-size:12.5px;line-height:1.6;color:#6E7078;margin:0;border-top:1px solid #E6E6E9;padding-top:16px;">
+    Gradefruit · Vorbereitung auf das schriftliche Mathe-Abitur in Hessen 2027<br>
+    <a href="https://www.gradefruit.de" style="color:#6E7078;">www.gradefruit.de</a>
+  </p>
+</div>
+```
+
+---
+
+## Schritt 4 — Prüfen
+
+Auf gradefruit.de abmelden → **Anmelden** → **Passwort vergessen?** → eigene
+Adresse eintragen. Die Mail muss von `noreply@gradefruit.de` kommen, den Text
+von oben tragen und der Knopf muss auf
+`https://www.gradefruit.de/passwort-neu` führen.
+
+> Damit der Knopf dort landet, muss die Adresse zusätzlich unter
+> **Authentication → URL Configuration → Redirect URLs** eingetragen sein.
