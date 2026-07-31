@@ -42,6 +42,20 @@ export default function PasswortNeu() {
   useEffect(() => {
     let abgebrochen = false;
 
+    /**
+     * Gibt es trotz gescheitertem Einlösen bereits eine gültige Sitzung?
+     *
+     * Der Fall ist nicht ausgedacht: Safari lädt Adressen aus der Adresszeile
+     * vorab, und dabei läuft diese Seite samt Einlösen schon einmal durch. Beim
+     * eigentlichen Aufruf ist der Nachweis dann verbraucht — von einem selbst,
+     * eine Sekunde vorher. Die Sitzung aus dem ersten Durchlauf liegt aber noch
+     * da und ist genau so viel wert.
+     */
+    const sitzungVorhanden = async () => {
+      const { data } = await supabase.auth.getSession();
+      return !!data.session;
+    };
+
     const einloesen = async () => {
       const params = new URLSearchParams(window.location.search);
       const anker = new URLSearchParams(window.location.hash.replace(/^#/, ''));
@@ -68,9 +82,10 @@ export default function PasswortNeu() {
         const { error } = await supabase.auth.setSession({ access_token, refresh_token });
         // Anker entfernen, damit die Token nicht im Verlauf stehen bleiben.
         window.history.replaceState({}, '', window.location.pathname);
+        const ok = !error || await sitzungVorhanden();
         if (!abgebrochen) {
-          if (error) setTechnisch(error.message);
-          setBereit(!error);
+          if (!ok && error) setTechnisch(error.message);
+          setBereit(ok);
           setPruefen(false);
         }
         return;
@@ -80,7 +95,12 @@ export default function PasswortNeu() {
       const code = params.get('code');
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (!abgebrochen) { setBereit(!error); setPruefen(false); }
+        const ok = !error || await sitzungVorhanden();
+        if (!abgebrochen) {
+          if (!ok && error) setTechnisch(error.message);
+          setBereit(ok);
+          setPruefen(false);
+        }
         return;
       }
 
@@ -88,9 +108,10 @@ export default function PasswortNeu() {
       const tokenHash = params.get('token_hash');
       if (tokenHash) {
         const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' });
+        const ok = !error || await sitzungVorhanden();
         if (!abgebrochen) {
-          if (error) setTechnisch(error.message);
-          setBereit(!error);
+          if (!ok && error) setTechnisch(error.message);
+          setBereit(ok);
           setPruefen(false);
         }
         return;
