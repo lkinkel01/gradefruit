@@ -67,8 +67,19 @@ Gradefruit.
 **Authentication** → **Emails** → Reiter **Templates**. Für jede Vorlage den
 Betreff oben und den HTML-Text unten ersetzen.
 
-Die geschweiften Ausdrücke (`{{ .ConfirmationURL }}`) füllt Supabase selbst
-aus — die müssen genau so stehen bleiben.
+Die geschweiften Ausdrücke füllt Supabase selbst aus. Die müssen genau so
+stehen bleiben.
+
+**Warum der Link NICHT `{{ .ConfirmationURL }}` ist:** Der zeigt auf Supabases
+Prüf-Adresse, und die löst den Nachweis schon beim bloßen Abrufen ein. Jeder
+Spam-Prüfer, jede Klick-Verfolgung eines Versanddienstes und jede Vorschau
+verbraucht ihn dadurch, bevor ein Mensch klickt. Am Ende steht „Link gilt nicht
+mehr", obwohl der Link Sekunden alt ist. Genau das ist passiert.
+
+Der Link zeigt deshalb direkt auf unsere eigene Seite und trägt den Nachweis nur
+mit. Eingelöst wird er erst, wenn die Seite im Browser läuft. Ein reiner Abruf
+holt nur HTML und lässt den Nachweis unberührt — nachgemessen: erst mit `curl`
+abgerufen, danach im Browser weiterhin gültig.
 
 ### „Reset Password"
 
@@ -96,7 +107,7 @@ Neues Passwort für Gradefruit · Reset your Gradefruit password
   </p>
 
   <p style="margin:0 0 20px;">
-    <a href="{{ .ConfirmationURL }}"
+    <a href="{{ .SiteURL }}/passwort-neu?token_hash={{ .TokenHash }}&amp;type=recovery"
        style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
       Neues Passwort setzen
     </a>
@@ -116,7 +127,7 @@ Neues Passwort für Gradefruit · Reset your Gradefruit password
   </p>
 
   <p style="margin:0 0 20px;">
-    <a href="{{ .ConfirmationURL }}"
+    <a href="{{ .SiteURL }}/passwort-neu?token_hash={{ .TokenHash }}&amp;type=recovery"
        style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
       Set a new password
     </a>
@@ -158,7 +169,7 @@ Willkommen bei Gradefruit · Welcome to Gradefruit
   </p>
 
   <p style="margin:0 0 20px;">
-    <a href="{{ .ConfirmationURL }}"
+    <a href="{{ .SiteURL }}/passwort-neu?token_hash={{ .TokenHash }}&amp;type=recovery"
        style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
       E-Mail bestätigen
     </a>
@@ -175,7 +186,7 @@ Willkommen bei Gradefruit · Welcome to Gradefruit
   </p>
 
   <p style="margin:0 0 20px;">
-    <a href="{{ .ConfirmationURL }}"
+    <a href="{{ .SiteURL }}/passwort-neu?token_hash={{ .TokenHash }}&amp;type=recovery"
        style="display:inline-block;background:#050505;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:8px;font-size:15px;font-weight:600;">
       Confirm email
     </a>

@@ -141,8 +141,8 @@ export default function PasswortNeu() {
           <>
             <p className={styles.text}>
               {grund === 'ohne-nachweis'
-                ? 'Diese Seite wurde ohne Link geöffnet. Klick den Knopf direkt in der E-Mail an, nicht einen Eintrag aus dem Verlauf oder den Lesezeichen.'
-                : 'Dieser Link wurde schon geöffnet oder ist abgelaufen. Jeder Link gilt eine Stunde und lässt sich genau einmal verwenden — auch ein erster Versuch, bei dem nichts zu klappen schien, verbraucht ihn.'}
+                ? 'Diese Seite wurde ohne Link geöffnet. Nimm den Knopf aus der E-Mail.'
+                : 'Dieser Link wurde schon benutzt oder ist abgelaufen. Fordere einen neuen an.'}
             </p>
             <button type="button" className="btn primary" onClick={() => router.push('/')}>
               Neuen Link anfordern
