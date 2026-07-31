@@ -14,10 +14,11 @@ import styles from './page.module.css';
  * Eine echte Route, kein View-Zustand: Der Link kommt von außen und muss ohne
  * die App im Rücken funktionieren. (Dieselbe Begründung wie bei `/feed`.)
  *
- * Supabase schickt den Nachweis in drei möglichen Formen, je nach Einstellung
- * und Alter des Projekts. Statt eine davon zu raten, werden alle drei
- * behandelt — die falsche Annahme wäre hier besonders ärgerlich, weil man den
- * Fehler erst bemerkt, wenn jemand tatsächlich ausgesperrt ist.
+ * Supabase schickt den Nachweis je nach Einstellung in verschiedenen Formen.
+ * Beim Zurücksetzen des Passworts ist es die fertige Sitzung im Anker der
+ * Adresse (`#access_token=…`) — nachgemessen an einem echten Link, nicht
+ * vermutet. Die übrigen Formen werden trotzdem behandelt, weil eine falsche
+ * Annahme hier erst auffällt, wenn jemand tatsächlich ausgesperrt ist.
  */
 export default function PasswortNeu() {
   const router = useRouter();
@@ -35,8 +36,33 @@ export default function PasswortNeu() {
 
     const einloesen = async () => {
       const params = new URLSearchParams(window.location.search);
+      const anker = new URLSearchParams(window.location.hash.replace(/^#/, ''));
 
-      // Form 1: PKCE — ein Code in der Adresse.
+      // Sagt die Adresse selbst, dass es schiefging (abgelaufen, schon
+      // benutzt), ist jeder weitere Versuch sinnlos.
+      if (anker.get('error') || params.get('error')) {
+        setBereit(false); setPruefen(false);
+        return;
+      }
+
+      // Form 1: Die fertige Sitzung steht im Anker. GENAU DAS schickt Supabase
+      // beim Zurücksetzen des Passworts.
+      //
+      // Der Supabase-Client räumt den Anker NICHT von selbst ab: Er ist auf den
+      // PKCE-Weg eingestellt und hält deshalb nur nach `?code=` Ausschau. Die
+      // fertigen Token im Anker sieht er nie — die Seite meldete dann „Link gilt
+      // nicht mehr", obwohl der Link tadellos war und alles Nötige mitbrachte.
+      const access_token = anker.get('access_token');
+      const refresh_token = anker.get('refresh_token');
+      if (access_token && refresh_token) {
+        const { error } = await supabase.auth.setSession({ access_token, refresh_token });
+        // Anker entfernen, damit die Token nicht im Verlauf stehen bleiben.
+        window.history.replaceState({}, '', window.location.pathname);
+        if (!abgebrochen) { setBereit(!error); setPruefen(false); }
+        return;
+      }
+
+      // Form 2: PKCE — ein Code in der Adresse.
       const code = params.get('code');
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
@@ -44,7 +70,7 @@ export default function PasswortNeu() {
         return;
       }
 
-      // Form 2: Einmal-Kennung, die noch eingelöst werden muss.
+      // Form 3: Einmal-Kennung, die noch eingelöst werden muss.
       const tokenHash = params.get('token_hash');
       if (tokenHash) {
         const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' });
@@ -52,8 +78,7 @@ export default function PasswortNeu() {
         return;
       }
 
-      // Form 3: Die Sitzung steckte im Anker der Adresse (#access_token=…) und
-      // wurde vom Supabase-Client beim Laden bereits übernommen.
+      // Letzte Möglichkeit: Der Client hatte die Sitzung schon selbst übernommen.
       const { data } = await supabase.auth.getSession();
       if (!abgebrochen) { setBereit(!!data.session); setPruefen(false); }
     };
