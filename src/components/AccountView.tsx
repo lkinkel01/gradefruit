@@ -5,7 +5,7 @@ import { useProgress } from '@/lib/ProgressContext';
 import { createClient } from '@/lib/supabase';
 import LernErinnerung from './LernErinnerung';
 import styles from './AccountView.module.css';
-import { LogoutIcon, PlayIcon, TutorIcon, ArrowRightIcon } from './UiIcons';
+import { LogoutIcon, PlayIcon, TutorIcon, ArrowRightIcon, KameraIcon } from './UiIcons';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import { PASSWORT_REGELN } from '@/lib/passwort';
 
@@ -40,28 +40,69 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
   const [pwMeldung, setPwMeldung] = useState('');
   const [pwFehler, setPwFehler] = useState(false);
   const [pwLaeuft, setPwLaeuft] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState<string>((user?.user_metadata?.avatar_url as string) ?? '');
+  // Alte Bilder steckten als Text („data:…") in den Kontodaten und haben die
+  // Sitzung gesprengt. Solche Werte werden hier ignoriert, damit ein Altbestand
+  // niemanden erneut aussperrt.
+  const gespeichertesBild = (user?.user_metadata?.avatar_url as string | undefined) ?? '';
+  const [avatarUrl, setAvatarUrl] = useState<string>(
+    gespeichertesBild.startsWith('data:') ? '' : gespeichertesBild,
+  );
+  const [bildLaeuft, setBildLaeuft] = useState(false);
+  const [bildFehler, setBildFehler] = useState('');
 
   // Der Benutzername kommt aus dem Auth-Kontext (dort einmal je Anmeldung
   // geholt), das Feld übernimmt ihn beim ersten Rendern.
   useEffect(() => { setBenutzername(gespeicherterName ?? ''); }, [gespeicherterName]);
 
-  // Profilbild: klein gerechnet und direkt im Nutzerprofil abgelegt, damit
-  // dafür kein zusätzlicher Speicher nötig ist.
+  /**
+   * Profilbild: quadratisch zugeschnitten, in den Datei-Speicher gelegt, und in
+   * den Kontodaten steht danach nur die Adresse.
+   *
+   * Vorher wanderte das Bild selbst als Text in die Kontodaten. Supabase legt
+   * die in den Anmelde-Ausweis, und der reist in einem Cookie mit — für das
+   * Browser rund 4000 Zeichen zulassen. Ein Bild sind schnell 47.000. Das
+   * Cookie wurde verworfen, die Sitzung war hin, die App blieb weiss, und man
+   * kam ohne fremde Hilfe nicht mehr hinein. Ein Profilbild darf niemanden aus
+   * seinem Konto aussperren.
+   */
   const handleAvatar = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
-    const bitmap = await createImageBitmap(file);
-    const size = 256;
-    const canvas = document.createElement('canvas');
-    canvas.width = size; canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const side = Math.min(bitmap.width, bitmap.height);
-    ctx.drawImage(bitmap, (bitmap.width - side) / 2, (bitmap.height - side) / 2, side, side, 0, 0, size, size);
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-    setAvatarUrl(dataUrl);
-    await supabase.auth.updateUser({ data: { avatar_url: dataUrl } });
+    if (!file || !user) return;
+    setBildFehler('');
+    setBildLaeuft(true);
+    try {
+      const bitmap = await createImageBitmap(file);
+      const size = 256;
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      const side = Math.min(bitmap.width, bitmap.height);
+      ctx.drawImage(bitmap, (bitmap.width - side) / 2, (bitmap.height - side) / 2, side, side, 0, 0, size, size);
+
+      const blob: Blob | null = await new Promise(fertig => canvas.toBlob(fertig, 'image/jpeg', 0.82));
+      if (!blob) { setBildFehler('Das Bild konnte nicht verarbeitet werden.'); return; }
+
+      // Fester Name je Nutzer: Ein neues Bild ersetzt das alte, statt Altlasten
+      // anzuhäufen. Der Ordner ist die Nutzerkennung — daran hängt die Regel,
+      // dass niemand fremde Bilder überschreibt.
+      const pfad = `${user.id}/profil.jpg`;
+      const { error } = await supabase.storage.from('avatare')
+        .upload(pfad, blob, { upsert: true, contentType: 'image/jpeg' });
+      if (error) { setBildFehler('Das Bild konnte nicht hochgeladen werden.'); return; }
+
+      const { data } = supabase.storage.from('avatare').getPublicUrl(pfad);
+      // Der Zeitstempel zwingt den Browser, das neue Bild zu holen statt das
+      // alte aus seinem Speicher zu zeigen. Die Adresse bleibt trotzdem kurz.
+      const adresse = `${data.publicUrl}?v=${Date.now()}`;
+      const { error: metaFehler } = await supabase.auth.updateUser({ data: { avatar_url: adresse } });
+      if (metaFehler) { setBildFehler('Das Bild wurde geladen, aber nicht gespeichert.'); return; }
+      setAvatarUrl(adresse);
+    } catch {
+      setBildFehler('Das Bild konnte nicht gelesen werden.');
+    } finally {
+      setBildLaeuft(false);
+    }
   };
 
   // Öffnet das Stripe-Kundenportal (Abo ansehen/ändern/kündigen)
@@ -213,18 +254,22 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
       <h1 className={styles.ph1}>Dein Gradefruit-Konto</h1>
 
       <div className={styles.card}>
+        {/* Ohne Bild die Initialen-Kachel, mit Bild das Bild. Das kleine
+            Kamera-Zeichen sitzt immer da: Vorher war nichts zu sehen, was
+            verriet, dass man hier überhaupt etwas ändern kann. */}
         <label className={styles.avatarWrap} title="Profilbild auswählen">
-          {/* Bewusst immer die Initialen-Kachel: Ein von außen mitgebrachtes
-              Profilbild (etwa aus einem Google-Konto) sah fremd aus und zeigte
-              nur einen Buchstaben. Die Kachel trägt dieselben Initialen wie
-              oben rechts, in Gradefruits Orange. */}
-          <span className={styles.avatar}>{initials}</span>
-          <span className={styles.avatarEdit}>Ändern</span>
-          <input type="file" accept="image/*" onChange={handleAvatar} hidden />
+          {avatarUrl
+            ? <img className={styles.avatarImg} src={avatarUrl} alt="Dein Profilbild" />
+            : <span className={styles.avatar}>{initials}</span>}
+          <span className={styles.avatarBadge} aria-hidden="true">
+            {bildLaeuft ? '…' : <KameraIcon size={13} />}
+          </span>
+          <input type="file" accept="image/*" onChange={handleAvatar} hidden disabled={bildLaeuft} />
         </label>
         <div className={styles.meta}>
           <div className={styles.metaName}>{anzeigeName || 'Ohne Namen'}</div>
           <div className={styles.metaEmail}>{user.email}</div>
+          {bildFehler && <div className={styles.bildFehler}>{bildFehler}</div>}
         </div>
         <button className={styles.signoutTop} onClick={handleSignOut}>
           <LogoutIcon size={15} />

@@ -145,3 +145,13 @@ export function CoursesIcon({ size = 16 }: { size?: number }) {
     </svg>
   );
 }
+
+/** Kamera — sitzt am Profilbild und zeigt, dass sich dort etwas ändern lässt. */
+export function KameraIcon({ size = 16 }: { size?: number }) {
+  return (
+    <UiIcon size={size}>
+      <path d="M3 8.5A1.5 1.5 0 0 1 4.5 7h2L8 5h4l1.5 2h2A1.5 1.5 0 0 1 17 8.5v6A1.5 1.5 0 0 1 15.5 16h-11A1.5 1.5 0 0 1 3 14.5z" />
+      <circle cx="10" cy="11" r="2.6" />
+    </UiIcon>
+  );
+}
