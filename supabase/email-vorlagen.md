@@ -76,6 +76,9 @@ Zweisprachig: Deutsch zuerst, Englisch darunter, getrennt durch eine feine
 Linie. Wer Deutsch liest, hört nach dem ersten Block auf; wer nicht, findet
 darunter dasselbe. Ein Sprachumschalter wäre in einer E-Mail nicht möglich.
 
+**Ohne Gedankenstriche** (Leons Vorgabe, 31.07.2026): In den sichtbaren Texten
+steht ein Punkt statt eines Gedankenstrichs. Beim Ändern beibehalten.
+
 **Betreff:**
 
 ```
@@ -103,7 +106,7 @@ Neues Passwort für Gradefruit · Reset your Gradefruit password
     Der Link gilt eine Stunde und lässt sich nur einmal verwenden.
   </p>
   <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 28px;">
-    Wenn du das nicht warst, kannst du diese E-Mail ignorieren — dein Passwort bleibt unverändert.
+    Wenn du das nicht warst, kannst du diese E-Mail ignorieren. Dein Passwort bleibt unverändert.
   </p>
 
   <hr style="border:none;border-top:1px solid #E6E6E9;margin:0 0 28px;">
@@ -123,7 +126,7 @@ Neues Passwort für Gradefruit · Reset your Gradefruit password
     The link is valid for one hour and can only be used once.
   </p>
   <p style="font-size:13.5px;line-height:1.6;color:#5F6067;margin:0 0 28px;">
-    If this wasn't you, you can ignore this email — your password stays as it is.
+    If this wasn't you, you can ignore this email. Your password stays as it is.
   </p>
 
   <p style="font-size:12.5px;line-height:1.6;color:#6E7078;margin:0;border-top:1px solid #E6E6E9;padding-top:16px;">
