@@ -65,6 +65,13 @@ export default function PasswortNeu() {
     };
 
     const einloesen = async () => {
+      // VOR dem Einlösen, nicht danach: Wer einen Wiederherstellungs-Link
+      // öffnet, meldet sich bewusst an. Ohne diese Markierung behandelt die
+      // Ein-Geräte-Sperre die neue Sitzung als fremdes zweites Gerät und meldet
+      // sie im selben Moment wieder ab, in dem sie entsteht. Sichtbar wurde das
+      // erst beim Speichern: Das Formular stand da, der Knopf tat nichts.
+      bewussteAnmeldung();
+
       const params = new URLSearchParams(window.location.search);
       const anker = new URLSearchParams(window.location.hash.replace(/^#/, ''));
 
