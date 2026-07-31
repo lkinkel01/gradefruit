@@ -603,7 +603,14 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Route `/passwort-neu`, die alle drei Nachweis-Formen von Supabase behandelt
   (`code`, `token_hash`, Sitzung im Anker). Unter „Mein Konto" lässt sich das
   Passwort auch direkt ändern.
-  ⚠️ **Zwei Einstellungen fehlen noch in Supabase:**
+  ⚠️ **Versand läuft über Brevo (eingerichtet 31.07.2026):** Domain
+  `gradefruit.de` ist dort authentifiziert, Absender `noreply@gradefruit.de`,
+  SMTP-Zugang in Supabase hinterlegt. **Falle:** Der SMTP-Schlüssel läuft am
+  **31.07.2027** ab — und zusätzlich nach **90 Tagen ohne Nutzung**. In beiden
+  Fällen hören die Mails **stillschweigend** auf; kein Fehler, nichts kommt an.
+  Erster Verdacht, wenn nach ruhiger Phase keine Passwort-Mail mehr ankommt:
+  neuen Schlüssel in Brevo erzeugen und in Supabase eintragen.
+  ⚠️ **Weiter offen in Supabase:**
   `https://www.gradefruit.de/passwort-neu` unter Authentication → URL
   Configuration → Redirect URLs (sonst führt der Link nur auf die Startseite),
   und ein eigener Mailversand — ohne den kommen die Mails von Supabase und sind
