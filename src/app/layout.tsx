@@ -68,6 +68,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `data-gf-bereit`), räumt es Speicher und Service Worker ab und lädt
             einmal neu — alles kommt frisch aus dem Netz.
 
+            Geräumt werden auch die Anmelde-Cookies. Ein zu großes oder kaputtes
+            Sitzungs-Cookie ist genau so eine Sackgasse: Es wird bei JEDER
+            Anfrage mitgeschickt, der Server weist sie ab, und die Seite kommt
+            nie so weit, dass man sich abmelden könnte. Ohne Anmeldung startet
+            die App wenigstens.
+
             Die Markierung in sessionStorage verhindert eine Schleife: höchstens
             ein Versuch je Sitzung. Hilft er nicht, liegt es an etwas anderem,
             und ein zweites Neuladen würde es auch nicht richten. */}
@@ -82,6 +88,8 @@ setTimeout(function(){
   var aufgaben=[];
   try{if(window.caches)aufgaben.push(caches.keys().then(function(k){return Promise.all(k.map(function(n){return caches.delete(n)}))}))}catch(e){}
   try{if(navigator.serviceWorker)aufgaben.push(navigator.serviceWorker.getRegistrations().then(function(r){return Promise.all(r.map(function(x){return x.unregister()}))}))}catch(e){}
+  try{document.cookie.split(';').forEach(function(c){var n=c.split('=')[0].trim();if(n.indexOf('sb-')===0){['/','' ].forEach(function(p){document.cookie=n+'=; Max-Age=0; path='+(p||'/');document.cookie=n+'=; Max-Age=0; path=/; domain='+location.hostname;document.cookie=n+'=; Max-Age=0; path=/; domain=.'+location.hostname.replace(/^www\./,'')})}})}catch(e){}
+  try{localStorage.removeItem('gf-device-id')}catch(e){}
   Promise.all(aufgaben).then(fertig,fertig);
 },8000)}catch(e){}})()`,
           }}
