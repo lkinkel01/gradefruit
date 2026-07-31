@@ -1,7 +1,7 @@
 .sidebar {
   position: sticky;
   top: 0;
-  height: 100vh;
+  height: calc(100vh - env(safe-area-inset-top, 0px));
   overflow-y: auto;
   display: flex;
   flex-direction: column;

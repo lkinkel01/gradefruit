@@ -1,10 +1,14 @@
 .shell {
   display: grid;
   grid-template-columns: 258px 1fr;
-  min-height: 100vh;
+  /* Der Sicherheitsabstand am Seitenkörper zählt zur Gesamthöhe. Ohne den
+     Abzug ist die Seite in der App genau um diesen Abstand höher als der
+     Bildschirm (rund 59 Punkte) — man kann senkrecht schieben, und unten wird
+     abgeschnitten. Im Browser ist der Wert 0, dort ändert sich nichts. */
+  min-height: calc(100vh - env(safe-area-inset-top, 0px));
 }
 .content { min-width: 0; position: relative; }
-.loading { min-height: 100vh; display: grid; place-items: center; }
+.loading { min-height: calc(100vh - env(safe-area-inset-top, 0px)); display: grid; place-items: center; }
 .notice {
   position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
   z-index: 200; max-width: min(92vw, 620px);

@@ -121,7 +121,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             new Promise<symbol>(fertig => setTimeout(() => fertig(abgelaufen), 4000)),
           ]);
 
-          if (ergebnis !== abgelaufen && ergebnis && typeof ergebnis === 'object' && 'error' in ergebnis && ergebnis.error) {
+          // NUR bei einer ausdrücklichen Zurückweisung abmelden (401/403).
+          //
+          // Jeder andere Fehler heißt bloß „die Frage kam nicht durch": kein
+          // Netz, DNS noch nicht wach, Server kurz weg. Beim Start der App ist
+          // genau das der Normalfall — das Fenster lädt, bevor die Verbindung
+          // steht. Wer daraufhin abmeldet, wirft den Nutzer bei jedem zweiten
+          // App-Start hinaus, obwohl mit seiner Sitzung alles in Ordnung ist.
+          const fehler = ergebnis !== abgelaufen && ergebnis && typeof ergebnis === 'object' && 'error' in ergebnis
+            ? (ergebnis.error as { status?: number } | null)
+            : null;
+          const zurueckgewiesen = fehler?.status === 401 || fehler?.status === 403;
+
+          if (zurueckgewiesen) {
             await supabase.auth.signOut().catch(() => {});
             setSession(null);
             setUser(null);
