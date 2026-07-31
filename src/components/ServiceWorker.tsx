@@ -14,6 +14,14 @@ import { useEffect } from 'react';
  *   window.gradefruitServiceWorkerAus()
  */
 export default function ServiceWorker() {
+  // Das Lebenszeichen für die Notbremse in layout.tsx. Es steht bewusst hier:
+  // Dieser Effekt läuft erst, wenn React tatsächlich angelaufen ist — genau das
+  // ist die Bedingung, die bei einem weißen Bildschirm fehlt. Ohne dieses
+  // Zeichen räumt die Notbremse nach acht Sekunden den Speicher und lädt neu.
+  useEffect(() => {
+    document.documentElement.setAttribute('data-gf-bereit', '1');
+  }, []);
+
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production') return;
     if (!('serviceWorker' in navigator)) return;
