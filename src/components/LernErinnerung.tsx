@@ -157,7 +157,7 @@ export default function LernErinnerung() {
         <p className={styles.body}>
           {aktiv
             ? `Du wirst jeden Tag um ${zeit} Uhr erinnert.`
-            : 'Eine kurze Mitteilung am Tag — damit Lernen nicht untergeht.'}
+            : 'Eine kurze Mitteilung am Tag, damit Lernen nicht untergeht.'}
         </p>
         {meldung && <p className={styles.hinweis}>{meldung}</p>}
       </div>

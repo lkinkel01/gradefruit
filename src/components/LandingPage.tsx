@@ -969,7 +969,7 @@ export default function LandingPage({
                 <span
                   key={s.label}
                   className={`${styles.socialLink} ${styles.socialLinkSoon}`}
-                  aria-label={`Gradefruit auf ${s.label} – bald`}
+                  aria-label={`Gradefruit auf ${s.label}, bald verfügbar`}
                 >
                   {s.icon}
                 </span>

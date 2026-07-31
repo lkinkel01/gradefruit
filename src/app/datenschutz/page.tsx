@@ -4,7 +4,7 @@ import { BrandMark } from '@/components/BrandMark';
 import styles from '../legal.module.css';
 
 export const metadata: Metadata = {
-  title: 'Datenschutz — Gradefruit',
+  title: 'Datenschutz · Gradefruit',
 };
 
 const Ph = ({ children }: { children: React.ReactNode }) => (
@@ -142,22 +142,22 @@ export default function DatenschutzPage() {
         <ul>
           <li>
             <strong>Vercel Inc.</strong>, 340 Pine Street, Suite 701, San Francisco, CA 94104, USA
-            — Hosting und Infrastruktur. Datenschutz: vercel.com/legal/privacy-policy
+            , Hosting und Infrastruktur. Datenschutz: vercel.com/legal/privacy-policy
           </li>
           <li>
-            <strong>Supabase Inc.</strong>, 970 Toa Payoh North, #07-04, Singapur — Authentifizierung
+            <strong>Supabase Inc.</strong>, 970 Toa Payoh North, #07-04, Singapur , Authentifizierung
             und Datenbank. Datenschutz: supabase.com/privacy
           </li>
           <li>
-            <strong>Stripe, Inc.</strong>, 510 Townsend Street, San Francisco, CA 94103, USA —
+            <strong>Stripe, Inc.</strong>, 510 Townsend Street, San Francisco, CA 94103, USA ,
             Zahlungsabwicklung. Datenschutz: stripe.com/de/privacy
           </li>
           <li>
             <strong>Anthropic PBC</strong>, 548 Market Street, PMB 90375, San Francisco, CA 94104,
-            USA — KI-Assistent. Datenschutz: anthropic.com/privacy
+            USA , KI-Assistent. Datenschutz: anthropic.com/privacy
           </li>
           <li>
-            <strong>Google LLC</strong>, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA —
+            <strong>Google LLC</strong>, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA ,
             Google Fonts. Datenschutz: policies.google.com/privacy
           </li>
         </ul>
@@ -224,7 +224,7 @@ export default function DatenschutzPage() {
             diese in Abschnitt 3 ergänzen
           </li>
           <li>
-            Prüfen ob Google Fonts lokal gehostet werden kann — erspart den Google-Eintrag in
+            Prüfen ob Google Fonts lokal gehostet werden kann , erspart den Google-Eintrag in
             Abschnitt 2.5 und vereinfacht die DSGVO-Konformität erheblich
           </li>
           <li>

@@ -60,7 +60,7 @@ export default function Dashboard({ onNavigate }: Props) {
         <div className={styles.overviewCard}>
           <div className={styles.cdCol}>
             <span className={styles.cdIcon} aria-hidden="true"><CalendarIcon size={18} /></span>
-            <span className={styles.cdDays}>{daysLeft ?? '—'}</span>
+            <span className={styles.cdDays}>{daysLeft ?? '…'}</span>
             <span className={styles.cdLabel}>Tage bis zur Prüfung</span>
             <span className={styles.cdDate}>
               {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}

@@ -6,7 +6,7 @@ import styles from './VideosView.module.css';
 import { useImAppRahmen } from '@/lib/nativeApp';
 
 const VIDEOS = [
-  { id: 'v1', title: 'Ableitung – Grundregeln', sub: 'Analysis · 8 Min.', color: '#FF7A00', badge: 'Analysis' },
+  { id: 'v1', title: 'Ableitung: Grundregeln', sub: 'Analysis · 8 Min.', color: '#FF7A00', badge: 'Analysis' },
   { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Analysis · 11 Min.', color: '#FF7A00', badge: 'Analysis' },
   { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Analysis · 14 Min.', color: '#FF7A00', badge: 'Analysis' },
   { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Lineare Algebra · 9 Min.', color: '#FF7A00', badge: 'Lin. Algebra' },

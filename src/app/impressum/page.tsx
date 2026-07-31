@@ -4,7 +4,7 @@ import { BrandMark } from '@/components/BrandMark';
 import styles from '../legal.module.css';
 
 export const metadata: Metadata = {
-  title: 'Impressum — Gradefruit',
+  title: 'Impressum · Gradefruit',
 };
 
 const Ph = ({ children }: { children: React.ReactNode }) => (
@@ -118,7 +118,7 @@ export default function ImpressumPage() {
           <li>Erreichbare E-Mail-Adresse</li>
           <li>Telefonnummer (optional, aber empfohlen)</li>
           <li>
-            Umsatzsteuer-ID — falls du Kleinunternehmer bist (§ 19 UStG), diesen Hinweis stattdessen
+            Umsatzsteuer-ID , falls du Kleinunternehmer bist (§ 19 UStG), diesen Hinweis stattdessen
             eintragen
           </li>
           <li>

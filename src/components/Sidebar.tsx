@@ -301,7 +301,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
 
       {!(owned || ownedLk) && !imApp && (
         <div className={styles.unlockCard}>
-          <p>Alle Aufgaben, Lösungen und Erklärvideos – bis zur Prüfung.</p>
+          <p>Alle Aufgaben, Lösungen und Erklärvideos bis zur Prüfung.</p>
           <button className="btn primary btn sm" onClick={onOpenCheckout}>
             Kurs freischalten
           </button>

@@ -4,7 +4,7 @@ import { BrandMark } from '@/components/BrandMark';
 import styles from '../legal.module.css';
 
 export const metadata: Metadata = {
-  title: 'Widerrufsbelehrung — Gradefruit',
+  title: 'Widerrufsbelehrung · Gradefruit',
 };
 
 const Ph = ({ children }: { children: React.ReactNode }) => (

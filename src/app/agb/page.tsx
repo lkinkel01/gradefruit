@@ -4,7 +4,7 @@ import { BrandMark } from '@/components/BrandMark';
 import styles from '../legal.module.css';
 
 export const metadata: Metadata = {
-  title: 'AGB — Gradefruit',
+  title: 'AGB · Gradefruit',
 };
 
 const Ph = ({ children }: { children: React.ReactNode }) => (
@@ -95,7 +95,7 @@ export default function AgbPage() {
         <p>
           Es gelten die zum Zeitpunkt der Bestellung auf der Website angezeigten Preise. Alle
           Preise sind Endpreise in Euro
-          {' '}<Ph>[Steuerliche Angabe wird vor dem Verkaufsstart ergänzt — inkl. gesetzlicher Umsatzsteuer ODER bei Kleinunternehmern: „Gemäß § 19
+          {' '}<Ph>[Steuerliche Angabe wird vor dem Verkaufsstart ergänzt , inkl. gesetzlicher Umsatzsteuer ODER bei Kleinunternehmern: „Gemäß § 19
           UStG wird keine Umsatzsteuer erhoben und ausgewiesen.“]</Ph>.
         </p>
         <p>

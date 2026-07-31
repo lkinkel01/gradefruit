@@ -103,7 +103,7 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           error.code === '23505'
             ? 'Dieser Benutzername ist schon vergeben. Bitte wähle einen anderen.'
             : error.code === '23514'
-              ? '3–24 Zeichen, erlaubt sind Buchstaben, Ziffern, Punkt, Unterstrich und Bindestrich.'
+              ? '3 bis 24 Zeichen, erlaubt sind Buchstaben, Ziffern, Punkt, Unterstrich und Bindestrich.'
               : 'Der Benutzername konnte nicht gespeichert werden. Bitte versuch es erneut.',
         );
         setSaving(false);

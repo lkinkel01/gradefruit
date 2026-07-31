@@ -7,7 +7,7 @@ import ServiceWorker from "@/components/ServiceWorker";
 
 export const metadata: Metadata = {
   title: "Gradefruit",
-  description: "Mathe-Abi Hessen 2027 – Grundkurs Vorbereitung",
+  description: "Mathe-Abi Hessen 2027 · Grundkurs Vorbereitung",
   // Auf dem iPhone zum Home-Bildschirm hinzugefügt startet Gradefruit dadurch
   // im Vollbild, ohne Safari-Leisten, mit eigenem Eintrag im App-Umschalter.
   appleWebApp: {

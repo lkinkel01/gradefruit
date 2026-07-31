@@ -59,7 +59,7 @@ export default function OfflineToggle({ topic, level }: { topic: string; level: 
 
   const text = zustand === 'speichert' ? 'Wird gespeichert …'
     : zustand === 'gespeichert' ? 'Offline verfügbar'
-    : zustand === 'fehler' ? 'Hat nicht geklappt — erneut versuchen'
+    : zustand === 'fehler' ? 'Hat nicht geklappt, erneut versuchen'
     : 'Für offline speichern';
 
   return (

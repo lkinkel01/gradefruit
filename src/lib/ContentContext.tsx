@@ -158,7 +158,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
                 state: 'ready',
                 tasks: offline.tasks,
                 summary: offline.summary,
-                message: 'Offline — zuletzt geladener Stand.',
+                message: 'Offline. Zuletzt geladener Stand.',
               }
             : {
                 state: 'error',

@@ -203,7 +203,7 @@ export default function PasswortNeu() {
         {fertig && (
           <>
             <p className={styles.text}>
-              Ab jetzt gilt dein neues Passwort — auf der Webseite und in der App.
+              Ab jetzt gilt dein neues Passwort. Es funktioniert auf der Webseite und in der App.
             </p>
             <button type="button" className="btn primary" onClick={() => router.push('/?view=dashboard')}>
               Weiter zum Lernen

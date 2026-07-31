@@ -113,7 +113,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
     const wunschAnrede = name.trim();
 
     if (wunschName && !/^[A-Za-z0-9._-]{3,24}$/.test(wunschName)) {
-      return '3–24 Zeichen, erlaubt sind Buchstaben, Ziffern, Punkt, Unterstrich und Bindestrich.';
+      return '3 bis 24 Zeichen, erlaubt sind Buchstaben, Ziffern, Punkt, Unterstrich und Bindestrich.';
     }
 
     const { data: { user: neu } } = await supabase.auth.getUser();
@@ -237,7 +237,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
               : mode === 'login'
               ? 'Mit deinem Konto einloggen.'
               : registrierSchritt2
-                ? 'Beides ist freiwillig — du kannst es auch später unter „Mein Konto" nachtragen.'
+                ? 'Beides ist freiwillig. Du kannst es auch später unter „Mein Konto" nachtragen.'
                 : 'Konto erstellen und loslegen.'}
           </p>
         </div>
@@ -349,7 +349,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
                     placeholder="frei lassen ist in Ordnung"
                   />
                   <span className={styles.fieldHint}>
-                    3–24 Zeichen. Damit kannst du dich später auch ohne deine E-Mail anmelden.
+                    3 bis 24 Zeichen. Damit kannst du dich später auch ohne deine E-Mail anmelden.
                   </span>
                 </div>
               </>
