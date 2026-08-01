@@ -440,17 +440,144 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     gStart.current = null;
   };
 
-  return (
-    <div className={`${styles.player} ${variant === 'reel' ? styles.reelPlayer : ''}`}>
-      <div className={styles.head}>
-        {variant !== 'reel' && (
-          <>
-            <span className={styles.badge} style={{ background: scene.color }}>
-              {scene.topic}
-            </span>
-            <span className={styles.htitle}>{scene.title}</span>
-          </>
+  // Der Graph ist in beiden Fassungen derselbe — im Modal als Beiwerk neben den
+  // Schritten, im Reel als Hauptbild. Deshalb einmal gebaut und zweimal benutzt.
+  const graphSvg = (className: string) =>
+    g && (
+      <svg className={className} viewBox={`0 0 ${g.W} ${g.H}`} key={scene.id}>
+        <defs>
+          <marker id="ahead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" className={styles.arrowHead} />
+          </marker>
+        </defs>
+
+        {/* Gitter */}
+        {g.gridX.map((t, i) => (
+          <line key={`gx${i}`} x1={t.px} y1={g.pad} x2={t.px} y2={g.H - g.pad} className={styles.gridline} />
+        ))}
+        {g.gridY.map((t, i) => (
+          <line key={`gy${i}`} x1={g.pad} y1={t.py} x2={g.W - g.pad} y2={t.py} className={styles.gridline} />
+        ))}
+
+        {/* Fläche unter der Kurve (Integral) */}
+        {g.shade && <path d={g.shade} className={styles.shade} fill={scene.color} />}
+
+        {/* Achsen mit Pfeilspitze */}
+        <line x1={g.pad} y1={g.y0} x2={g.W - g.pad} y2={g.y0} className={styles.axis} markerEnd="url(#ahead)" />
+        <line x1={g.x0} y1={g.H - g.pad} x2={g.x0} y2={g.pad} className={styles.axis} markerEnd="url(#ahead)" />
+
+        {/* Zahlen an den Achsen */}
+        {g.gridX.map((t, i) =>
+          t.x === 0 ? null : (
+            <text key={`lx${i}`} x={t.px} y={g.y0 + 12} className={styles.gridlabel} textAnchor="middle">
+              {Number.isInteger(t.x) ? t.x : t.x.toFixed(1)}
+            </text>
+          ),
         )}
+        {g.gridY.map((t, i) =>
+          t.y === 0 ? null : (
+            <text key={`ly${i}`} x={g.x0 - 6} y={t.py + 3} className={styles.gridlabel} textAnchor="end">
+              {Number.isInteger(t.y) ? t.y : t.y.toFixed(1)}
+            </text>
+          ),
+        )}
+        <text x={g.W - g.pad - 2} y={g.y0 - 7} className={styles.axisLabel} textAnchor="end">
+          x
+        </text>
+        <text x={g.x0 + 9} y={g.pad + 3} className={styles.axisLabel}>
+          y
+        </text>
+
+        {/* Kurve */}
+        <path d={g.d} pathLength={1} className={styles.curve} stroke={scene.color} />
+
+        {/* Markierte Punkte */}
+        {current.marks.map((m, i) => (
+          <g key={i} className={styles.markG}>
+            <circle cx={g.sx(m.x)} cy={g.sy(m.y)} r={5} fill={scene.color} stroke="#fff" strokeWidth={2} />
+            <text x={g.sx(m.x)} y={g.sy(m.y) - 10} className={styles.markLabel} textAnchor="middle">
+              {m.label}
+            </text>
+          </g>
+        ))}
+      </svg>
+    );
+
+  // ---- Reel: eigener Aufbau, nicht die Modalansicht mit anderen Farben ----
+  // Ein Reel besteht aus drei Dingen: den Fortschrittsstreifen oben, dem Bild
+  // in der Mitte und der Beschriftung unten links. Alles andere (Lernstatus,
+  // Zurück) liegt in der Seite darum herum, damit hier nichts das Bild verdeckt.
+  if (variant === 'reel') {
+    const step = activeStep >= 0 ? scene.steps[activeStep] : null;
+    return (
+      <div className={styles.reel}>
+        <div className={styles.reelBars} aria-hidden="true">
+          {segments.map((_, i) => (
+            <span key={i} className={styles.reelBar}>
+              <span
+                className={styles.reelBarFill}
+                style={{ transform: `scaleX(${i < seg ? 1 : i === seg ? frac : 0})` }}
+              />
+            </span>
+          ))}
+        </div>
+
+        {/* Ohne Graphen (Vektoren, Stochastik) trägt die Schrift das Bild:
+            Funktion und Formelzeile werden groß, statt in einem leeren
+            schwarzen Feld zu schweben. */}
+        <div className={`${styles.reelStage} ${g ? '' : styles.reelStageText}`}>
+          {scene.func && <div className={styles.reelFunc}>{scene.func}</div>}
+          {graphSvg(styles.reelGraph)}
+
+          {step && (
+            <div className={styles.reelStep} key={`s${seg}`}>
+              <span className={styles.reelStepNum} style={{ background: scene.color }}>{activeStep + 1}</span>
+              <span className={styles.reelStepBody}>
+                <span className={styles.reelStepTitle}>{step.title}</span>
+                {step.math && <span className={styles.reelStepMath}>{step.math}</span>}
+              </span>
+            </div>
+          )}
+
+          {current.showResult && scene.result && (
+            <div className={styles.reelResult} style={{ background: scene.color }}>{scene.result}</div>
+          )}
+        </div>
+
+        <div className={styles.reelFoot}>
+          <span className={styles.reelTopic}>{scene.topic}</span>
+          <strong className={styles.reelTitle}>{scene.title}</strong>
+          <p className={styles.reelCaption} key={`c${seg}`}>{current.say}</p>
+        </div>
+
+        {/* TikTok-Gesten: die ganze Bühne ist tipp-/haltbar. */}
+        <div
+          className={styles.reelGestures}
+          onPointerDown={onReelPointerDown}
+          onPointerMove={onReelPointerMove}
+          onPointerUp={onReelPointerEnd}
+          onPointerCancel={onReelPointerCancel}
+          onPointerLeave={onReelPointerCancel}
+          onContextMenu={(e) => e.preventDefault()}
+          aria-hidden="true"
+        />
+
+        {!playing && (
+          <div className={styles.reelPlayIndicator} aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 20 12 6 20 6 4" /></svg>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.player}>
+      <div className={styles.head}>
+        <span className={styles.badge} style={{ background: scene.color }}>
+          {scene.topic}
+        </span>
+        <span className={styles.htitle}>{scene.title}</span>
         {onClose && (
           <button className={styles.close} onClick={onClose} aria-label="Schließen">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -496,102 +623,15 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
           )}
         </div>
 
-        {g && (
-          <div className={styles.right}>
-            <svg className={styles.graph} viewBox={`0 0 ${g.W} ${g.H}`} key={scene.id}>
-              <defs>
-                <marker id="ahead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-                  <path d="M0 0 L10 5 L0 10 z" className={styles.arrowHead} />
-                </marker>
-              </defs>
-
-              {/* Gitter */}
-              {g.gridX.map((t, i) => (
-                <line key={`gx${i}`} x1={t.px} y1={g.pad} x2={t.px} y2={g.H - g.pad} className={styles.gridline} />
-              ))}
-              {g.gridY.map((t, i) => (
-                <line key={`gy${i}`} x1={g.pad} y1={t.py} x2={g.W - g.pad} y2={t.py} className={styles.gridline} />
-              ))}
-
-              {/* Fläche unter der Kurve (Integral) */}
-              {g.shade && <path d={g.shade} className={styles.shade} fill={scene.color} />}
-
-              {/* Achsen mit Pfeilspitze */}
-              <line x1={g.pad} y1={g.y0} x2={g.W - g.pad} y2={g.y0} className={styles.axis} markerEnd="url(#ahead)" />
-              <line x1={g.x0} y1={g.H - g.pad} x2={g.x0} y2={g.pad} className={styles.axis} markerEnd="url(#ahead)" />
-
-              {/* Zahlen an den Achsen */}
-              {g.gridX.map((t, i) =>
-                t.x === 0 ? null : (
-                  <text key={`lx${i}`} x={t.px} y={g.y0 + 12} className={styles.gridlabel} textAnchor="middle">
-                    {Number.isInteger(t.x) ? t.x : t.x.toFixed(1)}
-                  </text>
-                ),
-              )}
-              {g.gridY.map((t, i) =>
-                t.y === 0 ? null : (
-                  <text key={`ly${i}`} x={g.x0 - 6} y={t.py + 3} className={styles.gridlabel} textAnchor="end">
-                    {Number.isInteger(t.y) ? t.y : t.y.toFixed(1)}
-                  </text>
-                ),
-              )}
-              <text x={g.W - g.pad - 2} y={g.y0 - 7} className={styles.axisLabel} textAnchor="end">
-                x
-              </text>
-              <text x={g.x0 + 9} y={g.pad + 3} className={styles.axisLabel}>
-                y
-              </text>
-
-              {/* Kurve */}
-              <path d={g.d} pathLength={1} className={styles.curve} stroke={scene.color} />
-
-              {/* Markierte Punkte */}
-              {current.marks.map((m, i) => (
-                <g key={i} className={styles.markG}>
-                  <circle cx={g.sx(m.x)} cy={g.sy(m.y)} r={5} fill={scene.color} stroke="#fff" strokeWidth={2} />
-                  <text x={g.sx(m.x)} y={g.sy(m.y) - 10} className={styles.markLabel} textAnchor="middle">
-                    {m.label}
-                  </text>
-                </g>
-              ))}
-            </svg>
-          </div>
-        )}
+        {g && <div className={styles.right}>{graphSvg(styles.graph)}</div>}
       </div>
 
-      {variant === 'reel' ? (
-        <>
-          {/* TikTok-Gesten: die ganze Bühne ist tipp-/haltbar. */}
-          <div
-            className={styles.reelGestures}
-            onPointerDown={onReelPointerDown}
-            onPointerMove={onReelPointerMove}
-            onPointerUp={onReelPointerEnd}
-            onPointerCancel={onReelPointerCancel}
-            onPointerLeave={onReelPointerCancel}
-            onContextMenu={(e) => e.preventDefault()}
-            aria-hidden="true"
-          />
-          {!playing && (
-            <div className={styles.reelPlayIndicator} aria-hidden="true">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 20 12 6 20 6 4" /></svg>
-            </div>
-          )}
-          {/* Titel unten wie ein Creator-Name bei TikTok. */}
-          <div className={styles.reelMeta}>
-            <span className={styles.reelTopic}>{scene.topic}</span>
-            <strong className={styles.reelTitle}>{scene.title}</strong>
-          </div>
-        </>
-      ) : (
-        <div className={styles.caption}>{current.say}</div>
-      )}
+      <div className={styles.caption}>{current.say}</div>
 
       <div className={styles.progressbar}>
         <div className={styles.pfill} style={{ transform: `scaleX(${pct / 100})`, background: scene.color }} />
       </div>
 
-      {variant !== 'reel' && (
       <div className={styles.foot}>
         <button className={styles.ctrl} onClick={goPrev} disabled={seg === 0} aria-label="Zurück">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -656,7 +696,6 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
           </span>
         </div>
       </div>
-      )}
     </div>
   );
 }

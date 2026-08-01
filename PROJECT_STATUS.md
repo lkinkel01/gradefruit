@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-07-29 (Sprint 11: Inhalte server-seitig, Offline-Zugriff, native App-Hülle)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-08-01 (App-Feinschliff: Startbild, Wochenplan für die Erinnerung, Reels neu gebaut)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -28,8 +28,9 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   erst nach dem Öffnen; klickbare Formeln/Schritte öffnen den Coach.
 - **Wiederholungssystem:** drei Lernstufen pro Aufgabe, Wiederholen-Seite mit
   Filtern, Dashboard-Kacheln springen mit Vorauswahl dorthin.
-- **Reel-Modus** (`/feed`): vertikaler Video-Feed mit Autoplay und
-  Lernstatus-Auswahl.
+- **Reel-Modus** (`/feed`): vertikaler Video-Feed mit Autoplay,
+  Fortschrittsstreifen wie bei Stories und einer Aktionsspalte rechts
+  (Lernstatus, Sprung zur Aufgabe).
 - **Konto & Kauf:** Auth (E-Mail + Google), Checkout, Webhook schaltet frei,
   Kundenportal, Kontoseite mit Löschfunktion.
 
@@ -653,6 +654,42 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Browser behält die Kachel — dort teilt sich die Seite den Platz mit
   Seitenleiste und Kopfzeile.
 
+- ✅ **Startbild statt „Einen Moment …" (01.08.2026, live):** Beim Öffnen zeigt
+  die App nur ihr Logo. Dauert es länger als sonst, kommt nach acht Sekunden ein
+  Satz dazu, nach zwanzig der Hinweis auf Wartungsarbeiten mit „Neu laden". Ein
+  leerer weißer Bildschirm ist damit kein möglicher Zustand mehr.
+  (`src/components/Startbild.tsx`)
+- ✅ **Lernerinnerung kennt die Woche (01.08.2026, live):** Statt einer Uhrzeit
+  für alle Tage gibt es unter „Bearbeiten" je Wochentag einen Schalter und eine
+  eigene Zeit. Voreinstellung: Mo, Di, Do, Fr um 13:30 (nach der Schule), Sa um
+  12:00; Mi und So bleiben frei, damit nie mehr als zwei Tage ohne Anstoß
+  vergehen. Näher an der Prüfung rückt der Plan von selbst zusammen — aber nur,
+  solange niemand etwas Eigenes eingestellt hat. iOS kann keine Mehrtages-Regel,
+  deshalb je Wochentag eine eigene Mitteilung mit fester Nummer (`10 + Tag`).
+  (`src/lib/erinnerungsplan.ts`)
+- ✅ **Reels sehen aus wie Reels (01.08.2026, live):** Der Reel-Player war die
+  Modalansicht mit anderen Farben — ein Kasten mit Rand, in einem großen
+  schwarzen Feld. Jetzt ein eigener Aufbau: Fortschrittsstreifen pro Abschnitt
+  oben (wie bei Stories), das Bild randlos in der Mitte, Beschriftung und
+  Untertitel unten links, Aktionsspalte rechts (Verstanden · Wiederholen ·
+  Unklar · Aufgabe · Start). Die Pillenleiste oben und das doppelte
+  Knopfpaar unten sind weg.
+  **Nebenbefund:** Vier der sechs Erklärvideos hatten gar keinen Graphen — im
+  Reel blieb die Bühne deshalb leer. `v1` hat jetzt einen (3x⁴ − 5x² + 7);
+  wo ein Graph fachlich keinen Sinn ergibt (Vektoren, Stochastik), trägt die
+  Schrift das Bild: Funktion und Formelzeile werden groß.
+- ✅ **Untere Leiste rückt beim Scrollen zusammen (01.08.2026, live):** Wie bei
+  Instagram — beim Herunterscrollen schrumpfen die Beschriftungen weg, beim
+  Hochscrollen sind sie sofort wieder da. Gleichzeitig ist der Weichzeichner
+  hinter der Leiste entfallen: Er musste auf dem iPhone bei jedem Bild neu über
+  den durchlaufenden Inhalt gerechnet werden und ließ das Scrollen abgehackt
+  wirken. Eine zu 94 % deckende Fläche sieht kaum anders aus und kostet nichts.
+- ✅ **Themen-Filter unter „Wiederholen" im Raster (01.08.2026, live):** Als
+  Pillenreihe wurde „Stochastik" abgeschnitten. Jetzt dasselbe Raster wie das
+  Segment darüber, damit kein Name mehr abreißt.
+- ✅ **Countdown kleiner, mit Kalendersymbol (01.08.2026, live);** unter „Konto"
+  steht „Mehr" jetzt ganz unten.
+
 ## Bekannte Probleme / offen
 
 **Verkauf**
@@ -673,7 +710,6 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
 - 🟠 **Store-Veröffentlichung offen** — braucht Entwicklerprogramm (99 $/Jahr).
   Alle Texte liegen fertig in [native/APPSTORE.md](native/APPSTORE.md);
   Screenshots fehlen.
-- 🟡 **1:1 Nachhilfe** ist in der App nicht erreichbar (fehlt unter Konto).
 - 🟡 Vieles an der App-Oberfläche ist **gebaut, aber nicht von Claude geprüft** —
   im Simulator sind Wischen und Tippen unzuverlässig. Rückmeldung per
   Screenshot ist der schnellste Weg.

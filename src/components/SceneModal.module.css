@@ -428,28 +428,207 @@
   .dots { display: none; }
 }
 
-/* Der Reel-Modus reduziert den Erklärplayer auf die eigentliche Videobühne.
-   Die reguläre Modalansicht bleibt davon unberührt. */
-.reelPlayer {
+/* ---------- Reel-Fassung ----------
+   Ein Reel ist kein verkleinertes Modal, sondern ein eigenes Bild: Streifen
+   oben, Bühne in der Mitte, Beschriftung unten links. Alles liegt übereinander
+   auf derselben dunklen Fläche, ohne Karten und ohne Rahmen — genau das
+   unterscheidet ein Reel von einer Seite mit Inhalt.
+
+   Zwei Werte kommen von außen (die Seite kennt Leiste und Aktionsspalte):
+   --reel-rail  = Platz rechts, den die Aktionsspalte braucht
+   --reel-unten = Platz unten, den Navigationsleiste und Home-Anzeige brauchen */
+.reel {
   position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   color: #fff;
-  background: rgba(8, 8, 10, 0.42);
   /* iOS: langes Drücken darf weder Text markieren noch das Kopieren-Menü öffnen. */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* Im Reel ohne Kopfzeile: der ganze Platz gehört dem Videoinhalt. */
-.reelPlayer .head {
-  display: none;
+/* Fortschritt als Streifen pro Abschnitt, wie bei Stories. Ein einzelner
+   Balken über die ganze Länge sagt nur „irgendwo drin"; die Streifen sagen
+   „Schritt drei von acht", ohne eine Zahl hinzuschreiben. */
+.reelBars {
+  position: relative;
+  z-index: 7;
+  flex: none;
+  display: flex;
+  gap: 3px;
+  margin: calc(env(safe-area-inset-top, 0px) + 10px) 14px 0;
+  pointer-events: none;
+}
+.reelBar {
+  flex: 1;
+  height: 2.5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.26);
+}
+.reelBarFill {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transform-origin: left center;
+  transition: transform 140ms linear;
+}
+
+/* Bühne: das Bild des Reels. Der Graph darf so groß werden, wie der Platz
+   hergibt — er ist hier der Inhalt und nicht die Beilage. */
+.reelStage {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 16px 0;
+  pointer-events: none;
+}
+
+.reelFunc {
+  flex: none;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  animation: fadeIn 320ms var(--ease-out) both;
+}
+
+.reelGraph {
+  width: 100%;
+  max-height: 46dvh;
+  min-height: 0;
+  flex: 0 1 auto;
+}
+.reelGraph .axis,
+.reelGraph .gridline { stroke: rgba(255, 255, 255, 0.22); }
+.reelGraph .arrowHead,
+.reelGraph .gridlabel,
+.reelGraph .axisLabel,
+.reelGraph .markLabel { fill: rgba(255, 255, 255, 0.7); }
+.reelGraph .markLabel { fill: #fff; }
+.reelGraph .curve { stroke-width: 3.4; }
+
+/* Immer nur der Schritt, der gerade dran ist. Eine wachsende Liste ist eine
+   Seite; ein Reel zeigt einen Gedanken. */
+.reelStep {
+  flex: none;
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  animation: reelRein 260ms var(--ease-out) both;
+}
+.reelStepNum {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+.reelStepBody { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.reelStepTitle {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 13px;
+  font-weight: 650;
+}
+.reelStepMath {
+  font-variant-numeric: tabular-nums;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.6);
+}
+
+/* Ohne Graph: Funktion und Formel werden zum Bild. */
+.reelStageText { gap: 20px; }
+.reelStageText .reelFunc {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1.35;
+  text-align: center;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+.reelStageText .reelStep { justify-content: center; }
+.reelStageText .reelStepMath { font-size: 24px; line-height: 1.3; }
+.reelStageText .reelStepTitle { font-size: 14px; }
+
+.reelResult {
+  flex: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 750;
+  animation: pop 240ms var(--ease-out) both;
+}
+
+/* Beschriftung unten links, wie der Text unter einem Reel. Rechts bleibt die
+   Spalte mit den Aktionen frei. */
+.reelFoot {
+  position: relative;
+  z-index: 7;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 18px 16px calc(var(--reel-unten, 24px));
+  padding-right: calc(var(--reel-rail, 16px));
+  pointer-events: none;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.36) 52%, transparent);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
+}
+.reelTopic {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.reelTitle {
+  color: #fff;
+  font-size: 17px;
+  font-weight: 780;
+  letter-spacing: -0.015em;
+}
+/* Der gesprochene Satz als Untertitel — drei Zeilen, dann abgeschnitten. Wer
+   mitliest, liest mit; wer zuhört, wird nicht zugetextet. */
+.reelCaption {
+  margin: 3px 0 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 13px;
+  line-height: 1.45;
+  animation: fadeIn 240ms var(--ease-out) both;
 }
 
 /* Ganze Bühne ist tipp-/haltbar; vertikales Wischen bleibt fürs Reel-Scrollen. */
 .reelGestures {
   position: absolute;
   inset: 0;
-  z-index: 4;
+  z-index: 6;
   touch-action: pan-y;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -460,187 +639,34 @@
 .reelPlayIndicator {
   position: absolute;
   inset: 0;
-  z-index: 6;
+  z-index: 8;
   display: grid;
   place-items: center;
   pointer-events: none;
+  animation: fadeIn 140ms var(--ease-out) both;
 }
 .reelPlayIndicator svg {
-  width: 66px;
-  height: 66px;
-  padding: 19px;
+  width: 68px;
+  height: 68px;
+  padding: 20px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.42);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.44);
 }
 
-/* Titel unten wie ein Creator-Name — im Fluss unter dem Inhalt, damit er
-   Formel und Schritte nie überdeckt. */
-.reelMeta {
-  /* Platz fuer die runden Knoepfe darunter (52px) plus Sicherheitsabstand —
-     vorher lag der Zuruecktpfeil auf der Beschriftung. */
-  padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
-  position: relative;
-  z-index: 7;
-  flex: none;
-  margin: 4px 14px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  pointer-events: none;
-  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
-}
-.reelTopic { color: rgba(255, 255, 255, 0.74); font-size: 12px; font-weight: 650; }
-.reelTitle { color: #fff; font-size: 15.5px; font-weight: 750; letter-spacing: -0.01em; }
-
-/* Im Reel: keine Untertitel, keine Steuerleiste (nur Gesten). */
-.reelPlayer .caption,
-.reelPlayer .foot { display: none; }
-.reelPlayer .progressbar { position: relative; z-index: 7; }
-
-.reelPlayer .badge {
-  padding: 4px 9px;
-  font-size: 10px;
-}
-
-.reelPlayer .htitle {
-  color: #fff;
-  font-size: 14px;
-  font-weight: 720;
-}
-
-.reelPlayer .body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 10px;
-  padding: 8px;
-  overflow: hidden;
-}
-
-.reelPlayer .right {
-  order: -1;
-  flex: 1;
-  min-height: 0;
-  align-items: center;
-}
-
-.reelPlayer .graph {
-  width: 100%;
-  max-width: 100%;
-  max-height: min(42dvh, 360px);
-  padding: 3px;
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.reelPlayer .axis,
-.reelPlayer .gridline {
-  stroke: rgba(255, 255, 255, 0.25);
-}
-
-.reelPlayer .arrowHead,
-.reelPlayer .gridlabel,
-.reelPlayer .axisLabel,
-.reelPlayer .markLabel {
-  fill: rgba(255, 255, 255, 0.72);
-}
-
-.reelPlayer .left {
-  flex: none;
-  gap: 7px;
-}
-
-.reelPlayer .func {
-  padding: 6px 10px;
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.14) !important;
-  background: rgba(255, 255, 255, 0.06);
-  font-size: 15px;
-}
-
-.reelPlayer .steps {
-  gap: 6px;
-}
-
-.reelPlayer .step {
-  padding: 7px 9px;
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.reelPlayer .stepDone {
-  display: none;
-}
-
-.reelPlayer .stepActive {
-  box-shadow: none;
-}
-
-.reelPlayer .stepTitle,
-.reelPlayer .stepMath {
-  color: #fff;
-}
-
-.reelPlayer .stepTitle {
-  font-size: 12px;
-}
-
-.reelPlayer .stepMath {
-  font-size: 14px;
-}
-
-.reelPlayer .result {
-  padding: 7px 11px;
-  color: #fff;
-  font-size: 14px;
-}
-
-.reelPlayer .caption {
-  flex: none;
-  min-height: 0;
-  max-height: 74px;
-  margin: 3px 10px 0;
-  padding: 9px 11px;
-  overflow: auto;
-  border-color: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.86);
-  background: rgba(255, 255, 255, 0.07);
-  font-size: 12.5px;
-  line-height: 1.4;
-}
-
-.reelPlayer .progressbar {
-  flex: none;
-  height: 3px;
-  margin: 7px 10px 0;
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.reelPlayer .foot {
-  flex: none;
-  justify-content: center;
-  padding: 7px 10px 9px;
-}
-
-.reelPlayer .ctrl,
-.reelPlayer .progress {
-  display: none;
-}
-
-.reelPlayer .play {
-  width: 44px;
-  height: 44px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+@keyframes reelRein {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (max-height: 720px) {
-  .reelPlayer .graph {
-    max-height: 28dvh;
-  }
+  .reelGraph { max-height: 34dvh; }
+  .reelCaption { -webkit-line-clamp: 2; line-clamp: 2; }
+}
 
-  .reelPlayer .caption {
-    max-height: 62px;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .reelStep,
+  .reelCaption,
+  .reelFunc,
+  .reelResult { animation: none; }
+  .reelBarFill { transition: none; }
 }

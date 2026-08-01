@@ -1,9 +1,23 @@
+/* Reel-Modus.
+
+   Zwei Maße gibt diese Seite an den Player weiter, weil nur sie beide kennt:
+   wie viel Platz die Aktionsspalte rechts belegt und wie viel unten für die
+   Navigationsleiste frei bleiben muss. Der Player rechnet damit seine
+   Beschriftung ein, statt sie zu erraten. */
 .wrap {
   position: relative;
   height: 100dvh;
   overflow: hidden;
   color: #fff;
   background: #050505;
+  --reel-rail: 84px;
+  --reel-unten: calc(env(safe-area-inset-bottom, 0px) + 22px);
+}
+
+/* In der App liegt die Navigationsleiste unten im Bild — die Beschriftung des
+   Reels muss darüber bleiben. */
+.imApp {
+  --reel-unten: calc(env(safe-area-inset-bottom, 0px) + 78px);
 }
 
 .gate {
@@ -35,14 +49,16 @@
   scroll-snap-stop: always;
 }
 
+/* Der Rahmen ist die Videofläche: randlos, dunkel, mit einem Schimmer in der
+   Farbe des Themas. */
 .frame {
   position: relative;
   width: min(100%, 520px);
   height: 100%;
   overflow: hidden;
   background:
-    radial-gradient(circle at 72% 22%, rgba(255, 122, 0, 0.16), transparent 34%),
-    linear-gradient(160deg, #171719 0%, #09090a 52%, #020203 100%);
+    radial-gradient(circle at 76% 16%, rgba(255, 122, 0, 0.18), transparent 42%),
+    linear-gradient(160deg, #17171a 0%, #0a0a0c 54%, #020203 100%);
 }
 
 .poster {
@@ -51,7 +67,6 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  opacity: 0.62;
 }
 
 .poster::after {
@@ -59,156 +74,122 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(3, 3, 4, 0.3), transparent 20%),
-    linear-gradient(0deg, rgba(3, 3, 4, 0.9), transparent 42%);
+    linear-gradient(180deg, rgba(3, 3, 4, 0.42), transparent 22%),
+    linear-gradient(0deg, rgba(3, 3, 4, 0.72), transparent 46%);
 }
 
 .posterCurve {
-  width: 115%;
-  height: 62%;
-  opacity: 0.55;
+  width: 128%;
+  height: 66%;
+  opacity: 0.14;
 }
 
 .posterCurve path {
   fill: none;
   stroke: #ff7a00;
-  stroke-width: 4;
+  stroke-width: 6;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
 
-.poster span {
-  position: relative;
-  z-index: 1;
-  max-width: 82%;
-  padding: 10px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(13, 13, 15, 0.44);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-  font-size: 16px;
-  font-weight: 650;
-  text-align: center;
-}
-
-.playerWrap {
-  position: absolute;
-  z-index: 10;
-  inset: calc(env(safe-area-inset-top, 0px) + 72px) 8px
-    calc(env(safe-area-inset-bottom, 0px) + 82px);
-  min-height: 0;
-  overflow: hidden;
-  border-radius: 26px;
-  --surface: rgba(10, 10, 12, 0.58);
-  --surface-2: rgba(255, 255, 255, 0.08);
-  --ink: #fff;
-  --muted: rgba(255, 255, 255, 0.66);
-  --line: rgba(255, 255, 255, 0.12);
-}
-
-.statusBar {
+/* ---------- Aktionsspalte ----------
+   Icon über Beschriftung, untereinander am rechten Rand, in Daumenhöhe. */
+.rail {
   position: fixed;
-  z-index: 50;
-  top: calc(env(safe-area-inset-top, 0px) + 10px);
-  left: 50%;
-  width: min(calc(100% - 24px), 488px);
-  min-height: 48px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(16, 16, 18, 0.58);
-  box-shadow: 0 14px 42px rgba(0, 0, 0, 0.25);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  backdrop-filter: blur(24px) saturate(150%);
-  transform: translateX(-50%);
+  z-index: 60;
+  right: max(8px, calc(50% - 250px));
+  bottom: calc(var(--reel-unten) + 8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
-.statusButton {
-  min-width: 0;
-  min-height: 40px;
-  padding: 0 8px;
+.railButton {
+  width: 68px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
-  color: rgba(255, 255, 255, 0.64);
-  background: transparent;
+  background: none;
+  color: #fff;
   font: inherit;
-  font-size: 12px;
+  cursor: pointer;
+  transition: transform 120ms var(--ease-out), opacity 160ms var(--ease-out);
+}
+
+.railIcon {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  background: rgba(18, 18, 20, 0.6);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.34);
+}
+
+.railLabel {
+  font-size: 10px;
+  letter-spacing: -0.01em;
   font-weight: 650;
   line-height: 1.1;
-  cursor: pointer;
-  transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    transform 120ms ease;
+  text-align: center;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
 }
 
-.statusButton:disabled {
-  opacity: 0.42;
+.railButton:disabled {
+  opacity: 0.4;
   cursor: default;
 }
 
-.statusButtonActive {
+.railButton:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+/* Gewählt: gefüllt in der Markenfarbe — die einzige Farbe im Bild neben der
+   Kurve, deshalb sofort zu sehen. */
+.railButtonActive .railIcon {
+  border-color: transparent;
   color: #fff;
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  background: var(--accent);
+  box-shadow: 0 10px 26px rgba(255, 122, 0, 0.36);
 }
 
-.bottomNav {
+.back {
   position: fixed;
-  z-index: 50;
-  /* Über der App-Navigationsleiste, die jetzt auch hier steht. */
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 84px);
-  left: 50%;
-  width: min(calc(100% - 24px), 488px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  pointer-events: none;
-  transform: translateX(-50%);
-}
-
-.bottomNav button {
-  width: 52px;
-  height: 52px;
+  z-index: 60;
+  top: calc(env(safe-area-inset-top, 0px) + 24px);
+  left: max(10px, calc(50% - 254px));
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.17);
+  border: 0;
   border-radius: 50%;
   color: #fff;
-  background: rgba(16, 16, 18, 0.58);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 14px 34px rgba(0, 0, 0, 0.28);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
-  backdrop-filter: blur(22px) saturate(150%);
+  background: rgba(12, 12, 14, 0.42);
   cursor: pointer;
-  pointer-events: auto;
-  transition:
-    color 160ms ease,
-    background-color 160ms ease,
-    transform 120ms ease;
+  transition: background-color 160ms var(--ease-out);
 }
 
-.statusButton:focus-visible,
-.bottomNav button:focus-visible {
+.back:focus-visible,
+.railButton:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .statusButton:not(:disabled):hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.09);
+  .railButton:not(:disabled):hover .railIcon {
+    background-color: rgba(255, 255, 255, 0.14);
   }
-
-  .bottomNav button:hover {
-    background-color: rgba(255, 255, 255, 0.12);
-    transform: translateY(-1px);
+  .railButtonActive:hover .railIcon {
+    background-color: var(--accent);
+  }
+  .back:hover {
+    background-color: rgba(255, 255, 255, 0.16);
   }
 }
 
@@ -220,36 +201,12 @@
 }
 
 @media (max-width: 420px) {
-  .statusBar {
-    width: calc(100% - 16px);
-  }
-
-  .statusButton {
-    padding-inline: 4px;
-    font-size: 10.5px;
-  }
-
-  .bottomNav {
-    width: calc(100% - 16px);
-  }
+  .rail { right: 6px; gap: 12px; }
+  .railIcon { width: 42px; height: 42px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .feed {
-    scroll-behavior: auto;
-  }
-
-  .statusButton,
-  .bottomNav button {
-    transition-duration: 1ms;
-  }
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .statusBar,
-  .bottomNav button {
-    background: #171719;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
+  .feed { scroll-behavior: auto; }
+  .railButton,
+  .back { transition-duration: 1ms; }
 }

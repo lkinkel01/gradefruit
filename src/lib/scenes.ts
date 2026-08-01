@@ -82,6 +82,9 @@ export const SCENES: Record<string, Scene> = {
     outro:
       'Fassen wir zusammen: Mit der Potenzregel leitest du jedes Glied einzeln ab, Faktoren bleiben stehen, und Konstanten fallen weg. Das Ergebnis lautet f Strich von x gleich zwölf x hoch drei minus zehn x. Super, jetzt kennst du die Grundregeln des Ableitens!',
     result: "f'(x) = 12x³ − 10x",
+    // Die Funktion, um die es geht — im Reel trägt sie das Bild. Ohne Graphen
+    // stünde hier nur Text auf schwarzem Grund.
+    graph: { fn: (x) => 3 * x ** 4 - 5 * x * x + 7, xMin: -1.5, xMax: 1.5 },
     hasAudio: true,
   },
 

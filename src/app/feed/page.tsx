@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
@@ -9,6 +9,7 @@ import { SCENES, Scene } from '@/lib/scenes';
 import { indexFor } from '@/lib/contentIndex';
 import { ScenePlayer } from '@/components/SceneModal';
 import AppTabBar from '@/components/AppTabBar';
+import { CheckIcon, ReviewIcon, QuestionIcon, ArrowRightIcon } from '@/components/UiIcons';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './feed.module.css';
@@ -31,10 +32,18 @@ const TASK_SOURCES: {
   { topicId: 'stochastik', tasks: indexFor('stochastik', 'gk').tasks },
 ];
 
-const STATUS_OPTIONS: { status: Exclude<LernStatus, 'none'>; label: string }[] = [
-  { status: 'verstanden', label: 'Verstanden' },
-  { status: 'wiederholen', label: 'Wiederholen' },
-  { status: 'unklar', label: 'Nicht verstanden' },
+// Die Aktionsspalte rechts — das Merkmal, an dem ein Reel als Reel erkannt
+// wird. Sie ersetzt die frühere Pillenleiste am oberen Rand: Die lag über dem
+// Bild, war weit weg vom Daumen und sah aus wie ein Filter, nicht wie eine
+// Bewertung.
+const STATUS_OPTIONS: {
+  status: Exclude<LernStatus, 'none'>;
+  label: string;
+  icon: ReactNode;
+}[] = [
+  { status: 'verstanden', label: 'Verstanden', icon: <CheckIcon size={22} /> },
+  { status: 'wiederholen', label: 'Wiederholen', icon: <ReviewIcon size={22} /> },
+  { status: 'unklar', label: 'Unklar', icon: <QuestionIcon size={22} /> },
 ];
 
 function linkedTask(sceneId: string): VideoCard['task'] {
@@ -160,7 +169,10 @@ export default function FeedPage() {
   const onScroll = () => {
     const element = feedRef.current;
     if (!element) return;
-    const nextIndex = Math.round(element.scrollTop / element.clientHeight);
+    // Aus der tatsächlichen Höhe eines Reels rechnen, nicht aus der des
+    // Behälters — siehe Tastatur-Navigation weiter unten.
+    const hoehe = element.scrollHeight / Math.max(1, feed.length);
+    const nextIndex = Math.round(element.scrollTop / hoehe);
     if (nextIndex !== index && nextIndex >= 0 && nextIndex < feed.length) setIndex(nextIndex);
   };
 
@@ -174,7 +186,12 @@ export default function FeedPage() {
       const direction = event.key === 'ArrowDown' ? 1 : -1;
       const next = Math.min(Math.max(index + direction, 0), feed.length - 1);
       const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      element.scrollTo({ top: next * element.clientHeight, behavior: reduce ? 'auto' : 'smooth' });
+      // Zum Kind scrollen statt zu rechnen: Die Höhe eines Reels ist 100dvh,
+      // und die stimmt nicht immer auf das Pixel mit der Höhe des Behälters
+      // überein — dann landet die Rechnung zwischen zwei Reels.
+      const ziel = element.children[next] as HTMLElement | undefined;
+      if (!ziel) return;
+      element.scrollTo({ top: ziel.offsetTop, behavior: reduce ? 'auto' : 'smooth' });
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -214,22 +231,20 @@ export default function FeedPage() {
     );
   }
 
-  return (
-    <main className={styles.wrap}>
-      <div className={styles.statusBar} aria-label="Lernstatus für das aktuelle Video">
-        {STATUS_OPTIONS.map(option => (
-          <button
-            key={option.status}
-            className={`${styles.statusButton} ${activeStatus === option.status ? styles.statusButtonActive : ''}`}
-            aria-pressed={activeStatus === option.status}
-            disabled={!activeCard.task}
-            onClick={() => chooseStatus(option.status)}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
+  // Aufgabe zum Video öffnen — der Weg vom Zuschauen ins Üben. Die Schlüssel
+  // sind dieselben, die TopicView beim nächsten Besuch der Startseite abholt.
+  const openTask = () => {
+    if (!activeCard.task) return;
+    try {
+      localStorage.setItem('gf-open-topic', activeCard.task.topicId);
+      localStorage.setItem('gf-open-tab', 'uebungen');
+      localStorage.setItem('gf-open-task', activeCard.task.taskId);
+    } catch { /* Lokaler Speicher ist nicht verfügbar. */ }
+    router.push('/?view=dashboard');
+  };
 
+  return (
+    <main className={`${styles.wrap} ${imApp ? styles.imApp : ''}`}>
       <div className={styles.feed} ref={feedRef} onScroll={onScroll}>
         {feed.map((card, cardIndex) => {
           const isActive = cardIndex === index;
@@ -240,21 +255,58 @@ export default function FeedPage() {
               aria-label={`${card.scene.title}, Video ${cardIndex + 1} von ${feed.length}`}
             >
               <div className={styles.frame}>
+                {/* Der große Kurvenzug ist Hintergrund, kein Inhalt: Er gibt der
+                    Fläche Bewegung, während der eigentliche Graph auf der Bühne
+                    das Bild trägt. Deshalb sehr blass. */}
                 <div className={styles.poster} aria-hidden="true">
                   <svg className={styles.posterCurve} viewBox="0 0 400 300" preserveAspectRatio="none">
                     <path d={card.path} />
                   </svg>
                 </div>
 
-                {isActive && (
-                  <div className={styles.playerWrap}>
-                    <ScenePlayer scene={card.scene} autoPlay variant="reel" />
-                  </div>
-                )}
+                {isActive && <ScenePlayer scene={card.scene} autoPlay variant="reel" />}
               </div>
             </section>
           );
         })}
+      </div>
+
+      {/* Oben links zurück — sonst gehört der obere Rand den Fortschrittsstreifen. */}
+      <button className={styles.back} onClick={goBack} aria-label="Zurück">
+        <BackIcon />
+      </button>
+
+      {/* Aktionsspalte rechts: bewerten und zur Aufgabe springen. */}
+      <div className={styles.rail} aria-label="Aktionen zum aktuellen Video">
+        {STATUS_OPTIONS.map(option => (
+          <button
+            key={option.status}
+            type="button"
+            className={`${styles.railButton} ${activeStatus === option.status ? styles.railButtonActive : ''}`}
+            aria-pressed={activeStatus === option.status}
+            disabled={!activeCard.task}
+            onClick={() => chooseStatus(option.status)}
+          >
+            <span className={styles.railIcon}>{option.icon}</span>
+            <span className={styles.railLabel}>{option.label}</span>
+          </button>
+        ))}
+
+        {activeCard.task && (
+          <button type="button" className={styles.railButton} onClick={openTask}>
+            <span className={styles.railIcon}><ArrowRightIcon size={22} /></span>
+            <span className={styles.railLabel}>Aufgabe</span>
+          </button>
+        )}
+
+        <button
+          type="button"
+          className={styles.railButton}
+          onClick={() => router.push('/?view=dashboard')}
+        >
+          <span className={styles.railIcon}><HomeIcon /></span>
+          <span className={styles.railLabel}>Start</span>
+        </button>
       </div>
 
       {imApp && (
@@ -265,15 +317,6 @@ export default function FeedPage() {
           dunkel
         />
       )}
-
-      <nav className={styles.bottomNav} aria-label="Reel-Navigation">
-        <button onClick={goBack} aria-label="Zurück">
-          <BackIcon />
-        </button>
-        <button onClick={() => router.push('/?view=dashboard')} aria-label="Zum Dashboard">
-          <HomeIcon />
-        </button>
-      </nav>
     </main>
   );
 }
