@@ -339,4 +339,18 @@ body::before {
 body {
   overflow-x: clip;
   max-width: 100%;
+  /* Das Nachfedern am Rand gehört zum Gefühl einer App: Man zieht den Inhalt
+     über den Anschlag hinaus, lässt los, er kommt zurück. `contain` oder `none`
+     würden es abwürgen und das Scrollen hart wirken lassen. `auto` ist die
+     Vorgabe und steht hier nur, damit es niemand aus Versehen abschaltet. */
+  overscroll-behavior-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Bildschirmweite Flächen, die beim Scrollen stehen bleiben, sind auf dem
+   iPhone teuer, wenn sie den Hintergrund weichzeichnen: Der Weichzeichner wird
+   für jedes Bild neu über den durchlaufenden Inhalt gerechnet, und genau das
+   ließ das Scrollen abgehackt wirken. In der App deshalb solide Flächen. */
+@supports (-webkit-touch-callout: none) {
+  .gf-kein-blur { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 }

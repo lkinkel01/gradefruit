@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { View } from '@/lib/types';
 import styles from './AppTabBar.module.css';
 
@@ -74,8 +74,44 @@ export default function AppTabBar({
   /** Der Reel-Modus ist immer dunkel, unabhängig vom gewählten Erscheinungsbild. */
   dunkel?: boolean;
 }) {
+  // Beim Herunterscrollen rückt die Leiste zusammen und die Beschriftungen
+  // treten zurück, wie bei Instagram. Der Inhalt bekommt dadurch Platz, ohne
+  // dass die Navigation je verschwindet.
+  const [kompakt, setKompakt] = useState(false);
+  const letzte = useRef(0);
+
+  useEffect(() => {
+    // In der App scrollt der Seitenkörper, nicht das Dokument — deshalb beide
+    // Quellen abfragen. Genau daran ist eine frühere Fassung gescheitert.
+    const position = () => window.scrollY || document.scrollingElement?.scrollTop || 0;
+    let warten = false;
+
+    const beobachten = () => {
+      if (warten) return;
+      warten = true;
+      requestAnimationFrame(() => {
+        warten = false;
+        const jetzt = position();
+        // Kleine Bewegungen ignorieren, sonst zappelt die Leiste beim Wippen.
+        if (Math.abs(jetzt - letzte.current) < 6) return;
+        setKompakt(jetzt > letzte.current && jetzt > 40);
+        letzte.current = jetzt;
+      });
+    };
+
+    window.addEventListener('scroll', beobachten, { passive: true });
+    document.addEventListener('scroll', beobachten, { passive: true, capture: true });
+    return () => {
+      window.removeEventListener('scroll', beobachten);
+      document.removeEventListener('scroll', beobachten, { capture: true });
+    };
+  }, []);
+
   return (
-    <nav className={`${styles.leiste} ${dunkel ? styles.dunkel : ''}`} aria-label="Hauptnavigation">
+    <nav
+      className={`${styles.leiste} ${dunkel ? styles.dunkel : ''} ${kompakt ? styles.kompakt : ''}`}
+      aria-label="Hauptnavigation"
+    >
       {ZIELE.map(ziel => {
         const aktiv = ziel.view === view;
         return (
@@ -87,7 +123,7 @@ export default function AppTabBar({
             onClick={() => (ziel.view === 'feed' ? onReels() : onNavigate(ziel.view as View))}
           >
             <span className={styles.icon} aria-hidden="true">{ziel.icon}</span>
-            {ziel.label}
+            <span className={styles.label}>{ziel.label}</span>
           </button>
         );
       })}

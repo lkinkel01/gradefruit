@@ -3,6 +3,10 @@
 import { useEffect, useState } from 'react';
 import { gespeicherteZeit, imAppRahmen } from '@/lib/nativeApp';
 import { erinnerungsText } from '@/lib/erinnerungstexte';
+import {
+  TAGE_REIHE, TAG_KURZ, planBeschreiben, planFuerPhase, planLesen, planSchreiben,
+  type Plan, type Wochentag,
+} from '@/lib/erinnerungsplan';
 import { daysUntilExam } from '@/lib/exam';
 import { useProgress } from '@/lib/ProgressContext';
 import styles from './LernErinnerung.module.css';
@@ -64,19 +68,35 @@ function baustein(): Baustein | null {
  * Sowohl das Einschalten von Hand als auch das stille Nachziehen laufen hier
  * durch, damit die Mitteilung nicht in zwei Fassungen existiert.
  */
-async function planen(plugin: Baustein, zeit: string, prozent: number) {
-  const [stunde, minute] = zeit.split(':').map(Number);
-  await plugin.cancel({ notifications: [{ id: 1 }] });
-  await plugin.schedule({
-    notifications: [{
-      id: 1,
-      title: TITEL,
-      body: erinnerungsText({ prozent, tageWeg: tageSeitBesuch(), tageBisPruefung: daysUntilExam() }),
-      schedule: { on: { hour: stunde, minute }, repeats: true },
-    }],
+async function planen(plugin: Baustein, plan: Plan, prozent: number) {
+  // Je Wochentag eine eigene Mitteilung. iOS kann „jeden Montag um 13:30"
+  // planen, aber nicht „montags und donnerstags" in einem Eintrag — also sieben
+  // mögliche Einträge mit festen Nummern, die sich sauber einzeln löschen
+  // lassen.
+  const alle = TAGE_REIHE.map(tag => ({ id: 10 + tag }));
+  await plugin.cancel({ notifications: [{ id: 1 }, ...alle] });
+
+  const text = erinnerungsText({
+    prozent,
+    tageWeg: tageSeitBesuch(),
+    tageBisPruefung: daysUntilExam(),
   });
+
+  const mitteilungen = TAGE_REIHE.filter(tag => plan[tag].an).map(tag => {
+    const [stunde, minute] = plan[tag].zeit.split(':').map(Number);
+    return {
+      id: 10 + tag,
+      title: TITEL,
+      body: text,
+      // `weekday` ist bei iOS 1 = Sonntag, unsere Tage sind 0 = Sonntag.
+      schedule: { on: { weekday: tag + 1, hour: stunde, minute }, repeats: true },
+    };
+  });
+
+  if (mitteilungen.length > 0) await plugin.schedule({ notifications: mitteilungen });
+
   try {
-    localStorage.setItem('gf-erinnerung', zeit);
+    localStorage.setItem('gf-erinnerung', plan[1].zeit);
     localStorage.setItem(STAND_KEY, String(TEXT_STAND));
   } catch { /* Speicher gesperrt */ }
 }
@@ -91,8 +111,7 @@ async function planen(plugin: Baustein, zeit: string, prozent: number) {
  */
 async function textNachziehen(prozent: number) {
   if (!imAppRahmen()) return;
-  const zeit = gespeicherteZeit();
-  if (!zeit) return;
+  if (!gespeicherteZeit()) return;
   try {
     if (localStorage.getItem(STAND_KEY) === String(TEXT_STAND)) return;
   } catch { return; }
@@ -102,7 +121,11 @@ async function textNachziehen(prozent: number) {
   try {
     const erlaubnis = await plugin.checkPermissions();
     if (erlaubnis.display !== 'granted') return;
-    await planen(plugin, zeit, prozent);
+    const { plan, eigen } = planLesen();
+    // Wer nichts eingestellt hat, bekommt den zur Prüfungsnähe passenden Takt.
+    // Wer etwas eingestellt hat, behält ihn — die App ändert eine bewusste
+    // Wahl nicht hinter dem Rücken.
+    await planen(plugin, eigen ? plan : planFuerPhase(daysUntilExam()), prozent);
   } catch { /* Beim nächsten Öffnen der nächste Versuch. */ }
 }
 
@@ -110,15 +133,17 @@ export default function LernErinnerung() {
   const { totalDone, totalLessons } = useProgress();
   const prozent = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
   const [inApp, setInApp] = useState(false);
-  const [zeit, setZeit] = useState('17:00');
   const [aktiv, setAktiv] = useState(false);
+  const [plan, setPlan] = useState<Plan>(() => planLesen().plan);
+  const [offen, setOffen] = useState(false);
   const [meldung, setMeldung] = useState<string | null>(null);
   const [laeuft, setLaeuft] = useState(false);
 
   useEffect(() => {
     setInApp(imAppRahmen());
-    const gespeichert = gespeicherteZeit();
-    if (gespeichert) { setZeit(gespeichert); setAktiv(true); }
+    if (gespeicherteZeit()) setAktiv(true);
+    const { plan: gelesen, eigen } = planLesen();
+    setPlan(eigen ? gelesen : planFuerPhase(daysUntilExam()));
     void textNachziehen(prozent);
     // Besuch vermerken, NACHDEM der Text geplant wurde: Sonst wäre „Tage weg"
     // beim eigenen Öffnen immer 0 und die Abwesenheits-Sätze kämen nie vor.
@@ -130,7 +155,7 @@ export default function LernErinnerung() {
 
   if (!inApp) return null;
 
-  const neuPlanen = async (neueZeit: string) => {
+  const anwenden = async (neuerPlan: Plan) => {
     setLaeuft(true);
     setMeldung(null);
     try {
@@ -146,7 +171,8 @@ export default function LernErinnerung() {
         return;
       }
 
-      await planen(plugin, neueZeit, prozent);
+      await planen(plugin, neuerPlan, prozent);
+      planSchreiben(neuerPlan);
       setAktiv(true);
     } catch (fehler) {
       const text = fehler instanceof Error ? fehler.message : String(fehler);
@@ -164,9 +190,12 @@ export default function LernErinnerung() {
       // den Import-Weg — also über genau den, der von Anfang an nicht griff.
       // Deshalb ließ sich die Erinnerung anschalten, aber nie abschalten.
       const plugin = baustein();
-      if (plugin) await plugin.cancel({ notifications: [{ id: 1 }] });
+      if (plugin) {
+        await plugin.cancel({ notifications: [{ id: 1 }, ...TAGE_REIHE.map(t => ({ id: 10 + t }))] });
+      }
       try { localStorage.removeItem('gf-erinnerung'); } catch { /* Speicher gesperrt */ }
       setAktiv(false);
+      setOffen(false);
     } catch (fehler) {
       const text = fehler instanceof Error ? fehler.message : String(fehler);
       setMeldung(`Ausschalten hat nicht geklappt: ${text}`);
@@ -175,40 +204,77 @@ export default function LernErinnerung() {
     }
   };
 
+  const tagUmschalten = (tag: Wochentag) => {
+    setPlan(vorher => ({ ...vorher, [tag]: { ...vorher[tag], an: !vorher[tag].an } }));
+  };
+
+  const zeitSetzen = (tag: Wochentag, zeit: string) => {
+    setPlan(vorher => ({ ...vorher, [tag]: { ...vorher[tag], zeit } }));
+  };
+
   return (
     <section className={styles.box}>
-      <div className={styles.text}>
-        <strong className={styles.title}>Tägliche Lernerinnerung</strong>
-        <p className={styles.body}>
-          {aktiv
-            ? `Du wirst jeden Tag um ${zeit} Uhr erinnert.`
-            : 'Eine kurze Mitteilung am Tag, damit Lernen nicht untergeht.'}
-        </p>
-        {meldung && <p className={styles.hinweis}>{meldung}</p>}
+      <div className={styles.kopf}>
+        <strong className={styles.title}>Lernerinnerung</strong>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className="btn light sm"
+            onClick={() => setOffen(o => !o)}
+            disabled={laeuft}
+          >
+            {offen ? 'Fertig' : 'Bearbeiten'}
+          </button>
+          <button
+            type="button"
+            className="btn light sm"
+            disabled={laeuft}
+            onClick={() => void (aktiv ? ausschalten() : anwenden(plan))}
+          >
+            {laeuft ? 'Moment …' : aktiv ? 'Ausschalten' : 'Einschalten'}
+          </button>
+        </div>
       </div>
-      <div className={styles.actions}>
-        <input
-          type="time"
-          className={styles.zeit}
-          value={zeit}
-          onChange={event => {
-            setZeit(event.target.value);
-            // Läuft die Erinnerung schon, gilt die neue Zeit sofort — sonst
-            // müsste man erst aus- und wieder einschalten.
-            if (aktiv) void neuPlanen(event.target.value);
-          }}
-          disabled={laeuft}
-          aria-label="Uhrzeit der Erinnerung"
-        />
-        <button
-          type="button"
-          className="btn light"
-          disabled={laeuft}
-          onClick={() => void (aktiv ? ausschalten() : neuPlanen(zeit))}
-        >
-          {laeuft ? 'Moment …' : aktiv ? 'Ausschalten' : 'Einschalten'}
-        </button>
-      </div>
+
+      {meldung && <p className={styles.hinweis}>{meldung}</p>}
+
+      {offen && (
+        <div className={styles.plan}>
+          {/* Tag antippen schaltet ihn an oder aus. Die Uhrzeit steht daneben
+              und gilt nur für diesen Tag. */}
+          {TAGE_REIHE.map(tag => (
+            <div key={tag} className={styles.tagZeile}>
+              <button
+                type="button"
+                className={`${styles.tag} ${plan[tag].an ? styles.tagAn : ''}`}
+                onClick={() => tagUmschalten(tag)}
+                aria-pressed={plan[tag].an}
+              >
+                {TAG_KURZ[tag]}
+              </button>
+              <input
+                type="time"
+                className={styles.zeit}
+                value={plan[tag].zeit}
+                onChange={e => zeitSetzen(tag, e.target.value)}
+                disabled={!plan[tag].an}
+                aria-label={`Uhrzeit für ${TAG_KURZ[tag]}`}
+              />
+            </div>
+          ))}
+
+          <button
+            type="button"
+            className="btn primary"
+            onClick={() => { void anwenden(plan); setOffen(false); }}
+            disabled={laeuft}
+          >
+            Übernehmen
+          </button>
+        </div>
+      )}
+
+      {!offen && aktiv && <p className={styles.body}>{planBeschreiben(plan)}</p>}
     </section>
   );
 }

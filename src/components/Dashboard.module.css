@@ -170,10 +170,16 @@
   border-right: 0; border-bottom: 1px solid var(--line-strong);
 }
 .app .cdIcon { display: none; }
-.app .cdDays { font-size: clamp(36px, 11vw, 46px); line-height: 1; letter-spacing: -.035em; }
+.app .cdDays { font-size: clamp(29px, 8.5vw, 36px); line-height: 1.05; letter-spacing: -.03em; }
 .app .cdLabel { font-size: 15px; font-weight: 600; color: var(--ink); }
 /* Volle Breite heißt: eigene Zeile unter Zahl und Beschriftung. */
-.app .cdDate { width: 100%; margin-top: 6px; font-size: 12.5px; text-align: center; }
+/* Datum mit Kalendersymbol, mittig. Das Symbol macht aus einer Zeile Text
+   eine Angabe, die man als Termin liest. */
+.app .cdDate {
+  width: 100%; margin-top: 7px; font-size: 12.5px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+.app .cdDate svg { width: 14px; height: 14px; color: var(--accent); flex-shrink: 0; }
 
 .app .progressCol {
   justify-content: center; text-align: center; gap: 16px;

@@ -25,7 +25,7 @@ import AppEinstieg from '@/components/AppEinstieg';
 import AppTabBar from '@/components/AppTabBar';
 import AppHeader from '@/components/AppHeader';
 import ThemenView from '@/components/ThemenView';
-import { GrapefruitSpinner } from '@/components/Logo';
+import Startbild from '@/components/Startbild';
 import styles from './page.module.css';
 
 // Ohne Kauf frei zugänglich (Probezugang): Übersicht, alle Themenseiten und Konto.
@@ -423,13 +423,7 @@ export default function Home() {
     navigate('landing');
   };
 
-  if (loading || !routeReady) {
-    return (
-      <div className={styles.loading}>
-        <GrapefruitSpinner label="Einen Moment …" />
-      </div>
-    );
-  }
+  if (loading || !routeReady) return <Startbild />;
 
   if (view === 'landing') {
     // Angemeldet und in der App: Die Werbeseite ist hier fehl am Platz — sie ist
@@ -437,13 +431,7 @@ export default function Home() {
     // Webseiten-Oberfläche mit (Menü-Knopf, Preise, Hero). Der Effekt oben
     // schaltet gleich auf „Lernen"; für den einen Frame dazwischen zeigen wir
     // nichts davon.
-    if (imApp && user) {
-      return (
-        <div className={styles.loading}>
-          <GrapefruitSpinner label="Einen Moment …" />
-        </div>
-      );
-    }
+    if (imApp && user) return <Startbild />;
     // Wer die App installiert hat, muss nicht mehr überzeugt werden — statt der
     // Werbeseite der kurze Weg hinein. Im Browser unverändert.
     if (imApp && !user) {

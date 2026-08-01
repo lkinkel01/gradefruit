@@ -1,0 +1,42 @@
+/* Startbild: nur die Marke, mittig, ruhig.
+   Die Höhe zieht den Sicherheitsabstand des Seitenkörpers ab, sonst ist die
+   Seite in der App höher als der Bildschirm. */
+.seite {
+  min-height: calc(100dvh - env(safe-area-inset-top, 0px));
+  display: grid;
+  place-items: center;
+  padding: 32px 28px calc(32px + env(safe-area-inset-bottom, 0px));
+  background: var(--canvas);
+}
+
+.mitte {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 320px;
+  text-align: center;
+}
+
+/* Ein sehr ruhiges Atmen. Kein Rädchen: Das Logo ist das Zeichen, dass etwas
+   passiert, nicht ein Symbol für Warten.
+   Wichtig: OHNE `both`. Läuft die Animation aus irgendeinem Grund nicht an,
+   muss die Marke trotzdem sichtbar sein — genau daran hing schon einmal ein
+   weißer Bildschirm. */
+.mark {
+  display: inline-flex;
+  animation: atmen 2.4s var(--ease-out) infinite;
+}
+
+@keyframes atmen {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .72; transform: scale(.96); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark { animation: none; }
+}
+
+.text { color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+.leise { color: var(--faint); font-size: 13px; line-height: 1.55; }
+.mitte :global(.btn) { margin-top: 4px; }

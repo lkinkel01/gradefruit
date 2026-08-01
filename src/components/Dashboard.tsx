@@ -63,6 +63,7 @@ export default function Dashboard({ onNavigate }: Props) {
             <span className={styles.cdDays}>{daysLeft ?? '…'}</span>
             <span className={styles.cdLabel}>Tage bis zur Prüfung</span>
             <span className={styles.cdDate}>
+              <CalendarIcon size={14} />
               {EXAM_DATE.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
               {EXAM_DATE_IS_PRELIMINARY && ' · voraussichtlich'}
             </span>

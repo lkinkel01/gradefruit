@@ -36,38 +36,41 @@
    zwei Zeilen um und die zweite stand mittig unter der ersten: sichtbar schief,
    ohne dass etwas kaputt war. Eine Zeile ist ruhiger, und das seitliche
    Schieben kennt man von Filterreihen. */
+/* Wie die Stufen darüber: ein Raster in einer Fläche, kein Umbruch und kein
+   seitliches Schieben. Vorher stand „Stochastik" halb außerhalb — sichtbar
+   abgeschnitten, und niemand ahnt, dass man dort wischen könnte. Ein Raster
+   zeigt alles auf einmal.
+   Zwei Spalten, das dritte Thema über die volle Breite: Bei drei Einträgen ist
+   das die einzige Aufteilung ohne Loch. */
 .topicRow {
-  display: flex;
-  /* Erst der Rückfall, dann die bessere Regel: `safe center` zentriert nur,
-     solange alles hineinpasst, und rückt bei Überlauf an den Anfang. Ohne das
-     schneidet zentrierte Ausrichtung BEIDE Enden ab, und links stand „alysis". */
-  justify-content: flex-start;
-  justify-content: safe center;
-  gap: 8px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 5px;
   margin-bottom: 28px;
-  padding-bottom: 2px;
+  border-radius: var(--radius-control);
+  background: var(--surface-2);
 }
-.topicRow::-webkit-scrollbar { display: none; }
-.topicRow > * { flex-shrink: 0; }
+.topicRow > *:nth-child(3):last-child { grid-column: 1 / -1; }
+
 .chip {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 7px 12px;
-  border: 1px solid var(--line-strong);
+  padding: 7px 10px;
+  border: 0;
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--muted);
+  text-align: center;
   cursor: pointer;
   font-size: 12.5px;
   font-weight: 550;
   transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
   min-height: 44px;
 }
-.chipOn { border-color: var(--brand-rind); background: var(--brand-rind); color: #fff; }
+.chipOn { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-control); font-weight: 650; }
 .chipOn .cdot { background: #fff !important; }
 .cdot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; }
 

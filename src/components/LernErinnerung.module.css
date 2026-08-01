@@ -1,9 +1,6 @@
 /* Nur in der App sichtbar — deshalb ruhig eingebettet, kein Aufmacher. */
 .box {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
+  display: block;
   /* Keine eigene Linie oben: Der Block steht in „Mein Konto" direkt unter dem
      Profil, und dessen Karte schließt bereits mit einer Linie ab. Beide
      zusammen ergaben zwei Striche mit einer leeren Zeile dazwischen — es sah
@@ -12,7 +9,9 @@
   padding: 0 0 28px;
   border-bottom: 1px solid var(--line-strong);
 }
-.text { flex: 1; min-width: 220px; }
+/* Titel links, die zwei Knöpfe rechts. Bei wenig Platz rutschen sie darunter,
+   statt sich zu quetschen. */
+.kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .title { display: block; color: var(--ink); font-size: 15px; font-weight: 650; }
 .body { margin-top: 3px; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
 .hinweis { margin-top: 7px; color: var(--danger); font-size: 13px; line-height: 1.5; }
@@ -34,3 +33,22 @@
   .actions { width: 100%; }
   .actions :global(.btn) { flex: 1; }
 }
+
+/* Der Wochenplan: je Zeile ein Tag und seine Uhrzeit. Antippen schaltet den
+   Tag, die Uhrzeit gilt nur für ihn. Sieben Zeilen sind mehr als ein Feld,
+   aber sie sagen auf einen Blick, was passiert — eine einzelne Uhrzeit für
+   „täglich" hat das nie getan. */
+.plan { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.plan :global(.btn) { margin-top: 6px; width: 100%; justify-content: center; }
+
+.tagZeile { display: flex; align-items: center; gap: 10px; }
+.tag {
+  width: 52px; min-height: 44px; flex-shrink: 0;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-control);
+  background: transparent; color: var(--muted);
+  cursor: pointer; font: inherit; font-size: 13.5px; font-weight: 600;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
+}
+.tagAn { border-color: var(--ink); background: var(--ink); color: var(--canvas); }
+.tagZeile .zeit { flex: 1; }
+.tagZeile .zeit:disabled { opacity: .4; }

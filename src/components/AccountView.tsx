@@ -303,27 +303,6 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
         </div>
       </div>
 
-      {imApp && (
-        <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>Mehr</h2>
-          {/* Erklärvideos gehören zum bezahlten Kurs. Ohne Zugang bleibt die
-              Zeile weg, statt in einen Kaufhinweis zu führen — in der App darf
-              es keinen geben. */}
-          {(owned || ownedLk) && (
-            <button type="button" className={styles.linkRow} onClick={() => onNavigate('videos')}>
-              <PlayIcon size={17} />
-              <span className={styles.linkLabel}>Erklärvideos</span>
-              <ArrowRightIcon size={16} />
-            </button>
-          )}
-          <button type="button" className={styles.linkRow} onClick={() => onNavigate('tutors')}>
-            <TutorIcon size={17} />
-            <span className={styles.linkLabel}>1:1 Nachhilfe</span>
-            <ArrowRightIcon size={16} />
-          </button>
-        </div>
-      )}
-
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Passwort</h2>
         {!pwOffen ? (
@@ -446,6 +425,26 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           </>
         )}
       </div>
+      {imApp && (
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Mehr</h2>
+          {/* Erklärvideos gehören zum bezahlten Kurs. Ohne Zugang bleibt die
+              Zeile weg, statt in einen Kaufhinweis zu führen — in der App darf
+              es keinen geben. */}
+          {(owned || ownedLk) && (
+            <button type="button" className={styles.linkRow} onClick={() => onNavigate('videos')}>
+              <PlayIcon size={17} />
+              <span className={styles.linkLabel}>Erklärvideos</span>
+              <ArrowRightIcon size={16} />
+            </button>
+          )}
+          <button type="button" className={styles.linkRow} onClick={() => onNavigate('tutors')}>
+            <TutorIcon size={17} />
+            <span className={styles.linkLabel}>1:1 Nachhilfe</span>
+            <ArrowRightIcon size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
