@@ -53,6 +53,11 @@
 }
 .segDot,
 .cdot { width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; }
+/* Themen tragen keine Farbe: Farbige Punkte gibt es links schon, und dort
+   bedeuten sie eine Lernstufe. Zwei Bedeutungen für dieselbe Form nebeneinander
+   liest niemand richtig. Ein Ring statt einer Fläche — sichtbar, aber stumm. */
+.cdot { background: transparent; border: 1.5px solid var(--line-strong); }
+.chipOn .cdot { border-color: var(--ink); }
 
 .list { display: flex; flex-direction: column; border-top: 1px solid var(--line-strong); }
 .item {

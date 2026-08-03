@@ -229,6 +229,11 @@ export default function Home() {
     const body = document.body;
     body.classList.add('theme-switching');       // Übergänge kurz aus
     body.classList.toggle('dark', next);          // Farb-Variablen umstellen
+    // Zusätzlich am <html>: Die Fläche, die beim Überziehen sichtbar wird,
+    // gehört dem Dokument, nicht dem Seitenkörper — und Variablen vom <body>
+    // reichen nicht nach oben.
+    if (next) document.documentElement.dataset.theme = 'dark';
+    else delete document.documentElement.dataset.theme;
     setTimeout(() => body.classList.remove('theme-switching'), 60);
     try { localStorage.setItem('gf-theme', next ? 'dark' : 'light'); } catch { /* Speicher gesperrt */ }
     setDark(next);                                 // löst den Neuaufbau (key) aus

@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-08-03 (App-Feinschliff: Reels, gleiche Überschriften, iOS-Zoom-Fehler behoben)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-08-03 (Reels folgen dem Erscheinungsbild, Filter mehrfach wählbar, Offline repariert)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -737,6 +737,35 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   mitgelieferte Seite, wenn schon der allererste Start ohne Netz passiert (dann
   gibt es noch keinen Service Worker).
 
+- ✅ **Reel-Modus folgt dem Erscheinungsbild (03.08.2026, live):** Vorher war er
+  als einziger Bereich immer dunkel — das wirkte wie ein Fremdkörper. Alle Farben
+  laufen jetzt über Variablen auf `.wrap` in `feed.module.css`; die Bühne des
+  Players (`SceneModal.module.css`) erbt sie. Dazu: kein Zurück-Pfeil mehr oben
+  links (dort ist neben der Bewertung kein Platz) — der Weg zurück sitzt unten
+  rechts in der Aktionsspalte, und er führt dahin, wo man war, statt aufs
+  Dashboard. Die Beschriftung verschwindet nicht mehr hinter der
+  Navigationsleiste (`--reel-unten` in der App auf 104px).
+- ✅ **Filter unter „Wiederholen" mehrfach wählbar (03.08.2026, live):** Beide
+  Spalten funktionieren jetzt gleich — „Alle" oben, darunter beliebig viele
+  Einzelwahlen. Vorher war die Lernstufe eine Einzelwahl: „unklar UND
+  wiederholen" ging nicht, obwohl das die naheliegende Frage ist. Die Themen
+  tragen bewusst **keine Farbe** mehr, sondern einen Ring: Farbige Punkte gibt
+  es links schon, und dort bedeuten sie eine Lernstufe.
+- ✅ **Kein weißer Streifen mehr beim Überziehen (03.08.2026, live):** Die
+  Fläche, die beim Nachfedern sichtbar wird, gehört der Webansicht, nicht der
+  Seite. Sie stand fest auf Hell (aus `capacitor.config.json`). Jetzt zwei
+  Stellen: `web.underPageBackgroundColor = nil` (WebKit nimmt die Farbe der
+  Seite) und `html[data-theme="dark"]` in `globals.css` — Variablen vom `<body>`
+  reichen nicht bis zum `<html>`, deshalb setzt das Theme-Skript zusätzlich ein
+  Merkmal am `<html>`.
+- ⚠️ **Screenshot-Schutz wieder eingeschaltet (03.08.2026, ungeprüft):** Der
+  frühere Befund „wirkungslos" stammt aus dem **Simulator** — dort ist ein
+  Screenshot eine Aufnahme des Mac-Fensters und nicht ein iOS-Screenshot, die
+  geschützte Ebene greift also gar nicht. Auf einem echten iPhone ist es
+  derselbe Weg wie bei WhatsApps „einmal ansehen". `protectAgainstScreenshots()`
+  in `AppDelegate.swift` ist wieder aktiv. **Wenn die App danach leer oder
+  verschoben startet: die eine Zeile auskommentieren und neu bauen.**
+
 ## Bekannte Probleme / offen
 
 **Verkauf**
@@ -762,9 +791,11 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Screenshot ist der schnellste Weg.
 
 **App: offen und bewusst nicht gelöst**
-- 🔴 **Screenshots lassen sich auf iOS nicht verhindern** — vier Umsetzungen
-  geprüft, alle belegt wirkungslos oder schädlich (siehe unten). Was funktioniert:
-  **Bildschirmaufnahme** wird erkannt und abgedeckt (`ScreenshotGuard`).
+- 🟠 **Screenshot-Schutz auf iOS: neuer Versuch, am Gerät ungeprüft.** Alle
+  früheren Befunde stammen aus dem Simulator und sind damit wertlos. Am echten
+  Gerät muss geprüft werden, ob der Screenshot leer herauskommt UND die App
+  normal aussieht. **Bildschirmaufnahme** wird davon unabhängig erkannt und
+  abgedeckt.
 
 **Sonstiges**
 - 🟡 **Zusammenfassungs-Fortschritt liegt nur lokal** (`gf-summary-status`) —

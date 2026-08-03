@@ -98,16 +98,6 @@ function buildFeed(topic: TopicId | null): VideoCard[] {
   return topicVideos.length > 0 ? topicVideos : allVideos;
 }
 
-function HomeIcon() {
-  return (
-    <svg aria-hidden="true" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m3 10 9-7 9 7" />
-      <path d="M5 9.5V21h14V9.5" />
-      <path d="M9.5 21v-6h5v6" />
-    </svg>
-  );
-}
-
 function BackIcon() {
   return (
     <svg aria-hidden="true" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
@@ -127,15 +117,6 @@ export default function FeedPage() {
   const [index, setIndex] = useState(0);
   const [topic, setTopic] = useState<TopicId | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
-
-  // Der helle Streifen hinter der Statusleiste passt nicht zum dunklen
-  // Reel-Modus — hier reicht das eigene Dunkel bis nach oben durch.
-  useEffect(() => {
-    // Nicht 'transparent': darunter liegt der native Fensterhintergrund, und der
-    // ist hell — genau deshalb blieb der Balken weiß. Also die Reel-Farbe setzen.
-    document.documentElement.style.setProperty('--top-strip', '#050505');
-    return () => { document.documentElement.style.removeProperty('--top-strip'); };
-  }, []);
 
   useEffect(() => {
     if (!loading && !user) router.replace('/');
@@ -267,29 +248,25 @@ export default function FeedPage() {
       </div>
 
       {/* Bewerten gehört nach oben: Dort liegt es unter den
-          Fortschrittsstreifen und verdeckt weder Bild noch Beschriftung.
-          Links davon der Weg zurück. */}
-      <div className={styles.topRow}>
-        <button className={styles.back} onClick={goBack} aria-label="Zurück">
-          <BackIcon />
-        </button>
-        <div className={styles.statusBar} aria-label="Lernstatus für das aktuelle Video">
-          {STATUS_OPTIONS.map(option => (
-            <button
-              key={option.status}
-              type="button"
-              className={`${styles.statusButton} ${activeStatus === option.status ? styles.statusButtonActive : ''}`}
-              aria-pressed={activeStatus === option.status}
-              disabled={!activeCard.task}
-              onClick={() => chooseStatus(option.status)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
+          Fortschrittsstreifen und verdeckt weder Bild noch Beschriftung. */}
+      <div className={styles.statusBar} aria-label="Lernstatus für das aktuelle Video">
+        {STATUS_OPTIONS.map(option => (
+          <button
+            key={option.status}
+            type="button"
+            className={`${styles.statusButton} ${activeStatus === option.status ? styles.statusButtonActive : ''}`}
+            aria-pressed={activeStatus === option.status}
+            disabled={!activeCard.task}
+            onClick={() => chooseStatus(option.status)}
+          >
+            {option.label}
+          </button>
+        ))}
       </div>
 
-      {/* Aktionsspalte rechts: zur Aufgabe springen und zurück zum Start. */}
+      {/* Aktionsspalte rechts: zur Aufgabe springen und zurückgehen. Der Weg
+          zurück steht bewusst hier unten in Daumenreichweite und nicht als
+          Pfeil oben links — dort ist im Reel kein Platz neben der Bewertung. */}
       <div className={styles.rail} aria-label="Aktionen zum aktuellen Video">
         {activeCard.task && (
           <button type="button" className={styles.railButton} onClick={openTask}>
@@ -298,13 +275,9 @@ export default function FeedPage() {
           </button>
         )}
 
-        <button
-          type="button"
-          className={styles.railButton}
-          onClick={() => router.push('/?view=dashboard')}
-        >
-          <span className={styles.railIcon}><HomeIcon /></span>
-          <span className={styles.railLabel}>Start</span>
+        <button type="button" className={styles.railButton} onClick={goBack}>
+          <span className={styles.railIcon}><BackIcon /></span>
+          <span className={styles.railLabel}>Zurück</span>
         </button>
       </div>
 

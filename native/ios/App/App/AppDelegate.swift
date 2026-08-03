@@ -87,13 +87,24 @@ final class ScreenshotGuard {
     }
 
     func start() {
-        // ABGESCHALTET — nachgewiesen wirkungslos: Der Simulator-Bildschirm und
-        // der iOS-Screenshot zeigen beide denselben Inhalt. Die weißen
-        // Screenshots der vorigen Versuche waren kein Schutz, sondern eine noch
-        // nicht fertig gezeichnete Seite.
-        // protectAgainstScreenshots()
+        // Wieder eingeschaltet (03.08.2026). Der frühere Befund „wirkungslos"
+        // stammt aus dem **Simulator** — und dort greift die geschützte Ebene
+        // nachweislich nicht: Ein Simulator-Screenshot ist eine Aufnahme des
+        // Mac-Fensters, nicht ein iOS-Screenshot. Auf einem echten iPhone ist
+        // das derselbe Weg, den WhatsApp für „einmal ansehen" benutzt.
+        //
+        // Falls die App danach leer oder verschoben startet: Diese eine Zeile
+        // auskommentieren, neu bauen — alles andere bleibt unberührt.
+        protectAgainstScreenshots()
         observeScreenRecording()
         updateRecordingCover()
+    }
+
+    /// Nach Größenänderungen (Drehen, Fenster, Tastatur) sitzen die umgehängten
+    /// Ebenen sonst versetzt — sie liegen außerhalb der automatischen Anordnung.
+    func refreshGeometry() {
+        guard secureLayer != nil else { return }
+        applyGeometry()
     }
 
     // MARK: - Screenshots ins Leere laufen lassen
@@ -234,12 +245,21 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     /// 2. **Nie seitlich schieben.** Läuft der Inhalt einmal über die Breite
     ///    hinaus, bleibt die Seite sonst dauerhaft verschoben stehen.
     private func scrollverhalten() {
+        screenshotGuard?.refreshGeometry()
         guard let window = window, let web = Self.webansicht(in: window) else { return }
         let sicht = web.scrollView
         sicht.bounces = true
         sicht.alwaysBounceVertical = true
         sicht.alwaysBounceHorizontal = false
         sicht.contentInsetAdjustmentBehavior = .never
+        // Die Fläche, die beim Überziehen sichtbar wird, gehört der Webansicht,
+        // nicht der Seite. Stand sie fest (hell aus der Konfiguration), blitzte
+        // im dunklen Erscheinungsbild ein weißer Streifen auf. `nil` heißt:
+        // WebKit nimmt die Hintergrundfarbe der Seite — und die kennt hell und
+        // dunkel.
+        web.underPageBackgroundColor = nil
+        web.isOpaque = true
+        sicht.backgroundColor = nil
         // Ein hineingezoomter Zustand überlebt sonst jeden Seitenwechsel und
         // schneidet den rechten Rand ab.
         if sicht.zoomScale != 1 {

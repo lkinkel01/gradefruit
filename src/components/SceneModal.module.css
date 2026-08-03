@@ -431,18 +431,19 @@
 /* ---------- Reel-Fassung ----------
    Ein Reel ist kein verkleinertes Modal, sondern ein eigenes Bild: Streifen
    oben, Bühne in der Mitte, Beschriftung unten links. Alles liegt übereinander
-   auf derselben dunklen Fläche, ohne Karten und ohne Rahmen — genau das
-   unterscheidet ein Reel von einer Seite mit Inhalt.
+   auf derselben Fläche, ohne Karten und ohne Rahmen — genau das unterscheidet
+   ein Reel von einer Seite mit Inhalt.
 
-   Zwei Werte kommen von außen (die Seite kennt Leiste und Aktionsspalte):
-   --reel-rail  = Platz rechts, den die Aktionsspalte braucht
-   --reel-unten = Platz unten, den Navigationsleiste und Home-Anzeige brauchen */
+   Die Farben kommen von der Seite (`feed.module.css`) und folgen dem
+   Erscheinungsbild; die Maße --reel-rail und --reel-unten ebenfalls, weil nur
+   die Seite Aktionsspalte und Navigationsleiste kennt. Die Rückfallwerte gelten
+   dort, wo der Player ohne diese Seite steht. */
 .reel {
   position: relative;
   height: 100%;
   display: flex;
   flex-direction: column;
-  color: #fff;
+  color: var(--reel-ink, #fff);
   /* iOS: langes Drücken darf weder Text markieren noch das Kopieren-Menü öffnen. */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -466,12 +467,12 @@
   height: 2.5px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.26);
+  background: var(--reel-linie, rgba(255, 255, 255, 0.26));
 }
 .reelBarFill {
   display: block;
   height: 100%;
-  background: #fff;
+  background: var(--reel-ink, #fff);
   transform-origin: left center;
   transition: transform 140ms linear;
 }
@@ -488,16 +489,16 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 14px 16px 0;
+  padding: 44px 16px 0;
   pointer-events: none;
 }
 
 .reelFunc {
   flex: none;
   padding: 7px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid var(--reel-linie, rgba(255, 255, 255, 0.16));
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--reel-schleier, rgba(255, 255, 255, 0.07));
   font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -511,12 +512,11 @@
   flex: 0 1 auto;
 }
 .reelGraph .axis,
-.reelGraph .gridline { stroke: rgba(255, 255, 255, 0.22); }
+.reelGraph .gridline { stroke: var(--reel-dim, rgba(255, 255, 255, 0.22)); opacity: 0.4; }
 .reelGraph .arrowHead,
 .reelGraph .gridlabel,
-.reelGraph .axisLabel,
-.reelGraph .markLabel { fill: rgba(255, 255, 255, 0.7); }
-.reelGraph .markLabel { fill: #fff; }
+.reelGraph .axisLabel { fill: var(--reel-dim, rgba(255, 255, 255, 0.7)); }
+.reelGraph .markLabel { fill: var(--reel-ink, #fff); }
 .reelGraph .curve { stroke-width: 3.4; }
 
 /* Immer nur der Schritt, der gerade dran ist. Eine wachsende Liste ist eine
@@ -543,7 +543,7 @@
 }
 .reelStepBody { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .reelStepTitle {
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--reel-dim, rgba(255, 255, 255, 0.82));
   font-size: 13px;
   font-weight: 650;
 }
@@ -552,7 +552,6 @@
   font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.01em;
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.6);
 }
 
 /* Ohne Graph: Funktion und Formel werden zum Bild. */
@@ -565,7 +564,6 @@
   font-weight: 750;
   line-height: 1.35;
   text-align: center;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
 }
 .reelStageText .reelStep { justify-content: center; }
 .reelStageText .reelStepMath { font-size: 24px; line-height: 1.3; }
@@ -582,7 +580,7 @@
 }
 
 /* Beschriftung unten links, wie der Text unter einem Reel. Rechts bleibt die
-   Spalte mit den Aktionen frei. */
+   Spalte mit den Aktionen frei, unten die Navigationsleiste. */
 .reelFoot {
   position: relative;
   z-index: 7;
@@ -590,21 +588,20 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  padding: 18px 16px calc(var(--reel-unten, 24px));
-  padding-right: calc(var(--reel-rail, 16px));
+  padding: 18px 16px var(--reel-unten, 24px);
+  padding-right: var(--reel-rail, 16px);
   pointer-events: none;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.36) 52%, transparent);
-  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
+  background: var(--reel-verlauf, linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.36) 52%, transparent));
 }
 .reelTopic {
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--reel-dim, rgba(255, 255, 255, 0.72));
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 .reelTitle {
-  color: #fff;
+  color: var(--reel-ink, #fff);
   font-size: 17px;
   font-weight: 780;
   letter-spacing: -0.015em;
@@ -619,7 +616,7 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--reel-dim, rgba(255, 255, 255, 0.82));
   font-size: 13px;
   line-height: 1.45;
 }
@@ -639,14 +636,14 @@
   padding: 4px 0;
   border: 0;
   background: none;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--reel-ink, #fff);
   font: inherit;
   font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
   pointer-events: auto;
 }
-.reelMehr:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.reelMehr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Ganze Bühne ist tipp-/haltbar; vertikales Wischen bleibt fürs Reel-Scrollen. */
 .reelGestures {
@@ -674,7 +671,8 @@
   height: 68px;
   padding: 20px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.44);
+  fill: var(--reel-ink, #fff);
+  background: var(--reel-flaeche, rgba(0, 0, 0, 0.44));
 }
 
 @keyframes reelRein {
@@ -684,12 +682,10 @@
 
 @media (max-height: 720px) {
   .reelGraph { max-height: 34dvh; }
-  .reelCaption { -webkit-line-clamp: 2; line-clamp: 2; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .reelStep,
-  .reelCaption,
   .reelFunc,
   .reelResult { animation: none; }
   .reelBarFill { transition: none; }

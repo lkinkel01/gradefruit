@@ -34,13 +34,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" data-scroll-behavior="smooth">
+    <html lang="de" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body suppressHydrationWarning>
         {/* Setzt das gespeicherte Theme VOR dem ersten Rendern, damit die Seite
             nicht kurz hell aufblitzt und dann auf Dunkel springt. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(localStorage.getItem('gf-theme')==='dark')document.body.classList.add('dark')}catch(e){}`,
+            __html: `try{if(localStorage.getItem('gf-theme')==='dark'){document.body.classList.add('dark');document.documentElement.dataset.theme='dark'}}catch(e){}`,
           }}
         />
         {/* Auffangnetz für den Link aus der „Passwort vergessen"-Mail.

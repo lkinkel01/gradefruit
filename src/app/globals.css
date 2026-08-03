@@ -111,6 +111,13 @@ html, body { height: 100%; }
    und erzeugt anders als `hidden` keinen Scroll-Container — sticky-Elemente
    wie Navigation und Seitenleiste funktionieren also weiter. */
 html { overflow-x: clip; max-width: 100%; }
+/* Die Farbe MUSS auch am <html> stehen, nicht nur am <body>.
+   Zieht man in der App über den Anschlag hinaus, wird eine Fläche sichtbar, die
+   nicht mehr zur Seite gehört — WebKit malt dort die Hintergrundfarbe des
+   Dokuments. Stand sie nur am <body>, blieb dort im dunklen Erscheinungsbild
+   ein weißer Streifen stehen. */
+html { background: #F7F7F8; }
+html[data-theme="dark"] { background: #131315; }
 * { min-width: 0; }
 img, svg, video, canvas { max-width: 100%; }
 html { scroll-behavior: smooth; }

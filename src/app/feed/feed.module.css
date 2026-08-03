@@ -1,30 +1,57 @@
 /* Reel-Modus.
 
-   Zwei Maße gibt diese Seite an den Player weiter, weil nur sie beide kennt:
-   wie viel Platz die Aktionsspalte rechts belegt und wie viel unten für die
-   Navigationsleiste frei bleiben muss. Der Player rechnet damit seine
-   Beschriftung ein, statt sie zu erraten. */
+   Folgt dem Erscheinungsbild: Wer hell eingestellt hat, bekommt auch hier hell.
+   Ein Bereich, der als einziger immer dunkel ist, wirkt wie ein Fremdkörper —
+   und man tippt zweimal, bis man wieder weiß, wo man ist.
+
+   Alle Farben laufen über die Variablen hier oben; die Bühne des Players
+   (SceneModal.module.css) erbt sie. Zwei Maße gibt diese Seite ebenfalls
+   weiter, weil nur sie beide kennt: den Platz für die Aktionsspalte rechts und
+   den für die Navigationsleiste unten. */
 .wrap {
   position: relative;
   height: 100dvh;
   overflow: hidden;
-  color: #fff;
-  background: #050505;
+
+  --reel-grund: #F2F2F4;
+  --reel-ink: #131315;
+  --reel-dim: rgba(19, 19, 21, 0.62);
+  --reel-linie: rgba(19, 19, 21, 0.14);
+  --reel-flaeche: rgba(255, 255, 255, 0.72);
+  --reel-schleier: rgba(19, 19, 21, 0.06);
+  --reel-schatten: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --reel-verlauf: linear-gradient(0deg, rgba(242, 242, 244, 0.94), rgba(242, 242, 244, 0.6) 52%, transparent);
+
   --reel-rail: 84px;
-  --reel-unten: calc(env(safe-area-inset-bottom, 0px) + 22px);
+  --reel-unten: calc(env(safe-area-inset-bottom, 0px) + 26px);
+
+  color: var(--reel-ink);
+  background: var(--reel-grund);
+}
+
+:global(body.dark) .wrap {
+  --reel-grund: #050505;
+  --reel-ink: #fff;
+  --reel-dim: rgba(255, 255, 255, 0.68);
+  --reel-linie: rgba(255, 255, 255, 0.16);
+  --reel-flaeche: rgba(18, 18, 20, 0.62);
+  --reel-schleier: rgba(255, 255, 255, 0.08);
+  --reel-schatten: 0 10px 30px rgba(0, 0, 0, 0.34);
+  --reel-verlauf: linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.36) 52%, transparent);
 }
 
 /* In der App liegt die Navigationsleiste unten im Bild — die Beschriftung des
-   Reels muss darüber bleiben. */
+   Reels muss vollständig darüber bleiben, samt „mehr". Der Wert ist die Höhe
+   der Leiste (rund 64) plus ihr Abstand nach unten plus Luft. */
 .imApp {
-  --reel-unten: calc(env(safe-area-inset-bottom, 0px) + 78px);
+  --reel-unten: calc(env(safe-area-inset-bottom, 0px) + 104px);
 }
 
 .gate {
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  background: #050505;
+  background: var(--canvas);
 }
 
 .feed {
@@ -49,13 +76,19 @@
   scroll-snap-stop: always;
 }
 
-/* Der Rahmen ist die Videofläche: randlos, dunkel, mit einem Schimmer in der
-   Farbe des Themas. */
+/* Der Rahmen ist die Videofläche: randlos, mit einem Schimmer in der Farbe des
+   Themas. */
 .frame {
   position: relative;
   width: min(100%, 520px);
   height: 100%;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 76% 16%, rgba(255, 122, 0, 0.14), transparent 42%),
+    linear-gradient(160deg, #FAFAFB 0%, #F1F1F3 54%, #E9E9EC 100%);
+}
+
+:global(body.dark) .frame {
   background:
     radial-gradient(circle at 76% 16%, rgba(255, 122, 0, 0.18), transparent 42%),
     linear-gradient(160deg, #17171a 0%, #0a0a0c 54%, #020203 100%);
@@ -74,6 +107,12 @@
   position: absolute;
   inset: 0;
   background:
+    linear-gradient(180deg, rgba(242, 242, 244, 0.4), transparent 22%),
+    linear-gradient(0deg, rgba(242, 242, 244, 0.7), transparent 46%);
+}
+
+:global(body.dark) .poster::after {
+  background:
     linear-gradient(180deg, rgba(3, 3, 4, 0.42), transparent 22%),
     linear-gradient(0deg, rgba(3, 3, 4, 0.72), transparent 46%);
 }
@@ -81,8 +120,10 @@
 .posterCurve {
   width: 128%;
   height: 66%;
-  opacity: 0.14;
+  opacity: 0.1;
 }
+
+:global(body.dark) .posterCurve { opacity: 0.14; }
 
 .posterCurve path {
   fill: none;
@@ -92,31 +133,22 @@
   vector-effect: non-scaling-stroke;
 }
 
-/* ---------- Kopfzeile: zurück + Bewertung ----------
-   Liegt unter den Fortschrittsstreifen des Players (die stehen ganz oben). */
-.topRow {
+/* ---------- Bewertung oben ---------- */
+.statusBar {
   position: fixed;
   z-index: 60;
   top: calc(env(safe-area-inset-top, 0px) + 24px);
   left: 50%;
-  width: min(calc(100% - 16px), 512px);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transform: translateX(-50%);
-}
-
-.statusBar {
-  flex: 1;
-  min-width: 0;
+  width: min(calc(100% - 16px), 460px);
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 3px;
   padding: 3px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--reel-linie);
   border-radius: 999px;
-  background: rgba(18, 18, 20, 0.62);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  background: var(--reel-flaeche);
+  box-shadow: var(--reel-schatten);
+  transform: translateX(-50%);
 }
 
 .statusButton {
@@ -125,12 +157,12 @@
   padding: 0 4px;
   border: 0;
   border-radius: 999px;
-  color: rgba(255, 255, 255, 0.66);
+  color: var(--reel-dim);
   background: transparent;
   font: inherit;
   font-size: 10.5px;
-  letter-spacing: -0.01em;
   font-weight: 650;
+  letter-spacing: -0.01em;
   line-height: 1.15;
   cursor: pointer;
   transition: color 160ms var(--ease-out), background-color 160ms var(--ease-out);
@@ -162,7 +194,7 @@
   padding: 0;
   border: 0;
   background: none;
-  color: #fff;
+  color: var(--reel-ink);
   font: inherit;
   cursor: pointer;
   transition: transform 120ms var(--ease-out), opacity 160ms var(--ease-out);
@@ -173,67 +205,39 @@
   height: 46px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid var(--reel-linie);
   border-radius: 50%;
-  background: rgba(18, 18, 20, 0.6);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.34);
+  background: var(--reel-flaeche);
+  box-shadow: var(--reel-schatten);
 }
 
 .railLabel {
   font-size: 10px;
-  letter-spacing: -0.01em;
   font-weight: 650;
+  letter-spacing: -0.01em;
   line-height: 1.1;
   text-align: center;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
 }
 
-.railButton:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
+.railButton:disabled { opacity: 0.4; cursor: default; }
+.railButton:active:not(:disabled) { transform: scale(0.94); }
 
-.railButton:active:not(:disabled) {
-  transform: scale(0.94);
-}
-
-
-.back {
-  flex: none;
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  color: #fff;
-  background: rgba(12, 12, 14, 0.42);
-  cursor: pointer;
-  transition: background-color 160ms var(--ease-out);
-}
-
-.back:focus-visible,
 .statusButton:focus-visible,
 .railButton:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .railButton:not(:disabled):hover .railIcon {
-    background-color: rgba(255, 255, 255, 0.14);
-  }
-  .statusButton:not(:disabled):hover { color: #fff; background-color: rgba(255, 255, 255, 0.1); }
-  .statusButtonActive:not(:disabled):hover { background-color: var(--accent); }
-  .back:hover {
-    background-color: rgba(255, 255, 255, 0.16);
-  }
+  .railButton:not(:disabled):hover .railIcon { background-color: var(--reel-schleier); }
+  .statusButton:not(:disabled):hover { color: var(--reel-ink); background-color: var(--reel-schleier); }
+  .statusButtonActive:not(:disabled):hover { color: #fff; background-color: var(--accent); }
 }
 
 @media (min-width: 700px) {
   .frame {
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid var(--reel-linie);
+    border-left: 1px solid var(--reel-linie);
   }
 }
 
@@ -245,6 +249,5 @@
 @media (prefers-reduced-motion: reduce) {
   .feed { scroll-behavior: auto; }
   .railButton,
-  .statusButton,
-  .back { transition-duration: 1ms; }
+  .statusButton { transition-duration: 1ms; }
 }

@@ -21,8 +21,8 @@ type TopicId = 'analysis' | 'linalg' | 'stochastik';
 // Nummer und Überschrift aus dem Inhaltsverzeichnis. Der Aufgabentext selbst
 // wird erst beim Öffnen vom Server geholt.
 
-type StatusFilter = 'alle' | Exclude<LernStatus, 'none'>;
-const STATUS_FILTERS: StatusFilter[] = ['alle', 'unklar', 'wiederholen', 'verstanden'];
+type Stufe = Exclude<LernStatus, 'none'>;
+const STUFEN: Stufe[] = ['unklar', 'wiederholen', 'verstanden'];
 
 // Ampel: grün = verstanden, gelb = wiederholen, rot = nicht verstanden.
 const STATUS_DOT: Record<Exclude<LernStatus, 'none'>, string> = {
@@ -51,7 +51,11 @@ export default function ReviewView({ level, onNavigate }: Props) {
   };
 
   const { statusOf } = useProgress();
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('alle');
+  // Beide Filter sind Mengen und funktionieren gleich: leer heißt „alle".
+  // Vorher war die Lernstufe eine Einzelwahl — man konnte nicht „unklar UND
+  // wiederholen" sehen, obwohl genau das die naheliegende Frage ist
+  // („was kann ich noch nicht?").
+  const [stufenFilter, setStufenFilter] = useState<Set<Stufe>>(new Set());
   const [topicFilter, setTopicFilter] = useState<Set<TopicId>>(new Set());
 
   // Sprung vom Dashboard: gewünschte Lernstufe vorwählen (einmalig).
@@ -61,7 +65,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
       const s = localStorage.getItem('gf-review-status');
       if (s === 'verstanden' || s === 'wiederholen' || s === 'unklar') {
         frame = requestAnimationFrame(() => {
-          setStatusFilter(s);
+          setStufenFilter(new Set([s]));
           localStorage.removeItem('gf-review-status');
         });
       }
@@ -80,6 +84,15 @@ export default function ReviewView({ level, onNavigate }: Props) {
     });
   };
 
+  const toggleStufe = (s: Stufe) => {
+    setStufenFilter(prev => {
+      const next = new Set(prev);
+      if (next.has(s)) next.delete(s);
+      else next.add(s);
+      return next;
+    });
+  };
+
   // Alle eingeordneten Inhalte der gewählten Stufe einsammeln
   const activeTopics = TOPICS.filter(t => topicFilter.size === 0 || topicFilter.has(t.id as TopicId));
   const items = activeTopics.flatMap(topic => {
@@ -87,7 +100,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
     return tasks
       .map(task => ({ topic, task, status: statusOf(topic.id, task.id) }))
       .filter(x => x.status !== 'none')
-      .filter(x => statusFilter === 'alle' || x.status === statusFilter);
+      .filter(x => stufenFilter.size === 0 || stufenFilter.has(x.status as Stufe));
   });
 
   // Reihenfolge: Unklares zuerst, dann Wiederholen, Verstandenes zuletzt –
@@ -113,41 +126,60 @@ export default function ReviewView({ level, onNavigate }: Props) {
       {!imApp && <h1 className={styles.ph1}>Wiederholen</h1>}
 
       {/* Filter: links die Lernstufe, rechts die Themen — beides untereinander
-          und nebeneinander sichtbar. Als Reihe brach der längste Name („Lineare
-          Algebra & Geometrie") entweder um oder wurde abgeschnitten; in einer
-          Spalte hat jeder Name die volle Breite für sich. */}
+          und nebeneinander sichtbar. Beide Spalten funktionieren gleich:
+          „Alle" oben, darunter beliebig viele Einzelwahlen. Ein Klick auf eine
+          Einzelwahl hebt „Alle" auf, ein Klick auf „Alle" leert die Auswahl.
+          Die Punkte links tragen die Ampelfarben; die Themen bekommen bewusst
+          keine Farbe, sonst liest man sie als vierte Lernstufe. */}
       <div className={styles.filters}>
-        <div className={styles.filterCol} role="tablist" aria-label="Lernstufe filtern">
-          {STATUS_FILTERS.map(s => (
-            <button
-              key={s}
-              role="tab"
-              aria-selected={statusFilter === s}
-              className={`${styles.seg} ${statusFilter === s ? styles.segOn : ''}`}
-              onClick={() => setStatusFilter(s)}
-            >
-              <span
-                className={styles.segDot}
-                style={{ background: s === 'alle' ? 'transparent' : STATUS_DOT[s] }}
-                aria-hidden="true"
-              />
-              {s === 'alle' ? 'Alle' : STATUS_LABEL[s]}
-            </button>
-          ))}
+        <div className={styles.filterCol} aria-label="Lernstufe filtern">
+          <button
+            type="button"
+            className={`${styles.seg} ${stufenFilter.size === 0 ? styles.segOn : ''}`}
+            aria-pressed={stufenFilter.size === 0}
+            onClick={() => setStufenFilter(new Set())}
+          >
+            <span className={styles.segDot} style={{ background: 'transparent' }} aria-hidden="true" />
+            Alle
+          </button>
+          {STUFEN.map(stufe => {
+            const an = stufenFilter.has(stufe);
+            return (
+              <button
+                key={stufe}
+                type="button"
+                className={`${styles.seg} ${an ? styles.segOn : ''}`}
+                aria-pressed={an}
+                onClick={() => toggleStufe(stufe)}
+              >
+                <span className={styles.segDot} style={{ background: STATUS_DOT[stufe] }} aria-hidden="true" />
+                {STATUS_LABEL[stufe]}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Themen (mehrere gleichzeitig wählbar) */}
         <div className={styles.filterCol} aria-label="Themen filtern">
+          <button
+            type="button"
+            className={`${styles.chip} ${topicFilter.size === 0 ? styles.chipOn : ''}`}
+            aria-pressed={topicFilter.size === 0}
+            onClick={() => setTopicFilter(new Set())}
+          >
+            <span className={styles.cdot} aria-hidden="true" />
+            Alle
+          </button>
           {TOPICS.map(t => {
             const on = topicFilter.has(t.id as TopicId);
             return (
               <button
                 key={t.id}
+                type="button"
                 className={`${styles.chip} ${on ? styles.chipOn : ''}`}
                 aria-pressed={on}
                 onClick={() => toggleTopic(t.id as TopicId)}
               >
-                <span className={styles.cdot} style={{ background: t.color }} />
+                <span className={styles.cdot} aria-hidden="true" />
                 {t.label}
               </button>
             );
