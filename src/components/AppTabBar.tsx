@@ -79,6 +79,33 @@ export default function AppTabBar({
   // dass die Navigation je verschwindet.
   const [kompakt, setKompakt] = useState(false);
   const letzte = useRef(0);
+  const leisteRef = useRef<HTMLElement | null>(null);
+
+  // Die eigene Höhe bekanntgeben.
+  //
+  // Andere Bereiche müssen Platz über der Leiste freihalten — im Reel etwa die
+  // Beschriftung und die Zeitleiste. Solange dieser Wert im Stylesheet
+  // ausgerechnet wurde („64 + 6 + Sicherheitsabstand"), stimmte er irgendwann
+  // nicht mehr: Die Leiste rückt beim Scrollen zusammen, und der
+  // Sicherheitsabstand ist je Gerät ein anderer. Gemessen stimmt er immer.
+  useEffect(() => {
+    const messen = () => {
+      const el = leisteRef.current;
+      if (!el) return;
+      const kasten = el.getBoundingClientRect();
+      const hoehe = Math.max(0, Math.round(window.innerHeight - kasten.top));
+      document.documentElement.style.setProperty('--gf-leiste', `${hoehe}px`);
+    };
+    messen();
+    const beobachter = new ResizeObserver(messen);
+    if (leisteRef.current) beobachter.observe(leisteRef.current);
+    window.addEventListener('resize', messen);
+    return () => {
+      beobachter.disconnect();
+      window.removeEventListener('resize', messen);
+      document.documentElement.style.removeProperty('--gf-leiste');
+    };
+  }, []);
 
   useEffect(() => {
     // In der App scrollt der Seitenkörper, nicht das Dokument — deshalb beide
@@ -109,6 +136,7 @@ export default function AppTabBar({
 
   return (
     <nav
+      ref={leisteRef}
       className={`${styles.leiste} ${dunkel ? styles.dunkel : ''} ${kompakt ? styles.kompakt : ''}`}
       aria-label="Hauptnavigation"
     >

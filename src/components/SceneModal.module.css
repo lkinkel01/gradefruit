@@ -561,7 +561,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  padding: 18px 16px var(--reel-unten, 24px);
+  padding: 18px 16px 10px;
   padding-right: var(--reel-rail, 16px);
   pointer-events: none;
   background: var(--reel-verlauf, linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.36) 52%, transparent));
@@ -602,23 +602,22 @@
 }
 .reelCaptionOffen::-webkit-scrollbar { display: none; }
 
-/* Zeitleiste: ziehen zum Spulen, daneben die Sekunden. Sie liegt unter der
-   Beschriftung und über der Navigationsleiste — dort, wo man sie von TikTok
-   kennt und wo der Daumen ohnehin ist. */
+/* Zeitleiste über der Navigationsleiste, wie bei TikTok: über die ganze
+   Breite, nicht eingerückt neben der Aktionsspalte. Sie ist das Letzte im
+   Stapel und hält deshalb selbst den Abstand zur Leiste frei — die Höhe der
+   Leiste misst AppTabBar und legt sie unter --gf-leiste ab. */
 .reelZeit {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  position: relative;
+  z-index: 9;
+  flex: none;
+  padding: 0 12px var(--reel-unten, 24px);
   pointer-events: auto;
 }
 /* Die Griffleiste ist absichtlich höher als der sichtbare Strich: Ein 3px
    dünner Balken lässt sich mit dem Daumen nicht treffen. */
 .reelLeiste {
   position: relative;
-  flex: 1;
-  min-width: 0;
-  height: 26px;
+  height: 30px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -629,7 +628,8 @@
   height: 3px;
   overflow: hidden;
   border-radius: 999px;
-  background: var(--reel-linie, rgba(255, 255, 255, 0.3));
+  background: color-mix(in srgb, var(--reel-ink, #fff) 26%, transparent);
+  transition: height 140ms var(--ease-out);
 }
 .reelLeisteFuellung {
   display: block;
@@ -641,23 +641,41 @@
 .reelGriff {
   position: absolute;
   top: 50%;
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--reel-ink, #fff);
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
   transform: translate(-50%, -50%);
   pointer-events: none;
-  transition: left 120ms linear;
+  transition: left 120ms linear, width 140ms var(--ease-out), height 140ms var(--ease-out);
 }
-.reelLeiste:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
-.reelZeitText {
-  flex: none;
-  color: var(--reel-dim, rgba(255, 255, 255, 0.72));
-  font-size: 11.5px;
-  font-weight: 650;
+
+/* Beim Ziehen: dicker Balken, großer Griff — dieselbe Sprache wie bei TikTok. */
+.reelZeitAktiv .reelLeisteSpur { height: 8px; }
+.reelZeitAktiv .reelLeisteFuellung { transition: none; }
+.reelZeitAktiv .reelGriff { width: 18px; height: 18px; transition: width 140ms var(--ease-out), height 140ms var(--ease-out); }
+
+/* Die Zeit groß in der Mitte, solange gezogen wird. */
+.reelZeitGross {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  pointer-events: none;
   font-variant-numeric: tabular-nums;
+  font-size: clamp(30px, 9vw, 40px);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45);
+  animation: fadeIn 120ms var(--ease-out) both;
 }
+.reelZeitJetzt { color: var(--reel-ink, #fff); }
+.reelZeitTrenner,
+.reelZeitGanz { color: color-mix(in srgb, var(--reel-ink, #fff) 55%, transparent); }
 
 /* „mehr" / „weniger" — der einzige antippbare Teil der Beschriftung. */
 .reelMehr {

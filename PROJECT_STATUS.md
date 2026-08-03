@@ -832,6 +832,23 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   optional") erscheint mit bestehender Sitzung → „Überspringen" landet direkt
   auf `?view=dashboard`.
 
+- ✅ **Zeitleiste im Reel wie bei TikTok (03.08.2026, live):** Sie liegt jetzt
+  über die ganze Breite direkt über der Navigationsleiste, nicht mehr eingerückt
+  in der Beschriftung. Beim Ziehen wird der Balken dick, der Griff groß und die
+  Zeit steht **groß in der Bildmitte** („0:36 / 1:53") — auf einen 3px-Strich
+  zielt man sonst blind. Das Play-Dreieck tritt dabei zurück.
+  Wie viel Platz die Navigationsleiste braucht, **misst `AppTabBar` jetzt selbst**
+  und legt es unter `--gf-leiste` ab. Vorher stand die Rechnung („64 + 6 +
+  Sicherheitsabstand") im Stylesheet und stimmte je nach Gerät und Scrollzustand
+  nicht — deshalb rutschte die Leiste unter die Navigation.
+  Nebenbefund behoben: Der erste Tipp auf die Leiste tat nichts, wenn
+  `setPointerCapture` fehlschlug — jetzt wird erst gesprungen, dann gefangen.
+- ✅ **Farben unter „Wiederholen" richtiggestellt (03.08.2026, live):** Der Punkt
+  vor einer Aufgabe trug die Themenfarbe (immer Orange) und sagte damit nichts.
+  Jetzt trägt er die **Lernstufe** — dieselben Farben wie im Filter daneben.
+  Und „Alle" füllt sich gedeckt statt tiefschwarz: Ein schwarzer Punkt neben
+  Rot, Gelb und Grün liest sich wie eine vierte Stufe, obwohl er keine ist.
+
 ## Bekannte Probleme / offen
 
 **Verkauf**

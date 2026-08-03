@@ -428,6 +428,10 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
   const leisteRef = useRef<HTMLDivElement | null>(null);
   const zog = useRef(false);
   const liefVorZiehen = useRef(false);
+  // Während des Ziehens tritt das Bild zurück und die Zeit in den Vordergrund —
+  // so macht es TikTok. Ohne das zielt man auf einen 3px-Strich und sieht die
+  // Zahl, die man sucht, ausgerechnet nicht.
+  const [zieht, setZieht] = useState(false);
 
   const ausX = (x: number) => {
     const kasten = leisteRef.current?.getBoundingClientRect();
@@ -438,11 +442,15 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
   const zieheStart = (e: React.PointerEvent<HTMLDivElement>) => {
     e.stopPropagation();
     zog.current = true;
+    setZieht(true);
     liefVorZiehen.current = playing;
     stopNarration();
     setPlaying(false);
-    e.currentTarget.setPointerCapture(e.pointerId);
+    // Erst springen, dann den Zeiger einfangen. Andersherum hing das Springen
+    // daran, dass das Einfangen klappt — und wenn es fehlschlägt, tat der erste
+    // Tipp auf die Leiste gar nichts.
     applyPos(positionAus(ausX(e.clientX)));
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* nicht einfangbar */ }
   };
 
   const zieheWeiter = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -455,6 +463,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     if (!zog.current) return;
     e.stopPropagation();
     zog.current = false;
+    setZieht(false);
     try { e.currentTarget.releasePointerCapture(e.pointerId); } catch { /* schon frei */ }
     if (liefVorZiehen.current) runFrom(segRef.current, fracRef.current);
   };
@@ -647,41 +656,48 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
             {textOffen ? 'weniger' : 'mehr'}
           </button>
 
-          {/* Zeitleiste ganz unten, wie bei TikTok: ziehen zum Spulen, daneben
-              die Sekunden. Vorher standen oben Streifen je Abschnitt — die
-              sagten „Schritt 3 von 8", aber nicht, wie lang das Video ist. */}
-          <div className={styles.reelZeit}>
-            <div
-              ref={leisteRef}
-              className={styles.reelLeiste}
-              role="slider"
-              aria-label="Position im Video"
-              aria-valuemin={0}
-              aria-valuemax={Math.round(gesamt)}
-              aria-valuenow={Math.round(stand)}
-              aria-valuetext={`${alsZeit(stand)} von ${alsZeit(gesamt)}`}
-              tabIndex={0}
-              onPointerDown={zieheStart}
-              onPointerMove={zieheWeiter}
-              onPointerUp={zieheEnde}
-              onPointerCancel={zieheEnde}
-            >
-              <span className={styles.reelLeisteSpur}>
-                <span
-                  className={styles.reelLeisteFuellung}
-                  style={{ transform: `scaleX(${gesamt > 0 ? stand / gesamt : 0})` }}
-                />
-              </span>
+        </div>
+
+        {/* Zeitleiste über der Navigationsleiste, wie bei TikTok: über die
+            ganze Breite, nicht eingerückt neben der Aktionsspalte. Beim Ziehen
+            wird sie dicker und die Zeit steht groß in der Mitte des Bildes —
+            auf einen 3px-Strich zielt man sonst blind. */}
+        <div className={`${styles.reelZeit} ${zieht ? styles.reelZeitAktiv : ''}`}>
+          <div
+            ref={leisteRef}
+            className={styles.reelLeiste}
+            role="slider"
+            aria-label="Position im Video"
+            aria-valuemin={0}
+            aria-valuemax={Math.round(gesamt)}
+            aria-valuenow={Math.round(stand)}
+            aria-valuetext={`${alsZeit(stand)} von ${alsZeit(gesamt)}`}
+            tabIndex={0}
+            onPointerDown={zieheStart}
+            onPointerMove={zieheWeiter}
+            onPointerUp={zieheEnde}
+            onPointerCancel={zieheEnde}
+          >
+            <span className={styles.reelLeisteSpur}>
               <span
-                className={styles.reelGriff}
-                style={{ left: `${gesamt > 0 ? (stand / gesamt) * 100 : 0}%` }}
+                className={styles.reelLeisteFuellung}
+                style={{ transform: `scaleX(${gesamt > 0 ? stand / gesamt : 0})` }}
               />
-            </div>
-            <span className={styles.reelZeitText}>
-              {alsZeit(stand)} / {alsZeit(gesamt)}
             </span>
+            <span
+              className={styles.reelGriff}
+              style={{ left: `${gesamt > 0 ? (stand / gesamt) * 100 : 0}%` }}
+            />
           </div>
         </div>
+
+        {zieht && (
+          <div className={styles.reelZeitGross} aria-hidden="true">
+            <span className={styles.reelZeitJetzt}>{alsZeit(stand)}</span>
+            <span className={styles.reelZeitTrenner}>/</span>
+            <span className={styles.reelZeitGanz}>{alsZeit(gesamt)}</span>
+          </div>
+        )}
 
         {/* TikTok-Gesten: die ganze Bühne ist tipp-/haltbar. */}
         <div
@@ -695,7 +711,9 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
           aria-hidden="true"
         />
 
-        {!playing && (
+        {/* Beim Ziehen kein Play-Dreieck: Dort steht die Zeit, und zwei
+            Zeichen an derselben Stelle verdecken sich gegenseitig. */}
+        {!playing && !zieht && (
           <div className={styles.reelPlayIndicator} aria-hidden="true">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><polygon points="6 4 20 12 6 20 6 4" /></svg>
           </div>

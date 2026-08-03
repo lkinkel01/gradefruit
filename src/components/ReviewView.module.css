@@ -65,8 +65,11 @@
   background: transparent;
   border: 1.5px solid var(--dot, var(--line-strong));
 }
-.segOn .segDot { background: var(--dot, var(--ink)); border-color: var(--dot, var(--ink)); }
-.chipOn .cdot { background: var(--ink); border-color: var(--ink); }
+/* Gewählt = gefüllt. Wo keine Ampelfarbe gemeint ist („Alle", Themen), füllt
+   sich der Ring gedeckt statt in Tinte: Ein tiefschwarzer Punkt neben Rot, Gelb
+   und Grün liest sich wie eine vierte Stufe, obwohl er keine ist. */
+.segOn .segDot { background: var(--dot, var(--muted)); border-color: var(--dot, var(--muted)); }
+.chipOn .cdot { background: var(--muted); border-color: var(--muted); }
 
 .list { display: flex; flex-direction: column; border-top: 1px solid var(--line-strong); }
 .item {

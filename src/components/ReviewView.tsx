@@ -195,7 +195,11 @@ export default function ReviewView({ level, onNavigate }: Props) {
         <div className={styles.list}>
           {items.map(({ topic, task, status }) => (
             <button key={`${topic.id}-${task.id}`} className={styles.item} onClick={() => openTask(topic.id, task.id)}>
-              <span className={styles.itemDot} style={{ background: topic.color }} />
+              {/* Der Punkt trägt die Lernstufe, nicht das Thema. Das Thema
+                  steht daneben im Klartext; die Stufe ist das, wonach man auf
+                  dieser Seite sucht — und die Farben sind links im Filter
+                  dieselben. */}
+              <span className={styles.itemDot} style={{ background: STATUS_DOT[status as Stufe] }} />
               <span className={styles.itemBody}>
                 <span className={styles.itemTag}>{task.tag}</span>
                 <span className={styles.itemQ}>{questionOf(topic.id as TopicId, task.id)}</span>
