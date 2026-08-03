@@ -170,7 +170,10 @@
   border-right: 0; border-bottom: 1px solid var(--line-strong);
 }
 .app .cdIcon { display: none; }
-.app .cdDays { font-size: clamp(29px, 8.5vw, 36px); line-height: 1.05; letter-spacing: -.03em; }
+/* Zahl und Beschriftung stehen auf einer Grundlinie (`align-items: baseline`
+   oben) — dafür darf die Zahl nicht viel größer sein als ihre Zeile, sonst
+   kippt das Bild. */
+.app .cdDays { font-size: clamp(26px, 7vw, 31px); line-height: 1.05; letter-spacing: -.03em; }
 .app .cdLabel { font-size: 15px; font-weight: 600; color: var(--ink); }
 /* Volle Breite heißt: eigene Zeile unter Zahl und Beschriftung. */
 /* Datum mit Kalendersymbol, mittig. Das Symbol macht aus einer Zeile Text

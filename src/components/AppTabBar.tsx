@@ -71,7 +71,7 @@ export default function AppTabBar({
   view: View;
   onNavigate: (v: View) => void;
   onReels: () => void;
-  /** Der Reel-Modus ist immer dunkel, unabhängig vom gewählten Erscheinungsbild. */
+  /** Im Reel-Modus liegt die Leiste auf dem Bild und braucht dessen Farben. */
   dunkel?: boolean;
 }) {
   // Beim Herunterscrollen rückt die Leiste zusammen und die Beschriftungen

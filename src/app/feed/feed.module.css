@@ -40,11 +40,11 @@
   --reel-verlauf: linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.36) 52%, transparent);
 }
 
-/* In der App liegt die Navigationsleiste unten im Bild — die Beschriftung des
-   Reels muss vollständig darüber bleiben, samt „mehr". Der Wert ist die Höhe
-   der Leiste (rund 64) plus ihr Abstand nach unten plus Luft. */
+/* In der App liegt die Navigationsleiste unten im Bild — Beschriftung und
+   Zeitleiste müssen vollständig darüber bleiben. Die Höhe der Leiste steht in
+   globals.css, damit sie nicht an zwei Stellen geraten wird. */
 .imApp {
-  --reel-unten: calc(env(safe-area-inset-bottom, 0px) + 104px);
+  --reel-unten: calc(var(--gf-leiste) + 18px);
 }
 
 .gate {

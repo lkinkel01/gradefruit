@@ -116,6 +116,11 @@ export default function FeedPage() {
   const { statusOf, setStatus } = useProgress();
   const [index, setIndex] = useState(0);
   const [topic, setTopic] = useState<TopicId | null>(null);
+  // Der Reel-Modus folgt dem Erscheinungsbild — also muss auch die
+  // Navigationsleiste wissen, welches gerade gilt. Der Wert steht am <body>,
+  // gesetzt vom Inline-Skript in layout.tsx, bevor React anläuft.
+  const [dunkel, setDunkel] = useState(false);
+  useEffect(() => { setDunkel(document.body.classList.contains('dark')); }, []);
   const feedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -284,9 +289,17 @@ export default function FeedPage() {
       {imApp && (
         <AppTabBar
           view={'videos' as never}
-          onNavigate={(ziel) => router.push(`/?view=${ziel}`)}
+          // Bewusst ein echter Seitenwechsel statt router.push.
+          //
+          // Die Startseite liest ihren Standort (`?view=…`) genau einmal beim
+          // Einhängen. Kommt man vom Reel zurück und Next stellt die schon
+          // gerenderte Seite aus seinem Speicher wieder her, hängt sie sich
+          // nicht neu ein — der Klick auf „Konto" oder „Lernen" tat dann beim
+          // ersten Mal nichts und erst beim zweiten Anlauf etwas. Ein echter
+          // Seitenwechsel kann das nicht passieren.
+          onNavigate={(ziel) => { window.location.assign(`/?view=${ziel}`); }}
           onReels={() => { /* schon hier */ }}
-          dunkel
+          dunkel={dunkel}
         />
       )}
     </main>

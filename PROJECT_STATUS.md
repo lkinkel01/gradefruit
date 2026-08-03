@@ -766,6 +766,30 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   in `AppDelegate.swift` ist wieder aktiv. **Wenn die App danach leer oder
   verschoben startet: die eine Zeile auskommentieren und neu bauen.**
 
+- ✅ **Screenshot-Schutz funktioniert (03.08.2026, am Gerät bestätigt):** Der
+  Screenshot kommt schwarz heraus. Weil sich in den Screenshot selbst nichts
+  hineinschreiben lässt (die geschützte Ebene wird vollständig ausgelassen),
+  meldet iOS stattdessen, DASS einer gemacht wurde — direkt danach erscheint in
+  der App der Hinweis, dass Kursinhalte nicht weitergegeben werden dürfen. Die
+  Abdeckung bei Bildschirmaufnahme sagt jetzt dasselbe.
+- ✅ **Zeitleiste im Reel statt Abschnitts-Streifen (03.08.2026, live):** Unten,
+  über der Navigationsleiste, mit Sekunden („0:18 / 1:53") und zum Spulen
+  ziehbar. Die Dauer je Abschnitt wird aus der Textlänge geschätzt und ersetzt,
+  sobald die mp3 ihre Kopfdaten geliefert hat — ohne Netz bleibt die Schätzung
+  stehen. Die Streifen oben sagten „Schritt 3 von 8", aber nicht, wie lang das
+  Video ist.
+- ✅ **Menüleiste im Reel klemmte beim ersten Mal (03.08.2026, live):** Die
+  Startseite liest ihren Standort (`?view=…`) genau einmal beim Einhängen.
+  Stellte Next die schon gerenderte Seite aus seinem Speicher wieder her, hängte
+  sie sich nicht neu ein — der erste Klick auf „Konto" tat nichts, der zweite
+  schon. Aus dem Reel führt jetzt ein echter Seitenwechsel zurück.
+- ✅ **Kleinkram (03.08.2026, live):** Filterpunkte unter „Wiederholen" sind
+  Kontrollkästchen (leerer Ring, gefüllt wenn gewählt) statt immer gefüllter
+  Punkte ohne Aussage; „Passwort ändern" steht neben der Überschrift wie der
+  Dark-Mode-Schalter; der Countdown ist kleiner und steht auf einer Grundlinie
+  mit „Tage bis zur Prüfung"; die Zeile „x von 133 Aufgaben verstanden" ist weg
+  (dieselbe Zahl stand direkt darunter noch einmal).
+
 ## Bekannte Probleme / offen
 
 **Verkauf**
@@ -791,11 +815,10 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Screenshot ist der schnellste Weg.
 
 **App: offen und bewusst nicht gelöst**
-- 🟠 **Screenshot-Schutz auf iOS: neuer Versuch, am Gerät ungeprüft.** Alle
-  früheren Befunde stammen aus dem Simulator und sind damit wertlos. Am echten
-  Gerät muss geprüft werden, ob der Screenshot leer herauskommt UND die App
-  normal aussieht. **Bildschirmaufnahme** wird davon unabhängig erkannt und
-  abgedeckt.
+- ✅ **Screenshot-Schutz wirkt** (am iPhone bestätigt, 03.08.2026). Wichtig für
+  die Zukunft: Der Schutz lässt sich **im Simulator nicht prüfen** — dort ist
+  ein Screenshot eine Aufnahme des Mac-Fensters. Alle Simulator-Befunde dazu
+  sind wertlos.
 
 **Sonstiges**
 - 🟡 **Zusammenfassungs-Fortschritt liegt nur lokal** (`gf-summary-status`) —

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { View, TOPICS, LernStatus, STATUS_LABEL } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { GrapefruitProgress } from './Logo';
@@ -139,7 +139,7 @@ export default function ReviewView({ level, onNavigate }: Props) {
             aria-pressed={stufenFilter.size === 0}
             onClick={() => setStufenFilter(new Set())}
           >
-            <span className={styles.segDot} style={{ background: 'transparent' }} aria-hidden="true" />
+            <span className={styles.segDot} aria-hidden="true" />
             Alle
           </button>
           {STUFEN.map(stufe => {
@@ -152,7 +152,11 @@ export default function ReviewView({ level, onNavigate }: Props) {
                 aria-pressed={an}
                 onClick={() => toggleStufe(stufe)}
               >
-                <span className={styles.segDot} style={{ background: STATUS_DOT[stufe] }} aria-hidden="true" />
+                <span
+                  className={styles.segDot}
+                  style={{ '--dot': STATUS_DOT[stufe] } as CSSProperties}
+                  aria-hidden="true"
+                />
                 {STATUS_LABEL[stufe]}
               </button>
             );

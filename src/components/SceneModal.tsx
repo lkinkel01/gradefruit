@@ -133,6 +133,43 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     return segs;
   }, [scene]);
 
+  // Wie lang ein Abschnitt dauert — für die Zeitleiste im Reel.
+  //
+  // Geschätzt aus der Textlänge (dieselbe Formel, nach der auch der stumme
+  // Ablauf läuft), und sobald die mp3 ihre Kopfdaten geliefert hat, durch die
+  // echte Dauer ersetzt. Ohne Netz oder ohne Ton bleibt die Schätzung stehen —
+  // besser eine Zeitleiste, die ungefähr stimmt, als gar keine.
+  const schaetzung = useMemo(
+    () => segments.map(seg => Math.max(2600, seg.say.length * 72) / 1000),
+    [segments],
+  );
+  const [dauern, setDauern] = useState<number[]>(schaetzung);
+  useEffect(() => { setDauern(schaetzung); }, [schaetzung]);
+
+  useEffect(() => {
+    if (variant !== 'reel' || !scene.hasAudio) return;
+    let lebt = true;
+    const elemente: HTMLAudioElement[] = [];
+    segments.forEach((_, i) => {
+      const audio = new Audio(`/audio/${scene.id}-${i}.mp3`);
+      audio.preload = 'metadata';
+      audio.onloadedmetadata = () => {
+        if (!lebt || !isFinite(audio.duration) || audio.duration <= 0) return;
+        setDauern(vorher => {
+          const naechste = [...vorher];
+          naechste[i] = audio.duration;
+          return naechste;
+        });
+      };
+      elemente.push(audio);
+    });
+    return () => {
+      lebt = false;
+      elemente.forEach(a => { a.onloadedmetadata = null; a.src = ''; });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene, variant, segments.length]);
+
   const stopNarration = useCallback(() => {
     playToken.current++;
     if (audioRef.current) {
@@ -347,6 +384,30 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     posRef.current = 0;
   };
 
+  // ---- Zeitleiste: Sekunden <-> Position (seg+frac) ----
+  const gesamt = dauern.reduce((summe, d) => summe + d, 0);
+  const sekundenBisher = dauern.slice(0, seg).reduce((summe, d) => summe + d, 0);
+  const stand = Math.min(gesamt, sekundenBisher + frac * (dauern[seg] ?? 0));
+
+  /** Sekunden in „m:ss". */
+  const alsZeit = (sekunden: number) => {
+    const ganz = Math.max(0, Math.floor(sekunden));
+    return `${Math.floor(ganz / 60)}:${String(ganz % 60).padStart(2, '0')}`;
+  };
+
+  /** Aus einer Stelle auf der Leiste (0..1) die Position seg+frac machen. */
+  const positionAus = (anteil: number) => {
+    const ziel = Math.max(0, Math.min(1, anteil)) * gesamt;
+    let rest = ziel;
+    for (let i = 0; i < dauern.length; i++) {
+      if (rest < dauern[i] || i === dauern.length - 1) {
+        return i + Math.max(0, Math.min(0.999, dauern[i] > 0 ? rest / dauern[i] : 0));
+      }
+      rest -= dauern[i];
+    }
+    return 0;
+  };
+
   // ---- Reel-Gesten: stufenloses Spulen über eine Fließkomma-Position ----
   // Position ist seg+frac. applyPos setzt daraus Segment und Segment-Fortschritt,
   // sodass Schritte und Fortschrittsbalken beim Spulen flüssig mitlaufen.
@@ -360,6 +421,42 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     fracRef.current = f;
     setSeg(s);
     setFrac(f);
+  };
+
+  // Ziehen auf der Zeitleiste. Während des Ziehens läuft nichts weiter; beim
+  // Loslassen spielt es an der neuen Stelle an, wenn es vorher lief.
+  const leisteRef = useRef<HTMLDivElement | null>(null);
+  const zog = useRef(false);
+  const liefVorZiehen = useRef(false);
+
+  const ausX = (x: number) => {
+    const kasten = leisteRef.current?.getBoundingClientRect();
+    if (!kasten || kasten.width === 0) return 0;
+    return (x - kasten.left) / kasten.width;
+  };
+
+  const zieheStart = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    zog.current = true;
+    liefVorZiehen.current = playing;
+    stopNarration();
+    setPlaying(false);
+    e.currentTarget.setPointerCapture(e.pointerId);
+    applyPos(positionAus(ausX(e.clientX)));
+  };
+
+  const zieheWeiter = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!zog.current) return;
+    e.stopPropagation();
+    applyPos(positionAus(ausX(e.clientX)));
+  };
+
+  const zieheEnde = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!zog.current) return;
+    e.stopPropagation();
+    zog.current = false;
+    try { e.currentTarget.releasePointerCapture(e.pointerId); } catch { /* schon frei */ }
+    if (liefVorZiehen.current) runFrom(segRef.current, fracRef.current);
   };
 
   const stopSeekInterval = () => {
@@ -514,17 +611,6 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     const step = activeStep >= 0 ? scene.steps[activeStep] : null;
     return (
       <div className={styles.reel}>
-        <div className={styles.reelBars} aria-hidden="true">
-          {segments.map((_, i) => (
-            <span key={i} className={styles.reelBar}>
-              <span
-                className={styles.reelBarFill}
-                style={{ transform: `scaleX(${i < seg ? 1 : i === seg ? frac : 0})` }}
-              />
-            </span>
-          ))}
-        </div>
-
         {/* Ohne Graphen (Vektoren, Stochastik) trägt die Schrift das Bild:
             Funktion und Formelzeile werden groß, statt in einem leeren
             schwarzen Feld zu schweben. */}
@@ -560,6 +646,41 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
           >
             {textOffen ? 'weniger' : 'mehr'}
           </button>
+
+          {/* Zeitleiste ganz unten, wie bei TikTok: ziehen zum Spulen, daneben
+              die Sekunden. Vorher standen oben Streifen je Abschnitt — die
+              sagten „Schritt 3 von 8", aber nicht, wie lang das Video ist. */}
+          <div className={styles.reelZeit}>
+            <div
+              ref={leisteRef}
+              className={styles.reelLeiste}
+              role="slider"
+              aria-label="Position im Video"
+              aria-valuemin={0}
+              aria-valuemax={Math.round(gesamt)}
+              aria-valuenow={Math.round(stand)}
+              aria-valuetext={`${alsZeit(stand)} von ${alsZeit(gesamt)}`}
+              tabIndex={0}
+              onPointerDown={zieheStart}
+              onPointerMove={zieheWeiter}
+              onPointerUp={zieheEnde}
+              onPointerCancel={zieheEnde}
+            >
+              <span className={styles.reelLeisteSpur}>
+                <span
+                  className={styles.reelLeisteFuellung}
+                  style={{ transform: `scaleX(${gesamt > 0 ? stand / gesamt : 0})` }}
+                />
+              </span>
+              <span
+                className={styles.reelGriff}
+                style={{ left: `${gesamt > 0 ? (stand / gesamt) * 100 : 0}%` }}
+              />
+            </div>
+            <span className={styles.reelZeitText}>
+              {alsZeit(stand)} / {alsZeit(gesamt)}
+            </span>
+          </div>
         </div>
 
         {/* TikTok-Gesten: die ganze Bühne ist tipp-/haltbar. */}

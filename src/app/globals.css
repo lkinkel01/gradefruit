@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
 
 :root {
+  /* Höhe der unteren Navigationsleiste in der App, gemessen von der Unterkante
+     des Bildschirms: 64px Leiste + 6px Abstand + Sicherheitsabstand. Wer Inhalt
+     darüber freihalten muss, rechnet mit diesem Wert statt zu raten. */
+  --gf-leiste: calc(70px + env(safe-area-inset-bottom, 0px));
   /* Reduziertes Markensystem: neutrales Weiß, echtes Schwarz, eine Grapefruit. */
   --canvas: #F7F7F8;
   --surface: #FFFFFF;

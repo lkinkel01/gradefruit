@@ -76,7 +76,6 @@ export default function Dashboard({ onNavigate }: Props) {
                 <span className={styles.pctNum}>{pct}</span>
                 <span className={styles.pctUnit}>%</span>
               </span>
-              <span className={styles.progressSub}>{totalDone} von {totalLessons} Aufgaben verstanden</span>
             </span>
             <span className={styles.progressGo} aria-hidden="true"><ArrowRightIcon size={16} /></span>
           </button>

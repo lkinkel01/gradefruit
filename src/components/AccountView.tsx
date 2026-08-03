@@ -307,12 +307,18 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
       </div>
 
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Passwort</h2>
-        {!pwOffen ? (
-          <button type="button" className="btn light sm" onClick={() => setPwOffen(true)}>
-            Passwort ändern
-          </button>
-        ) : (
+        {/* Überschrift und Knopf in einer Zeile, genau wie „Dark Mode" darüber —
+            ein Abschnitt, der aus einer Sache besteht, braucht dafür keine
+            zweite Zeile. */}
+        <div className={styles.titleRow}>
+          <h2 className={styles.sectionTitle}>Passwort</h2>
+          {!pwOffen && (
+            <button type="button" className="btn light sm" onClick={() => setPwOffen(true)}>
+              Passwort ändern
+            </button>
+          )}
+        </div>
+        {!pwOffen ? null : (
           <>
             <div className={styles.field}>
               <label htmlFor="pw-neu">Neues Passwort</label>

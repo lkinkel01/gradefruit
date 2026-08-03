@@ -79,6 +79,8 @@ final class ScreenshotGuard {
 
     private weak var window: UIWindow?
     private var coverView: UIView?
+    private var hinweisView: UIView?
+    private var hinweisTimer: Timer?
     private let secureField = UITextField()
     private var secureLayer: CALayer?
 
@@ -97,6 +99,7 @@ final class ScreenshotGuard {
         // auskommentieren, neu bauen — alles andere bleibt unberührt.
         protectAgainstScreenshots()
         observeScreenRecording()
+        observeScreenshots()
         updateRecordingCover()
     }
 
@@ -151,6 +154,82 @@ final class ScreenshotGuard {
         window.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
     }
 
+    // MARK: - Screenshot: hinterher sagen, warum er leer ist
+
+    /// In den Screenshot selbst lässt sich nichts hineinschreiben — die
+    /// geschützte Ebene wird vollständig ausgelassen, Text darin also auch.
+    /// Was geht: iOS meldet, DASS einer gemacht wurde. Direkt danach erscheint
+    /// der Hinweis in der App. Wer es versucht, erfährt damit sofort, woran es
+    /// liegt, statt einen schwarzen Screenshot für einen Fehler zu halten.
+    private func observeScreenshots() {
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.userDidTakeScreenshotNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.zeigeScreenshotHinweis()
+        }
+    }
+
+    private func zeigeScreenshotHinweis() {
+        guard let window = window else { return }
+        hinweisTimer?.invalidate()
+        hinweisView?.removeFromSuperview()
+
+        let karte = UIView()
+        karte.translatesAutoresizingMaskIntoConstraints = false
+        karte.backgroundColor = UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(white: 0.13, alpha: 0.98)
+                : UIColor(white: 1.0, alpha: 0.98)
+        }
+        karte.layer.cornerRadius = 16
+        karte.layer.shadowColor = UIColor.black.cgColor
+        karte.layer.shadowOpacity = 0.18
+        karte.layer.shadowRadius = 24
+        karte.layer.shadowOffset = CGSize(width: 0, height: 8)
+
+        let titel = UILabel()
+        titel.text = "Screenshot blockiert"
+        titel.font = .systemFont(ofSize: 15, weight: .bold)
+        titel.textColor = UIColor { $0.userInterfaceStyle == .dark ? .white : .black }
+
+        let text = UILabel()
+        text.text = "Die Kursinhalte gehören zu deinem Zugang und dürfen nicht weitergegeben werden. Dein Screenshot bleibt deshalb leer."
+        text.numberOfLines = 0
+        text.font = .systemFont(ofSize: 13.5)
+        text.textColor = UIColor { $0.userInterfaceStyle == .dark
+            ? UIColor(white: 1, alpha: 0.7) : UIColor(white: 0, alpha: 0.62) }
+
+        let stapel = UIStackView(arrangedSubviews: [titel, text])
+        stapel.axis = .vertical
+        stapel.spacing = 5
+        stapel.translatesAutoresizingMaskIntoConstraints = false
+        karte.addSubview(stapel)
+        window.addSubview(karte)
+
+        NSLayoutConstraint.activate([
+            stapel.topAnchor.constraint(equalTo: karte.topAnchor, constant: 14),
+            stapel.bottomAnchor.constraint(equalTo: karte.bottomAnchor, constant: -14),
+            stapel.leadingAnchor.constraint(equalTo: karte.leadingAnchor, constant: 16),
+            stapel.trailingAnchor.constraint(equalTo: karte.trailingAnchor, constant: -16),
+            karte.leadingAnchor.constraint(equalTo: window.leadingAnchor, constant: 16),
+            karte.trailingAnchor.constraint(equalTo: window.trailingAnchor, constant: -16),
+            karte.topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor, constant: 12),
+        ])
+
+        karte.alpha = 0
+        UIView.animate(withDuration: 0.22) { karte.alpha = 1 }
+        hinweisView = karte
+        hinweisTimer = Timer.scheduledTimer(withTimeInterval: 4.5, repeats: false) { [weak self] _ in
+            guard let karte = self?.hinweisView else { return }
+            UIView.animate(withDuration: 0.22, animations: { karte.alpha = 0 }) { _ in
+                karte.removeFromSuperview()
+            }
+            self?.hinweisView = nil
+        }
+    }
+
     // MARK: - Bildschirmaufnahme abdecken
 
     private func observeScreenRecording() {
@@ -177,7 +256,14 @@ final class ScreenshotGuard {
             }
 
             let label = UILabel()
-            label.text = "Bildschirmaufnahme läuft.\nDie Kursinhalte sind währenddessen ausgeblendet."
+            label.text = """
+            Bildschirmaufnahme läuft
+
+            Die Kursinhalte gehören zu deinem Zugang und dürfen nicht \
+            weitergegeben werden. Sie sind währenddessen ausgeblendet.
+
+            Beende die Aufnahme, um weiterzulernen.
+            """
             label.numberOfLines = 0
             label.textAlignment = .center
             label.font = .systemFont(ofSize: 16, weight: .medium)
