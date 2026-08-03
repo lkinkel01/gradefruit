@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import WebKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -212,5 +213,48 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let guardInstance = ScreenshotGuard(window: newWindow)
         guardInstance.start()
         screenshotGuard = guardInstance
+
+        // Nach dem Aufbau: Die Webansicht steht erst im nächsten Durchlauf.
+        DispatchQueue.main.async { [weak self] in self?.scrollverhalten() }
+    }
+
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        scrollverhalten()
+    }
+
+    /// Scrollen wie in einer App, nicht wie auf einer Seite.
+    ///
+    /// Zwei Dinge, die WKWebView von sich aus nicht so macht:
+    ///
+    /// 1. **Immer federn.** Ohne `alwaysBounceVertical` federt die Ansicht nur,
+    ///    wenn der Inhalt länger als der Bildschirm ist. Auf kurzen Seiten
+    ///    („Themen") passiert beim Wischen deshalb gar nichts — es fühlt sich
+    ///    an, als wäre die App eingefroren. WhatsApp federt auf jeder Liste,
+    ///    auch auf einer leeren.
+    /// 2. **Nie seitlich schieben.** Läuft der Inhalt einmal über die Breite
+    ///    hinaus, bleibt die Seite sonst dauerhaft verschoben stehen.
+    private func scrollverhalten() {
+        guard let window = window, let web = Self.webansicht(in: window) else { return }
+        let sicht = web.scrollView
+        sicht.bounces = true
+        sicht.alwaysBounceVertical = true
+        sicht.alwaysBounceHorizontal = false
+        sicht.contentInsetAdjustmentBehavior = .never
+        // Ein hineingezoomter Zustand überlebt sonst jeden Seitenwechsel und
+        // schneidet den rechten Rand ab.
+        if sicht.zoomScale != 1 {
+            sicht.setZoomScale(1, animated: false)
+        }
+        if sicht.contentOffset.x != 0 {
+            sicht.setContentOffset(CGPoint(x: 0, y: sicht.contentOffset.y), animated: false)
+        }
+    }
+
+    private static func webansicht(in view: UIView) -> WKWebView? {
+        if let web = view as? WKWebView { return web }
+        for unter in view.subviews {
+            if let treffer = webansicht(in: unter) { return treffer }
+        }
+        return nil
     }
 }

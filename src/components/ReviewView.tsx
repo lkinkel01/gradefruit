@@ -112,38 +112,47 @@ export default function ReviewView({ level, onNavigate }: Props) {
       {/* In der App steht der Titel schon in der Kopfzeile. */}
       {!imApp && <h1 className={styles.ph1}>Wiederholen</h1>}
 
-      {/* Lernstufe */}
-      <div className={styles.filterRow} role="tablist" aria-label="Lernstufe filtern">
-        {STATUS_FILTERS.map(s => (
-          <button
-            key={s}
-            role="tab"
-            aria-selected={statusFilter === s}
-            className={`${styles.seg} ${statusFilter === s ? styles.segOn : ''}`}
-            onClick={() => setStatusFilter(s)}
-          >
-            {s !== 'alle' && <span className={styles.segDot} style={{ background: STATUS_DOT[s] }} aria-hidden="true" />}
-            {s === 'alle' ? 'Alle' : STATUS_LABEL[s]}
-          </button>
-        ))}
-      </div>
-
-      {/* Themen (mehrere gleichzeitig wählbar) */}
-      <div className={styles.topicRow} aria-label="Themen filtern">
-        {TOPICS.map(t => {
-          const on = topicFilter.has(t.id as TopicId);
-          return (
+      {/* Filter: links die Lernstufe, rechts die Themen — beides untereinander
+          und nebeneinander sichtbar. Als Reihe brach der längste Name („Lineare
+          Algebra & Geometrie") entweder um oder wurde abgeschnitten; in einer
+          Spalte hat jeder Name die volle Breite für sich. */}
+      <div className={styles.filters}>
+        <div className={styles.filterCol} role="tablist" aria-label="Lernstufe filtern">
+          {STATUS_FILTERS.map(s => (
             <button
-              key={t.id}
-              className={`${styles.chip} ${on ? styles.chipOn : ''}`}
-              aria-pressed={on}
-              onClick={() => toggleTopic(t.id as TopicId)}
+              key={s}
+              role="tab"
+              aria-selected={statusFilter === s}
+              className={`${styles.seg} ${statusFilter === s ? styles.segOn : ''}`}
+              onClick={() => setStatusFilter(s)}
             >
-              <span className={styles.cdot} style={{ background: t.color }} />
-              {t.label}
+              <span
+                className={styles.segDot}
+                style={{ background: s === 'alle' ? 'transparent' : STATUS_DOT[s] }}
+                aria-hidden="true"
+              />
+              {s === 'alle' ? 'Alle' : STATUS_LABEL[s]}
             </button>
-          );
-        })}
+          ))}
+        </div>
+
+        {/* Themen (mehrere gleichzeitig wählbar) */}
+        <div className={styles.filterCol} aria-label="Themen filtern">
+          {TOPICS.map(t => {
+            const on = topicFilter.has(t.id as TopicId);
+            return (
+              <button
+                key={t.id}
+                className={`${styles.chip} ${on ? styles.chipOn : ''}`}
+                aria-pressed={on}
+                onClick={() => toggleTopic(t.id as TopicId)}
+              >
+                <span className={styles.cdot} style={{ background: t.color }} />
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {items.length > 0 ? (

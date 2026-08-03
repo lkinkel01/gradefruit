@@ -609,20 +609,44 @@
   font-weight: 780;
   letter-spacing: -0.015em;
 }
-/* Der gesprochene Satz als Untertitel — drei Zeilen, dann abgeschnitten. Wer
-   mitliest, liest mit; wer zuhört, wird nicht zugetextet. */
+/* Der gesprochene Satz als Untertitel — zwei Zeilen, der Rest hinter „mehr",
+   wie die Beschreibung unter einem TikTok. Scrollen wäre hier falsch: Im Reel
+   wischt man senkrecht zum nächsten Video, nicht im Text. */
 .reelCaption {
   margin: 3px 0 0;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
   color: rgba(255, 255, 255, 0.82);
   font-size: 13px;
   line-height: 1.45;
-  animation: fadeIn 240ms var(--ease-out) both;
 }
+.reelCaptionOffen {
+  display: block;
+  max-height: 34dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.reelCaptionOffen::-webkit-scrollbar { display: none; }
+
+/* „mehr" / „weniger" — der einzige antippbare Teil der Beschriftung. */
+.reelMehr {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.reelMehr:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 /* Ganze Bühne ist tipp-/haltbar; vertikales Wischen bleibt fürs Reel-Scrollen. */
 .reelGestures {

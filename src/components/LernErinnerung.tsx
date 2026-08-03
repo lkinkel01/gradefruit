@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { gespeicherteZeit, imAppRahmen } from '@/lib/nativeApp';
 import { erinnerungsText } from '@/lib/erinnerungstexte';
 import {
-  TAGE_REIHE, TAG_KURZ, planBeschreiben, planFuerPhase, planLesen, planSchreiben,
+  TAGE_REIHE, TAG_KURZ, planFuerPhase, planLesen, planSchreiben,
   type Plan, type Wochentag,
 } from '@/lib/erinnerungsplan';
 import { daysUntilExam } from '@/lib/exam';
@@ -214,8 +214,8 @@ export default function LernErinnerung() {
 
   return (
     <section className={styles.box}>
+      <h2 className={styles.title}>Lernerinnerung</h2>
       <div className={styles.kopf}>
-        <strong className={styles.title}>Lernerinnerung</strong>
         <div className={styles.actions}>
           <button
             type="button"
@@ -274,7 +274,6 @@ export default function LernErinnerung() {
         </div>
       )}
 
-      {!offen && aktiv && <p className={styles.body}>{planBeschreiben(plan)}</p>}
     </section>
   );
 }

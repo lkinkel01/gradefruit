@@ -9,11 +9,10 @@
   padding: 0 0 28px;
   border-bottom: 1px solid var(--line-strong);
 }
-/* Titel links, die zwei Knöpfe rechts. Bei wenig Platz rutschen sie darunter,
-   statt sich zu quetschen. */
-.kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.title { display: block; color: var(--ink); font-size: 15px; font-weight: 650; }
-.body { margin-top: 3px; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+/* Überschrift genau wie in „Mein Konto" (Passwort, Zugang, …) — ein Abschnitt
+   sieht überall gleich aus, sonst wirkt einer davon wie ein Fremdkörper. */
+.title { margin-bottom: 16px; color: var(--muted); font-size: 12.5px; font-weight: 650; letter-spacing: .01em; }
+.kopf { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .hinweis { margin-top: 7px; color: var(--danger); font-size: 13px; line-height: 1.5; }
 
 .actions { display: flex; align-items: center; gap: 10px; }

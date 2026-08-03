@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
@@ -9,7 +9,7 @@ import { SCENES, Scene } from '@/lib/scenes';
 import { indexFor } from '@/lib/contentIndex';
 import { ScenePlayer } from '@/components/SceneModal';
 import AppTabBar from '@/components/AppTabBar';
-import { CheckIcon, ReviewIcon, QuestionIcon, ArrowRightIcon } from '@/components/UiIcons';
+import { ArrowRightIcon } from '@/components/UiIcons';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import { GrapefruitSpinner } from '@/components/Logo';
 import styles from './feed.module.css';
@@ -32,18 +32,13 @@ const TASK_SOURCES: {
   { topicId: 'stochastik', tasks: indexFor('stochastik', 'gk').tasks },
 ];
 
-// Die Aktionsspalte rechts — das Merkmal, an dem ein Reel als Reel erkannt
-// wird. Sie ersetzt die frühere Pillenleiste am oberen Rand: Die lag über dem
-// Bild, war weit weg vom Daumen und sah aus wie ein Filter, nicht wie eine
-// Bewertung.
-const STATUS_OPTIONS: {
-  status: Exclude<LernStatus, 'none'>;
-  label: string;
-  icon: ReactNode;
-}[] = [
-  { status: 'verstanden', label: 'Verstanden', icon: <CheckIcon size={22} /> },
-  { status: 'wiederholen', label: 'Wiederholen', icon: <ReviewIcon size={22} /> },
-  { status: 'unklar', label: 'Unklar', icon: <QuestionIcon size={22} /> },
+// Bewertung des laufenden Videos. Steht oben unter den Fortschrittsstreifen:
+// Dort verdeckt sie weder das Bild noch die Beschriftung, und man sieht auf
+// einen Blick, wie die Aufgabe zum Video eingeordnet ist.
+const STATUS_OPTIONS: { status: Exclude<LernStatus, 'none'>; label: string }[] = [
+  { status: 'verstanden', label: 'Verstanden' },
+  { status: 'wiederholen', label: 'Wiederholen' },
+  { status: 'unklar', label: 'Nicht verstanden' },
 ];
 
 function linkedTask(sceneId: string): VideoCard['task'] {
@@ -271,27 +266,31 @@ export default function FeedPage() {
         })}
       </div>
 
-      {/* Oben links zurück — sonst gehört der obere Rand den Fortschrittsstreifen. */}
-      <button className={styles.back} onClick={goBack} aria-label="Zurück">
-        <BackIcon />
-      </button>
+      {/* Bewerten gehört nach oben: Dort liegt es unter den
+          Fortschrittsstreifen und verdeckt weder Bild noch Beschriftung.
+          Links davon der Weg zurück. */}
+      <div className={styles.topRow}>
+        <button className={styles.back} onClick={goBack} aria-label="Zurück">
+          <BackIcon />
+        </button>
+        <div className={styles.statusBar} aria-label="Lernstatus für das aktuelle Video">
+          {STATUS_OPTIONS.map(option => (
+            <button
+              key={option.status}
+              type="button"
+              className={`${styles.statusButton} ${activeStatus === option.status ? styles.statusButtonActive : ''}`}
+              aria-pressed={activeStatus === option.status}
+              disabled={!activeCard.task}
+              onClick={() => chooseStatus(option.status)}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-      {/* Aktionsspalte rechts: bewerten und zur Aufgabe springen. */}
+      {/* Aktionsspalte rechts: zur Aufgabe springen und zurück zum Start. */}
       <div className={styles.rail} aria-label="Aktionen zum aktuellen Video">
-        {STATUS_OPTIONS.map(option => (
-          <button
-            key={option.status}
-            type="button"
-            className={`${styles.railButton} ${activeStatus === option.status ? styles.railButtonActive : ''}`}
-            aria-pressed={activeStatus === option.status}
-            disabled={!activeCard.task}
-            onClick={() => chooseStatus(option.status)}
-          >
-            <span className={styles.railIcon}>{option.icon}</span>
-            <span className={styles.railLabel}>{option.label}</span>
-          </button>
-        ))}
-
         {activeCard.task && (
           <button type="button" className={styles.railButton} onClick={openTask}>
             <span className={styles.railIcon}><ArrowRightIcon size={22} /></span>

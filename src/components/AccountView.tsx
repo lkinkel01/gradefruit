@@ -287,15 +287,18 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           Schalter, die man tatsächlich benutzt. Profil und Zugang darunter. */}
       <LernErinnerung />
 
+      {/* „Dark Mode" ist hier selbst die Überschrift. Eine Zeile „Erscheinungsbild"
+          darüber wäre eine Überschrift über genau einem Schalter — sie sagt
+          nichts, was der Schalter nicht schon sagt. */}
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Erscheinungsbild</h2>
-        <div className={styles.infoRow}>
-          <span>Dark Mode</span>
+        <div className={styles.titleRow}>
+          <h2 className={styles.sectionTitle}>Dark Mode</h2>
           <button
             type="button"
             className={`${styles.themeBtn} ${dark ? styles.themeBtnOn : ''}`}
             role="switch"
             aria-checked={dark}
+            aria-label="Dark Mode"
             onClick={onToggleDark}
           >
             <span className={styles.themeKnob} />

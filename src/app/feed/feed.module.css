@@ -92,6 +92,54 @@
   vector-effect: non-scaling-stroke;
 }
 
+/* ---------- Kopfzeile: zurück + Bewertung ----------
+   Liegt unter den Fortschrittsstreifen des Players (die stehen ganz oben). */
+.topRow {
+  position: fixed;
+  z-index: 60;
+  top: calc(env(safe-area-inset-top, 0px) + 24px);
+  left: 50%;
+  width: min(calc(100% - 16px), 512px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transform: translateX(-50%);
+}
+
+.statusBar {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(18, 18, 20, 0.62);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+}
+
+.statusButton {
+  min-width: 0;
+  min-height: 38px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.66);
+  background: transparent;
+  font: inherit;
+  font-size: 10.5px;
+  letter-spacing: -0.01em;
+  font-weight: 650;
+  line-height: 1.15;
+  cursor: pointer;
+  transition: color 160ms var(--ease-out), background-color 160ms var(--ease-out);
+}
+.statusButton:disabled { opacity: 0.42; cursor: default; }
+/* Gewählt: gefüllt in der Markenfarbe — die einzige Farbe im Bild neben der
+   Kurve, deshalb sofort zu sehen. */
+.statusButtonActive { color: #fff; background: var(--accent); }
+
 /* ---------- Aktionsspalte ----------
    Icon über Beschriftung, untereinander am rechten Rand, in Daumenhöhe. */
 .rail {
@@ -149,20 +197,9 @@
   transform: scale(0.94);
 }
 
-/* Gewählt: gefüllt in der Markenfarbe — die einzige Farbe im Bild neben der
-   Kurve, deshalb sofort zu sehen. */
-.railButtonActive .railIcon {
-  border-color: transparent;
-  color: #fff;
-  background: var(--accent);
-  box-shadow: 0 10px 26px rgba(255, 122, 0, 0.36);
-}
 
 .back {
-  position: fixed;
-  z-index: 60;
-  top: calc(env(safe-area-inset-top, 0px) + 24px);
-  left: max(10px, calc(50% - 254px));
+  flex: none;
   width: 40px;
   height: 40px;
   display: grid;
@@ -176,6 +213,7 @@
 }
 
 .back:focus-visible,
+.statusButton:focus-visible,
 .railButton:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
@@ -185,9 +223,8 @@
   .railButton:not(:disabled):hover .railIcon {
     background-color: rgba(255, 255, 255, 0.14);
   }
-  .railButtonActive:hover .railIcon {
-    background-color: var(--accent);
-  }
+  .statusButton:not(:disabled):hover { color: #fff; background-color: rgba(255, 255, 255, 0.1); }
+  .statusButtonActive:not(:disabled):hover { background-color: var(--accent); }
   .back:hover {
     background-color: rgba(255, 255, 255, 0.16);
   }
@@ -208,5 +245,6 @@
 @media (prefers-reduced-motion: reduce) {
   .feed { scroll-behavior: auto; }
   .railButton,
+  .statusButton,
   .back { transition-duration: 1ms; }
 }

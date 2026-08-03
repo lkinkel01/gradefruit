@@ -30,6 +30,10 @@
   border-bottom: 1px solid var(--line-strong);
 }
 .sectionTitle { margin-bottom: 16px; color: var(--muted); font-size: 12.5px; font-weight: 650; letter-spacing: .01em; }
+/* Überschrift und Schalter in einer Zeile — für Abschnitte, die aus genau
+   einem Schalter bestehen (Dark Mode). */
+.titleRow { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.titleRow .sectionTitle { margin-bottom: 0; }
 .field { margin-bottom: 13px; }
 .field label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
 .field input {

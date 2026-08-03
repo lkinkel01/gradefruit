@@ -2,6 +2,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { createClient } from './supabase';
+import { imAppRahmen } from './nativeApp';
 
 /** Warum jemand abgemeldet wurde, ohne selbst auf „Abmelden" zu klicken. */
 export type SignedOutReason = 'other-device' | 'idle';
@@ -254,8 +255,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Sicherheitshalber automatisch abmelden, wenn zwei Stunden lang nichts
   // passiert. Jede Eingabe setzt die Frist zurück; die letzte Aktivität liegt
   // im Speicher, damit auch ein geschlossener und wieder geöffneter Tab zählt.
+  //
+  // NUR im Browser. Ein Browser läuft oft auf einem fremden oder geteilten
+  // Rechner, eine installierte App liegt auf genau einem Gerät, das dem Nutzer
+  // gehört und selbst gesperrt ist. Dort ist das Abmelden kein Schutz, sondern
+  // eine Zumutung: Man macht die App auf und muss erst wieder Passwort tippen.
+  // Keine App, die man täglich benutzt, tut das.
   useEffect(() => {
     if (!user) return;
+    if (imAppRahmen()) return;
     const LIMIT = 2 * 60 * 60 * 1000;
     const KEY = 'gf-last-activity';
     const touch = () => {

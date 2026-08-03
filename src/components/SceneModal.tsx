@@ -89,6 +89,9 @@ interface PlayerProps {
 export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'default' }: PlayerProps) {
   const [seg, setSeg] = useState(0);
   const [playing, setPlaying] = useState(false);
+  // Im Reel: Ist der gesprochene Satz ausgeklappt? Wie bei TikTok stehen
+  // zunächst zwei Zeilen da, „mehr" zeigt den Rest.
+  const [textOffen, setTextOffen] = useState(false);
   // Wiedergabegeschwindigkeit — gilt für Stimme und stumme Segmente.
   const [rate, setRate] = useState(1);
   const rateRef = useRef(1);
@@ -156,7 +159,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
 
   // segRef/fracRef spiegeln den aktuellen Stand, damit die Gesten-Handler ihn
   // synchron lesen können; beim Abbau alle Gesten-Timer aufräumen.
-  useEffect(() => { segRef.current = seg; }, [seg]);
+  useEffect(() => { segRef.current = seg; setTextOffen(false); }, [seg]);
   useEffect(() => { fracRef.current = frac; }, [frac]);
   useEffect(() => () => {
     if (gHold.current) window.clearTimeout(gHold.current);
@@ -547,7 +550,16 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
         <div className={styles.reelFoot}>
           <span className={styles.reelTopic}>{scene.topic}</span>
           <strong className={styles.reelTitle}>{scene.title}</strong>
-          <p className={styles.reelCaption} key={`c${seg}`}>{current.say}</p>
+          <p className={`${styles.reelCaption} ${textOffen ? styles.reelCaptionOffen : ''}`}>
+            {current.say}
+          </p>
+          <button
+            type="button"
+            className={styles.reelMehr}
+            onClick={() => setTextOffen(o => !o)}
+          >
+            {textOffen ? 'weniger' : 'mehr'}
+          </button>
         </div>
 
         {/* TikTok-Gesten: die ganze Bühne ist tipp-/haltbar. */}

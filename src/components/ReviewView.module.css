@@ -2,77 +2,57 @@
 .ph1 { margin-bottom: 8px; text-align: center; font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -0.035em; }
 .blurb { max-width: 58ch; margin: 0 auto 26px; text-align: center; color: var(--muted); font-size: 15px; line-height: 1.6; }
 
-.filterRow {
-  max-width: 100%;
-  width: fit-content;
-  margin-inline: auto;
-  display: flex;
-  gap: 3px;
-  margin-bottom: 14px;
-  padding: 3px;
-  overflow-x: auto;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-control);
-  background: var(--surface-2);
-}
-.seg {
-  min-height: 44px;
-  padding: 8px 15px;
-  border: none;
-  border-radius: var(--radius-control);
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  white-space: nowrap;
-  transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
-}
-.segOn { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-control); }
-.seg { display: inline-flex; align-items: center; gap: 7px; }
-.segDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-/* Eine Zeile, notfalls seitlich schiebbar — statt Umbruch.
-   Bei drei Themen mit sehr unterschiedlicher Länge brach die Reihe vorher auf
-   zwei Zeilen um und die zweite stand mittig unter der ersten: sichtbar schief,
-   ohne dass etwas kaputt war. Eine Zeile ist ruhiger, und das seitliche
-   Schieben kennt man von Filterreihen. */
-/* Wie die Stufen darüber: ein Raster in einer Fläche, kein Umbruch und kein
-   seitliches Schieben. Vorher stand „Stochastik" halb außerhalb — sichtbar
-   abgeschnitten, und niemand ahnt, dass man dort wischen könnte. Ein Raster
-   zeigt alles auf einmal.
-   Zwei Spalten, das dritte Thema über die volle Breite: Bei drei Einträgen ist
-   das die einzige Aufteilung ohne Loch. */
-.topicRow {
+/* Zwei Spalten nebeneinander, in jeder die Einträge untereinander: links die
+   Lernstufe, rechts die Themen. Als eine Reihe passten die Namen nicht — je
+   nach Fassung brach „Lineare Algebra & Geometrie" um oder wurde abgeschnitten.
+   Untereinander hat jeder Name die volle Spaltenbreite. */
+.filters {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 4px;
+  margin-bottom: 26px;
   padding: 5px;
-  margin-bottom: 28px;
   border-radius: var(--radius-control);
   background: var(--surface-2);
 }
-.topicRow > *:nth-child(3):last-child { grid-column: 1 / -1; }
+.filterCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+/* Feine Trennlinie zwischen den beiden Spalten — ohne sie sieht es aus wie
+   eine einzige, unsauber gesetzte Liste. */
+.filterCol + .filterCol { border-left: 1px solid var(--line); padding-left: 5px; }
 
+.seg,
 .chip {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 7px 10px;
+  min-height: 40px;
+  padding: 8px 10px;
   border: 0;
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--muted);
-  text-align: center;
   cursor: pointer;
+  font-family: inherit;
   font-size: 12.5px;
-  font-weight: 550;
-  transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
-  min-height: 44px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
+  transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
 }
-.chipOn { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-control); font-weight: 650; }
-.chipOn .cdot { background: #fff !important; }
-.cdot { width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; }
+.segOn,
+.chipOn {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-control);
+  font-weight: 650;
+}
+.segDot,
+.cdot { width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; }
 
 .list { display: flex; flex-direction: column; border-top: 1px solid var(--line-strong); }
 .item {
@@ -118,12 +98,6 @@
 
 @media (max-width: 560px) {
   .page { --page-top: 30px; --page-bottom: 96px; }
-  .filterRow {
-    display: grid;
-    width: 100%;
-    grid-template-columns: 1fr 1fr;
-    overflow: visible;
-  }
   .item {
     display: grid;
     grid-template-columns: 8px minmax(0, 1fr) auto;

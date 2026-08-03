@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-08-01 (App-Feinschliff: Startbild, Wochenplan für die Erinnerung, Reels neu gebaut)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-08-03 (App-Feinschliff: Reels, gleiche Überschriften, iOS-Zoom-Fehler behoben)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -690,6 +690,37 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
 - ✅ **Countdown kleiner, mit Kalendersymbol (01.08.2026, live);** unter „Konto"
   steht „Mehr" jetzt ganz unten.
 
+- ✅ **iOS-Zoom nach dem Anmelden behoben (03.08.2026, live):** Nach jeder
+  Anmeldung war der Bildschirm zu breit — man musste seitlich schieben, unten
+  fehlte ein Stück, und erst ein Neustart der App setzte es zurück. Ursache war
+  keine Layout-Angabe, sondern iOS: Beim Antippen eines Eingabefeldes mit einer
+  Schrift **kleiner als 16px** zoomt iOS hinein und bleibt hineingezoomt. Die
+  Anmeldemaske hat Felder mit 14 bis 15px. Regel in `globals.css` unter
+  `@supports (-webkit-touch-callout: none)`: In der App sind Felder 16px, am
+  Schreibtisch bleibt die Typografie unverändert.
+- ✅ **App meldet nicht mehr von selbst ab (03.08.2026, live):** Die
+  Zwei-Stunden-Frist gilt nur noch im Browser. Ein Browser läuft oft auf einem
+  fremden Rechner; eine installierte App liegt auf einem Gerät, das dem Nutzer
+  gehört und selbst gesperrt ist. Dort ist das Abmelden kein Schutz, sondern
+  eine Zumutung. Die Ein-Geräte-Sperre bleibt unverändert.
+- ✅ **Federndes Scrollen auch auf kurzen Seiten (03.08.2026, live):**
+  WKWebView federt von sich aus nur, wenn der Inhalt länger als der Bildschirm
+  ist — auf „Themen" passierte beim Wischen deshalb gar nichts. Jetzt
+  `alwaysBounceVertical` (und `alwaysBounceHorizontal = false`) im
+  SceneDelegate; ein hineingezoomter Zustand wird beim Aktivieren zurückgesetzt.
+- ✅ **Alle Abschnitts-Überschriften unter „Konto" gleich (03.08.2026, live):**
+  „Lernerinnerung" war eine andere Schrift und Größe als „Passwort" oder
+  „Zugang". „Erscheinungsbild" ist weg — „Dark Mode" ist jetzt selbst die
+  Überschrift, mit dem Schalter daneben. Eine Überschrift über genau einem
+  Schalter sagt nichts, was der Schalter nicht schon sagt.
+- ✅ **Reels: bewerten wieder oben, Text wie bei TikTok (03.08.2026, live):**
+  Die drei Stufen stehen wieder als Leiste unter den Fortschrittsstreifen; die
+  Spalte rechts trägt nur noch „Aufgabe" und „Start". Der gesprochene Satz steht
+  zweizeilig da, „mehr" klappt ihn auf.
+- ✅ **Filter unter „Wiederholen" in zwei Spalten (03.08.2026, live):** Links
+  die vier Lernstufen untereinander, rechts die drei Themen untereinander. Als
+  Reihe passte „Lineare Algebra & Geometrie" in keiner Fassung.
+
 ## Bekannte Probleme / offen
 
 **Verkauf**
@@ -713,6 +744,16 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
 - 🟡 Vieles an der App-Oberfläche ist **gebaut, aber nicht von Claude geprüft** —
   im Simulator sind Wischen und Tippen unzuverlässig. Rückmeldung per
   Screenshot ist der schnellste Weg.
+
+**App: offen und bewusst nicht gelöst**
+- 🔴 **Offline funktioniert in der App nicht.** Die App ist eine Hülle um
+  www.gradefruit.de (`server.url` in `native/capacitor.config.json`) — ohne Netz
+  gibt es nichts zu laden. Damit Offline wirklich trägt, müsste das Web-Bündel
+  **in die App gepackt** werden (`webDir` statt `server.url`) und nur noch die
+  Daten über das Netz kommen. Das ist ein eigener Umbau, kein Schalter.
+- 🔴 **Screenshots lassen sich auf iOS nicht verhindern** — vier Umsetzungen
+  geprüft, alle belegt wirkungslos oder schädlich (siehe unten). Was funktioniert:
+  **Bildschirmaufnahme** wird erkannt und abgedeckt (`ScreenshotGuard`).
 
 **Sonstiges**
 - 🟡 **Zusammenfassungs-Fortschritt liegt nur lokal** (`gf-summary-status`) —

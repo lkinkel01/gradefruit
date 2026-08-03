@@ -354,3 +354,16 @@ body {
 @supports (-webkit-touch-callout: none) {
   .gf-kein-blur { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 }
+
+/* iOS zoomt beim Antippen eines Eingabefeldes hinein, sobald dessen Schrift
+   kleiner als 16px ist — und bleibt danach hineingezoomt. Die Seite ist dann
+   breiter als der Bildschirm: Man kann seitlich schieben, unten fehlt ein
+   Stück, und erst ein Neustart der App setzt es zurück. Genau das passierte
+   nach jeder Anmeldung, weil dort Felder mit 14 bis 15px stehen.
+
+   16px ist die Grenze, ab der iOS nicht mehr zoomt. Die Regel gilt nur dort
+   (`-webkit-touch-callout` gibt es nur auf iOS); am Schreibtisch bleibt die
+   Typografie unverändert. */
+@supports (-webkit-touch-callout: none) {
+  input, select, textarea { font-size: 16px; }
+}
