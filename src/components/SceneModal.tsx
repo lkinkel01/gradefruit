@@ -204,6 +204,28 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     if (gTap.current) window.clearTimeout(gTap.current);
   }, []);
 
+  // App im Hintergrund, Bildschirm gesperrt, Tab gewechselt: Das Video hält an.
+  //
+  // Ohne das lief die Stimme weiter, während man längst etwas anderes machte —
+  // man kam zurück und war mitten im nächsten Abschnitt. TikTok hält an, sobald
+  // man weg ist, und bleibt angehalten; genau so hier. `pagehide` ist der Fall,
+  // in dem iOS die Seite einfriert, ohne `visibilitychange` zu schicken.
+  useEffect(() => {
+    const anhalten = () => {
+      stopNarration();
+      setPlaying(false);
+    };
+    const beiSichtwechsel = () => {
+      if (document.visibilityState === 'hidden') anhalten();
+    };
+    document.addEventListener('visibilitychange', beiSichtwechsel);
+    window.addEventListener('pagehide', anhalten);
+    return () => {
+      document.removeEventListener('visibilitychange', beiSichtwechsel);
+      window.removeEventListener('pagehide', anhalten);
+    };
+  }, [stopNarration]);
+
   // ESC schließt den Player (nur wenn es ein Schließen gibt)
   useEffect(() => {
     if (!onClose) return;

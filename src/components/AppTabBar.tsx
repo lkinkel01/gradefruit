@@ -67,12 +67,22 @@ export default function AppTabBar({
   onNavigate,
   onReels,
   dunkel = false,
+  kompaktErlaubt = true,
 }: {
   view: View;
   onNavigate: (v: View) => void;
   onReels: () => void;
   /** Im Reel-Modus liegt die Leiste auf dem Bild und braucht dessen Farben. */
   dunkel?: boolean;
+  /**
+   * Darf die Leiste beim Scrollen zusammenrücken?
+   *
+   * Im Reel nicht: Dort wischt man senkrecht durch Videos, die Leiste würde bei
+   * jedem Wisch die Größe wechseln. Schlimmer noch — ihre Höhe ist das Maß,
+   * nach dem sich die Zeitleiste darüber ausrichtet. Wechselt sie ständig,
+   * wandert auch die Zeitleiste.
+   */
+  kompaktErlaubt?: boolean;
 }) {
   // Beim Herunterscrollen rückt die Leiste zusammen und die Beschriftungen
   // treten zurück, wie bei Instagram. Der Inhalt bekommt dadurch Platz, ohne
@@ -94,13 +104,32 @@ export default function AppTabBar({
       if (!el) return;
       const kasten = el.getBoundingClientRect();
       const hoehe = Math.max(0, Math.round(window.innerHeight - kasten.top));
-      document.documentElement.style.setProperty('--gf-leiste', `${hoehe}px`);
+      // Nur wachsen, nie schrumpfen.
+      //
+      // Der Grund: Die Leiste rückt beim Scrollen zusammen. Wird in genau dem
+      // Moment gemessen, gilt der kleinere Wert weiter — und sobald sie wieder
+      // auseinandergeht, verdeckt sie, was sich nach ihr gerichtet hat. Genau so
+      // verschwand die Zeitleiste im Reel und kam erst zurück, wenn man die
+      // Leiste einmal angetippt hatte. Der größte je gemessene Wert ist der
+      // sichere.
+      const bisher = Number.parseInt(
+        document.documentElement.style.getPropertyValue('--gf-leiste') || '0', 10,
+      );
+      if (hoehe > (Number.isFinite(bisher) ? bisher : 0)) {
+        document.documentElement.style.setProperty('--gf-leiste', `${hoehe}px`);
+      }
     };
     messen();
+    // Beim ersten Bild steht das Layout noch nicht endgültig: Schriften kommen
+    // nach, der Sicherheitsabstand wird erst angewandt. Deshalb noch einmal,
+    // wenn beides durch ist.
+    const nachmessen = window.setTimeout(messen, 300);
+    document.fonts?.ready.then(messen).catch(() => {});
     const beobachter = new ResizeObserver(messen);
     if (leisteRef.current) beobachter.observe(leisteRef.current);
     window.addEventListener('resize', messen);
     return () => {
+      window.clearTimeout(nachmessen);
       beobachter.disconnect();
       window.removeEventListener('resize', messen);
       document.documentElement.style.removeProperty('--gf-leiste');
@@ -121,18 +150,19 @@ export default function AppTabBar({
         const jetzt = position();
         // Kleine Bewegungen ignorieren, sonst zappelt die Leiste beim Wippen.
         if (Math.abs(jetzt - letzte.current) < 6) return;
-        setKompakt(jetzt > letzte.current && jetzt > 40);
+        setKompakt(kompaktErlaubt && jetzt > letzte.current && jetzt > 40);
         letzte.current = jetzt;
       });
     };
 
+    if (!kompaktErlaubt) { setKompakt(false); return; }
     window.addEventListener('scroll', beobachten, { passive: true });
     document.addEventListener('scroll', beobachten, { passive: true, capture: true });
     return () => {
       window.removeEventListener('scroll', beobachten);
       document.removeEventListener('scroll', beobachten, { capture: true });
     };
-  }, []);
+  }, [kompaktErlaubt]);
 
   return (
     <nav

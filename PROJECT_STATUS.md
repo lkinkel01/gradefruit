@@ -885,6 +885,24 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   stand überall die Zahl der Aufgaben — auch über der Zusammenfassung, die mit
   Aufgaben nichts zu tun hat.
 
+- ✅ **Zeitleiste war verdeckt, bis man die Leiste einmal anfasste (04.08.2026,
+  live):** Zwei Ursachen, beide behoben. Erstens rückte die Navigationsleiste im
+  Reel beim Wischen zusammen — wurde in genau dem Moment gemessen, galt der
+  kleinere Wert weiter, und sobald sie wieder auseinanderging, verdeckte sie die
+  Zeitleiste. Im Reel rückt sie jetzt **gar nicht mehr zusammen**
+  (`kompaktErlaubt={false}`): Dort wischt man senkrecht durch Videos, eine
+  Leiste, die dabei die Größe wechselt, ist ohnehin Unruhe. Zweitens gilt beim
+  Messen jetzt **nur wachsen, nie schrumpfen**, dazu ein zweiter Messpunkt nach
+  300 ms und nach `document.fonts.ready` — beim ersten Bild steht das Layout
+  noch nicht endgültig.
+  Nachgemessen in der Simulation: Zeitleiste endet bei 722, Navigation beginnt
+  bei 740 — 18 px Abstand, auch nach dem Scrollen.
+- ✅ **Videos halten an, wenn man die App verlässt (04.08.2026, live):** Vorher
+  lief die Stimme weiter, während man längst etwas anderes machte — man kam
+  zurück und war mitten im nächsten Abschnitt. Jetzt hält der Player bei
+  `visibilitychange` (versteckt) und bei `pagehide` an und bleibt angehalten,
+  wie bei TikTok. Gilt für Reels **und** die Erklärvideos im Modal.
+
 ### Aus Leons Rückmeldung noch offen (Stand 04.08.2026)
 
 Bewusst nicht in einem Rutsch gemacht — das sind Umbauten, keine Feinheiten:

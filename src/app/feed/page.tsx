@@ -300,6 +300,7 @@ export default function FeedPage() {
           onNavigate={(ziel) => { window.location.assign(`/?view=${ziel}`); }}
           onReels={() => { /* schon hier */ }}
           dunkel={dunkel}
+          kompaktErlaubt={false}
         />
       )}
     </main>
