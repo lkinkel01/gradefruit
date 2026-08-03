@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { createClient } from '@/lib/supabase';
 import LernErinnerung from './LernErinnerung';
+import OfflineVideos from './OfflineVideos';
 import styles from './AccountView.module.css';
 import { LogoutIcon, PlayIcon, TutorIcon, ArrowRightIcon, KameraIcon } from './UiIcons';
 import { useImAppRahmen } from '@/lib/nativeApp';
@@ -434,6 +435,13 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           </>
         )}
       </div>
+      {/* Offline gehört zum Konto, nicht zu einem einzelnen Thema: Es betrifft
+          alles, was auf diesem Gerät liegt. */}
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>Offline</h2>
+        <OfflineVideos />
+      </div>
+
       {imApp && (
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Mehr</h2>

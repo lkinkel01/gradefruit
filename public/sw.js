@@ -25,6 +25,14 @@
 //     genau so lange kaputt) und speichert auch Bilder und Schriften.
 const VERSION = 'gf-v5';
 const SHELL = `${VERSION}-shell`;
+// Die Erklärvideos liegen in einem eigenen, NICHT versionsgebundenen Speicher.
+//
+// Warum getrennt: Sie sind rund 11 MB und werden bewusst geladen („Erklärvideos
+// aufs Gerät laden" unter Konto). Läge das im Gerüst-Speicher, wäre es nach
+// jeder Veröffentlichung weg, ohne dass es jemand merkt — und wer im Zug sitzt,
+// stünde ohne Ton da. Beim Laden wird jedes Mal frisch geholt, damit ein
+// geänderter Text nicht mit altem Ton weiterläuft.
+const AUDIO = 'gf-audio';
 const OFFLINE_URL = '/offline.html';
 // Das zuletzt geladene Seitengerüst. Ohne das startet die App ohne Netz gar
 // nicht — und käme nie dazu, die abgelegten Kursinhalte zu lesen.
@@ -57,7 +65,9 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
-        keys.filter(key => !key.startsWith(VERSION)).map(key => caches.delete(key)),
+        keys
+          .filter(key => !key.startsWith(VERSION) && key !== AUDIO)
+          .map(key => caches.delete(key)),
       ))
       .then(() => self.clients.claim()),
   );
@@ -90,6 +100,20 @@ self.addEventListener('fetch', event => {
   // Schriften aus /public. Ohne die zweite Hälfte startet die App ohne Netz
   // zwar, aber ohne Logo und ohne Bilder — es sieht kaputt aus, obwohl es
   // funktioniert.
+  // Erklärvideos: aus dem eigenen Speicher, sonst laden und dort ablegen.
+  if (url.pathname.startsWith('/audio/')) {
+    event.respondWith(
+      caches.match(request, { cacheName: AUDIO }).then(hit => hit ?? fetch(request).then(response => {
+        if (response.ok) {
+          const copy = response.clone();
+          caches.open(AUDIO).then(cache => cache.put(request, copy));
+        }
+        return response;
+      })),
+    );
+    return;
+  }
+
   const istStatisch = url.pathname.startsWith('/_next/static/')
     || /\.(?:png|jpg|jpeg|svg|webp|avif|woff2?|ico)$/.test(url.pathname);
   if (istStatisch) {

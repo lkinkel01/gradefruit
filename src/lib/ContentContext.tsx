@@ -182,6 +182,17 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Zugriff auf das Nachladen, ohne einen bestimmten Inhalt zu abonnieren.
+ *
+ * Gedacht für das Vorladen im Hintergrund: Es will alle Themen aufs Gerät
+ * holen, aber keines davon anzeigen.
+ */
+export function useContentLaden() {
+  const { request } = useContext(Ctx);
+  return request;
+}
+
+/**
  * Inhalte eines Themas in der gewählten Stufe. Lädt beim ersten Aufruf
  * selbstständig nach und liefert solange `state: 'loading'`.
  */

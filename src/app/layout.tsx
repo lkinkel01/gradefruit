@@ -4,6 +4,7 @@ import { AuthProvider } from "@/lib/AuthContext";
 import { ProgressProvider } from "@/lib/ProgressContext";
 import { ContentProvider } from "@/lib/ContentContext";
 import ServiceWorker from "@/components/ServiceWorker";
+import OfflineVorrat from '@/components/OfflineVorrat';
 
 export const metadata: Metadata = {
   title: "Gradefruit",
@@ -98,6 +99,10 @@ setTimeout(function(){
           <ProgressProvider>
             <ContentProvider>
               <ServiceWorker />
+              {/* Legt die Kursinhalte im Hintergrund aufs Gerät, damit Lernen
+                  ohne Netz nicht davon abhängt, was man vorher zufällig
+                  geöffnet hatte. */}
+              <OfflineVorrat />
               {children}
             </ContentProvider>
           </ProgressProvider>

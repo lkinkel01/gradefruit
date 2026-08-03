@@ -903,11 +903,31 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   `visibilitychange` (versteckt) und bei `pagehide` an und bleibt angehalten,
   wie bei TikTok. Gilt für Reels **und** die Erklärvideos im Modal.
 
+- ✅ **Alles offline (04.08.2026, live):** Bisher lag auf dem Gerät nur, was man
+  ohnehin geöffnet hatte — Offline-Lernen war damit Zufall. Es gab „Für offline
+  speichern" je Thema, aber daran muss man denken, und woran man denken muss,
+  das passiert nicht.
+  Jetzt zweigeteilt, weil die Größen zweigeteilt sind:
+  1. **Texte automatisch.** `OfflineVorrat` legt nach dem Anmelden alle
+     zugänglichen Thema/Stufe-Kombinationen im Hintergrund ab (nacheinander, mit
+     Pausen, damit es dem gerade Gelesenen nicht die Leitung nimmt). Wenige
+     hundert Kilobyte — weniger als ein Foto, deshalb ohne Nachfrage.
+  2. **Erklärvideos auf Knopfdruck.** Rund 11 MB Ton; das lädt niemand ungefragt
+     über Mobilfunk. „Konto → Offline" mit Fortschritt, „Erneut laden" und „Vom
+     Gerät entfernen". Der Ton liegt in einem **eigenen, nicht
+     versionsgebundenen** Speicher (`gf-audio`), damit er nicht bei jeder
+     Veröffentlichung verschwindet; geladen wird er mit `cache: 'reload'`, damit
+     kein alter Ton zu neuem Text läuft.
+  **Nachgewiesen im Produktions-Build:** angemeldet, Videos geladen (47 von 47),
+  dann den **Server abgeschaltet** — die App startet, die Aufgabenliste steht,
+  eine nie geöffnete Aufgabe („Fläche zwischen zwei Kurven") öffnet sich mit
+  Text und Lösung, und `/audio/v2-3.mp3` kommt mit 188.961 Bytes aus dem
+  Speicher.
+
 ### Aus Leons Rückmeldung noch offen (Stand 04.08.2026)
 
 Bewusst nicht in einem Rutsch gemacht — das sind Umbauten, keine Feinheiten:
 
-- 🟠 **Alles offline**, nicht nur geöffnete Themen.
 - 🟠 **Kurswechsel (GK/LK) und die restlichen Browser-Funktionen** in der App.
 - 🟠 **Statusanzeige neben dem Thema** statt unter der Nummer.
 

@@ -1,0 +1,24 @@
+.block { display: flex; flex-direction: column; gap: 12px; }
+
+.text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.balken {
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--line);
+}
+.balkenFuellung {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform 200ms var(--ease-out);
+}
+
+.knoepfe { display: flex; flex-wrap: wrap; gap: 10px; }
