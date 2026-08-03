@@ -820,6 +820,18 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
      weiterhin einen Neustart — umgehängte Ebenen im laufenden Betrieb
      zurückzuhängen ist ein Eingriff, der schiefgehen kann.
 
+- ✅ **Nach der Registrierung sofort drin (03.08.2026, live):** Man musste sich
+  nach dem Registrieren noch einmal mit denselben Daten anmelden. Ursache: Das
+  Anmelde-Fenster stand **dreimal** im Baum — einmal je Zweig von `page.tsx`
+  (App-Einstieg, Werbeseite, Lernbereich). Sobald die Registrierung durch war,
+  war man angemeldet, der Zweig wechselte, und React baute das Fenster damit neu
+  auf: Es sprang zurück auf Schritt 1 mit leeren Feldern, und es sah aus, als
+  hätte die Registrierung nicht funktioniert. Die Sitzung bestand die ganze Zeit.
+  Jetzt steht das Fenster **einmal** außerhalb der Zweige.
+  Nachgewiesen: Registrieren → Schritt 2 („Name optional", „Benutzername
+  optional") erscheint mit bestehender Sitzung → „Überspringen" landet direkt
+  auf `?view=dashboard`.
+
 ## Bekannte Probleme / offen
 
 **Verkauf**

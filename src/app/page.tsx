@@ -430,7 +430,15 @@ export default function Home() {
 
   if (loading || !routeReady) return <Startbild />;
 
-  if (view === 'landing') {
+  // Der Seiteninhalt hängt vom Standort ab und wechselt dabei den Zweig.
+  //
+  // Das Anmelde-Fenster darf NICHT in diesen Zweigen stehen: Sobald die
+  // Registrierung durch ist, ist man angemeldet, der Zweig wechselt — und React
+  // baut damit auch das Fenster neu auf. Es sprang dadurch zurück auf Schritt 1
+  // mit leeren Feldern, und es sah aus, als müsste man sich gleich noch einmal
+  // anmelden. Deshalb steht es einmal ganz unten, außerhalb.
+  const seiteRendern = () => {
+    if (view === 'landing') {
     // Angemeldet und in der App: Die Werbeseite ist hier fehl am Platz — sie ist
     // für Leute gebaut, die den Kurs noch nicht kennen, und bringt die ganze
     // Webseiten-Oberfläche mit (Menü-Knopf, Preise, Hero). Der Effekt oben
@@ -452,12 +460,6 @@ export default function Home() {
             onTesten={() => navigate('analysis')}
             hinweis={signedOutReason ? SIGNED_OUT_TEXT[signedOutReason] : null}
             onHinweisSchliessen={clearSignedOutReason}
-          />
-          <AuthModal
-            open={authOpen}
-            onClose={() => setAuthOpen(false)}
-            onAuthenticated={handleAuthenticated}
-            initialMode={authMode}
           />
         </>
       );
@@ -484,12 +486,6 @@ export default function Home() {
           onClose={clearSignedOutReason}
         />
         <CheckoutModal open={checkoutOpen} onClose={() => setCheckoutOpen(false)} course={checkoutCourse} />
-        <AuthModal
-          open={authOpen}
-          onClose={() => setAuthOpen(false)}
-          onAuthenticated={handleAuthenticated}
-          initialMode={authMode}
-        />
       </>
     );
   }
@@ -606,13 +602,21 @@ export default function Home() {
         onClose={() => setCheckoutOpen(false)}
         course={checkoutCourse}
       />
+      <AskDrawer open={askOpen} ctx={askCtx} snippet={askSnippet} source={askSource} onClose={() => setAskOpen(false)} />
+    </>
+  );
+  };
+
+  return (
+    <>
+      {seiteRendern()}
+      {/* Genau ein Anmelde-Fenster für die ganze Seite — siehe seiteRendern(). */}
       <AuthModal
         open={authOpen}
         onClose={() => setAuthOpen(false)}
         onAuthenticated={handleAuthenticated}
         initialMode={authMode}
       />
-      <AskDrawer open={askOpen} ctx={askCtx} snippet={askSnippet} source={askSource} onClose={() => setAskOpen(false)} />
     </>
   );
 }
