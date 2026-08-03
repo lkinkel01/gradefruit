@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, R
 import { User, Session } from '@supabase/supabase-js';
 import { createClient } from './supabase';
 import { imAppRahmen } from './nativeApp';
+import { SCHUTZ_KEY, screenshotsFrei } from './schutz';
 
 /** Warum jemand abgemeldet wurde, ohne selbst auf „Abmelden" zu klicken. */
 export type SignedOutReason = 'other-device' | 'idle';
@@ -251,6 +252,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       void supabase.removeChannel(channel);
     };
   }, [supabase, user]);
+
+  // Die App darf nicht wissen, wer angemeldet ist — sie kennt keine Konten.
+  // Also legt die Seite die Antwort für sie hin; die native Hülle liest sie
+  // beim Aktivieren aus und merkt sie sich bis zum nächsten Start.
+  useEffect(() => {
+    let lebt = true;
+    // Bis die Antwort da ist, gilt „geschützt". Ein Fehler darf nie dazu
+    // führen, dass ein gekaufter Kurs plötzlich abfotografierbar ist.
+    try { localStorage.setItem(SCHUTZ_KEY, '0'); } catch { /* Speicher gesperrt */ }
+    void screenshotsFrei(user?.email).then(frei => {
+      if (!lebt || !frei) return;
+      try { localStorage.setItem(SCHUTZ_KEY, '1'); } catch { /* Speicher gesperrt */ }
+    });
+    return () => { lebt = false; };
+  }, [user]);
 
   // Sicherheitshalber automatisch abmelden, wenn zwei Stunden lang nichts
   // passiert. Jede Eingabe setzt die Frist zurück; die letzte Aktivität liegt

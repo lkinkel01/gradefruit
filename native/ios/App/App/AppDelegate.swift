@@ -77,6 +77,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 /// dafür keine Entsprechung — das ist der Grund für diese Hülle.
 final class ScreenshotGuard {
 
+    /// Merker: Darf dieses Gerät Screenshots machen?
+    ///
+    /// Die Antwort kommt von der Seite (sie kennt das Konto, die App nicht) und
+    /// wird hier abgelegt, weil sie beim Start schon feststehen muss — da ist
+    /// die Seite noch nicht geladen. Ohne Eintrag gilt: geschützt. Ein Fehler
+    /// darf nie dazu führen, dass ein gekaufter Kurs plötzlich abfotografierbar
+    /// ist.
+    static let freiKey = "gf-screenshot-frei"
+    static var frei: Bool { UserDefaults.standard.bool(forKey: freiKey) }
+
     private weak var window: UIWindow?
     private var coverView: UIView?
     private var hinweisView: UIView?
@@ -97,9 +107,17 @@ final class ScreenshotGuard {
         //
         // Falls die App danach leer oder verschoben startet: Diese eine Zeile
         // auskommentieren, neu bauen — alles andere bleibt unberührt.
-        protectAgainstScreenshots()
+        //
+        // Für freigestellte Konten (Entwicklung, siehe src/lib/schutz.ts) bleibt
+        // der Schutz aus. Die Entscheidung stammt aus dem vorigen Start: Beim
+        // Aktivieren wird sie neu gelesen, sie wirkt also ab dem nächsten Start.
+        // Umgekehrt heißt das auch: Ein Konto, das den Schutz braucht, bekommt
+        // ihn spätestens beim nächsten Start zurück.
+        if !Self.frei {
+            protectAgainstScreenshots()
+            observeScreenshots()
+        }
         observeScreenRecording()
-        observeScreenshots()
         updateRecordingCover()
     }
 
@@ -313,6 +331,15 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Nach dem Aufbau: Die Webansicht steht erst im nächsten Durchlauf.
         DispatchQueue.main.async { [weak self] in self?.scrollverhalten() }
+        // Und noch zweimal später: Beim Start ist die Seite noch nicht geladen,
+        // die Antwort auf „darf dieses Konto Screenshots machen?" gibt es also
+        // erst nach ein paar Sekunden. Ohne das müsste man die App eigens in den
+        // Hintergrund und wieder nach vorne holen, damit sie ankommt.
+        for verzoegerung in [4.0, 10.0] {
+            DispatchQueue.main.asyncAfter(deadline: .now() + verzoegerung) { [weak self] in
+                self?.scrollverhalten()
+            }
+        }
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
@@ -333,6 +360,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func scrollverhalten() {
         screenshotGuard?.refreshGeometry()
         guard let window = window, let web = Self.webansicht(in: window) else { return }
+        schutzAntwortLesen(web)
         let sicht = web.scrollView
         sicht.bounces = true
         sicht.alwaysBounceVertical = true
@@ -353,6 +381,19 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         if sicht.contentOffset.x != 0 {
             sicht.setContentOffset(CGPoint(x: 0, y: sicht.contentOffset.y), animated: false)
+        }
+    }
+
+    /// Holt die Antwort auf „darf dieses Konto Screenshots machen?" von der
+    /// Seite und merkt sie sich für den nächsten Start.
+    ///
+    /// Bewusst nur lesen, nicht sofort umschalten: Der Schutz hängt Ebenen um,
+    /// und das mitten im Betrieb rückgängig zu machen ist ein Eingriff, der
+    /// schiefgehen kann. Ein Neustart ist der ruhigere Weg.
+    private func schutzAntwortLesen(_ web: WKWebView) {
+        web.evaluateJavaScript("localStorage.getItem('\(ScreenshotGuard.freiKey)')") { wert, _ in
+            guard let text = wert as? String else { return }
+            UserDefaults.standard.set(text == "1", forKey: ScreenshotGuard.freiKey)
         }
     }
 

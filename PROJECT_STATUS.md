@@ -790,6 +790,21 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   mit „Tage bis zur Prüfung"; die Zeile „x von 133 Aufgaben verstanden" ist weg
   (dieselbe Zahl stand direkt darunter noch einmal).
 
+- ✅ **Screenshot-Schutz mit Ausnahme für die Entwicklung (03.08.2026, live):**
+  Ohne Screenshots gibt es keine Rückmeldung darüber, wie die App tatsächlich
+  aussieht — mit Schutz für alle wäre die Zusammenarbeit blind. Freigestellt
+  sind die Wegwerf-Konten aus `create-test-user.mjs` und namentlich hinterlegte
+  Konten; alles steht in **`src/lib/schutz.ts`**, der einzigen Stelle dafür.
+  Die Adressen liegen dort als **SHA-256-Fingerabdruck**, nicht im Klartext:
+  Das Verzeichnis ist öffentlich, und eine veröffentlichte Adresse bekommt
+  Werbung und Anmeldeversuche.
+  Ablauf: Die Seite legt die Antwort unter `gf-screenshot-frei` ab (Vorgabe
+  „geschützt"), die App liest sie beim Aktivieren und beim Start (nach 4 s und
+  10 s, weil die Seite beim Start noch nicht geladen ist) und merkt sie sich in
+  den `UserDefaults`. **Sie wirkt ab dem nächsten App-Start** — der Schutz hängt
+  Ebenen um, und das im laufenden Betrieb rückgängig zu machen wäre ein
+  Eingriff, der schiefgehen kann.
+
 ## Bekannte Probleme / offen
 
 **Verkauf**
