@@ -376,5 +376,11 @@ body {
    (`-webkit-touch-callout` gibt es nur auf iOS); am Schreibtisch bleibt die
    Typografie unverändert. */
 @supports (-webkit-touch-callout: none) {
-  input, select, textarea { font-size: 16px; }
+  /* `!important` ist hier nicht Bequemlichkeit, sondern nötig: Fast jedes Feld
+     steht in einem CSS-Modul und wird dort über eine Klasse angesprochen
+     (`.field input { font-size: 15px }`). Eine Klasse schlägt eine
+     Element-Regel — ohne `!important` galt diese Regel ausgerechnet dort nicht,
+     wo am meisten getippt wird: in der Anmelde- und Registrierungsmaske. Genau
+     dort trat der hineingezoomte Bildschirm auch weiterhin auf. */
+  input, select, textarea { font-size: 16px !important; }
 }

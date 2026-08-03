@@ -128,6 +128,24 @@ final class ScreenshotGuard {
         applyGeometry()
     }
 
+    /// Läuft der Schutz gerade?
+    var laeuft: Bool { secureLayer != nil }
+
+    /// Schutz nachträglich einschalten.
+    ///
+    /// Die eine Richtung geht sofort, die andere nicht: Einschalten ist derselbe
+    /// Handgriff wie beim Start und deshalb unbedenklich. Ausschalten hieße,
+    /// umgehängte Ebenen im laufenden Betrieb zurückzuhängen — das braucht einen
+    /// Neustart.
+    ///
+    /// Wichtig ist genau diese Richtung: Wer sich mit einem anderen Konto
+    /// anmeldet, ist sofort geschützt, statt erst beim nächsten Start.
+    func nachtraeglichSchuetzen() {
+        guard !laeuft else { return }
+        protectAgainstScreenshots()
+        observeScreenshots()
+    }
+
     // MARK: - Screenshots ins Leere laufen lassen
 
     /// Hängt die Inhaltsebene in die geschützte Ebene eines sicheren
@@ -328,6 +346,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let guardInstance = ScreenshotGuard(window: newWindow)
         guardInstance.start()
         screenshotGuard = guardInstance
+        tastaturBeobachten()
 
         // Nach dem Aufbau: Die Webansicht steht erst im nächsten Durchlauf.
         DispatchQueue.main.async { [weak self] in self?.scrollverhalten() }
@@ -344,6 +363,23 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         scrollverhalten()
+    }
+
+    /// Nach dem Tippen aufräumen.
+    ///
+    /// iOS zoomt beim Antippen eines Feldes hinein und bleibt danach so stehen —
+    /// die Seite ist dann breiter als der Bildschirm. Die Ursache ist behoben
+    /// (Felder sind in der App 16px groß, siehe globals.css); das hier ist der
+    /// Gürtel zum Hosenträger: Sobald die Tastatur weg ist, steht die Ansicht
+    /// wieder gerade, statt eine Minute lang schief zu bleiben.
+    private func tastaturBeobachten() {
+        NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardDidHideNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.scrollverhalten()
+        }
     }
 
     /// Scrollen wie in einer App, nicht wie auf einer Seite.
@@ -387,13 +423,22 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     /// Holt die Antwort auf „darf dieses Konto Screenshots machen?" von der
     /// Seite und merkt sie sich für den nächsten Start.
     ///
-    /// Bewusst nur lesen, nicht sofort umschalten: Der Schutz hängt Ebenen um,
-    /// und das mitten im Betrieb rückgängig zu machen ist ein Eingriff, der
-    /// schiefgehen kann. Ein Neustart ist der ruhigere Weg.
+    /// Nur eine Richtung wirkt sofort: Sagt die Antwort „geschützt", wird der
+    /// Schutz auf der Stelle eingeschaltet. Sagt sie „frei", wird das nur
+    /// vermerkt und gilt ab dem nächsten Start — umgehängte Ebenen im laufenden
+    /// Betrieb zurückzuhängen ist ein Eingriff, der schiefgehen kann.
+    ///
+    /// Die Reihenfolge ist Absicht: Ein Kontowechsel darf nie eine Sitzung lang
+    /// ungeschützt bleiben; ein Neustart zum Screenshot-Machen ist zumutbar.
     private func schutzAntwortLesen(_ web: WKWebView) {
-        web.evaluateJavaScript("localStorage.getItem('\(ScreenshotGuard.freiKey)')") { wert, _ in
+        web.evaluateJavaScript("localStorage.getItem('\(ScreenshotGuard.freiKey)')") { [weak self] wert, _ in
             guard let text = wert as? String else { return }
-            UserDefaults.standard.set(text == "1", forKey: ScreenshotGuard.freiKey)
+            let frei = text == "1"
+            UserDefaults.standard.set(frei, forKey: ScreenshotGuard.freiKey)
+            // Sagt die Antwort „geschützt", gilt das sofort — nicht erst beim
+            // nächsten Start. Sonst bliebe der Schutz nach einem Kontowechsel
+            // eine ganze Sitzung lang aus.
+            if !frei { self?.screenshotGuard?.nachtraeglichSchuetzen() }
         }
     }
 

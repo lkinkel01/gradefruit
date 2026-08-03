@@ -805,6 +805,21 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Ebenen um, und das im laufenden Betrieb rückgängig zu machen wäre ein
   Eingriff, der schiefgehen kann.
 
+- ✅ **Zwei Nachbesserungen am Schutz und am Zoom (03.08.2026, live):**
+  1. **Die 16px-Regel für Eingabefelder galt nicht dort, wo sie am nötigsten
+     war.** Sie stand als Element-Regel (`input { … }`), fast jedes Feld wird
+     aber über eine Klasse angesprochen (`.field input { font-size: 15px }`) —
+     und eine Klasse schlägt eine Element-Regel. Ausgerechnet in der Anmelde-
+     und Registrierungsmaske blieb der iOS-Zoom deshalb bestehen. Jetzt mit
+     `!important` (begründet im Code).
+     Ergänzend nativ: Sobald die Tastatur weg ist, wird die Ansicht
+     zurückgesetzt, statt eine Minute lang schief zu bleiben.
+  2. **Der Schutz griff nach einem Kontowechsel erst beim nächsten Start.**
+     Jetzt wirkt die eine Richtung sofort: Sagt die Antwort „geschützt", wird
+     der Schutz auf der Stelle eingeschaltet. Nur das Ausschalten braucht
+     weiterhin einen Neustart — umgehängte Ebenen im laufenden Betrieb
+     zurückzuhängen ist ein Eingriff, der schiefgehen kann.
+
 ## Bekannte Probleme / offen
 
 **Verkauf**
