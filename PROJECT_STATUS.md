@@ -721,6 +721,22 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   die vier Lernstufen untereinander, rechts die drei Themen untereinander. Als
   Reihe passte „Lineare Algebra & Geometrie" in keiner Fassung.
 
+- ✅ **Offline repariert (03.08.2026, live):** Der Service Worker legte das
+  Seitengerüst erst beim **zweiten** Seitenaufruf ab — beim ersten übernimmt er
+  gerade erst die Kontrolle. Im Browser fällt das nicht auf (man klickt
+  weiter), in der App gibt es pro Start genau **einen** Seitenaufruf: Nach jeder
+  Veröffentlichung war Offline deshalb bis zum übernächsten Start wirkungslos.
+  Jetzt holt `install` das Gerüst selbst (`cache.addAll` mit `cache: 'reload'`),
+  und Bilder und Schriften werden mitgespeichert — vorher startete die App ohne
+  Netz zwar, sah aber kaputt aus. Version auf `gf-v5`.
+  **Nachgewiesen:** Produktions-Build, angemeldet, Analysis geöffnet, dann den
+  Server **abgeschaltet** und neu geladen — die App startet, bleibt angemeldet,
+  zeigt Zusammenfassung und alle 23 Aufgaben aus der verschlüsselten Ablage und
+  meldet „Offline verfügbar".
+  Ergänzend: `server.errorPath` in `capacitor.config.json` zeigt eine
+  mitgelieferte Seite, wenn schon der allererste Start ohne Netz passiert (dann
+  gibt es noch keinen Service Worker).
+
 ## Bekannte Probleme / offen
 
 **Verkauf**
@@ -746,11 +762,6 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Screenshot ist der schnellste Weg.
 
 **App: offen und bewusst nicht gelöst**
-- 🔴 **Offline funktioniert in der App nicht.** Die App ist eine Hülle um
-  www.gradefruit.de (`server.url` in `native/capacitor.config.json`) — ohne Netz
-  gibt es nichts zu laden. Damit Offline wirklich trägt, müsste das Web-Bündel
-  **in die App gepackt** werden (`webDir` statt `server.url`) und nur noch die
-  Daten über das Netz kommen. Das ist ein eigener Umbau, kein Schalter.
 - 🔴 **Screenshots lassen sich auf iOS nicht verhindern** — vier Umsetzungen
   geprüft, alle belegt wirkungslos oder schädlich (siehe unten). Was funktioniert:
   **Bildschirmaufnahme** wird erkannt und abgedeckt (`ScreenshotGuard`).

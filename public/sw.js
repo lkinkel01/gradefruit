@@ -20,7 +20,10 @@
 // v3: nach den Veröffentlichungen vom 30./31.07.2026.
 // v4: räumt die vergifteten Gerüste ab — bis hierhin konnte unter „/" die
 //     zuletzt besuchte Unterseite liegen (siehe unten beim Seitenaufruf).
-const VERSION = 'gf-v4';
+// v5: legt das Gerüst schon beim Einrichten ab (vorher brauchte es dafür einen
+//     zweiten Seitenaufruf — nach jeder Veröffentlichung war Offline also
+//     genau so lange kaputt) und speichert auch Bilder und Schriften.
+const VERSION = 'gf-v5';
 const SHELL = `${VERSION}-shell`;
 const OFFLINE_URL = '/offline.html';
 // Das zuletzt geladene Seitengerüst. Ohne das startet die App ohne Netz gar
@@ -28,8 +31,22 @@ const OFFLINE_URL = '/offline.html';
 const SHELL_URL = '/';
 
 self.addEventListener('install', event => {
+  // Gerüst UND Ausweichseite sofort holen.
+  //
+  // Vorher lag hier nur die Ausweichseite. Das Gerüst wurde erst beim nächsten
+  // Seitenaufruf abgelegt — und den gibt es in der App erst beim nächsten
+  // Start. Nach jeder Veröffentlichung war Offline deshalb einen Start lang
+  // wirkungslos, ohne dass man es merkte.
+  //
+  // `reload` erzwingt eine frische Antwort: Ein Gerüst aus dem Browser-Speicher
+  // kann auf Dateien zeigen, die es nach der Veröffentlichung nicht mehr gibt.
   event.waitUntil(
-    caches.open(SHELL).then(cache => cache.addAll([OFFLINE_URL])),
+    caches.open(SHELL).then(cache => cache.addAll([
+      new Request(SHELL_URL, { cache: 'reload' }),
+      new Request(OFFLINE_URL, { cache: 'reload' }),
+    ])).catch(() => {
+      /* Beim Einrichten ohne Netz: Das Gerüst kommt beim ersten Aufruf mit Netz. */
+    }),
   );
   // Sofort übernehmen, statt auf das Schließen aller Tabs zu warten. Ohne das
   // bliebe nach einem Fehler die alte Fassung hartnäckig aktiv.
@@ -69,8 +86,13 @@ self.addEventListener('fetch', event => {
   // Kursinhalte, Kauf, Konto, KI: niemals anfassen.
   if (url.pathname.startsWith('/api/')) return;
 
-  // Statische Dateien mit Prüfsumme im Namen: aus dem Speicher, sonst laden.
-  if (url.pathname.startsWith('/_next/static/')) {
+  // Statische Dateien: Next.js-Bündel (Prüfsumme im Namen) sowie Bilder und
+  // Schriften aus /public. Ohne die zweite Hälfte startet die App ohne Netz
+  // zwar, aber ohne Logo und ohne Bilder — es sieht kaputt aus, obwohl es
+  // funktioniert.
+  const istStatisch = url.pathname.startsWith('/_next/static/')
+    || /\.(?:png|jpg|jpeg|svg|webp|avif|woff2?|ico)$/.test(url.pathname);
+  if (istStatisch) {
     event.respondWith(
       caches.match(request).then(hit => hit ?? fetch(request).then(response => {
         if (response.ok) {
