@@ -81,8 +81,34 @@
 
 /* Bereichs-Titel statt Umschalter: Zusammenfassung und Übungen sind eigene
    Seiten. */
-.areaTitle {
+/* Kopfzeile eines Bereichs: die drei Striche links, daneben der Titel. Im
+   Detail bleibt nur der Knopf — dort steht die Überschrift schon oben. */
+.areaKopf {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin: 4px 0 18px;
+}
+.menuKnopf {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out);
+}
+.menuKnopf:active { background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) {
+  .menuKnopf:hover { background: var(--surface-2); }
+}
+
+.areaTitle {
+  margin: 0;
   color: var(--ink);
   font-family: 'Bricolage Grotesque', sans-serif;
   font-weight: 750;

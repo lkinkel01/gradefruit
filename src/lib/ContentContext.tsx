@@ -33,7 +33,7 @@ export interface ContentSummarySection {
 }
 
 export interface ContentSummary {
-  intro: string;
+  /** Abschnitte in Lern-Reihenfolge; der erste heißt „Einleitung". */
   sections: ContentSummarySection[];
 }
 

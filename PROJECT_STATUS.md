@@ -867,16 +867,28 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   (`body::before`, z-index 90 über der Schublade mit 80). Jetzt trägt die
   Kopfzeile den Sicherheitsabstand.
 
-### Aus Leons Rückmeldung noch offen (Stand 03.08.2026)
+- ✅ **Einleitung ist Abschnitt 1 (04.08.2026, live):** Der Einleitungstext lag
+  als eigenes Feld `intro` neben den Abschnitten und stand als Wand über der
+  Liste — das Einzige, was man nicht anklicken, nicht abhaken und nicht direkt
+  ansteuern konnte. Jetzt ist er ein echter Abschnitt in `summaries.ts` (in
+  allen 6 Thema/Stufe-Kombinationen), `intro` gibt es nicht mehr. Damit trägt er
+  automatisch Nummer, Status, Deep-Link und Vor/Zurück wie jeder andere.
+  Nach der Änderung: `node scripts/build-content-index.mjs`.
+- ✅ **Sprungliste hinter drei Strichen (04.08.2026, live):**
+  `src/components/TopicMenu.tsx` — von links, mit Nummer, Titel und Lernstatus je
+  Eintrag, der aktuelle hervorgehoben. Sie erscheint **nur in der App**: Im
+  Browser führt die Seitenleiste bereits zu jedem Abschnitt, ein zweites Menü
+  daneben wäre dasselbe zweimal. Sichtbar auch im Detail — vorher musste man für
+  den nächsten Abschnitt jedes Mal zurück in die Liste.
+- ✅ **Fortschritt folgt dem Bereich (04.08.2026, live):** Über der
+  Zusammenfassung steht jetzt „0 von 7", über den Übungen „0 von 23". Vorher
+  stand überall die Zahl der Aufgaben — auch über der Zusammenfassung, die mit
+  Aufgaben nichts zu tun hat.
+
+### Aus Leons Rückmeldung noch offen (Stand 04.08.2026)
 
 Bewusst nicht in einem Rutsch gemacht — das sind Umbauten, keine Feinheiten:
 
-- 🟠 **Einleitung als Punkt 0 in der Zusammenfassung.** Der Text liegt heute als
-  `summary.intro` neben den Abschnitten, nicht als einer von ihnen; die Liste
-  kommt zudem aus dem erzeugten `contentIndex.ts`. Sauber ist das nur mit einem
-  echten Abschnitt im Inhalt.
-- 🟠 **Menü mit drei Strichen** in Zusammenfassung und Übungen (links
-  ausklappbar, direkt zu jedem Unterpunkt), wie im Browser.
 - 🟠 **Alles offline**, nicht nur geöffnete Themen.
 - 🟠 **Kurswechsel (GK/LK) und die restlichen Browser-Funktionen** in der App.
 - 🟠 **Statusanzeige neben dem Thema** statt unter der Nummer.

@@ -10,6 +10,7 @@ import { indexFor, type ContentTopic } from '@/lib/contentIndex';
 import { useTopicContent } from '@/lib/ContentContext';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import OfflineToggle from './OfflineToggle';
+import TopicMenu, { type MenuEintrag } from './TopicMenu';
 import { SkeletonListe, SkeletonText } from './Skeleton';
 import { ArrowRightIcon, ChevronIcon, SparkIcon, TutorIcon, UploadIcon } from './UiIcons';
 import type { AskSource } from './AskDrawer';
@@ -144,6 +145,11 @@ export default function TopicView({
     onLocationChange(nextTab, null, null);
   };
 
+  // Sprungliste: im Browser steht sie fest in der Seitenleiste, in der App
+  // hinter drei Strichen. Ohne sie führt der Weg zum nächsten Abschnitt jedes
+  // Mal über die Liste zurück.
+  const [menuOffen, setMenuOffen] = useState(false);
+
   const summaryStatusKey = (title: string) => `${topicId}/${level}/${title}`;
 
   // Die Zusammenfassung hat ihren eigenen Stand — er liegt lokal auf dem Gerät
@@ -162,6 +168,28 @@ export default function TopicView({
 
   const openSummaryItem = (section: { title: string }) => {
     onLocationChange('zusammenfassung', section.title, section.title);
+  };
+
+  const menuEintraege: MenuEintrag[] = tab === 'zusammenfassung'
+    ? sectionList.map((section, index) => ({
+        key: section.title,
+        nummer: index + 1,
+        label: section.title,
+        status: summaryStatuses[summaryStatusKey(section.title)] ?? 'none',
+        aktiv: selectedSummary?.title === section.title,
+      }))
+    : tasks.map((task, index) => ({
+        key: task.id,
+        nummer: index + 1,
+        label: task.tag,
+        status: statusOf(topicId, task.id),
+        aktiv: selectedTask?.id === task.id,
+      }));
+
+  const menuWaehlen = (key: string) => {
+    if (tab === 'zusammenfassung') { openSummaryItem({ title: key }); return; }
+    const treffer = tasks.find(task => task.id === key);
+    if (treffer) openTaskItem(treffer);
   };
 
   const openTaskItem = (task: { id: string; tag: string }) => {
@@ -386,11 +414,9 @@ export default function TopicView({
 
   const renderSummaryIndex = () => (
     <div className={styles.contentIndex}>
-      {summary?.intro && (
-        <div className={styles.introBox} {...askable(summary.intro)}>
-          {richText(summary.intro, '')}
-        </div>
-      )}
+      {/* Kein Textblock mehr über der Liste: Die Einleitung ist Abschnitt 1 und
+          verhält sich wie jeder andere — anklickbar, abhakbar, direkt
+          ansteuerbar. */}
       <div className={styles.indexList}>
         {sectionList.map((section, index) => {
           const status = summaryStatuses[summaryStatusKey(section.title)] ?? 'none';
@@ -686,17 +712,40 @@ export default function TopicView({
       </div>
       )}
 
-      {!detailOpen && hasAccess && (
-        <div className={styles.progressRow}>
-          <GrapefruitProgress pct={tasks.length ? (doneCount / tasks.length) * 100 : 0} size={26} />
-          <span className={styles.progressLabel}>{doneCount} von {tasks.length} verstanden</span>
-        </div>
-      )}
+      {/* Der Stand gehört zu dem Bereich, in dem man steht. Vorher stand
+          überall die Zahl der Aufgaben — auch über der Zusammenfassung, die mit
+          Aufgaben nichts zu tun hat. */}
+      {!detailOpen && hasAccess && (() => {
+        const fertig = tab === 'zusammenfassung' ? summaryDone : doneCount;
+        const gesamt = tab === 'zusammenfassung' ? sectionList.length : tasks.length;
+        return (
+          <div className={styles.progressRow}>
+            <GrapefruitProgress pct={gesamt ? (fertig / gesamt) * 100 : 0} size={26} />
+            <span className={styles.progressLabel}>{fertig} von {gesamt} verstanden</span>
+          </div>
+        );
+      })()}
 
-      {!detailOpen && tab !== 'uebersicht' && (
-        <p className={styles.areaTitle}>
-          {tab === 'zusammenfassung' ? 'Zusammenfassung' : 'Übungen'}
-        </p>
+      {tab !== 'uebersicht' && hasAccess && (
+        <div className={styles.areaKopf}>
+          {/* Nur in der App: Im Browser führt die Seitenleiste bereits zu jedem
+              Abschnitt, ein zweites Menü daneben wäre dasselbe zweimal. */}
+          {imApp && <button
+            type="button"
+            className={styles.menuKnopf}
+            onClick={() => setMenuOffen(true)}
+            aria-label={tab === 'zusammenfassung' ? 'Alle Abschnitte' : 'Alle Aufgaben'}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="4" y1="7" x2="20" y2="7" /><line x1="4" y1="12" x2="20" y2="12" /><line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          </button>}
+          {!detailOpen && (
+            <p className={styles.areaTitle}>
+              {tab === 'zusammenfassung' ? 'Zusammenfassung' : 'Übungen'}
+            </p>
+          )}
+        </div>
       )}
 
       {!hasAccess ? (
@@ -738,6 +787,14 @@ export default function TopicView({
       ) : (
         selectedTask ? renderExerciseDetail() : renderExerciseIndex()
       )}
+
+      <TopicMenu
+        offen={menuOffen}
+        titel={tab === 'zusammenfassung' ? 'Zusammenfassung' : 'Übungen'}
+        eintraege={menuEintraege}
+        onWaehlen={menuWaehlen}
+        onClose={() => setMenuOffen(false)}
+      />
     </div>
   );
 }

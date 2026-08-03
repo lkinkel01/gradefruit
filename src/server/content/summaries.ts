@@ -9,16 +9,29 @@ export interface SummarySection {
 }
 
 export interface TopicSummary {
-  intro: string;
+  /**
+   * Die Abschnitte in Lern-Reihenfolge. Der erste heißt „Einleitung" und
+   * ordnet das Thema ein.
+   *
+   * Vorher stand dieser Text als eigenes Feld `intro` daneben und wurde über
+   * der Liste angezeigt. Damit war er das Einzige, was man nicht anklicken,
+   * nicht abhaken und nicht direkt ansteuern konnte — vor jeder Zusammenfassung
+   * stand eine Wand aus Text, durch die man erst hindurch musste. Als Abschnitt
+   * verhält er sich wie alles andere auch.
+   */
   sections: SummarySection[];
 }
 
 export const SUMMARIES: Record<'analysis' | 'linalg' | 'stochastik', Record<'gk' | 'lk', TopicSummary>> = {
   analysis: {
     gk: {
-      intro:
-        'Analysis dreht sich um zwei Fragen: Wie schnell ändert sich etwas (Ableitung) und wie viel kommt insgesamt zusammen (Integral). Diese Zusammenfassung bündelt alles, was du im Grundkurs sicher können musst.',
       sections: [
+        {
+          title: 'Einleitung',
+          text:
+            'Analysis dreht sich um zwei Fragen: Wie schnell ändert sich etwas (Ableitung) und wie viel kommt insgesamt zusammen (Integral). Diese Zusammenfassung bündelt alles, was du im Grundkurs sicher können musst.',
+          formulas: [],
+        },
         {
           title: 'Ableitung und Grundregeln',
           text: 'Die Ableitung f′(x₀) ist die Steigung des Graphen an der Stelle x₀. Polynome leitest du Glied für Glied mit der Potenzregel ab.',
@@ -71,9 +84,13 @@ export const SUMMARIES: Record<'analysis' | 'linalg' | 'stochastik', Record<'gk'
       ],
     },
     lk: {
-      intro:
-        'Im Leistungskurs kommen e- und ln-Funktionen, stärkere Ableitungsregeln, Integrationstechniken und Funktionenscharen dazu. Diese Übersicht sammelt die Werkzeuge, die in fast jeder LK-Aufgabe stecken.',
       sections: [
+        {
+          title: 'Einleitung',
+          text:
+            'Im Leistungskurs kommen e- und ln-Funktionen, stärkere Ableitungsregeln, Integrationstechniken und Funktionenscharen dazu. Diese Übersicht sammelt die Werkzeuge, die in fast jeder LK-Aufgabe stecken.',
+          formulas: [],
+        },
         {
           title: 'Produkt-, Quotienten- und Kettenregel',
           text: 'Produkte, Brüche und Verkettungen leitest du mit den drei großen Regeln ab. Bei Verkettungen immer die innere Ableitung nachziehen.',
@@ -128,9 +145,13 @@ export const SUMMARIES: Record<'analysis' | 'linalg' | 'stochastik', Record<'gk'
   },
   linalg: {
     gk: {
-      intro:
-        'In der linearen Algebra beschreibst du Punkte, Geraden und Ebenen im Raum mit Vektoren. Fast alles läuft über drei Werkzeuge: Betrag, Skalarprodukt und Lagebeziehungen.',
       sections: [
+        {
+          title: 'Einleitung',
+          text:
+            'In der linearen Algebra beschreibst du Punkte, Geraden und Ebenen im Raum mit Vektoren. Fast alles läuft über drei Werkzeuge: Betrag, Skalarprodukt und Lagebeziehungen.',
+          formulas: [],
+        },
         {
           title: 'Vektoren und Abstände',
           text: 'Ein Vektor verbindet zwei Punkte. Sein Betrag ist die Länge, der Abstand zweier Punkte der Betrag des Verbindungsvektors.',
@@ -175,9 +196,13 @@ export const SUMMARIES: Record<'analysis' | 'linalg' | 'stochastik', Record<'gk'
       ],
     },
     lk: {
-      intro:
-        'Der Leistungskurs erweitert die Geometrie um Kreuz- und Spatprodukt, Kugeln, Spiegelungen und Übergangsmatrizen. Die Grundwerkzeuge aus dem Grundkurs bleiben die Basis.',
       sections: [
+        {
+          title: 'Einleitung',
+          text:
+            'Der Leistungskurs erweitert die Geometrie um Kreuz- und Spatprodukt, Kugeln, Spiegelungen und Übergangsmatrizen. Die Grundwerkzeuge aus dem Grundkurs bleiben die Basis.',
+          formulas: [],
+        },
         {
           title: 'Kreuz- und Spatprodukt',
           text: 'Das Kreuzprodukt liefert einen Normalenvektor und Flächen, das Spatprodukt Volumina.',
@@ -223,9 +248,13 @@ export const SUMMARIES: Record<'analysis' | 'linalg' | 'stochastik', Record<'gk'
   },
   stochastik: {
     gk: {
-      intro:
-        'Stochastik beschreibt Zufall mit Zahlen: von einfachen Laplace-Experimenten über Baumdiagramme bis zur Binomialverteilung. Diese Übersicht enthält alle Standard-Werkzeuge des Grundkurses.',
       sections: [
+        {
+          title: 'Einleitung',
+          text:
+            'Stochastik beschreibt Zufall mit Zahlen: von einfachen Laplace-Experimenten über Baumdiagramme bis zur Binomialverteilung. Diese Übersicht enthält alle Standard-Werkzeuge des Grundkurses.',
+          formulas: [],
+        },
         {
           title: 'Grundlagen',
           text: 'Beim Laplace-Experiment sind alle Ergebnisse gleich wahrscheinlich. Oft ist das Gegenereignis der schnellere Weg.',
@@ -270,9 +299,13 @@ export const SUMMARIES: Record<'analysis' | 'linalg' | 'stochastik', Record<'gk'
       ],
     },
     lk: {
-      intro:
-        'Im Leistungskurs kommen Hypothesentests, die Normalapproximation und weitere Verteilungen dazu. Wichtig ist vor allem der sichere Umgang mit kumulierten Wahrscheinlichkeiten.',
       sections: [
+        {
+          title: 'Einleitung',
+          text:
+            'Im Leistungskurs kommen Hypothesentests, die Normalapproximation und weitere Verteilungen dazu. Wichtig ist vor allem der sichere Umgang mit kumulierten Wahrscheinlichkeiten.',
+          formulas: [],
+        },
         {
           title: 'Binomialverteilung vertieft',
           text: 'Kumulierte Wahrscheinlichkeiten setzt du aus Intervallen zusammen. Die Sigma-Regeln geben schnelle Näherungen um den Erwartungswert.',

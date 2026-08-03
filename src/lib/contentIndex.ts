@@ -127,6 +127,9 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
       ],
       "sections": [
         {
+          "title": "Einleitung"
+        },
+        {
           "title": "Ableitung und Grundregeln"
         },
         {
@@ -238,6 +241,9 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
         }
       ],
       "sections": [
+        {
+          "title": "Einleitung"
+        },
         {
           "title": "Produkt-, Quotienten- und Kettenregel"
         },
@@ -357,6 +363,9 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
       ],
       "sections": [
         {
+          "title": "Einleitung"
+        },
+        {
           "title": "Vektoren und Abstände"
         },
         {
@@ -465,6 +474,9 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
         }
       ],
       "sections": [
+        {
+          "title": "Einleitung"
+        },
         {
           "title": "Kreuz- und Spatprodukt"
         },
@@ -579,6 +591,9 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
       ],
       "sections": [
         {
+          "title": "Einleitung"
+        },
+        {
           "title": "Grundlagen"
         },
         {
@@ -687,6 +702,9 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
         }
       ],
       "sections": [
+        {
+          "title": "Einleitung"
+        },
         {
           "title": "Binomialverteilung vertieft"
         },
