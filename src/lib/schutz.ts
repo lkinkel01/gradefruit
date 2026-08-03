@@ -26,10 +26,14 @@
  * keiner App der Welt.
  */
 
-/** Wegwerf-Konten aus `scripts/create-test-user.mjs`. */
-const TEST_MUSTER = /^gradefruit\..+\.test@gmail\.com$/;
-
-/** Fingerabdrücke namentlich freigestellter Konten (Entwicklung). */
+/**
+ * Fingerabdrücke der freigestellten Konten.
+ *
+ * Bewusst eine namentliche Liste und KEIN Muster: Ein Muster wie „alle Adressen
+ * mit .test@" wäre von außen erratbar — wer es kennt, legt sich ein Konto an,
+ * das darauf passt, und der Schutz ist für ihn aus. Eine Liste kann nur
+ * erweitern, wer diese Datei ändert.
+ */
 const FREIGESTELLT = [
   // Leon
   'fb248b072a94d631d7d2275ce64b0442a675d250707510e7ed8ad623ab9b9605',
@@ -50,9 +54,7 @@ async function fingerabdruck(text: string): Promise<string | null> {
 
 export async function screenshotsFrei(email?: string | null): Promise<boolean> {
   if (!email) return false;
-  const adresse = email.trim().toLowerCase();
-  if (TEST_MUSTER.test(adresse)) return true;
-  const abdruck = await fingerabdruck(adresse);
+  const abdruck = await fingerabdruck(email.trim().toLowerCase());
   return abdruck !== null && FREIGESTELLT.includes(abdruck);
 }
 
