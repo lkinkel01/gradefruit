@@ -849,6 +849,38 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Und „Alle" füllt sich gedeckt statt tiefschwarz: Ein schwarzer Punkt neben
   Rot, Gelb und Grün liest sich wie eine vierte Stufe, obwohl er keine ist.
 
+- ✅ **App-Aufbau geschärft (03.08.2026, live):** Die untere Leiste heißt jetzt
+  **Übersicht · Lernen · Wiederholen · Reels · Konto** — der erste Punkt ist ein
+  Dashboard, der zweite führt zu den Themen. Unter „Lernen" steht nur noch der
+  Name des Themas: Wie weit man ist, steht in der Übersicht, und zweimal
+  dieselbe Zahl an zwei Orten heißt nur, dass eine davon irgendwann nicht mehr
+  stimmt. In der Übersicht steht je Thema der **Anteil in Prozent** statt „x von
+  y Aufgaben" — ein Thema besteht nicht nur aus Aufgaben.
+- ✅ **Themenseite ist wieder ein Weg, keine Leseseite (03.08.2026, live):** Der
+  Einleitungstext und die vollständigen Listen sind aus der Übersicht raus;
+  geblieben sind zwei Karten mit **eigenem Stand** je Bereich
+  („0 von 6 verstanden" / „1 von 23 verstanden"). Die Listen kamen eine Seite
+  später ohnehin noch einmal.
+- ✅ **Coach ließ sich in der App nicht schließen (03.08.2026, live):** Die
+  Schublade liegt fest am Fensterrand und beginnt deshalb UNTER der Statusleiste
+  — der Schließen-Knopf saß hinter dem deckenden Streifen für Uhrzeit und Akku
+  (`body::before`, z-index 90 über der Schublade mit 80). Jetzt trägt die
+  Kopfzeile den Sicherheitsabstand.
+
+### Aus Leons Rückmeldung noch offen (Stand 03.08.2026)
+
+Bewusst nicht in einem Rutsch gemacht — das sind Umbauten, keine Feinheiten:
+
+- 🟠 **Einleitung als Punkt 0 in der Zusammenfassung.** Der Text liegt heute als
+  `summary.intro` neben den Abschnitten, nicht als einer von ihnen; die Liste
+  kommt zudem aus dem erzeugten `contentIndex.ts`. Sauber ist das nur mit einem
+  echten Abschnitt im Inhalt.
+- 🟠 **Menü mit drei Strichen** in Zusammenfassung und Übungen (links
+  ausklappbar, direkt zu jedem Unterpunkt), wie im Browser.
+- 🟠 **Alles offline**, nicht nur geöffnete Themen.
+- 🟠 **Kurswechsel (GK/LK) und die restlichen Browser-Funktionen** in der App.
+- 🟠 **Statusanzeige neben dem Thema** statt unter der Nummer.
+
 ## Bekannte Probleme / offen
 
 **Verkauf**

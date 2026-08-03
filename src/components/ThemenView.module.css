@@ -20,8 +20,12 @@
 }
 .zeile:active { background: var(--surface-2); }
 
-.text { flex: 1; min-width: 0; }
-.name { display: block; font-size: 16.5px; font-weight: 650; letter-spacing: -0.015em; }
-.meta { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; }
+.name {
+  flex: 1;
+  min-width: 0;
+  font-size: 16.5px;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
 
 .schloss { display: inline-flex; color: var(--faint); }

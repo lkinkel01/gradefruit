@@ -173,7 +173,7 @@
 /* Zahl und Beschriftung stehen auf einer Grundlinie (`align-items: baseline`
    oben) — dafür darf die Zahl nicht viel größer sein als ihre Zeile, sonst
    kippt das Bild. */
-.app .cdDays { font-size: clamp(26px, 7vw, 31px); line-height: 1.05; letter-spacing: -.03em; }
+.app .cdDays { font-size: clamp(23px, 6vw, 27px); line-height: 1.05; letter-spacing: -.03em; }
 .app .cdLabel { font-size: 15px; font-weight: 600; color: var(--ink); }
 /* Volle Breite heißt: eigene Zeile unter Zahl und Beschriftung. */
 /* Datum mit Kalendersymbol, mittig. Das Symbol macht aus einer Zeile Text
@@ -231,5 +231,8 @@
   .cdCol { border-right: 0; border-bottom: 1px solid var(--line); }
   .progressCol { flex-direction: row; gap: 14px; padding: 16px; }
   .progressGo { display: none; }
-  .topicCount { display: none; }
+  /* Der Anteil bleibt auch auf dem Handy stehen: Er ist die einzige Angabe
+     dazu, wie weit man in einem Thema ist — vorher war das „x von y", das
+     wegen seiner Länge weichen musste. Eine Prozentzahl passt immer. */
+  .topicCount { font-size: 12.5px; }
 }

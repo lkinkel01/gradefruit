@@ -14,8 +14,8 @@ import styles from './AppHeader.module.css';
  * Auf den vier Hauptseiten gibt es keinen Zurück-Pfeil, nur den Titel.
  */
 const TITEL: Partial<Record<View, string>> = {
-  dashboard: 'Lernen',
-  themen: 'Themen',
+  dashboard: 'Übersicht',
+  themen: 'Lernen',
   review: 'Wiederholen',
   account: 'Mein Konto',
   tutors: '1:1 Nachhilfe',

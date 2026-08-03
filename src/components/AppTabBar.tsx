@@ -14,7 +14,7 @@ import styles from './AppTabBar.module.css';
 const ZIELE: { view: View | 'feed'; label: string; icon: ReactNode }[] = [
   {
     view: 'dashboard',
-    label: 'Lernen',
+    label: 'Übersicht',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10a2 2 0 0 1 2 2v13a1.5 1.5 0 0 0-1.5-1.5h-5A1.5 1.5 0 0 1 4 16z" />
@@ -24,7 +24,7 @@ const ZIELE: { view: View | 'feed'; label: string; icon: ReactNode }[] = [
   },
   {
     view: 'themen',
-    label: 'Themen',
+    label: 'Lernen',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <line x1="9" y1="6" x2="20" y2="6" /><line x1="9" y1="12" x2="20" y2="12" /><line x1="9" y1="18" x2="20" y2="18" />

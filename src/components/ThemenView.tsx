@@ -41,12 +41,11 @@ export default function ThemenView({
                 onClick={() => onNavigate(topic.id as View, { tab: 'uebersicht' })}
               >
                 <GrapefruitProgress pct={(fertig / gesamt) * 100} size={30} />
-                <span className={styles.text}>
-                  <span className={styles.name}>{topic.label}</span>
-                  <span className={styles.meta}>
-                    {fertig} von {gesamt} verstanden
-                  </span>
-                </span>
+                {/* Nur der Name. Wie weit man ist, steht in der Übersicht —
+                    zweimal dieselbe Zahl an zwei Orten heißt nur, dass eine von
+                    beiden irgendwann nicht mehr stimmt. Hier geht es ums
+                    Hineingehen, nicht ums Nachrechnen. */}
+                <span className={styles.name}>{topic.label}</span>
                 {gesperrt
                   ? <span className={styles.schloss} aria-label="Nicht in deinem Zugang"><LockIcon size={15} /></span>
                   : <ArrowRightIcon size={17} />}

@@ -145,6 +145,13 @@ export default function TopicView({
   };
 
   const summaryStatusKey = (title: string) => `${topicId}/${level}/${title}`;
+
+  // Die Zusammenfassung hat ihren eigenen Stand — er liegt lokal auf dem Gerät
+  // und hat mit den Aufgaben nichts zu tun. Steht bewusst NACH
+  // `summaryStatusKey`: Eine const-Funktion gibt es vor ihrer Zeile nicht.
+  const summaryDone = sectionList.filter(
+    section => summaryStatuses[summaryStatusKey(section.title)] === 'verstanden',
+  ).length;
   const setSummaryStatus = (title: string, status: LernStatus) => {
     setSummaryStatuses(prev => {
       const next = { ...prev, [summaryStatusKey(title)]: status };
@@ -343,20 +350,21 @@ export default function TopicView({
 
   const renderOverview = () => (
     <div className={styles.contentIndex}>
-      {summary?.intro && (
-        <div className={styles.introBox} {...askable(summary.intro)}>
-          {richText(summary.intro, '')}
-        </div>
-      )}
+      {/* Zwei Wege, sonst nichts.
+          Vorher stand hier zuerst der Einleitungstext und darunter zwei Karten
+          mit der kompletten Liste aller Abschnitte und Aufgaben. Das war eine
+          Seite zum Lesen, keine zum Weitergehen — und die Liste stand gleich
+          darauf noch einmal. Der Einleitungstext gehört in die Zusammenfassung,
+          nicht vor sie.
+          Jeder Weg trägt jetzt seinen eigenen Stand: Wie weit man in der
+          Zusammenfassung ist, hat mit den Aufgaben nichts zu tun. */}
       <div className={styles.areaGrid}>
         <button type="button" className={styles.areaCard} onClick={() => selectTab('zusammenfassung')}>
           <span className={styles.areaCardHead}>
             <span className={styles.areaCardTitle}>Zusammenfassung</span>
             <span className={styles.areaCardMeta}>{sectionList.length} Abschnitte</span>
           </span>
-          <ol className={styles.areaList}>
-            {sectionList.map(section => <li key={section.title}>{section.title}</li>)}
-          </ol>
+          <span className={styles.areaCardStand}>{summaryDone} von {sectionList.length} verstanden</span>
           <span className={styles.areaCardGo}>Zur Zusammenfassung <ArrowRightIcon size={15} /></span>
         </button>
         <button type="button" className={styles.areaCard} onClick={() => selectTab('uebungen')}>
@@ -364,10 +372,7 @@ export default function TopicView({
             <span className={styles.areaCardTitle}>Übungen</span>
             <span className={styles.areaCardMeta}>{tasks.length} Aufgaben</span>
           </span>
-          <ol className={styles.areaList}>
-            {tasks.slice(0, 8).map(task => <li key={task.id}>{task.tag}</li>)}
-            {tasks.length > 8 && <li className={styles.areaMore}>und {tasks.length - 8} weitere</li>}
-          </ol>
+          <span className={styles.areaCardStand}>{doneCount} von {tasks.length} verstanden</span>
           <span className={styles.areaCardGo}>Zu den Übungen <ArrowRightIcon size={15} /></span>
         </button>
       </div>

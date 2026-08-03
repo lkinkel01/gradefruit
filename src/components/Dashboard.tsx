@@ -100,7 +100,11 @@ export default function Dashboard({ onNavigate }: Props) {
             <button key={t.id} className={styles.topicRow} onClick={() => onNavigate(t.id)}>
               <GrapefruitProgress pct={tp} size={40} />
               <span className={styles.topicName}>{t.label}</span>
-              <span className={styles.topicCount}>{topicDone(t.id)}/{topicTotal(t.id)} verstanden</span>
+              {/* Prozent statt „x von y": Ein Thema besteht nicht nur aus
+                  Übungsaufgaben, sondern auch aus Zusammenfassung und Videos.
+                  Eine Zahl, die nur die Aufgaben zählt, behauptet mehr, als sie
+                  weiß — der Anteil sagt dasselbe, ohne die Behauptung. */}
+              <span className={styles.topicCount}>{tp} %</span>
               <span className={styles.topicGo}><ArrowRightIcon size={16} /></span>
             </button>
           );
