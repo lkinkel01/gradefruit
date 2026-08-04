@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { useAuth } from './AuthContext';
 import type { ContentLevel, ContentTopic } from './contentIndex';
 import { ladeOffline, loescheOffline, speichereOffline } from './offlineContent';
+import { tonspurenLaden, tonspurenVorhanden, alleTonspuren } from './offlineAudio';
 
 // ===========================================================================
 // Kursinhalte im Browser — geladen, nicht mitgeliefert.
@@ -172,6 +173,43 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       }
     })();
   }, [token, authLoading]);
+
+  // Alles auf Vorrat holen, sobald einmal Netz da ist.
+  //
+  // Vorher lag offline nur bereit, was man vorher zufällig geöffnet hatte —
+  // und dass etwas fehlt, merkt man erst dort, wo man es nicht mehr nachholen
+  // kann. Läuft im Hintergrund, ohne Anzeige: Wer gerade liest, merkt nichts
+  // davon; was diesmal nicht klappt, klappt beim nächsten Start.
+  useEffect(() => {
+    if (authLoading || !userId) return;
+    // Erst dem laufen lassen, was der Nutzer gerade sehen will.
+    const start = window.setTimeout(() => {
+      const themen: ContentTopic[] = ['analysis', 'linalg', 'stochastik'];
+      const stufen: ContentLevel[] = ['gk', 'lk'];
+      themen.forEach((thema, i) => {
+        stufen.forEach((stufe, j) => {
+          window.setTimeout(() => request(thema, stufe), (i * 2 + j) * 400);
+        });
+      });
+
+      // Die Tonspuren dazu — rund 11 MB.
+      //
+      // Bisher hing das an einem Knopf, aus Rücksicht auf das Datenvolumen.
+      // Die Rücksicht war an der falschen Stelle: Wer im Zug sitzt und den Ton
+      // nicht hat, kann ihn dort nicht mehr holen. Also automatisch, aber mit
+      // zwei Ausnahmen — bei eingeschaltetem Datensparmodus und wenn ohnehin
+      // schon alles da ist, passiert nichts.
+      void (async () => {
+        const netz = (navigator as Navigator & {
+          connection?: { saveData?: boolean };
+        }).connection;
+        if (netz?.saveData) return;
+        if ((await tonspurenVorhanden()) >= alleTonspuren().length) return;
+        await tonspurenLaden(() => {});
+      })();
+    }, 2500);
+    return () => window.clearTimeout(start);
+  }, [authLoading, userId, request]);
 
   const get = useCallback(
     (topic: ContentTopic, level: ContentLevel) => cache[keyOf(topic, level)],

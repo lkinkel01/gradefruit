@@ -44,7 +44,15 @@
    Zeitleiste müssen vollständig darüber bleiben. Die Höhe der Leiste steht in
    globals.css, damit sie nicht an zwei Stellen geraten wird. */
 .imApp {
-  --reel-unten: calc(var(--gf-leiste) + 18px);
+  /* Zwei Werte, der größere gewinnt.
+     Gemessen ist genauer, aber die Messung braucht einen Moment — und bis dahin
+     lag die Zeitleiste hinter der Navigation. Der zweite Wert ist ein fester
+     Boden, der auch ganz ohne Messung reicht. Damit ist der Anfangszustand nie
+     falsch; die Messung macht ihn nur noch genauer. */
+  --reel-unten: max(
+    calc(var(--gf-leiste) + 18px),
+    calc(env(safe-area-inset-bottom, 0px) + 96px)
+  );
 }
 
 .gate {
@@ -178,7 +186,9 @@
   position: fixed;
   z-index: 60;
   right: max(8px, calc(50% - 250px));
-  bottom: calc(var(--reel-unten) + 8px);
+  /* Über der Zeitleiste, nicht daneben: Die Beschriftung „Zurück" endet unten
+     am Knopf und lag sonst genau auf dem Strich. */
+  bottom: calc(var(--reel-unten) + 52px);
   display: flex;
   flex-direction: column;
   align-items: center;

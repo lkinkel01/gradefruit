@@ -462,7 +462,10 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 76px 16px 0;
+  /* Unter der Bewertungsleiste beginnen, nicht dahinter: Die steht oben bei
+     Sicherheitsabstand + 24 und ist rund 44 hoch. Vorher stieß die Formel
+     direkt daran. */
+  padding: calc(env(safe-area-inset-top, 0px) + 96px) 16px 0;
   pointer-events: none;
 }
 

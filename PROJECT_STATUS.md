@@ -924,6 +924,39 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   Text und Lösung, und `/audio/v2-3.mp3` kommt mit 188.961 Bytes aus dem
   Speicher.
 
+- ✅ **Inhalte und Ton kommen von selbst aufs Gerät (04.08.2026, live):** Bisher
+  lag offline nur bereit, was man vorher zufällig geöffnet hatte — und dass
+  etwas fehlt, merkt man erst dort, wo man es nicht mehr nachholen kann. Jetzt
+  holt die App 2,5 s nach dem Start im Hintergrund **alle Themen beider
+  Kursstufen** (gesperrte kommen als gesperrt zurück und werden nicht abgelegt)
+  **und alle Tonspuren** (rund 11 MB). Ohne Anzeige, ohne Knopf, ohne Abbruch
+  bei Fehlern; bei eingeschaltetem Datensparmodus bleibt der Ton aus.
+  Nachgewiesen im Produktions-Build: Speicher geleert, angemeldet, 35 s
+  gewartet → 47 Tonspuren im Speicher, alle zugänglichen Themen abgelegt.
+- ✅ **Nichts im Reel überlappt mehr (04.08.2026, live):** Die Zeitleiste hat
+  jetzt einen **festen Boden** zusätzlich zur Messung
+  (`max(gemessen, safe-area + 96px)`) — die Messung braucht einen Moment, und
+  bis dahin lag die Leiste hinter der Navigation. Der Anfangszustand ist damit
+  nie falsch. Die Aktionsspalte sitzt 52 px höher, sonst lag „Zurück" auf dem
+  Strich, und die Bühne beginnt unter der Bewertungsleiste statt daran.
+
+### Offline in der App: was noch fehlt und warum
+
+🔴 **Im Flugmodus startet die App gar nicht** — sie zeigt die mitgelieferte
+Seite „Keine Verbindung". Der Grund ist grundsätzlich: Die App ist ein Fenster
+auf www.gradefruit.de (`server.url`). Ohne Netz scheitert WKWebView schon am
+Öffnen dieses Fensters — **bevor** der Service Worker überhaupt gefragt wird.
+Alles, was auf dem Gerät liegt (Gerüst, Inhalte, Ton), ist da, aber niemand
+kommt daran.
+
+Der einzige echte Weg: **Die App muss ihren eigenen Code mitbringen** (Bündel
+statt `server.url`). Das ändert die Herkunft der Seite von
+`https://www.gradefruit.de` auf eine app-eigene — und damit funktioniert die
+Anmeldung über Cookies nicht mehr. Sie müsste in der App auf Token umgestellt
+werden (`Authorization: Bearer`, die API-Routen können das schon), plus
+CORS-Freigabe für die App-Herkunft. Das ist ein eigener Umbau mit echtem Risiko
+an der Anmeldung — nichts, was man nebenbei mitnimmt.
+
 ### Aus Leons Rückmeldung noch offen (Stand 04.08.2026)
 
 Bewusst nicht in einem Rutsch gemacht — das sind Umbauten, keine Feinheiten:
