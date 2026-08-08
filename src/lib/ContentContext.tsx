@@ -182,6 +182,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   // davon; was diesmal nicht klappt, klappt beim nächsten Start.
   useEffect(() => {
     if (authLoading || !userId) return;
+    const abbruch = new AbortController();
     // Erst dem laufen lassen, was der Nutzer gerade sehen will.
     const start = window.setTimeout(() => {
       const themen: ContentTopic[] = ['analysis', 'linalg', 'stochastik'];
@@ -194,21 +195,27 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
       // Die Tonspuren dazu — rund 11 MB.
       //
-      // Bisher hing das an einem Knopf, aus Rücksicht auf das Datenvolumen.
-      // Die Rücksicht war an der falschen Stelle: Wer im Zug sitzt und den Ton
-      // nicht hat, kann ihn dort nicht mehr holen. Also automatisch, aber mit
-      // zwei Ausnahmen — bei eingeschaltetem Datensparmodus und wenn ohnehin
-      // schon alles da ist, passiert nichts.
+      // Sie kommen IMMER, auch im Datensparmodus. Ein Video ohne Ton ist kein
+      // Video, und wer den Ton nicht hat, kann ihn genau dort nicht nachholen,
+      // wo er ihn braucht. Der Sparmodus ändert nicht OB, sondern WIE: mit
+      // einer halben Sekunde Pause zwischen den Dateien läuft es nebenher statt
+      // die Leitung zu belegen. Was schon da ist, wird übersprungen.
       void (async () => {
+        if ((await tonspurenVorhanden()) >= alleTonspuren().length) return;
         const netz = (navigator as Navigator & {
           connection?: { saveData?: boolean };
         }).connection;
-        if (netz?.saveData) return;
-        if ((await tonspurenVorhanden()) >= alleTonspuren().length) return;
-        await tonspurenLaden(() => {});
+        await tonspurenLaden(() => {}, {
+          nurFehlende: true,
+          pause: netz?.saveData ? 600 : 80,
+          signal: abbruch.signal,
+        });
       })();
     }, 2500);
-    return () => window.clearTimeout(start);
+    return () => {
+      window.clearTimeout(start);
+      abbruch.abort();
+    };
   }, [authLoading, userId, request]);
 
   const get = useCallback(
