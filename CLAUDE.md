@@ -240,6 +240,37 @@ STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_SERVICE_ROLE_KEY`
 → **LK-Preise (`STRIPE_PRICE_LK_ONE_TIME`, `STRIPE_PRICE_LK_MONTHLY`) fehlen
 lokal noch** (in Vercel für den Live-Gang nötig).
 
+## Cloud-Sitzungen (Leon arbeitet vom Handy)
+
+Leon startet Aufgaben unterwegs über claude.ai/code bzw. die Claude-App. Diese
+Sitzungen laufen auf Anthropics Servern, **nicht auf seinem Mac** — sein Laptop
+darf zu sein. Wer dort arbeitet, hat einen frischen Container mit dem Repo aus
+GitHub und sonst nichts.
+
+**Was dort NICHT vorhanden ist — nicht versuchen, sondern sagen und vertagen:**
+
+- **Keine `.env.local`.** Alle Skripte mit `node --env-file=.env.local …`
+  (`create-test-user`, `delete-test-user`, `check-webhook`,
+  `check-content-gate`) laufen nicht. Damit gibt es auch **keine Testkonten**.
+- **Kein Xcode, kein iOS-Simulator, kein iPhone.** Alles Native (App bauen,
+  `AppDelegate.swift` prüfen, Screenshot-Schutz, Mitteilungen, Flugmodus)
+  gehört in eine Sitzung am Mac. Änderungen an `native/` kann man schreiben,
+  aber nicht prüfen — dann klar dazusagen, dass es ungeprüft ist.
+- **Keine Browser-Vorschau.** Der Dev-Server lässt sich starten, aber niemand
+  kann hineinsehen. Layout-Aussagen also nicht behaupten, sondern aus dem Code
+  begründen — oder auf die nächste Mac-Sitzung verschieben.
+
+**Was dort geht:** alles am Web-Teil — Inhalte, Texte, Layout-Code, Logik,
+Fehlerbehebung, `tsc --noEmit`, `npm run build`, committen und pushen (Vercel
+deployt automatisch).
+
+**Umgebungsvariablen der Cloud-Umgebung:** `npm run build` bricht ohne
+`NEXT_PUBLIC_SUPABASE_URL` und `NEXT_PUBLIC_SUPABASE_ANON_KEY` ab (Supabase-
+Client beim Vorrendern). Beide sind öffentlich — sie stehen ohnehin im
+Browser-Bündel. **Alles andere gehört dort nicht hinein**, besonders nicht
+`SUPABASE_SERVICE_ROLE_KEY` und die Stripe-Schlüssel: Ein Build braucht sie
+nicht, und was nicht da ist, kann nicht verloren gehen.
+
 ## Stand & offene Aufgaben
 
 Steht ausschließlich in **[PROJECT_STATUS.md](PROJECT_STATUS.md)** (kompakter
