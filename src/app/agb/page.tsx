@@ -112,10 +112,9 @@ export default function AgbPage() {
           keine Folgekosten, der Zugang verlängert sich nicht automatisch.
         </p>
         <p>
-          <strong>Monatsabo:</strong> Das Abo verlängert sich monatlich automatisch und ist
-          jederzeit zum Ende des laufenden Abrechnungsmonats kündbar. Die Kündigung ist ohne
-          Angabe von Gründen über das Stripe-Kundenportal möglich (erreichbar im Bereich „Mein
-          Konto“) oder per E-Mail an leon.kinkel@gmail.com.
+          <strong>Kein Abonnement:</strong> Gradefruit wird ausschließlich einmalig gekauft. Es
+          gibt keine wiederkehrende Zahlung, keine automatische Verlängerung und damit auch
+          nichts zu kündigen.
         </p>
       </div>
 

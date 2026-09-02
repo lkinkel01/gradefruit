@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
+import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 import styles from './Modal.module.css';
 
 interface Props {
@@ -9,22 +10,18 @@ interface Props {
   course?: 'gk' | 'lk';
 }
 
-// Anzeige-Texte je Kurs. WICHTIG: Die hier gezeigten Preise sind nur Anzeige –
-// abgerechnet wird IMMER der echte Stripe-Preis. Halte beide Werte gleich.
+// Anzeige-Texte je Kurs. Die Preise kommen aus `preise.ts` — dort steht auch,
+// warum sie nicht mehr in jeder Datei einzeln gepflegt werden.
 const COURSE_INFO = {
   gk: {
     tag: 'Mathe-Abi Hessen 2027 · Grundkurs',
     title: 'Vollzugang',
     blurb: 'Alle Grundkurs-Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und Fragen an die KI.',
-    full: '79 €',
-    month: '14,90 €',
   },
   lk: {
     tag: 'Mathe-Abi Hessen 2027 · Leistungskurs',
     title: 'LK-Vollzugang',
     blurb: 'Alle Leistungskurs-Themen, prüfungsnahe Übungsaufgaben, Erklärvideos und Fragen an die KI.',
-    full: '99 €',
-    month: '17,90 €',
   },
 } as const;
 
@@ -35,7 +32,6 @@ export default function CheckoutModal({ open, onClose, course = 'gk' }: Props) {
 
 function CheckoutDialog({ onClose, course }: { onClose: () => void; course: 'gk' | 'lk' }) {
   const { session } = useAuth();
-  const [selected, setSelected] = useState<'full' | 'month'>('full');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   // Zustimmung zu AGB + Erlöschen des Widerrufsrechts (Pflicht bei digitalen
@@ -58,7 +54,11 @@ function CheckoutDialog({ onClose, course }: { onClose: () => void; course: 'gk'
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ plan: selected, course }),
+        // Es gibt nur den Einmalkauf. Das Abo ist bewusst raus: Bei einer
+        // Zielgruppe, die überwiegend minderjährig ist, sind wiederkehrende
+        // Zahlungen ohne Zustimmung der Eltern rechtlich wacklig — und nach
+        // der Prüfung würde ohnehin jede:r kündigen.
+        body: JSON.stringify({ plan: 'full', course }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok || !data?.url) {
@@ -85,30 +85,14 @@ function CheckoutDialog({ onClose, course }: { onClose: () => void; course: 'gk'
           <p>{info.blurb}</p>
         </div>
         <div className={styles.mbody}>
-          <button
-            type="button"
-            aria-pressed={selected === 'full'}
-            className={`${styles.opt} ${selected === 'full' ? styles.sel : ''}`}
-            onClick={() => setSelected('full')}
-          >
-            <div className={styles.radio} />
+          {/* Nur ein Tarif — deshalb keine Auswahl, sondern die Zusammenfassung
+              dessen, was gekauft wird. */}
+          <div className={`${styles.opt} ${styles.sel} ${styles.summary}`}>
             <div className={styles.ox}><b>Komplettkurs</b><small>einmalig · Zugang bis zur Prüfung</small></div>
-            <div className={styles.op}>{info.full}</div>
-          </button>
-          <button
-            type="button"
-            aria-pressed={selected === 'month'}
-            className={`${styles.opt} ${selected === 'month' ? styles.sel : ''}`}
-            onClick={() => setSelected('month')}
-          >
-            <div className={styles.radio} />
-            <div className={styles.ox}><b>Monatlich</b><small>monatlich kündbar</small></div>
-            <div className={styles.op}>{info.month}<small>/ Monat</small></div>
-          </button>
+            <div className={styles.op}>{PREISE[course].einmalig}</div>
+          </div>
 
-          {/* Preisangabe: falls Kleinunternehmer nach § 19 UStG, Text ersetzen durch
-              „Gemäß § 19 UStG wird keine Umsatzsteuer erhoben." */}
-          <p className={styles.vat}>Alle Preise inkl. gesetzlicher Umsatzsteuer.</p>
+          <p className={styles.vat}>Einmalzahlung, keine Folgekosten. {STEUERHINWEIS}</p>
 
           <label className={styles.consent}>
             <input
@@ -125,6 +109,13 @@ function CheckoutDialog({ onClose, course }: { onClose: () => void; course: 'gk'
               ich gelesen.
             </span>
           </label>
+
+          {/* Sichtbar im Kaufvorgang, nicht nur in den AGB. Wer unter 18 ist,
+              schließt Verträge nur mit Zustimmung der Eltern wirksam ab — der
+              Hinweis nützt nichts, wenn ihn niemand liest. */}
+          <p className={styles.minderjaehrig}>
+            Du bist noch nicht 18? Dann kauf bitte mit dem Einverständnis deiner Eltern.
+          </p>
 
           {error && <div className={styles.checkoutError}>{error}</div>}
 

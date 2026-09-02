@@ -6,6 +6,7 @@ import styles from './LandingPage.module.css';
 import { BrandMark } from './BrandMark';
 import { Logo } from './Logo';
 import { daysUntilExam } from '@/lib/exam';
+import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 
 const Arrow = () => (
   <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -440,7 +441,6 @@ export default function LandingPage({
   const plan = (
     label: string,
     price: string,
-    recurringPrice: string,
     course: 'gk' | 'lk',
     tone: 'analysis' | 'linalg',
     hasAccess: boolean,
@@ -454,7 +454,7 @@ export default function LandingPage({
         <strong>{price}</strong>
         <span>einmalig</span>
       </div>
-      <p className={styles.planAlternative}>oder {recurringPrice} pro Monat</p>
+      <p className={styles.planAlternative}>Keine Folgekosten, keine Kündigung nötig.</p>
       <ul className={styles.planFeatures}>
         {PLAN_FEATURES.map(feature => <li key={feature}>{feature}</li>)}
       </ul>
@@ -912,15 +912,15 @@ export default function LandingPage({
         <section className={styles.section} id="kurse">
           <div className={styles.sectionIntro}>
             <h2>Ein Zugang.<br />Bis zur Prüfung.</h2>
-            <p>Einmal zahlen oder monatlich kündbar. Analysis kannst du vorher kostenlos ausprobieren.</p>
+            <p>Einmal zahlen, fertig. Analysis kannst du vorher kostenlos ausprobieren.</p>
           </div>
           <div className={styles.plans}>
-            {plan('Grundkurs', '79 €', '14,90 €', 'gk', 'analysis', owned)}
-            {plan('Leistungskurs', '99 €', '17,90 €', 'lk', 'linalg', ownedLk)}
+            {plan(PREISE.gk.label, PREISE.gk.einmalig, 'gk', 'analysis', owned)}
+            {plan(PREISE.lk.label, PREISE.lk.einmalig, 'lk', 'linalg', ownedLk)}
           </div>
           <p className={styles.planNote}>
-            Alle Preise inkl. gesetzlicher Umsatzsteuer. Sichere Bezahlung über Stripe.
-            Ob Einmalzahlung oder Abo, entscheidest du im nächsten Schritt.
+            {STEUERHINWEIS} Sichere Bezahlung über Stripe. Kein Abo, keine automatische
+            Verlängerung — der Zugang gilt bis zum Ende des Prüfungszeitraums.
           </p>
         </section>
         )}

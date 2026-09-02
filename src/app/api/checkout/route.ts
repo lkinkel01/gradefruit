@@ -38,32 +38,31 @@ export async function POST(req: Request) {
   }
 
   // 3) Tarif + Kurs aus dem Body lesen
-  //    plan:   'full' = Einmalkauf, 'month' = Abo
-  //    course: 'gk'   = Grundkurs,  'lk'    = Leistungskurs (getrennt kaufbar)
-  let plan: 'full' | 'month' | null = null;
+  //    plan:   nur noch 'full' = Einmalkauf. Das frühere Monatsabo ist bewusst
+  //            entfernt (siehe unten) — deshalb wird 'month' hier abgewiesen
+  //            statt stillschweigend in einen Einmalkauf umgedeutet.
+  //    course: 'gk' = Grundkurs, 'lk' = Leistungskurs (getrennt kaufbar)
+  let plan: 'full' | null = null;
   let course: 'gk' | 'lk' = 'gk';
   try {
     const body = (await req.json()) as { plan?: string; course?: string };
-    plan = body.plan === 'month' ? 'month' : body.plan === 'full' ? 'full' : null;
+    plan = body.plan === 'full' ? 'full' : null;
     course = body.course === 'lk' ? 'lk' : 'gk';
   } catch {
     return json({ error: 'bad_request', message: 'Ungültige Anfrage.' }, 400);
   }
   if (!plan) {
-    return json({ error: 'bad_request', message: 'Bitte wähle einen Tarif aus.' }, 400);
+    return json(
+      { error: 'bad_request', message: 'Gradefruit wird einmalig gekauft — ein Abo gibt es nicht.' },
+      400,
+    );
   }
 
   const COURSE_SLUG = course === 'lk' ? 'mathe-lk' : 'mathe-gk';
 
   // 4) Passende Preis-ID (in .env.local / Vercel hinterlegt) auswählen
   const priceId =
-    course === 'lk'
-      ? plan === 'full'
-        ? process.env.STRIPE_PRICE_LK_ONE_TIME
-        : process.env.STRIPE_PRICE_LK_MONTHLY
-      : plan === 'full'
-        ? process.env.STRIPE_PRICE_ONE_TIME
-        : process.env.STRIPE_PRICE_MONTHLY;
+    course === 'lk' ? process.env.STRIPE_PRICE_LK_ONE_TIME : process.env.STRIPE_PRICE_ONE_TIME;
   if (!priceId) {
     return json(
       { error: 'server_misconfig', message: 'Für diesen Tarif ist auf dem Server kein Preis hinterlegt.' },
@@ -116,24 +115,20 @@ export async function POST(req: Request) {
     // 8) Bezahlseite erstellen
     const origin =
       req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const mode = plan === 'full' ? 'payment' : 'subscription';
     const metadata = {
       user_id: user.id,
       course_id: courseId,
-      plan: plan === 'full' ? 'one_time' : 'subscription',
+      plan: 'one_time',
     };
 
     const session = await stripe.checkout.sessions.create({
-      mode,
+      mode: 'payment',
       customer: customerId,
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${origin}/?checkout=success`,
       cancel_url: `${origin}/?checkout=cancel`,
       client_reference_id: user.id,
       metadata,
-      // Beim Abo dieselben Infos an das Abonnement hängen,
-      // damit spätere Ereignisse (Kündigung etc.) zugeordnet werden können.
-      ...(mode === 'subscription' ? { subscription_data: { metadata } } : {}),
       allow_promotion_codes: true,
     });
 
