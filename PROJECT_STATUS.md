@@ -964,6 +964,24 @@ Bewusst nicht in einem Rutsch gemacht — das sind Umbauten, keine Feinheiten:
 - 🟠 **Kurswechsel (GK/LK) und die restlichen Browser-Funktionen** in der App.
 - 🟠 **Statusanzeige neben dem Thema** statt unter der Nummer.
 
+- 🔴→✅ **Datenbank war pausiert, App komplett tot (04.08.2026):** Supabase hatte
+  `lkinkel01's Project` pausiert — um 01:30 noch `ACTIVE_HEALTHY`, danach
+  `INACTIVE`. Folge: keine Registrierung, keine Anmeldung, keine Inhalte, für
+  **alle**. Wiederhergestellt (103 s bis zur ersten Antwort); nachgewiesen mit
+  echter Registrierung + Anmeldung + Datenprüfung: 133 Lektionen, 4 Konten,
+  nichts verloren.
+  **Falle beim Prüfen:** Direkt nach dem Aufwecken meldete die REST-Schicht
+  `null` Zeilen und 0 Konten, während die Datenbank längst vollständig war. Wer
+  in diesem Fenster misst, hält es für Datenverlust. Erst `ACTIVE_HEALTHY`
+  abwarten, dann zählen — am besten per SQL statt über PostgREST.
+  **Vorbeugung eingebaut:** `GET /api/wachhalten` stellt eine winzige Abfrage,
+  ein Vercel-Cron ruft sie täglich um 04:17 auf (`vercel.json`). Das hält das
+  Projekt wach.
+  🔴 **Das ersetzt keinen bezahlten Tarif.** Vor dem Verkaufsstart gehört
+  Supabase auf einen Tarif, der gar nicht erst pausiert — sonst steht der Kurs
+  irgendwann für zahlende Schüler still. Gleiche Dringlichkeit wie Stripe
+  TEST→LIVE.
+
 ## Bekannte Probleme / offen
 
 **Verkauf**
