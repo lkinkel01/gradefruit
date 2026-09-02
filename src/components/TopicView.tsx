@@ -122,8 +122,10 @@ export default function TopicView({
       const raw = localStorage.getItem('gf-summary-status');
       if (raw) saved = JSON.parse(raw) as Record<string, LernStatus>;
     } catch { /* Speicher gesperrt oder alter ungültiger Wert */ }
-    const frame = requestAnimationFrame(() => setSummaryStatuses(saved));
-    return () => cancelAnimationFrame(frame);
+    // Kein requestAnimationFrame — sonst kämen die gemerkten Lernstände eines
+    // im Hintergrund geöffneten Tabs nie an, und alles sähe unbearbeitet aus.
+    const frame = window.setTimeout(() => setSummaryStatuses(saved), 0);
+    return () => window.clearTimeout(frame);
   }, []);
 
   if (!topic) return null;

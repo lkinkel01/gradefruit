@@ -100,7 +100,7 @@ const SYSTEM_POINTS = [
   {
     icon: 'path',
     title: 'Klarer Lernweg',
-    desc: 'Zusammenfassungen, Übungen und Original-Abituraufgaben aus den letzten Jahren.',
+    desc: 'Zusammenfassungen, Übungen und prüfungsnahe Aufgaben im Stil der hessischen Abiturprüfung.',
   },
   {
     icon: 'help',
@@ -344,8 +344,10 @@ export default function LandingPage({
   const navPinnedAtY = useRef<number | null>(null);
 
   useEffect(() => {
-    const daysRaf = requestAnimationFrame(() => setDays(daysUntilExam()));
-    return () => cancelAnimationFrame(daysRaf);
+    // Kein requestAnimationFrame: Im Hintergrund wird nicht gezeichnet, und der
+    // Countdown bliebe leer, bis jemand den Tab in den Vordergrund holt.
+    const daysTimer = window.setTimeout(() => setDays(daysUntilExam()), 0);
+    return () => window.clearTimeout(daysTimer);
   }, []);
 
   useEffect(() => {

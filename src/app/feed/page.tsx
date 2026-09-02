@@ -134,11 +134,13 @@ export default function FeedPage() {
       if (value === 'analysis' || value === 'linalg' || value === 'stochastik') storedTopic = value;
     } catch { /* Lokaler Speicher ist nicht verfügbar. */ }
 
-    const frame = requestAnimationFrame(() => {
+    // Kein requestAnimationFrame: Im Hintergrund wird nicht gezeichnet, und der
+    // Themen-Fokus käme nie an.
+    const frame = window.setTimeout(() => {
       setTopic(storedTopic);
       setIndex(0);
-    });
-    return () => cancelAnimationFrame(frame);
+    }, 0);
+    return () => window.clearTimeout(frame);
   }, []);
 
   const feed = useMemo(() => buildFeed(topic), [topic]);
