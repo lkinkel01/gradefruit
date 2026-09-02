@@ -129,9 +129,10 @@ async function textNachziehen(prozent: number) {
   } catch { /* Beim nächsten Öffnen der nächste Versuch. */ }
 }
 
-export default function LernErinnerung() {
+export default function LernErinnerung({ level }: { level: 'gk' | 'lk' }) {
   const { totalDone, totalLessons } = useProgress();
-  const prozent = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
+  const gesamt = totalLessons(level);
+  const prozent = gesamt > 0 ? Math.round((totalDone(level) / gesamt) * 100) : 0;
   const [inApp, setInApp] = useState(false);
   const [aktiv, setAktiv] = useState(false);
   const [plan, setPlan] = useState<Plan>(() => planLesen().plan);

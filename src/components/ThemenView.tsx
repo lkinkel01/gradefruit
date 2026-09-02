@@ -16,10 +16,13 @@ import styles from './ThemenView.module.css';
 export default function ThemenView({
   owned,
   ownedLk,
+  level,
   onNavigate,
 }: {
   owned: boolean;
   ownedLk: boolean;
+  /** Kursstufe — sonst zählt der Nenner die Aufgaben der anderen Stufe mit. */
+  level: 'gk' | 'lk';
   onNavigate: NavigateTo;
 }) {
   const { topicDone, topicTotal } = useProgress();
@@ -29,8 +32,8 @@ export default function ThemenView({
     <div className={styles.seite}>
       <ul className={styles.liste}>
         {TOPICS.map(topic => {
-          const gesamt = topicTotal(topic.id) || 1;
-          const fertig = topicDone(topic.id);
+          const gesamt = topicTotal(topic.id, level) || 1;
+          const fertig = topicDone(topic.id, level);
           const gesperrt = topic.id !== 'analysis' && !hatZugang;
 
           return (

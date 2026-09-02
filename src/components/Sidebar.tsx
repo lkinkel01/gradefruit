@@ -159,7 +159,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
               >
                 <span className={styles.cdot} style={{ background: t.color }} />
                 <span className={styles.ti}>{t.label}</span>
-                {topicTotal(t.id) > 0 && topicDone(t.id) === topicTotal(t.id)
+                {topicTotal(t.id, level) > 0 && topicDone(t.id, level) === topicTotal(t.id, level)
                   ? <span className={styles.stDone}><CheckIcon size={11} /></span>
                   : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><LockIcon size={13} /></span>
                 }

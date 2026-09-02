@@ -11,21 +11,28 @@ import styles from './Dashboard.module.css';
 
 interface Props {
   onNavigate: (v: View) => void;
+  /** Kursstufe, die gerade gelernt wird — alle Zähler hängen daran. */
+  level: 'gk' | 'lk';
 }
 
-export default function Dashboard({ onNavigate }: Props) {
+export default function Dashboard({ onNavigate, level }: Props) {
   const { anzeigeName } = useAuth();
   // In der App trägt der Bildschirm nur diese eine Seite — dort darf der
   // Countdown die Fläche nehmen, die ihm laut DESIGN.md zusteht (Zahl als
   // Motiv, Haarlinien statt Karten). Im Browser bleibt alles wie bisher.
   const imApp = useImAppRahmen();
   const { totalDone, totalLessons, topicDone, topicTotal, statusCounts } = useProgress();
-  const pct = totalLessons > 0 ? Math.round((totalDone / totalLessons) * 100) : 0;
+  const gesamt = totalLessons(level);
+  const pct = gesamt > 0 ? Math.round((totalDone(level) / gesamt) * 100) : 0;
+  const zaehler = statusCounts(level);
 
   const [daysLeft, setDaysLeft] = useState<number | null>(null);
   useEffect(() => {
-    const frame = requestAnimationFrame(() => setDaysLeft(daysUntilExam()));
-    return () => cancelAnimationFrame(frame);
+    // setTimeout statt requestAnimationFrame: Ein Bild wird nur gezeichnet, wenn
+    // der Tab sichtbar ist. Lag er im Hintergrund, blieb hier dauerhaft „…"
+    // stehen — ausgerechnet bei der Zahl, für die man die Übersicht öffnet.
+    const frame = window.setTimeout(() => setDaysLeft(daysUntilExam()), 0);
+    return () => window.clearTimeout(frame);
   }, []);
 
   // Nur der erste Bestandteil: „Leon Kinkel" wird zu „Leon". Ist gar nichts
@@ -39,9 +46,9 @@ export default function Dashboard({ onNavigate }: Props) {
   };
 
   const statusTiles: { status: Exclude<LernStatus, 'none'>; label: string; num: number }[] = [
-    { status: 'verstanden', label: 'Verstanden', num: statusCounts.verstanden },
-    { status: 'wiederholen', label: 'Wiederholen', num: statusCounts.wiederholen },
-    { status: 'unklar', label: 'Nicht verstanden', num: statusCounts.unklar },
+    { status: 'verstanden', label: 'Verstanden', num: zaehler.verstanden },
+    { status: 'wiederholen', label: 'Wiederholen', num: zaehler.wiederholen },
+    { status: 'unklar', label: 'Nicht verstanden', num: zaehler.unklar },
   ];
 
   return (
@@ -95,7 +102,8 @@ export default function Dashboard({ onNavigate }: Props) {
       <p className={`gf-meta ${styles.secLabel}`}>Themen</p>
       <div className={styles.list}>
         {TOPICS.map(t => {
-          const tp = topicTotal(t.id) > 0 ? Math.round((topicDone(t.id) / topicTotal(t.id)) * 100) : 0;
+          const themaGesamt = topicTotal(t.id, level);
+          const tp = themaGesamt > 0 ? Math.round((topicDone(t.id, level) / themaGesamt) * 100) : 0;
           return (
             <button key={t.id} className={styles.topicRow} onClick={() => onNavigate(t.id)}>
               <GrapefruitProgress pct={tp} size={40} />

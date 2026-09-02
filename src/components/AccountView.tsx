@@ -299,7 +299,7 @@ export default function AccountView({
 
       {/* Erinnerung und Erscheinungsbild stehen bewusst oben: Das sind die
           Schalter, die man tatsächlich benutzt. Profil und Zugang darunter. */}
-      <LernErinnerung />
+      <LernErinnerung level={level} />
 
       {/* „Dark Mode" ist hier selbst die Überschrift. Eine Zeile „Erscheinungsbild"
           darüber wäre eine Überschrift über genau einem Schalter — sie sagt

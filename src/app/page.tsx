@@ -141,7 +141,10 @@ export default function Home() {
   const jumpConsumed = useRef(false);
   useEffect(() => {
     if (loading || !routeReady || !user || jumpConsumed.current) return;
-    const frame = requestAnimationFrame(() => {
+    // setTimeout statt requestAnimationFrame — Begründung wie oben beim
+    // Standort: Im Hintergrund wird nicht gezeichnet, und ein Deep-Link aus dem
+    // Reel-Modus verpuffte dann wortlos.
+    const frame = window.setTimeout(() => {
       jumpConsumed.current = true;
       try {
         const afterAuth = localStorage.getItem('gf-after-auth');
@@ -173,9 +176,9 @@ export default function Home() {
           window.history.replaceState({}, '', locationFor(jump, requestedTab, requestedItem));
         }
       } catch { /* Speicher gesperrt */ }
-    });
+    }, 0);
     return () => {
-      if (frame) cancelAnimationFrame(frame);
+      if (frame) window.clearTimeout(frame);
     };
   }, [user, loading, routeReady]);
 
@@ -189,11 +192,14 @@ export default function Home() {
       const l = localStorage.getItem('gf-level');
       if (l === 'gk' || l === 'lk') initialLevel = l;
     } catch { /* Speicher gesperrt */ }
-    const frame = requestAnimationFrame(() => {
+    // Auch hier kein Bild abwarten: Sonst blieben Thema und Kursstufe im
+    // Hintergrund-Tab auf den Vorgabewerten stehen — der Nutzer sähe nach dem
+    // Wechsel in den Tab den Grundkurs, obwohl er den Leistungskurs gewählt hat.
+    const frame = window.setTimeout(() => {
       setDark(initialDark);
       if (initialLevel) setPrefLevel(initialLevel);
-    });
-    return () => cancelAnimationFrame(frame);
+    }, 0);
+    return () => window.clearTimeout(frame);
   }, []);
 
   // Besitzt jemand genau einen Kurs, zählt der Kauf. Sonst die eigene Wahl.
@@ -273,10 +279,13 @@ export default function Home() {
 
     if (c === 'success') {
       const PENDING = 'Zahlung erfolgreich! Dein Vollzugang wird freigeschaltet …';
-      frame = requestAnimationFrame(() => {
+      // Kein requestAnimationFrame: Wer gerade bezahlt hat, muss die Bestätigung
+      // sehen — auch wenn Stripe ihn in einen Tab zurückschickt, der noch nicht
+      // im Vordergrund ist.
+      frame = window.setTimeout(() => {
         setNotice(PENDING);
         setView('dashboard');
-      });
+      }, 0);
       // Der Webhook schaltet frei – wir fragen den Status ein paar Mal nach.
       let tries = 0;
       void refresh();
@@ -292,15 +301,15 @@ export default function Home() {
             : prev,
         );
       }, 13000);
-      return () => { cancelAnimationFrame(frame); clearInterval(iv); clearTimeout(fallback); };
+      return () => { window.clearTimeout(frame); clearInterval(iv); clearTimeout(fallback); };
     }
 
     if (c === 'cancel') {
-      frame = requestAnimationFrame(() => {
+      frame = window.setTimeout(() => {
         setNotice('Bezahlung abgebrochen. Du kannst es jederzeit erneut versuchen.');
-      });
+      }, 0);
       const t = setTimeout(() => setNotice(''), 6000);
-      return () => { cancelAnimationFrame(frame); clearTimeout(t); };
+      return () => { window.clearTimeout(frame); clearTimeout(t); };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -501,7 +510,7 @@ export default function Home() {
   const renderContent = () => {
     switch (view) {
       case 'dashboard':
-        return <Dashboard onNavigate={navigate} />;
+        return <Dashboard onNavigate={navigate} level={level} />;
       case 'analysis':
       case 'linalg':
       case 'stochastik':
@@ -522,7 +531,7 @@ export default function Home() {
             onItemLabelChange={setTopicItemLabel}
           />
         );
-      case 'themen': return <ThemenView owned={owned} ownedLk={ownedLk} onNavigate={navigate} />;
+      case 'themen': return <ThemenView owned={owned} ownedLk={ownedLk} level={level} onNavigate={navigate} />;
       case 'videos': return <VideosView />;
       case 'tutors': return <TutorsView />;
       case 'profil': return <ProfilView onFertig={() => navigate('account')} />;
@@ -530,7 +539,7 @@ export default function Home() {
       case 'review':
         return <ReviewView level={level} onNavigate={navigate} />;
       default:
-        return <Dashboard onNavigate={navigate} />;
+        return <Dashboard onNavigate={navigate} level={level} />;
     }
   };
 

@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState, useCallback, ReactNode 
 import { createClient } from './supabase';
 import { useAuth } from './AuthContext';
 import { LernStatus } from './types';
+import { CONTENT_INDEX, type ContentLevel, type ContentTopic } from './contentIndex';
 
 const COURSE_SLUG = 'mathe-gk';
 const COURSE_SLUG_LK = 'mathe-lk';
@@ -48,11 +49,12 @@ interface ProgressCtx {
   refresh: () => Promise<void>;
   statusOf: (topicSlug: string, lessonSlug: string) => LernStatus;
   setStatus: (topicSlug: string, lessonSlug: string, status: LernStatus) => Promise<void>;
-  topicDone: (topicSlug: string) => number;
-  topicTotal: (topicSlug: string) => number;
-  statusCounts: StatusCounts; // über alle Themen
-  totalDone: number;
-  totalLessons: number;
+  // Alle Zähler brauchen die Kursstufe. Warum, steht bei `aufgabenDerStufe`.
+  topicDone: (topicSlug: string, level: ContentLevel) => number;
+  topicTotal: (topicSlug: string, level: ContentLevel) => number;
+  statusCounts: (level: ContentLevel) => StatusCounts; // über alle Themen
+  totalDone: (level: ContentLevel) => number;
+  totalLessons: (level: ContentLevel) => number;
 }
 
 const Ctx = createContext<ProgressCtx | null>(null);
@@ -63,8 +65,6 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   // Map "topicSlug/lessonSlug" -> lessonId  (aus der DB geladen)
   const [lessonId, setLessonId] = useState<Record<string, string>>({});
-  // Map topicSlug -> lessonId[]  (für Zähler)
-  const [lessonsByTopic, setLessonsByTopic] = useState<Record<string, string[]>>({});
   // Map lessonId -> Fortschritt
   const [progress, setProgress] = useState<Record<string, ProgressState>>({});
   const [courseId, setCourseId] = useState<string | null>(null);
@@ -94,12 +94,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       }
 
       const idMap: Record<string, string> = {};
-      const byTopic: Record<string, string[]> = {};
       (lessons ?? []).forEach((row: { id: string; slug: string; topics: { slug: string } | { slug: string }[] | null }) => {
         const topic = Array.isArray(row.topics) ? row.topics[0] : row.topics;
         if (!topic) return;
         idMap[`${topic.slug}/${row.slug}`] = row.id;
-        (byTopic[topic.slug] ??= []).push(row.id);
       });
 
       // 2) Nur eingeloggt: Kauf-Status (GK + LK) + Fortschritt laden
@@ -137,7 +135,6 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
       if (cancelled) return;
       setLessonId(idMap);
-      setLessonsByTopic(byTopic);
       setCourseId(cId);
       setCourseIdLk(cIdLk);
       setOwned(isOwned);
@@ -225,12 +222,34 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     setPlanLk(lkP?.plan ?? null);
   }, [user?.id, courseId, courseIdLk]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Zähler je Lernstufe über alle Themen (fürs Dashboard)
-  const statusCounts: StatusCounts = { verstanden: 0, wiederholen: 0, unklar: 0 };
-  Object.values(progress).forEach(s => {
-    const st = toStatus(s);
-    if (st !== 'none') statusCounts[st]++;
-  });
+  /**
+   * Die Aufgaben-IDs eines Themas in EINER Kursstufe.
+   *
+   * Früher kam diese Zahl aus der Lektionstabelle. Dort liegen aber Grundkurs
+   * und Leistungskurs unter demselben Thema: Analysis hat 45 Lektionen, 23 aus
+   * dem GK und 22 aus dem LK. Wer dort zählte, teilte durch die Aufgaben beider
+   * Stufen — ein Grundkursschüler, der jede einzelne Aufgabe verstanden hat,
+   * sah deshalb ungefähr 50 %. Der Ring konnte sich nie füllen.
+   *
+   * Das Inhaltsverzeichnis kennt Thema UND Stufe. Der Nenner kommt deshalb von
+   * dort; die Lektionstabelle bleibt, was sie ist — der Ort, an dem der
+   * Fortschritt gespeichert wird.
+   */
+  const aufgabenDerStufe = (topicSlug: string, level: ContentLevel): string[] =>
+    CONTENT_INDEX[topicSlug as ContentTopic]?.[level]?.tasks.map(t => t.id) ?? [];
+
+  const alleThemen = Object.keys(CONTENT_INDEX) as ContentTopic[];
+
+  const zaehleStufe = (level: ContentLevel): StatusCounts => {
+    const counts: StatusCounts = { verstanden: 0, wiederholen: 0, unklar: 0 };
+    alleThemen.forEach(topic => {
+      aufgabenDerStufe(topic, level).forEach(taskId => {
+        const st = toStatus(getState(topic, taskId));
+        if (st !== 'none') counts[st]++;
+      });
+    });
+    return counts;
+  };
 
   const value: ProgressCtx = {
     ready,
@@ -241,11 +260,13 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     refresh,
     statusOf: (t, l) => toStatus(getState(t, l)),
     setStatus: (t, l, status) => writeProgress(t, l, fromStatus(status)),
-    topicTotal: (t) => (lessonsByTopic[t] ?? []).length,
-    topicDone: (t) => (lessonsByTopic[t] ?? []).filter(id => toStatus(progress[id]) === 'verstanden').length,
-    statusCounts,
-    totalLessons: Object.values(lessonsByTopic).reduce((a, ids) => a + ids.length, 0),
-    totalDone: Object.values(progress).filter(p => toStatus(p) === 'verstanden').length,
+    topicTotal: (t, level) => aufgabenDerStufe(t, level).length,
+    topicDone: (t, level) =>
+      aufgabenDerStufe(t, level).filter(id => toStatus(getState(t, id)) === 'verstanden').length,
+    statusCounts: zaehleStufe,
+    totalLessons: level =>
+      alleThemen.reduce((summe, topic) => summe + aufgabenDerStufe(topic, level).length, 0),
+    totalDone: level => zaehleStufe(level).verstanden,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
