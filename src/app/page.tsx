@@ -19,6 +19,7 @@ import AuthModal from '@/components/AuthModal';
 import AskDrawer, { type AskSource } from '@/components/AskDrawer';
 import Watermark from '@/components/Watermark';
 import { useImAppRahmen } from '@/lib/nativeApp';
+import { gespeicherteStufe, stufeAus, stufeMerken, stufeWaehlbar } from '@/lib/stufe';
 import { useZurueckWischen } from '@/lib/zurueckWischen';
 import SignedOutNotice, { TEXT as SIGNED_OUT_TEXT } from '@/components/SignedOutNotice';
 import AppEinstieg from '@/components/AppEinstieg';
@@ -187,24 +188,21 @@ export default function Home() {
   // seinen Zustand hier einmalig daran an.
   useEffect(() => {
     const initialDark = document.body.classList.contains('dark');
-    let initialLevel: 'gk' | 'lk' | null = null;
-    try {
-      const l = localStorage.getItem('gf-level');
-      if (l === 'gk' || l === 'lk') initialLevel = l;
-    } catch { /* Speicher gesperrt */ }
+    const initialLevel = gespeicherteStufe();
     // Auch hier kein Bild abwarten: Sonst blieben Thema und Kursstufe im
     // Hintergrund-Tab auf den Vorgabewerten stehen — der Nutzer sähe nach dem
     // Wechsel in den Tab den Grundkurs, obwohl er den Leistungskurs gewählt hat.
     const frame = window.setTimeout(() => {
       setDark(initialDark);
-      if (initialLevel) setPrefLevel(initialLevel);
+      setPrefLevel(initialLevel);
     }, 0);
     return () => window.clearTimeout(frame);
   }, []);
 
-  // Besitzt jemand genau einen Kurs, zählt der Kauf. Sonst die eigene Wahl.
-  const level: 'gk' | 'lk' = owned && !ownedLk ? 'gk' : ownedLk && !owned ? 'lk' : prefLevel;
-  const levelChoosable = owned === ownedLk; // niemand oder beide gekauft
+  // Regel und Speicherschlüssel liegen in `stufe.ts` — der Reel-Modus braucht
+  // beides ebenfalls, und zweimal aufgeschrieben wäre es zweimal zu pflegen.
+  const level = stufeAus(owned, ownedLk, prefLevel);
+  const levelChoosable = stufeWaehlbar(owned, ownedLk);
   // Grundkurs und Leistungskurs führen eigene Standorte: Wer die Stufe
   // wechselt, landet dort, wo er in dieser Stufe zuletzt war.
   const levelSpots = useRef<Record<'gk' | 'lk', { view: View; tab: TopicTab; itemId: string | null }>>({
@@ -224,7 +222,7 @@ export default function Home() {
     // Aktuellen Standort für die verlassene Stufe merken …
     if (stufenSache) levelSpots.current[level] = { view, tab: topicTab, itemId: topicItemId };
     setPrefLevel(l);
-    try { localStorage.setItem('gf-level', l); } catch { /* Speicher gesperrt */ }
+    stufeMerken(l);
     if (!stufenSache) return;
     // … und den zuletzt besuchten Standort der neuen Stufe wiederherstellen.
     const spot = levelSpots.current[l];

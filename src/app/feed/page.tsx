@@ -7,6 +7,7 @@ import { useProgress } from '@/lib/ProgressContext';
 import { LernStatus } from '@/lib/types';
 import { SCENES, Scene } from '@/lib/scenes';
 import { indexFor } from '@/lib/contentIndex';
+import { gespeicherteStufe, stufeAus, type Stufe } from '@/lib/stufe';
 import { ScenePlayer } from '@/components/SceneModal';
 import AppTabBar from '@/components/AppTabBar';
 import { ArrowRightIcon } from '@/components/UiIcons';
@@ -22,15 +23,19 @@ interface VideoCard {
   path: string;
 };
 
-const TASK_SOURCES: {
+// Nur die Zuordnung Video → Aufgabe; der Aufgabentext wird hier nie gezeigt.
+// Die Stufe muss stimmen: Sonst markiert ein LK-Schüler im Reel-Modus
+// Grundkurs-Aufgaben, und sein eigener Fortschritt bewegt sich nicht.
+function taskSources(stufe: Stufe): {
   topicId: TopicId;
   tasks: { id: string; videoId?: string }[];
-}[] = [
-  // Nur die Zuordnung Video → Aufgabe; der Aufgabentext wird hier nie gezeigt.
-  { topicId: 'analysis', tasks: indexFor('analysis', 'gk').tasks },
-  { topicId: 'linalg', tasks: indexFor('linalg', 'gk').tasks },
-  { topicId: 'stochastik', tasks: indexFor('stochastik', 'gk').tasks },
-];
+}[] {
+  return [
+    { topicId: 'analysis', tasks: indexFor('analysis', stufe).tasks },
+    { topicId: 'linalg', tasks: indexFor('linalg', stufe).tasks },
+    { topicId: 'stochastik', tasks: indexFor('stochastik', stufe).tasks },
+  ];
+}
 
 // Bewertung des laufenden Videos. Steht oben unter den Fortschrittsstreifen:
 // Dort verdeckt sie weder das Bild noch die Beschriftung, und man sieht auf
@@ -41,8 +46,8 @@ const STATUS_OPTIONS: { status: Exclude<LernStatus, 'none'>; label: string }[] =
   { status: 'unklar', label: 'Nicht verstanden' },
 ];
 
-function linkedTask(sceneId: string): VideoCard['task'] {
-  for (const source of TASK_SOURCES) {
+function linkedTask(sceneId: string, stufe: Stufe): VideoCard['task'] {
+  for (const source of taskSources(stufe)) {
     const task = source.tasks.find(item => item.videoId === sceneId);
     if (task) return { topicId: source.topicId, taskId: task.id };
   }
@@ -76,21 +81,21 @@ function curvePath(scene: Scene): string {
     .join(' ');
 }
 
-function videoCard(scene: Scene): VideoCard {
+function videoCard(scene: Scene, stufe: Stufe): VideoCard {
   return {
     scene,
-    task: linkedTask(scene.id),
+    task: linkedTask(scene.id, stufe),
     path: curvePath(scene),
   };
 }
 
 const ALL_VIDEO_IDS = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
 
-function buildFeed(topic: TopicId | null): VideoCard[] {
+function buildFeed(topic: TopicId | null, stufe: Stufe): VideoCard[] {
   const allVideos = ALL_VIDEO_IDS
     .map(id => SCENES[id])
     .filter((scene): scene is Scene => Boolean(scene))
-    .map(videoCard);
+    .map(scene => videoCard(scene, stufe));
   const topicVideos = topic
     ? allVideos.filter(card => card.task?.topicId === topic)
     : allVideos;
@@ -113,7 +118,13 @@ export default function FeedPage() {
   // In der App bleibt die Navigation auch im Reel-Modus erreichbar — so macht
   // es Instagram, und ohne sie ist der Reel-Modus eine Sackgasse.
   const imApp = useImAppRahmen();
-  const { statusOf, setStatus } = useProgress();
+  const { statusOf, setStatus, owned, ownedLk } = useProgress();
+  // Der Reel-Modus liegt auf einer eigenen Route und kommt nicht an der
+  // Kursstufe aus page.tsx vorbei — er ermittelt sie deshalb selbst, nach
+  // derselben Regel.
+  const [wahl, setWahl] = useState<Stufe>('gk');
+  useEffect(() => { setWahl(gespeicherteStufe()); }, []);
+  const stufe = stufeAus(owned, ownedLk, wahl);
   const [index, setIndex] = useState(0);
   const [topic, setTopic] = useState<TopicId | null>(null);
   // Der Reel-Modus folgt dem Erscheinungsbild — also muss auch die
@@ -143,7 +154,7 @@ export default function FeedPage() {
     return () => window.clearTimeout(frame);
   }, []);
 
-  const feed = useMemo(() => buildFeed(topic), [topic]);
+  const feed = useMemo(() => buildFeed(topic, stufe), [topic, stufe]);
   const activeCard = feed[Math.min(index, Math.max(0, feed.length - 1))];
   const activeStatus = activeCard?.task
     ? statusOf(activeCard.task.topicId, activeCard.task.taskId)
@@ -257,6 +268,15 @@ export default function FeedPage() {
       {/* Bewerten gehört nach oben: Dort liegt es unter den
           Fortschrittsstreifen und verdeckt weder Bild noch Beschriftung. */}
       <div className={styles.statusBar} aria-label="Lernstatus für das aktuelle Video">
+        {/* Ohne verknüpfte Aufgabe wäre die Bewertung wortlos wirkungslos —
+            man tippt, und nichts geschieht. Die Erklärvideos gibt es bisher
+            nur für den Grundkurs; im Leistungskurs sind sie sehenswert, aber
+            an keine Aufgabe gebunden. Das gehört gesagt, nicht versteckt. */}
+        {!activeCard.task && (
+          <span className={styles.statusHinweis}>
+            Erklärvideo aus dem Grundkurs — im Leistungskurs ohne Aufgabe zum Bewerten.
+          </span>
+        )}
         {STATUS_OPTIONS.map(option => (
           <button
             key={option.status}
