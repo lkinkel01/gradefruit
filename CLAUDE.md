@@ -110,7 +110,8 @@ Diese Datei verweist nur.
   (**einzige Quelle für den Prüfungstermin**), `types.ts` (Views, Topics,
   LernStatus); Server-Helfer `stripe.ts`, `supabaseAdmin.ts`
 - `supabase/` — SQL-Referenz: `schema.sql`, `stripe.sql`, `ai-rate-limit.sql`,
-  `lessons-seed.sql`, `lk-course-seed.sql` (ausgeführt im Supabase-Dashboard)
+  `lessons-seed.sql`, `lk-course-seed.sql`, `summary-sections-seed.sql`
+  (ausgeführt im Supabase-Dashboard)
 - `scripts/` — `generate-audio.mjs`, `check-webhook.mjs`,
   `build-content-index.mjs`, `check-content-gate.mjs`,
   `create-test-user.mjs`, `delete-test-user.mjs`
@@ -191,7 +192,7 @@ etwas falsch. Alle bewusst so getroffen — nicht „aufräumen":
 | `gf-open-tab` | Deep-Link: Tab (`zusammenfassung`/`uebungen`) | einmalig, wird konsumiert |
 | `gf-open-task` | Deep-Link: Aufgabe aufklappen + hinscrollen | einmalig, wird konsumiert |
 | `gf-open-summary` | Deep-Link: Abschnitt einer Zusammenfassung aufklappen + hinscrollen | einmalig, wird konsumiert |
-| `gf-summary-status` | Lokaler Lernstatus für Zusammenfassungsabschnitte | dauerhaft, bis ein serverseitiges Datenmodell ergänzt wird |
+| `gf-summary-status` | **Altbestand.** Der Lernstatus der Zusammenfassungsabschnitte liegt seit 02.09.2026 auf dem Server (Abschnitte sind Lektionen mit Slug `sec:<thema>:<stufe>:<Überschrift>`, siehe `supabase/summary-sections-seed.sql`). `TopicView.tsx` schiebt vorhandene lokale Werte einmalig hoch. | wird nach erfolgreicher Übernahme gelöscht |
 | `gf-feed-topic` | Reel-Modus: Themen-Fokus für `/feed` | bleibt bis überschrieben |
 | `gf-review-status` | Wiederholen-Seite: vorgewählter Stufen-Filter | einmalig, wird konsumiert |
 
@@ -204,9 +205,10 @@ Einmal-Schlüssel werden StrictMode-sicher über Refs konsumiert (Muster in
   stripe_customer_id, stripe_subscription_id, stripe_checkout_session_id,
   current_period_end, updated_at` → **Zeitstempel heißt `purchased_at`,
   NICHT `created_at`.**
-- **`lessons`** (133 Einträge; Slugs = Aufgaben-IDs, decken alle 133 Aufgaben
-  ab — Stand 02.09.2026 geprüft) + **`progress`** (`understood`, `saved` als
-  Bools). Die drei **Lernstufen** sind darauf kodiert: verstanden=(1,0),
+- **`lessons`** (171 Einträge, Stand 02.09.2026: 133 Aufgaben mit den
+  Aufgaben-IDs als Slug + 38 Zusammenfassungs-Abschnitte mit dem Slug
+  `sec:<thema>:<stufe>:<Überschrift>`) + **`progress`** (`understood`, `saved`
+  als Bools). Die drei **Lernstufen** sind darauf kodiert: verstanden=(1,0),
   wiederholen=(0,1), unklar=(1,1), keine=(0,0) — Logik ausschließlich in
   `ProgressContext.tsx` (`statusOf`/`setStatus`).
   **Nach neuen Aufgaben** `node --env-file=.env.local scripts/seed-lessons.mjs`

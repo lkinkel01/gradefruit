@@ -88,10 +88,9 @@ export default function TopicView({
   const imApp = useImAppRahmen();
   const summary = content.summary ?? undefined;
   const { user } = useAuth();
-  const { statusOf, setStatus } = useProgress();
+  const { statusOf, setStatus, ready } = useProgress();
   const [openSolutions, setOpenSolutions] = useState<Set<string>>(new Set());
   const [mistakesOpen, setMistakesOpen] = useState(false);
-  const [summaryStatuses, setSummaryStatuses] = useState<Record<string, LernStatus>>({});
   const isFree = topicId === 'analysis';
 
   // Listen und Zähler laufen über das Inhaltsverzeichnis — so bleibt die
@@ -116,17 +115,43 @@ export default function TopicView({
     onItemLabelChange(selectedSummary?.title ?? selectedTask?.tag ?? null);
   }, [onItemLabelChange, selectedSummary?.title, selectedTask?.tag]);
 
+  // Altbestand einmalig übernehmen.
+  //
+  // Der Stand der Zusammenfassungs-Abschnitte lag früher im lokalen Speicher.
+  // Damit gehörte er dem Gerät und nicht dem Konto: Wer in der App etwas als
+  // verstanden markierte und danach am Laptop die Webseite öffnete, sah alles
+  // wieder unbearbeitet. Jetzt liegen die Abschnitte als Lektionen auf dem
+  // Server, wie die Aufgaben auch. Was noch lokal liegt, wird hochgeschoben
+  // und der alte Schlüssel danach gelöscht — einmal, nicht bei jedem Start.
   useEffect(() => {
-    let saved: Record<string, LernStatus> = {};
-    try {
-      const raw = localStorage.getItem('gf-summary-status');
-      if (raw) saved = JSON.parse(raw) as Record<string, LernStatus>;
-    } catch { /* Speicher gesperrt oder alter ungültiger Wert */ }
-    // Kein requestAnimationFrame — sonst kämen die gemerkten Lernstände eines
-    // im Hintergrund geöffneten Tabs nie an, und alles sähe unbearbeitet aus.
-    const frame = window.setTimeout(() => setSummaryStatuses(saved), 0);
-    return () => window.clearTimeout(frame);
-  }, []);
+    // `ready` abwarten ist keine Feinheit: Die Zuordnung Aufgabe → Lektion wird
+    // erst nachgeladen. Liefe die Übernahme vorher, ginge jede Zeile ins Leere
+    // — und der alte Schlüssel wäre gelöscht. Der Stand wäre dann weg, ohne
+    // dass es jemand merkt.
+    if (!user || !ready) return;
+    let raw: string | null = null;
+    try { raw = localStorage.getItem('gf-summary-status'); } catch { return; }
+    if (!raw) return;
+    let alt: Record<string, LernStatus> = {};
+    try { alt = JSON.parse(raw) as Record<string, LernStatus>; } catch { alt = {}; }
+    void (async () => {
+      let allesAngekommen = true;
+      for (const [schluessel, status] of Object.entries(alt)) {
+        // Alter Schlüssel: "<thema>/<stufe>/<Überschrift>"
+        const teile = schluessel.split('/');
+        if (teile.length < 3) continue;
+        if (status === 'none') continue;
+        const [thema, stufe, ...rest] = teile;
+        const ok = await setStatus(thema, `sec:${thema}:${stufe}:${rest.join('/')}`, status);
+        if (!ok) allesAngekommen = false;
+      }
+      // Nur löschen, wenn wirklich alles auf dem Server liegt. Beim nächsten
+      // Start wird es sonst erneut versucht.
+      if (allesAngekommen) {
+        try { localStorage.removeItem('gf-summary-status'); } catch { /* egal */ }
+      }
+    })();
+  }, [user, ready, setStatus]);
 
   if (!topic) return null;
 
@@ -152,20 +177,21 @@ export default function TopicView({
   // Mal über die Liste zurück.
   const [menuOffen, setMenuOffen] = useState(false);
 
-  const summaryStatusKey = (title: string) => `${topicId}/${level}/${title}`;
+  // Jeder Abschnitt ist eine eigene Lektion. Die Stufe steckt im Schlüssel,
+  // weil dieselbe Überschrift („Einleitung") im GK und im LK vorkommt und
+  // trotzdem zwei verschiedene Abschnitte sind.
+  const summaryStatusKey = (title: string) => `sec:${topicId}:${level}:${title}`;
 
-  // Die Zusammenfassung hat ihren eigenen Stand — er liegt lokal auf dem Gerät
-  // und hat mit den Aufgaben nichts zu tun. Steht bewusst NACH
-  // `summaryStatusKey`: Eine const-Funktion gibt es vor ihrer Zeile nicht.
+  const summaryStatusOf = (title: string): LernStatus =>
+    statusOf(topicId, summaryStatusKey(title));
+
+  // Steht bewusst NACH `summaryStatusOf`: Eine const-Funktion gibt es vor ihrer
+  // Zeile nicht.
   const summaryDone = sectionList.filter(
-    section => summaryStatuses[summaryStatusKey(section.title)] === 'verstanden',
+    section => summaryStatusOf(section.title) === 'verstanden',
   ).length;
   const setSummaryStatus = (title: string, status: LernStatus) => {
-    setSummaryStatuses(prev => {
-      const next = { ...prev, [summaryStatusKey(title)]: status };
-      try { localStorage.setItem('gf-summary-status', JSON.stringify(next)); } catch { /* Speicher gesperrt */ }
-      return next;
-    });
+    void setStatus(topicId, summaryStatusKey(title), status);
   };
 
   const openSummaryItem = (section: { title: string }) => {
@@ -177,7 +203,7 @@ export default function TopicView({
         key: section.title,
         nummer: index + 1,
         label: section.title,
-        status: summaryStatuses[summaryStatusKey(section.title)] ?? 'none',
+        status: summaryStatusOf(section.title),
         aktiv: selectedSummary?.title === section.title,
       }))
     : tasks.map((task, index) => ({
@@ -421,7 +447,7 @@ export default function TopicView({
           ansteuerbar. */}
       <div className={styles.indexList}>
         {sectionList.map((section, index) => {
-          const status = summaryStatuses[summaryStatusKey(section.title)] ?? 'none';
+          const status = summaryStatusOf(section.title);
           return (
             <button
               key={section.title}
@@ -443,7 +469,7 @@ export default function TopicView({
 
   const renderSummaryDetail = () => {
     if (!selectedSummary) return renderSummaryIndex();
-    const status = summaryStatuses[summaryStatusKey(selectedSummary.title)] ?? 'none';
+    const status = summaryStatusOf(selectedSummary.title);
     // Der Coach zeigt den ganzen Abschnitt und hebt den angetippten Teil hervor.
     const summarySource = (highlight: number): AskSource => ({
       number: selectedSummaryIndex + 1,

@@ -48,7 +48,8 @@ interface ProgressCtx {
   planLk: string | null;   // Leistungskurs-Tarif
   refresh: () => Promise<void>;
   statusOf: (topicSlug: string, lessonSlug: string) => LernStatus;
-  setStatus: (topicSlug: string, lessonSlug: string, status: LernStatus) => Promise<void>;
+  /** Liefert false, wenn zur Aufgabe keine Lektion existiert — dann wurde nichts gespeichert. */
+  setStatus: (topicSlug: string, lessonSlug: string, status: LernStatus) => Promise<boolean>;
   // Alle Zähler brauchen die Kursstufe. Warum, steht bei `aufgabenDerStufe`.
   topicDone: (topicSlug: string, level: ContentLevel) => number;
   topicTotal: (topicSlug: string, level: ContentLevel) => number;
@@ -150,8 +151,8 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [user?.id]);
 
   const writeProgress = useCallback(
-    async (topicSlug: string, lessonSlug: string, next: ProgressState) => {
-      if (!user) return;
+    async (topicSlug: string, lessonSlug: string, next: ProgressState): Promise<boolean> => {
+      if (!user) return false;
       const id = lessonId[`${topicSlug}/${lessonSlug}`];
       if (!id) {
         // Fehlt zu einer Aufgabe die Lektion, lässt sich ihr Status nicht
@@ -159,7 +160,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         // 54 Aufgaben lange unter. Die Daten sind repariert; neue Inhalte
         // brauchen `node --env-file=.env.local scripts/seed-lessons.mjs`.
         console.warn(`Gradefruit: Keine Lektion für ${topicSlug}/${lessonSlug} — Lernstatus wird nicht gespeichert.`);
-        return;
+        return false;
       }
 
       const current = progress[id] ?? { understood: false, saved: false };
@@ -181,7 +182,9 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         console.error('Fortschritt speichern fehlgeschlagen:', error.message);
         // Bei Fehler zurückrollen
         setProgress(p => ({ ...p, [id]: current }));
+        return false;
       }
+      return true;
     },
     [user, lessonId, progress, supabase],
   );
