@@ -19,9 +19,11 @@ Erklärvideos und einem Wiederholungssystem.
 | **[DESIGN.md](DESIGN.md)** | Designsystem: Tokens, Typo, Komponenten, Motion, Do/Don'ts. **Vor UI-Arbeit lesen** (Impeccable lädt beide automatisch). |
 | **[PROJECT_STATUS.md](PROJECT_STATUS.md)** | Aktueller Stand + vollständige Sprint-Historie. Einzige Quelle für „was ist fertig / offen". Nach großen Änderungen aktualisieren. |
 | **[HANDOUT.md](HANDOUT.md)** | Session-Start für Leon (kopierbare Prompts, nächste Schritte). |
+| **Notion-Workspace „Gradefruit — Unternehmen"** | Alles Unternehmerische: Gründung & Recht, Finanzen, Controlling/KPIs, Marketing, Vertrieb, Support, Betrieb, Prompts. Liegt in Leons Notion, nicht im Repo. |
 
 Fakten stehen genau EINMAL: Produkt-Aussagen in PRODUCT.md, Design-Regeln in
-DESIGN.md, Zustand in PROJECT_STATUS.md. Diese Datei verweist nur.
+DESIGN.md, Zustand in PROJECT_STATUS.md, Unternehmerisches im Notion-Workspace.
+Diese Datei verweist nur.
 
 ## Wie ich mit Leon arbeite (wichtig)
 
