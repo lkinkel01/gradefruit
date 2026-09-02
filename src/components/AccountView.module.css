@@ -181,6 +181,23 @@
   .courseRow { flex-wrap: wrap; }
 }
 
+/* Kurswahl in der App: dieselbe Zeile wie die Kursliste, aber anfassbar.
+   Der aktive Kurs trägt „aktiv" statt eines Hakens — ein Haken allein sagt
+   nicht, ob er den Zustand meldet oder zum Anklicken auffordert. */
+.kursWahl {
+  appearance: none; width: 100%; background: none; border-left: none;
+  border-right: none; border-bottom: none;
+  font-family: inherit; text-align: left; cursor: pointer;
+  transition: opacity var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
+}
+.kursWahl:active { transform: scale(.99); }
+.kursWahl:not(.kursWahlAn) .courseName { color: var(--muted); font-weight: 500; }
+.kursHaken {
+  flex-shrink: 0; padding: 3px 10px; border-radius: var(--radius-pill);
+  background: var(--accent-soft); color: var(--accent-d);
+  font-size: 11.5px; font-weight: 650;
+}
+
 /* Konto löschen */
 .dangerText { max-width: 58ch; margin-bottom: 14px; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .dangerError { margin: 10px 0 0; color: var(--danger); font-size: 13.5px; line-height: 1.5; }

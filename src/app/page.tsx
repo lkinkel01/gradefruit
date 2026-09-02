@@ -206,12 +206,20 @@ export default function Home() {
     lk: { view: 'dashboard', tab: 'zusammenfassung', itemId: null },
   });
 
+  // Konto und Profil gehören keiner Kursstufe — dort steht dieselbe Seite, egal
+  // ob GK oder LK. Sie taugen deshalb weder als gemerkter Standort noch als
+  // Ziel: Wer im Konto den Kurs wechselt, will den Kurs wechseln, nicht
+  // woanders landen.
+  const STUFENLOSE_VIEWS: View[] = ['account', 'profil'];
+
   const chooseLevel = (l: 'gk' | 'lk') => {
     if (l === level) return;
+    const stufenSache = !STUFENLOSE_VIEWS.includes(view);
     // Aktuellen Standort für die verlassene Stufe merken …
-    levelSpots.current[level] = { view, tab: topicTab, itemId: topicItemId };
+    if (stufenSache) levelSpots.current[level] = { view, tab: topicTab, itemId: topicItemId };
     setPrefLevel(l);
     try { localStorage.setItem('gf-level', l); } catch { /* Speicher gesperrt */ }
+    if (!stufenSache) return;
     // … und den zuletzt besuchten Standort der neuen Stufe wiederherstellen.
     const spot = levelSpots.current[l];
     navigate(spot.view, TOPIC_VIEWS.includes(spot.view)
@@ -518,7 +526,7 @@ export default function Home() {
       case 'videos': return <VideosView />;
       case 'tutors': return <TutorsView />;
       case 'profil': return <ProfilView onFertig={() => navigate('account')} />;
-      case 'account': return <AccountView onNavigate={(v) => navigate(v as View)} onOpenCheckout={openCheckout} dark={dark} onToggleDark={() => setTheme(!dark)} />;
+      case 'account': return <AccountView onNavigate={(v) => navigate(v as View)} onOpenCheckout={openCheckout} dark={dark} onToggleDark={() => setTheme(!dark)} level={level} levelChoosable={levelChoosable} onChooseLevel={chooseLevel} />;
       case 'review':
         return <ReviewView level={level} onNavigate={navigate} />;
       default:

@@ -15,9 +15,22 @@ interface Props {
   onOpenCheckout: (course: 'gk' | 'lk') => void;
   dark: boolean;
   onToggleDark: () => void;
+  /** Welche Kursstufe gerade gelernt wird. */
+  level: 'gk' | 'lk';
+  /** Wahr, wenn die Stufe überhaupt zur Wahl steht (keiner oder beide Kurse gekauft). */
+  levelChoosable: boolean;
+  onChooseLevel: (l: 'gk' | 'lk') => void;
 }
 
-export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggleDark }: Props) {
+export default function AccountView({
+  onNavigate,
+  onOpenCheckout,
+  dark,
+  onToggleDark,
+  level,
+  levelChoosable,
+  onChooseLevel,
+}: Props) {
   const { user, session, signOut, username: gespeicherterName, anzeigeName, refreshProfil } = useAuth();
   // In der App gibt es keine Seitenleiste. Erklärvideos und 1:1 Nachhilfe wären
   // dort sonst überhaupt nicht erreichbar — deshalb hängen sie unter „Konto",
@@ -370,6 +383,32 @@ export default function AccountView({ onNavigate, onOpenCheckout, dark, onToggle
           </>
         )}
       </div>
+
+      {/* Kurswechsel. Auf der Webseite sitzt er in der Seitenleiste — die gibt
+          es in der App nicht, und ohne ihn kommt niemand, der beide Kurse hat,
+          je in den anderen. Deshalb hier, wie alles Seltenere. */}
+      {imApp && levelChoosable && (
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>Kurs</h2>
+          <div className={styles.courseList}>
+            {([
+              { id: 'gk' as const, label: 'Grundkurs' },
+              { id: 'lk' as const, label: 'Leistungskurs' },
+            ]).map(kurs => (
+              <button
+                key={kurs.id}
+                type="button"
+                className={`${styles.courseRow} ${styles.kursWahl} ${level === kurs.id ? styles.kursWahlAn : ''}`}
+                aria-current={level === kurs.id ? 'true' : undefined}
+                onClick={() => onChooseLevel(kurs.id)}
+              >
+                <span className={styles.courseName}>{kurs.label}</span>
+                {level === kurs.id && <span className={styles.kursHaken}>aktiv</span>}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Zugang</h2>
