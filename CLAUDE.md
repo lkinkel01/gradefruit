@@ -204,11 +204,14 @@ Einmal-Schlüssel werden StrictMode-sicher über Refs konsumiert (Muster in
   stripe_customer_id, stripe_subscription_id, stripe_checkout_session_id,
   current_period_end, updated_at` → **Zeitstempel heißt `purchased_at`,
   NICHT `created_at`.**
-- **`lessons`** (79 Einträge; Slugs = Aufgaben-IDs) + **`progress`**
-  (`understood`, `saved` als Bools). Die drei **Lernstufen** sind darauf
-  kodiert: verstanden=(1,0), wiederholen=(0,1), unklar=(1,1), keine=(0,0) —
-  Logik ausschließlich in `ProgressContext.tsx` (`statusOf`/`setStatus`).
-  Bekannte Lücke: 133 Aufgaben, aber nur 79 DB-Lektionen.
+- **`lessons`** (133 Einträge; Slugs = Aufgaben-IDs, decken alle 133 Aufgaben
+  ab — Stand 02.09.2026 geprüft) + **`progress`** (`understood`, `saved` als
+  Bools). Die drei **Lernstufen** sind darauf kodiert: verstanden=(1,0),
+  wiederholen=(0,1), unklar=(1,1), keine=(0,0) — Logik ausschließlich in
+  `ProgressContext.tsx` (`statusOf`/`setStatus`).
+  **Nach neuen Aufgaben** `node --env-file=.env.local scripts/seed-lessons.mjs`
+  laufen lassen; sonst lässt sich ihr Lernstatus nicht speichern (genau so
+  gingen 54 Aufgaben lange unter).
 
 ## Bezahlung (Stripe, Testmodus)
 
