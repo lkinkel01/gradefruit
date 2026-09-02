@@ -26,3 +26,11 @@ export const KLEINUNTERNEHMER = false;
 export const STEUERHINWEIS = KLEINUNTERNEHMER
   ? 'Gemäß § 19 UStG wird keine Umsatzsteuer erhoben.'
   : 'Alle Preise inkl. gesetzlicher Umsatzsteuer.';
+
+/**
+ * Dieselbe Aussage, aber als Anschlusssatz für die Rechtstexte formuliert —
+ * dort steht davor „Alle Preise sind Endpreise in Euro."
+ */
+export const STEUERHINWEIS_AGB = KLEINUNTERNEHMER
+  ? 'Gemäß § 19 UStG wird keine Umsatzsteuer erhoben und ausgewiesen.'
+  : 'Sie enthalten die gesetzliche Umsatzsteuer.';

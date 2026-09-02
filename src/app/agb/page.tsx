@@ -2,14 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BrandMark } from '@/components/BrandMark';
 import styles from '../legal.module.css';
+import { STEUERHINWEIS_AGB } from '@/lib/preise';
 
 export const metadata: Metadata = {
   title: 'AGB · Gradefruit',
 };
-
-const Ph = ({ children }: { children: React.ReactNode }) => (
-  <span className={styles.ph}>{children}</span>
-);
 
 export default function AgbPage() {
   return (
@@ -94,9 +91,7 @@ export default function AgbPage() {
         <h2>5. Preise und Zahlung</h2>
         <p>
           Es gelten die zum Zeitpunkt der Bestellung auf der Website angezeigten Preise. Alle
-          Preise sind Endpreise in Euro
-          {' '}<Ph>[Steuerliche Angabe wird vor dem Verkaufsstart ergänzt , inkl. gesetzlicher Umsatzsteuer ODER bei Kleinunternehmern: „Gemäß § 19
-          UStG wird keine Umsatzsteuer erhoben und ausgewiesen.“]</Ph>.
+          Preise sind Endpreise in Euro. {STEUERHINWEIS_AGB}
         </p>
         <p>
           Die Zahlung erfolgt über den Zahlungsdienstleister Stripe. Wir speichern oder sehen
@@ -188,10 +183,8 @@ export default function AgbPage() {
         <p>
           Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts;
           zwingende verbraucherschützende Vorschriften deines gewöhnlichen Aufenthalts bleiben
-          unberührt. Die Europäische Kommission stellt eine Plattform zur
-          Online-Streitbeilegung bereit: https://ec.europa.eu/consumers/odr. Zur Teilnahme an
-          einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle sind wir nicht
-          verpflichtet und nicht bereit.
+          unberührt. Zur Teilnahme an einem Streitbeilegungsverfahren vor einer
+          Verbraucherschlichtungsstelle sind wir nicht verpflichtet und nicht bereit.
         </p>
       </div>
     </div>

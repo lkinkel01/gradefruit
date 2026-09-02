@@ -37,7 +37,7 @@ export default function ImpressumPage() {
       <header className={styles.header}>
         <div className={styles.eyebrow}>Rechtliches</div>
         <h1 className={styles.title}>Impressum</h1>
-        <p className={styles.updated}>Angaben gemäß § 5 TMG</p>
+        <p className={styles.updated}>Angaben gemäß § 5 DDG</p>
       </header>
 
       <div className={styles.section}>
@@ -70,7 +70,7 @@ export default function ImpressumPage() {
 
       <div className={styles.section}>
         <h2>Verantwortlich für den Inhalt</h2>
-        <p>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</p>
+        <p>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:</p>
         <p>
           Leon Kinkel<br />
           Eichendorffring 15<br />
@@ -87,7 +87,7 @@ export default function ImpressumPage() {
         <p>
           Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit,
           Vollständigkeit und Aktualität der Inhalte übernehmen wir keine Gewähr. Als
-          Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten nach
+          Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach
           den allgemeinen Gesetzen verantwortlich.
         </p>
 
