@@ -74,11 +74,6 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const inFlight = useRef<Set<string>>(new Set());
   const token = session?.access_token ?? null;
   const userId = user?.id ?? null;
-  // In einer Ref, damit die laufende Anfrage die aktuelle Kennung sieht, ohne
-  // dass `request` bei jedem Nutzerwechsel neu erzeugt wird.
-  const userIdRef = useRef<string | null>(userId);
-  userIdRef.current = userId;
-
   // Nutzerwechsel oder Abmelden: alles Geladene verwerfen. Sonst sähe der
   // nächste Nutzer am selben Gerät die Inhalte des vorigen.
   const lastUser = useRef<string | null>(null);
@@ -134,8 +129,8 @@ export function ContentProvider({ children }: { children: ReactNode }) {
           }));
           // Für den Offline-Zugriff verschlüsselt ablegen — nur für angemeldete
           // Nutzer, denn die Ablage gehört immer genau einem Konto.
-          if (userIdRef.current) {
-            void speichereOffline(userIdRef.current, topic, level,
+          if (userId) {
+            void speichereOffline(userId, topic, level,
               { tasks: body.tasks, summary: body.summary });
           }
         } else {
@@ -147,9 +142,9 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         }
       } catch {
         // Kein Netz: auf die Ablage auf dem Gerät zurückfallen.
-        const offline = userIdRef.current
+        const offline = userId
           ? await ladeOffline<{ tasks: ContentTask[]; summary: ContentSummary }>(
-              userIdRef.current, topic, level)
+              userId, topic, level)
           : null;
 
         setCache(prev => ({
@@ -172,7 +167,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         inFlight.current.delete(key);
       }
     })();
-  }, [token, authLoading]);
+  }, [token, authLoading, userId]);
 
   // Alles auf Vorrat holen, sobald einmal Netz da ist.
   //

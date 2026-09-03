@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { gespeicherteZeit, imAppRahmen } from '@/lib/nativeApp';
+import { useEffect, useRef, useState } from 'react';
+import { gespeicherteZeit, imAppRahmen, useImAppRahmen } from '@/lib/nativeApp';
 import { erinnerungsText } from '@/lib/erinnerungstexte';
 import {
   TAGE_REIHE, TAG_KURZ, planFuerPhase, planLesen, planSchreiben,
@@ -133,7 +133,8 @@ export default function LernErinnerung({ level }: { level: 'gk' | 'lk' }) {
   const { totalDone, totalLessons } = useProgress();
   const gesamt = totalLessons(level);
   const prozent = gesamt > 0 ? Math.round((totalDone(level) / gesamt) * 100) : 0;
-  const [inApp, setInApp] = useState(false);
+  const startProzent = useRef(prozent);
+  const inApp = useImAppRahmen();
   const [aktiv, setAktiv] = useState(false);
   const [plan, setPlan] = useState<Plan>(() => planLesen().plan);
   const [offen, setOffen] = useState(false);
@@ -141,17 +142,18 @@ export default function LernErinnerung({ level }: { level: 'gk' | 'lk' }) {
   const [laeuft, setLaeuft] = useState(false);
 
   useEffect(() => {
-    setInApp(imAppRahmen());
-    if (gespeicherteZeit()) setAktiv(true);
-    const { plan: gelesen, eigen } = planLesen();
-    setPlan(eigen ? gelesen : planFuerPhase(daysUntilExam()));
-    void textNachziehen(prozent);
-    // Besuch vermerken, NACHDEM der Text geplant wurde: Sonst wäre „Tage weg"
-    // beim eigenen Öffnen immer 0 und die Abwesenheits-Sätze kämen nie vor.
-    try { localStorage.setItem(BESUCH_KEY, String(Date.now())); } catch { /* Speicher gesperrt */ }
+    const frame = window.requestAnimationFrame(() => {
+      if (gespeicherteZeit()) setAktiv(true);
+      const { plan: gelesen, eigen } = planLesen();
+      setPlan(eigen ? gelesen : planFuerPhase(daysUntilExam()));
+      void textNachziehen(startProzent.current);
+      // Besuch vermerken, NACHDEM der Text geplant wurde: Sonst wäre „Tage weg"
+      // beim eigenen Öffnen immer 0 und die Abwesenheits-Sätze kämen nie vor.
+      try { localStorage.setItem(BESUCH_KEY, String(Date.now())); } catch { /* Speicher gesperrt */ }
+    });
     // Absichtlich nur beim ersten Rendern: Der Prozentwert kommt kurz darauf
     // nach, das Nachziehen darf deshalb nicht bei jeder Änderung neu laufen.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   if (!inApp) return null;

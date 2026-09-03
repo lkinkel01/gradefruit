@@ -91,7 +91,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
   const [playing, setPlaying] = useState(false);
   // Im Reel: Ist der gesprochene Satz ausgeklappt? Wie bei TikTok stehen
   // zunächst zwei Zeilen da, „mehr" zeigt den Rest.
-  const [textOffen, setTextOffen] = useState(false);
+  const [offenesTextSegment, setOffenesTextSegment] = useState<number | null>(null);
   // Wiedergabegeschwindigkeit — gilt für Stimme und stumme Segmente.
   const [rate, setRate] = useState(1);
   const rateRef = useRef(1);
@@ -143,8 +143,8 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
     () => segments.map(seg => Math.max(2600, seg.say.length * 72) / 1000),
     [segments],
   );
-  const [dauern, setDauern] = useState<number[]>(schaetzung);
-  useEffect(() => { setDauern(schaetzung); }, [schaetzung]);
+  const [gemesseneDauern, setGemesseneDauern] = useState<Record<string, number>>({});
+  const dauern = schaetzung.map((dauer, i) => gemesseneDauern[`${scene.id}:${i}`] ?? dauer);
 
   useEffect(() => {
     if (variant !== 'reel' || !scene.hasAudio) return;
@@ -155,11 +155,10 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
       audio.preload = 'metadata';
       audio.onloadedmetadata = () => {
         if (!lebt || !isFinite(audio.duration) || audio.duration <= 0) return;
-        setDauern(vorher => {
-          const naechste = [...vorher];
-          naechste[i] = audio.duration;
-          return naechste;
-        });
+        setGemesseneDauern(vorher => ({
+          ...vorher,
+          [`${scene.id}:${i}`]: audio.duration,
+        }));
       };
       elemente.push(audio);
     });
@@ -196,7 +195,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
 
   // segRef/fracRef spiegeln den aktuellen Stand, damit die Gesten-Handler ihn
   // synchron lesen können; beim Abbau alle Gesten-Timer aufräumen.
-  useEffect(() => { segRef.current = seg; setTextOffen(false); }, [seg]);
+  useEffect(() => { segRef.current = seg; }, [seg]);
   useEffect(() => { fracRef.current = frac; }, [frac]);
   useEffect(() => () => {
     if (gHold.current) window.clearTimeout(gHold.current);
@@ -410,6 +409,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
   const gesamt = dauern.reduce((summe, d) => summe + d, 0);
   const sekundenBisher = dauern.slice(0, seg).reduce((summe, d) => summe + d, 0);
   const stand = Math.min(gesamt, sekundenBisher + frac * (dauern[seg] ?? 0));
+  const textOffen = offenesTextSegment === seg;
 
   /** Sekunden in „m:ss". */
   const alsZeit = (sekunden: number) => {
@@ -673,7 +673,7 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
           <button
             type="button"
             className={styles.reelMehr}
-            onClick={() => setTextOffen(o => !o)}
+            onClick={() => setOffenesTextSegment(textOffen ? null : seg)}
           >
             {textOffen ? 'weniger' : 'mehr'}
           </button>

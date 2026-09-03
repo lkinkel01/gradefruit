@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 // Erkennt, ob Gradefruit gerade in der nativen App läuft.
 //
@@ -14,6 +14,8 @@ import { useEffect, useState } from 'react';
 // pflegt, wo er nichts bewirkt.
 
 const KEY = 'gf-erinnerung';
+const keineAenderungen = () => () => {};
+const nichtImApp = () => false;
 
 export function imAppRahmen(): boolean {
   if (typeof window === 'undefined') return false;
@@ -35,7 +37,9 @@ export function gespeicherteZeit(): string | null {
  * und wird nach dem Einhängen korrigiert.
  */
 export function useImAppRahmen(): boolean {
-  const [inApp, setInApp] = useState(false);
-  useEffect(() => { setInApp(imAppRahmen()); }, []);
-  return inApp;
+  return useSyncExternalStore(
+    keineAenderungen,
+    imAppRahmen,
+    nichtImApp,
+  );
 }

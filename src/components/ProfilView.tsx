@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import { createClient } from '@/lib/supabase';
 import styles from './ProfilView.module.css';
@@ -20,12 +20,11 @@ export default function ProfilView({ onFertig }: { onFertig: () => void }) {
   const supabase = createClient();
 
   const [name, setName] = useState<string>((user?.user_metadata?.full_name as string) ?? '');
-  const [benutzername, setBenutzername] = useState('');
+  const [benutzernameEntwurf, setBenutzername] = useState<string | null>(null);
+  const benutzername = benutzernameEntwurf ?? gespeicherterName ?? '';
   const [fehler, setFehler] = useState('');
   const [laeuft, setLaeuft] = useState(false);
   const [fertig, setFertig] = useState(false);
-
-  useEffect(() => { setBenutzername(gespeicherterName ?? ''); }, [gespeicherterName]);
 
   const speichern = async () => {
     if (!user) return;

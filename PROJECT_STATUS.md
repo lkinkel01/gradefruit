@@ -31,7 +31,10 @@ relevanter Lint, Build, Content-Check und unauthentifizierte API-Smokes sind
 erfolgreich. Extern offen bleiben Stripe LIVE, der LK-Preis, das neue
 `CRON_SECRET`, juristische Freigabe und der reale End-to-End-Kauftest. Die 42
 LK-Sprachdateien bleiben kostenbewusst vertagt und sind nicht als vorhanden
-markiert.
+markiert. Im anschließenden Stabilitätssprint wurden die elf verbliebenen
+React-Lintfehler in Profil-, App-, Offline-, Video-, Auth- und Inhaltslogik
+ohne sichtbare Produktänderung bereinigt. Der globale Lint läuft nun mit
+0 Fehlern und 16 älteren Warnungen; TypeScript und Produktions-Build bestehen.
 
 - **Landing** (`/`): Premium-Einstieg, geführter Lernweg, kontextueller Coach,
   Lernmethoden, Kurse (GK 49 € · LK 69 €, jeweils einmalig), FAQ, Closing.

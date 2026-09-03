@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import { useProgress } from '@/lib/ProgressContext';
 import { createClient } from '@/lib/supabase';
@@ -43,7 +43,7 @@ export default function AccountView({
   const [saving, setSaving] = useState(false);
   // Benutzername: zweiter Weg zur Anmeldung. Steht in `public.users`, nicht in
   // den Anmeldedaten — Supabase kennt dort nur E-Mail und Passwort.
-  const [benutzername, setBenutzername] = useState('');
+  const benutzername = gespeicherterName ?? '';
   const [nameFehler, setNameFehler] = useState('');
   const [portalBusy, setPortalBusy] = useState(false);
   // Passwort ändern — bewusst eingeklappt: Man tut es selten, und ein
@@ -63,10 +63,6 @@ export default function AccountView({
   );
   const [bildLaeuft, setBildLaeuft] = useState(false);
   const [bildFehler, setBildFehler] = useState('');
-
-  // Der Benutzername kommt aus dem Auth-Kontext (dort einmal je Anmeldung
-  // geholt), das Feld übernimmt ihn beim ersten Rendern.
-  useEffect(() => { setBenutzername(gespeicherterName ?? ''); }, [gespeicherterName]);
 
   /**
    * Profilbild: quadratisch zugeschnitten, in den Datei-Speicher gelegt, und in

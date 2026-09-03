@@ -17,14 +17,25 @@ type Zustand = 'unbekannt' | 'nicht-gespeichert' | 'speichert' | 'gespeichert' |
  */
 export default function OfflineToggle({ topic, level }: { topic: string; level: 'gk' | 'lk' }) {
   const { session, user } = useAuth();
-  const [zustand, setZustand] = useState<Zustand>('unbekannt');
   const userId = user?.id ?? null;
+  const schluessel = userId ? `${userId}:${topic}:${level}` : '';
+  const [abfrage, setAbfrage] = useState<{ schluessel: string; zustand: Zustand }>({
+    schluessel: '',
+    zustand: 'unbekannt',
+  });
+  const zustand = abfrage.schluessel === schluessel ? abfrage.zustand : 'unbekannt';
+  const setZustand = useCallback((naechster: Zustand) => {
+    setAbfrage({ schluessel, zustand: naechster });
+  }, [schluessel]);
 
   useEffect(() => {
     let aktiv = true;
-    if (!userId) { setZustand('unbekannt'); return; }
+    if (!userId) return;
     void hatOffline(userId, topic, level).then(da => {
-      if (aktiv) setZustand(da ? 'gespeichert' : 'nicht-gespeichert');
+      if (aktiv) setAbfrage({
+        schluessel: `${userId}:${topic}:${level}`,
+        zustand: da ? 'gespeichert' : 'nicht-gespeichert',
+      });
     });
     return () => { aktiv = false; };
   }, [userId, topic, level]);
@@ -52,7 +63,7 @@ export default function OfflineToggle({ topic, level }: { topic: string; level: 
     } catch {
       setZustand('fehler');
     }
-  }, [userId, topic, level, zustand, session]);
+  }, [userId, topic, level, zustand, session, setZustand]);
 
   // Ohne Konto gibt es keine Ablage — dann auch keinen Knopf.
   if (!userId || zustand === 'unbekannt') return null;

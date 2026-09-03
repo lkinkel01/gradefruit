@@ -7,9 +7,10 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
 
 - **Aktiver Branch:** `codex/launch-readiness`, Basis `12a314f` = `main` =
   `origin/main` zum Start dieses Sprints.
-- **Aktueller Sprint:** `Technischen Launch-Readiness-Audit durchführen`.
-  Genau diese eine technische Notion-Aufgabe ist aktiv. Die kostenlose lokale
-  Prüfung ist abgeschlossen; externe Produktionsschritte bleiben bewusst offen.
+- **Aktueller Sprint:** `React-Lintfehler im Kernprodukt bereinigen`.
+  Der kleine kostenlose Stabilitätssprint ist lokal abgeschlossen und wird als
+  nächste technische Notion-Aufgabe dokumentiert; externe Produktionsschritte
+  bleiben bewusst offen.
 - **Lokal umgesetzt:** Checkout und Stripe-Portal vertrauen nicht mehr dem frei
   setzbaren Origin-Header, doppelte Käufe bereits freigeschalteter Kurse werden
   verhindert und Datenbankfehler werden nicht mehr übergangen. Der Webhook
@@ -23,9 +24,13 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
   Content-Check (133 Aufgaben, 0 Befunde) bestehen. Öffentliche API-Smokes:
   freie Analysis 200, bezahltes Thema ohne Sitzung 401, Checkout/Portal/
   Kontolöschung/KI ohne Sitzung 401, Webhook ohne Signatur 400 und Cron ohne
-  Secret 401. Die bedingte Hook-Reihenfolge in `TopicView` ist korrigiert.
-  Der globale Lint prüft dank rekursiver Build-Ignores wieder echten Quellcode,
-  zeigt aber noch 11 bereits vorhandene React-Effect-Fehler und 16 Warnungen.
+  Secret 401. Die bedingte Hook-Reihenfolge in `TopicView` ist korrigiert. Die
+  elf verbliebenen React-Fehler in Profil, App-Navigation, Erinnerung,
+  Offline-Ablage, Video, Auth und Inhaltskontext sind ohne sichtbare
+  Produktänderung bereinigt. Der globale Lint besteht jetzt mit 0 Fehlern und
+  16 älteren Warnungen; TypeScript und Produktions-Build bestehen erneut.
+  Gast-Startseite und freie Analysis funktionieren auch bei 390 px und ohne
+  horizontalen Überlauf; Light/Dark-Wechsel funktioniert.
 - **Externe Launch-Blocker:** Stripe läuft lokal im Testmodus;
   `STRIPE_PRICE_LK_ONE_TIME` und `CRON_SECRET` fehlen lokal. Vor Produktion
   müssen die entsprechenden Live-Werte ausschließlich in Vercel gesetzt, die
@@ -56,9 +61,9 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
 - **Nicht anfassen oder stagen:** die schon vorher geänderte übrige Übergabe,
   `# Gradefruit Logokonzept.zip`, `final/` und `stash@{0}` zur
   Creative-Direction-Validierung.
-- **Nächster Schritt:** Nach dem geprüften lokalen Audit-Commit die bestehenden
-  React-Lintfehler als kleines kostenloses Stabilitätspaket abarbeiten. Parallel
-  braucht Leon für den echten Launch die oben genannten Rechts-, Stripe- und
+- **Nächster Schritt:** Den Stabilitätssprint lokal selektiv committen und danach
+  den nächsten kostenlosen, klar abgegrenzten Launch-Check wählen. Für den
+  echten Verkauf braucht Leon weiterhin die oben genannten Rechts-, Stripe- und
   Vercel-Schritte. Kein Push, Merge oder Deployment ohne ausdrückliche Freigabe.
 
 > Zweck: Diese Datei überbrückt den Chat-Wechsel. Nur Start-Anleitung, aktueller

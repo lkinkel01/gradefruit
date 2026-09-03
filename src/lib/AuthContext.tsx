@@ -51,15 +51,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   // Der Benutzername steht in `public.users`, nicht in der Sitzung — einmal je
   // Anmeldung geholt, damit ihn nicht jede Komponente einzeln nachfragen muss.
-  const [username, setUsername] = useState<string | null>(null);
+  const [profil, setProfil] = useState<{ userId: string; username: string | null } | null>(null);
+  const username = profil && profil.userId === user?.id ? profil.username : null;
 
   const ladeProfil = useCallback(async (id: string | undefined) => {
-    if (!id) { setUsername(null); return; }
+    if (!id) return;
     const { data } = await supabase.from('users').select('username').eq('id', id).maybeSingle();
-    setUsername((data?.username as string | undefined) ?? null);
+    setProfil({ userId: id, username: (data?.username as string | undefined) ?? null });
   }, [supabase]);
 
-  useEffect(() => { void ladeProfil(user?.id); }, [user?.id, ladeProfil]);
+  useEffect(() => {
+    if (!user?.id) return;
+    const id = user.id;
+    const frame = window.requestAnimationFrame(() => { void ladeProfil(id); });
+    return () => window.cancelAnimationFrame(frame);
+  }, [user?.id, ladeProfil]);
 
   const refreshProfil = useCallback(() => ladeProfil(user?.id), [ladeProfil, user?.id]);
 
@@ -83,10 +89,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Beim Start einen gemerkten Grund zurückholen.
   useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem(REASON_KEY);
-      if (stored === 'other-device' || stored === 'idle') setReasonState(stored);
-    } catch { /* Speicher gesperrt */ }
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        const stored = sessionStorage.getItem(REASON_KEY);
+        if (stored === 'other-device' || stored === 'idle') setReasonState(stored);
+      } catch { /* Speicher gesperrt */ }
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {

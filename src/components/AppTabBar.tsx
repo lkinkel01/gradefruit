@@ -155,7 +155,14 @@ export default function AppTabBar({
       });
     };
 
-    if (!kompaktErlaubt) { setKompakt(false); return; }
+    if (!kompaktErlaubt) {
+      // Der Wechsel in den Reel-Modus darf keine alte kompakte Darstellung
+      // mitnehmen. Im nächsten Frame bleibt der Effekt trotzdem rein
+      // ereignisgetrieben und erzeugt keinen zusätzlichen Renderdurchlauf im
+      // Effekt selbst.
+      const frame = window.requestAnimationFrame(() => setKompakt(false));
+      return () => window.cancelAnimationFrame(frame);
+    }
     window.addEventListener('scroll', beobachten, { passive: true });
     document.addEventListener('scroll', beobachten, { passive: true, capture: true });
     return () => {
