@@ -31,9 +31,14 @@ export default function VideosView({ level }: { level: Stufe }) {
   const [active, setActive] = useState<Scene | null>(null);
   const [notice, setNotice] = useState('');
 
+  // Fehlt nur die Stimme, ist das Video trotzdem vollständig: Die Schritte
+  // laufen, und der Sprechtext steht als Untertitel darunter. Es zu sperren
+  // wäre nicht vorsichtig, sondern falsch — und es widerspräche dem
+  // Reel-Modus, wo dieselben Videos längst laufen. Gesperrt bleibt nur, was
+  // es wirklich noch nicht gibt.
   const openVideo = (id: string) => {
     const scene = SCENES[id];
-    if (scene?.hasAudio) {
+    if (scene) {
       setActive(scene);
     } else {
       setNotice('Dieses Erklärvideo kommt bald.');
@@ -46,7 +51,9 @@ export default function VideosView({ level }: { level: Stufe }) {
       {!imApp && <h1 className={styles.ph1}>Erklärvideos</h1>}
       <p className={styles.pblurb}>Ausgewählte Themen kurz und klar erklärt.</p>
       {VIDEOS[level].map(v => {
-        const ready = Boolean(SCENES[v.id]?.hasAudio);
+        const scene = SCENES[v.id];
+        // Drei Zustände, drei Aussagen: fertig, ohne Stimme, oder noch gar nicht da.
+        const zusatz = !scene ? ' · bald' : scene.hasAudio ? '' : ' · noch ohne Ton';
         return (
           <button key={v.id} className={styles.vcard} onClick={() => openVideo(v.id)}>
             <div className={styles.vthumb} style={{ background: v.color }}>
@@ -59,7 +66,7 @@ export default function VideosView({ level }: { level: Stufe }) {
             </div>
             <div className={styles.vinfo}>
               <div className={styles.vt}>{v.title}</div>
-              <div className={styles.vd}>{ready ? v.sub : `${v.sub} · bald`}</div>
+              <div className={styles.vd}>{`${v.sub}${zusatz}`}</div>
             </div>
           </button>
         );

@@ -665,7 +665,14 @@ export function ScenePlayer({ scene, autoPlay = false, onClose, variant = 'defau
         </div>
 
         <div className={styles.reelFoot}>
-          <span className={styles.reelTopic}>{scene.topic}</span>
+          <span className={styles.reelTopic}>
+            {scene.topic}
+            {/* Ehrlich sagen, was fehlt. Das Video ist vollständig — die
+                Schritte laufen und der Sprechtext steht darunter —, nur die
+                Stimme ist noch nicht aufgenommen. Ohne diesen Hinweis hält man
+                sein Handy für stumm und dreht vergeblich lauter. */}
+            {!scene.hasAudio && <span className={styles.reelOhneTon}>noch ohne Ton</span>}
+          </span>
           <strong className={styles.reelTitle}>{scene.title}</strong>
           <p className={`${styles.reelCaption} ${textOffen ? styles.reelCaptionOffen : ''}`}>
             {current.say}

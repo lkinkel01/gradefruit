@@ -576,6 +576,22 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+/* Kleiner Zusatz neben dem Thema, wenn zu einem Video noch keine Stimme
+   aufgenommen ist. Bewusst unaufdringlich: eine Feststellung, keine Warnung —
+   und ohne Versalien, damit sie nicht wie ein Fehler schreit. */
+.reelOhneTon {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border: 1px solid var(--reel-linie, rgba(255, 255, 255, 0.16));
+  border-radius: 999px;
+  background: var(--reel-flaeche, rgba(255, 255, 255, 0.08));
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
 .reelTitle {
   color: var(--reel-ink, #fff);
   font-size: 17px;
