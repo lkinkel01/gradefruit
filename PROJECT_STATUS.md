@@ -35,6 +35,10 @@ markiert. Im anschließenden Stabilitätssprint wurden die elf verbliebenen
 React-Lintfehler in Profil-, App-, Offline-, Video-, Auth- und Inhaltslogik
 ohne sichtbare Produktänderung bereinigt. Der globale Lint läuft nun mit
 0 Fehlern und 16 älteren Warnungen; TypeScript und Produktions-Build bestehen.
+Ein zusätzlicher lokaler Launch-Gate prüft die Produktionskonfiguration, ohne
+Werte auszugeben. Er blockiert aktuell erwartungsgemäß die lokale Site-URL, den
+Stripe-Testschlüssel sowie die fehlenden Werte `STRIPE_PRICE_LK_ONE_TIME` und
+`CRON_SECRET`.
 
 - **Landing** (`/`): Premium-Einstieg, geführter Lernweg, kontextueller Coach,
   Lernmethoden, Kurse (GK 49 € · LK 69 €, jeweils einmalig), FAQ, Closing.
@@ -117,6 +121,18 @@ ohne sichtbare Produktänderung bereinigt. Der globale Lint läuft nun mit
   Content-Check mit 133 Aufgaben und 0 Befunden sowie öffentliche API-Smokes
   bestanden. Der globale Lint enthält noch ältere, getrennt zu bearbeitende
   React-Effect-Verstöße.
+
+### Neu im Produktions-Konfigurationscheck (03.09.2026)
+
+- `npm run check:launch-env` prüft vor einem Produktionsdeployment alle
+  erforderlichen Variablen auf Vorhandensein und ein plausibles Format.
+- Lokale URLs und Stripe-Testschlüssel werden im Produktionsmodus abgewiesen;
+  GK-/LK-Preis, Webhook-Secret und `CRON_SECRET` sind Pflicht.
+- Der Check gibt ausschließlich Variablennamen und verständliche Fehlergründe
+  aus, niemals die Werte selbst. Er verwendet keine Netzwerkverbindung.
+- `npm run test:launch-env` deckt eine gültige Produktionskonfiguration und
+  die vier aktuellen Blocker ab. Test, globaler ESLint, TypeScript und
+  Produktions-Build bestehen.
 
 ## Architektur — wichtige Entscheidungen
 - **Inhalte liegen serverseitig** unter `src/server/content/` (Analysis, lineare

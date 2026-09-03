@@ -7,10 +7,9 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
 
 - **Aktiver Branch:** `codex/launch-readiness`, Basis `12a314f` = `main` =
   `origin/main` zum Start dieses Sprints.
-- **Aktueller Sprint:** `React-Lintfehler im Kernprodukt bereinigen`.
-  Der kleine kostenlose Stabilitätssprint ist lokal abgeschlossen und wird als
-  nächste technische Notion-Aufgabe dokumentiert; externe Produktionsschritte
-  bleiben bewusst offen.
+- **Aktueller Sprint:** `Produktionskonfiguration vor Deployment automatisch
+  prüfen`. Der kostenlose Launch-Gate ist lokal abgeschlossen; externe
+  Produktionsschritte bleiben bewusst offen.
 - **Lokal umgesetzt:** Checkout und Stripe-Portal vertrauen nicht mehr dem frei
   setzbaren Origin-Header, doppelte Käufe bereits freigeschalteter Kurse werden
   verhindert und Datenbankfehler werden nicht mehr übergangen. Der Webhook
@@ -30,7 +29,11 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
   Produktänderung bereinigt. Der globale Lint besteht jetzt mit 0 Fehlern und
   16 älteren Warnungen; TypeScript und Produktions-Build bestehen erneut.
   Gast-Startseite und freie Analysis funktionieren auch bei 390 px und ohne
-  horizontalen Überlauf; Light/Dark-Wechsel funktioniert.
+  horizontalen Überlauf; Light/Dark-Wechsel funktioniert. Zusätzlich prüft
+  `npm run check:launch-env` jetzt vor einem Deployment die erforderlichen
+  Variablen und offensichtliche Testkonfigurationen, ohne Werte auszugeben.
+  Der zugehörige Positiv-/Negativtest, globaler ESLint, TypeScript und
+  Produktions-Build bestehen.
 - **Externe Launch-Blocker:** Stripe läuft lokal im Testmodus;
   `STRIPE_PRICE_LK_ONE_TIME` und `CRON_SECRET` fehlen lokal. Vor Produktion
   müssen die entsprechenden Live-Werte ausschließlich in Vercel gesetzt, die
@@ -40,8 +43,8 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
 - **Bewusst vertagt:** 42 fehlende MP3-Dateien mit zusammen 5.410 Zeichen
   Sprechtext für sechs neue LK-Szenen. ElevenLabs bleibt aus, bis Leon eine
   kommerzielle Lizenz beziehungsweise Kosten ausdrücklich freigibt.
-- **Notion:** Launch-Plan und LK-Video-Aufgabe sind synchron. Der technische
-  Launch-Audit ist die einzige aktive Aufgabe; die Audio-Aufgabe steht auf
+- **Notion:** Launch-Plan, technischer Launch-Audit, React-Stabilität und
+  Produktions-Konfigurationscheck sind synchron. Die Audio-Aufgabe steht auf
   `Wartet auf andere`. Vier Ideen bleiben im späteren Ideen-Backlog:
   STARK-2027-Benchmark, Wettbewerbsvergleich, eigener Sprach-/Erklärstil und
   authentische Bildwelt.
@@ -61,10 +64,12 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
 - **Nicht anfassen oder stagen:** die schon vorher geänderte übrige Übergabe,
   `# Gradefruit Logokonzept.zip`, `final/` und `stash@{0}` zur
   Creative-Direction-Validierung.
-- **Nächster Schritt:** Den Stabilitätssprint lokal selektiv committen und danach
-  den nächsten kostenlosen, klar abgegrenzten Launch-Check wählen. Für den
-  echten Verkauf braucht Leon weiterhin die oben genannten Rechts-, Stripe- und
-  Vercel-Schritte. Kein Push, Merge oder Deployment ohne ausdrückliche Freigabe.
+- **Nächster Schritt:** Leon klärt zuerst Rechtsform, Steuern und Rechtstexte.
+  Vor einem späteren Produktionsdeployment werden die geschützten Live-Werte
+  ausschließlich in Vercel gesetzt und mit `npm run check:launch-env` geprüft.
+  Lokal blockiert der Gate derzeit erwartungsgemäß die lokale Site-URL, den
+  Stripe-Testschlüssel sowie fehlende Werte für `STRIPE_PRICE_LK_ONE_TIME` und
+  `CRON_SECRET`. Kein Push, Merge oder Deployment ohne ausdrückliche Freigabe.
 
 > Zweck: Diese Datei überbrückt den Chat-Wechsel. Nur Start-Anleitung, aktueller
 > Stand und offene Punkte. Details stehen genau einmal woanders:

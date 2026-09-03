@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "check:launch-env": "node --env-file-if-exists=.env.local scripts/check-launch-env.mjs --production",
+    "test:launch-env": "node scripts/check-launch-env.test.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.106.0",
