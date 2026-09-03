@@ -15,6 +15,13 @@ const DAILY_LIMIT = 30;
 // Sicherheitsnetz gegen riesige Uploads (Base64-Länge).
 // ~7 Mio. Zeichen entsprechen etwa 5 MB Datei.
 const MAX_ATTACHMENT_CHARS = 7_000_000;
+const MAX_REQUEST_BYTES = 8_000_000;
+const MAX_QUESTION_CHARS = 4_000;
+const MAX_CONTEXT_CHARS = 1_000;
+const MAX_SNIPPET_CHARS = 12_000;
+const MAX_HISTORY_ITEMS = 20;
+const MAX_HISTORY_ITEM_CHARS = 8_000;
+const MAX_HISTORY_CHARS = 30_000;
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] as const;
 type AllowedImageType = (typeof ALLOWED_IMAGE_TYPES)[number];
@@ -75,6 +82,45 @@ interface AskBody {
   attachment?: Attachment | null;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isOptionalText(value: unknown, maxLength: number): value is string | undefined {
+  return value === undefined || (typeof value === 'string' && value.length <= maxLength);
+}
+
+function isValidAskBody(value: unknown): value is AskBody {
+  if (!isRecord(value)) return false;
+  if (!isOptionalText(value.question, MAX_QUESTION_CHARS)) return false;
+  if (!isOptionalText(value.context, MAX_CONTEXT_CHARS)) return false;
+  if (!isOptionalText(value.snippet, MAX_SNIPPET_CHARS)) return false;
+
+  if (value.history !== undefined) {
+    if (!Array.isArray(value.history) || value.history.length > MAX_HISTORY_ITEMS) return false;
+    let totalHistoryChars = 0;
+    for (const item of value.history) {
+      if (!isRecord(item)) return false;
+      if (item.role !== 'user' && item.role !== 'ai') return false;
+      if (typeof item.text !== 'string' || item.text.length > MAX_HISTORY_ITEM_CHARS) return false;
+      totalHistoryChars += item.text.length;
+    }
+    if (totalHistoryChars > MAX_HISTORY_CHARS) return false;
+  }
+
+  if (value.attachment !== undefined && value.attachment !== null) {
+    if (!isRecord(value.attachment)) return false;
+    const { kind, media_type: mediaType, data } = value.attachment;
+    if (kind !== 'image' && kind !== 'pdf') return false;
+    if (typeof mediaType !== 'string' || typeof data !== 'string' || data.length === 0) return false;
+    if (data.length > MAX_ATTACHMENT_CHARS) return false;
+    if (kind === 'image' && !ALLOWED_IMAGE_TYPES.includes(mediaType as AllowedImageType)) return false;
+    if (kind === 'pdf' && mediaType !== 'application/pdf') return false;
+  }
+
+  return true;
+}
+
 function json(body: unknown, status: number) {
   return new Response(JSON.stringify(body), {
     status,
@@ -113,13 +159,29 @@ export async function POST(req: Request) {
   }
 
   // 3) Body lesen
-  let body: AskBody;
+  const contentLength = Number(req.headers.get('content-length') ?? 0);
+  if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
+    return json(
+      { error: 'too_large', message: 'Die Anfrage ist zu groß. Bitte nutze eine kleinere Datei.' },
+      413,
+    );
+  }
+
+  let rawBody: unknown;
   try {
-    body = (await req.json()) as AskBody;
+    rawBody = await req.json();
   } catch {
     return json({ error: 'bad_request', message: 'Ungültige Anfrage.' }, 400);
   }
 
+  if (!isValidAskBody(rawBody)) {
+    return json(
+      { error: 'bad_request', message: 'Die Frage, Unterhaltung oder Datei ist ungültig oder zu groß.' },
+      400,
+    );
+  }
+
+  const body = rawBody;
   const { question, context, snippet, history, attachment } = body;
 
   // 4) Nutzer prüfen + Tageslimit verbrauchen (mit dem JWT des Nutzers,
@@ -164,23 +226,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // 5) Anhang prüfen (falls vorhanden)
-  if (attachment?.data) {
-    if (attachment.data.length > MAX_ATTACHMENT_CHARS) {
-      return json(
-        { error: 'too_large', message: 'Die Datei ist zu groß. Bitte nutze ein kleineres Foto oder PDF (max. ca. 5 MB).' },
-        413,
-      );
-    }
-    if (attachment.kind === 'image' && !ALLOWED_IMAGE_TYPES.includes(attachment.media_type as AllowedImageType)) {
-      return json(
-        { error: 'bad_request', message: 'Dieses Bildformat wird nicht unterstützt. Nutze JPG, PNG, GIF oder WebP.' },
-        400,
-      );
-    }
-  }
-
-  // 6) Nachrichten für die KI zusammenbauen
+  // 5) Nachrichten für die KI zusammenbauen
   const messages: Anthropic.MessageParam[] = [];
 
   // frühere Nachrichten dieser Unterhaltung übernehmen
@@ -227,7 +273,7 @@ export async function POST(req: Request) {
 
   messages.push({ role: 'user', content: userContent });
 
-  // 7) KI aufrufen und die Antwort als Text-Stream zurückgeben
+  // 6) KI aufrufen und die Antwort als Text-Stream zurückgeben
   const client = new Anthropic({ apiKey });
   const encoder = new TextEncoder();
 

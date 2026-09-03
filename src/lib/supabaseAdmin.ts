@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 // Supabase-Client mit Service-Role-Schlüssel – NUR auf dem Server.

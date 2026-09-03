@@ -242,12 +242,14 @@ Einmal-Schlüssel werden StrictMode-sicher über Refs konsumiert (Muster in
 ## Env-Variablen (nur Namen, nie Werte!)
 
 `.env.local` enthält:
-`ANTHROPIC_API_KEY, ELEVENLABS_API_KEY, ELEVENLABS_MODEL,
+`ANTHROPIC_API_KEY, CRON_SECRET, ELEVENLABS_API_KEY, ELEVENLABS_MODEL,
 ELEVENLABS_VOICE_ID, NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
-NEXT_PUBLIC_SUPABASE_URL, STRIPE_PRICE_MONTHLY, STRIPE_PRICE_ONE_TIME,
-STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_SERVICE_ROLE_KEY`
-→ **LK-Preise (`STRIPE_PRICE_LK_ONE_TIME`, `STRIPE_PRICE_LK_MONTHLY`) fehlen
-lokal noch** (in Vercel für den Live-Gang nötig).
+NEXT_PUBLIC_SUPABASE_URL, STRIPE_PRICE_ONE_TIME, STRIPE_PRICE_LK_ONE_TIME,
+STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SUPABASE_SERVICE_ROLE_KEY`.
+Die versionierte `.env.example` enthält ausschließlich Namen und leere
+Platzhalter. Für Produktion muss `NEXT_PUBLIC_SITE_URL` eine HTTPS-URL sein.
+`CRON_SECRET` schützt `/api/wachhalten`; Vercel sendet es beim Cron-Aufruf im
+Authorization-Header. Werte niemals lesen, ausgeben oder committen.
 
 ## Cloud-Sitzungen (Leon arbeitet vom Handy)
 

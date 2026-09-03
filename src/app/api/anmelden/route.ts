@@ -19,7 +19,10 @@ export const dynamic = 'force-dynamic';
 function json(body: unknown, status: number) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+    },
   });
 }
 
@@ -27,6 +30,8 @@ function json(body: unknown, status: number) {
 // unbekannt" vs. „Passwort falsch") wäre eine Auskunft darüber, welche Konten
 // existieren.
 const FEHLER = { error: 'invalid_credentials', message: 'Anmeldedaten stimmen nicht.' };
+const MAX_KENNUNG_CHARS = 254;
+const MAX_PASSWORT_CHARS = 1_024;
 
 export async function POST(req: Request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -44,7 +49,14 @@ export async function POST(req: Request) {
   } catch {
     return json({ error: 'bad_request', message: 'Anfrage konnte nicht gelesen werden.' }, 400);
   }
-  if (!kennung || !passwort) return json(FEHLER, 400);
+  if (
+    !kennung ||
+    !passwort ||
+    kennung.length > MAX_KENNUNG_CHARS ||
+    passwort.length > MAX_PASSWORT_CHARS
+  ) {
+    return json(FEHLER, 400);
+  }
 
   // Das @ entscheidet. Benutzernamen dürfen keins enthalten (Prüfregel in
   // supabase/username.sql), damit diese Unterscheidung eindeutig bleibt.

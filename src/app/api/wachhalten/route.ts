@@ -21,7 +21,13 @@ import { createAdminClient } from '@/lib/supabaseAdmin';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const cronSecret = process.env.CRON_SECRET;
+  const authorization = req.headers.get('authorization');
+  if (!cronSecret || authorization !== `Bearer ${cronSecret}`) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
+
   try {
     const admin = createAdminClient();
     const { count, error } = await admin

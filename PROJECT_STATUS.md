@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-09-03 (Launch-Sprint: LK-Erklärvideos lokal vorbereitet, kostenpflichtige Audioerzeugung vertagt)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-09-03 (technischer Launch-Audit lokal abgeschlossen, externe Live-Schritte offen)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -23,13 +23,15 @@ Vor dem ersten Verkauf fehlen insbesondere die LK-Erklärvideos, die formale
 Gründung und Rechtsprüfung sowie der geprüfte Wechsel von Stripe TEST auf LIVE.
 Seit Sprint 11 kommt die **native App** dazu, die noch nicht veröffentlicht ist.
 
-**Aktueller WIP auf `codex/launch-readiness`:** Sechs LK-Erklärszenen sind
-fachlich vorbereitet und je zwei Aufgaben in Analysis, Linearer Algebra und
-Stochastik zugeordnet. Content-Check, Typecheck, relevanter Lint, Build sowie
-Landing-Smokes auf Desktop und 390 px sind erfolgreich. Die 42 zugehörigen
-Sprachdateien werden zunächst nicht erzeugt: Leon möchte bis auf Weiteres
-kostenlos weiterarbeiten. Die vorbereiteten Szenen bleiben deshalb ehrlich als
-noch nicht vertont gekennzeichnet.
+**Aktueller WIP auf `codex/launch-readiness`:** Die sechs LK-Erklärszenen sind
+im lokalen Commit `bca9ad7` fachlich vorbereitet. Danach wurde der technische
+Launch-Audit durchgeführt: Checkout, Webhook, Kauf-RLS, privilegierte
+Servermodule, KI-Eingaben und Cron-Endpunkt sind lokal gehärtet. Typecheck,
+relevanter Lint, Build, Content-Check und unauthentifizierte API-Smokes sind
+erfolgreich. Extern offen bleiben Stripe LIVE, der LK-Preis, das neue
+`CRON_SECRET`, juristische Freigabe und der reale End-to-End-Kauftest. Die 42
+LK-Sprachdateien bleiben kostenbewusst vertagt und sind nicht als vorhanden
+markiert.
 
 - **Landing** (`/`): Premium-Einstieg, geführter Lernweg, kontextueller Coach,
   Lernmethoden, Kurse (GK 49 € · LK 69 €, jeweils einmalig), FAQ, Closing.
@@ -89,6 +91,29 @@ noch nicht vertont gekennzeichnet.
 - **Stripe** — aktuell **TEST/Sandbox-Modus** (Checkout, Webhook, Kundenportal)
 - **ElevenLabs** (TTS für Videos), **Anthropic API** (KI-Coach)
 - Secrets nur serverseitig (`.env.local` / Vercel Env), nie im Browser.
+
+### Neu im technischen Launch-Audit (03.09.2026)
+
+- Checkout und Stripe-Portal erzeugen Rücksprung-URLs nur noch aus der festen
+  `NEXT_PUBLIC_SITE_URL`; ein Client-Origin kann das Ziel nicht manipulieren.
+- Bereits aktive Kurskäufe werden vor einem neuen Checkout abgefangen. Fehler
+  beim Kurs-, Konto- oder Kaufzugriff werden nicht mehr still übergangen.
+- Der Stripe-Webhook prüft alle Schreibresultate. Bei fehlgeschlagener
+  Freischaltung, Kündigung oder Rückerstattung antwortet er mit 500, damit
+  Stripe erneut zustellen kann.
+- `supabase/schema.sql` entfernt Client-Schreibrechte auf `purchases` dauerhaft
+  und öffnet sie bei erneutem Ausführen nicht wieder.
+- Service-Role- und Stripe-Helfer sind `server-only`; sensible JSON-Antworten
+  tragen `Cache-Control: no-store`.
+- KI-Fragen, Verlauf und Anhänge besitzen validierte Typen und Größenlimits,
+  bevor Tageskontingent verbraucht wird. Auch die Anmelderoute begrenzt
+  Eingabelängen.
+- Der Vercel-Cron `/api/wachhalten` ist mit `CRON_SECRET` geschützt. Die neue
+  `.env.example` dokumentiert ausschließlich Variablennamen und leere Werte.
+- Verifikation: TypeScript, betroffene ESLint-Dateien, Produktions-Build,
+  Content-Check mit 133 Aufgaben und 0 Befunden sowie öffentliche API-Smokes
+  bestanden. Der globale Lint enthält noch ältere, getrennt zu bearbeitende
+  React-Effect-Verstöße.
 
 ## Architektur — wichtige Entscheidungen
 - **Inhalte liegen serverseitig** unter `src/server/content/` (Analysis, lineare

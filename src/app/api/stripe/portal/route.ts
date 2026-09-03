@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { getStripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabaseAdmin';
+import { getTrustedSiteOrigin } from '@/lib/siteOrigin';
 
 // Öffnet das gehostete Stripe-Kundenportal, in dem Nutzer ihr
 // Monats-Abo ansehen, die Zahlungsart ändern oder kündigen können.
@@ -9,7 +10,10 @@ export const runtime = 'nodejs';
 function json(body: unknown, status: number) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+    },
   });
 }
 
@@ -43,18 +47,20 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
     const stripe = getStripe();
 
-    const { data: profile } = await admin
+    const { data: profile, error: profileError } = await admin
       .from('users')
       .select('stripe_customer_id')
       .eq('id', user.id)
       .maybeSingle();
+    if (profileError) {
+      return json({ error: 'database_error', message: 'Dein Konto konnte nicht geladen werden.' }, 500);
+    }
     const customerId = (profile?.stripe_customer_id as string | null) ?? null;
     if (!customerId) {
       return json({ error: 'no_customer', message: 'Für dein Konto gibt es noch kein Abo zum Verwalten.' }, 400);
     }
 
-    const origin =
-      req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const origin = getTrustedSiteOrigin(req);
 
     const portal = await stripe.billingPortal.sessions.create({
       customer: customerId,

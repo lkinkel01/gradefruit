@@ -88,7 +88,7 @@ durch Klarheit („297 Tage. Ein Stück pro Tag reicht."), nie durch Druck oder
 Emojis.
 
 **Premium-Anspruch — was „premium" hier bedeutet und was nicht.** Premium ist
-kein Luxus-Look und nichts Teures. Für ein 79-€-Produkt für Schüler:innen
+kein Luxus-Look und nichts Teures. Für einen Einmalkauf für Schüler:innen
 heißt premium: **Sorgfalt und Vertrauen.** Jedes Detail wirkt bewusst
 entschieden, nichts wirkt zufällig oder generiert — dadurch fühlt sich
 Gradefruit durchdachter an als die kostenlosen Apps daneben. Premium entsteht
@@ -228,9 +228,9 @@ Vision oben ist das Ziel, dies ist der Weg dorthin):
    Zusammenfassungen/Formeln, echtes Spaced-Repetition-Scheduling und
    Interleaving auf der Wiederholen-Seite. Das Wiederholungssystem ist das
    Herz des Produkts und der langfristige Burggraben.
-3. **Bezahlschranke härten.** Inhalte server-seitig laden, sobald echter
-   Umsatz das rechtfertigt (heute sind Inhalte client-seitig — die Sperre ist
-   ein UX-Gate, keine harte Grenze; siehe CLAUDE.md → Architektur).
+3. **Bezahlschranke hart halten.** Inhalte werden server-seitig geladen und
+   erst nach Prüfung von Sitzung und Kurskauf ausgeliefert. Neue Inhalte dürfen
+   diese Grenze nicht umgehen (siehe CLAUDE.md → Architektur).
 4. **Erst danach horizontal skalieren** (der Sprung Richtung Vision): weitere
    Bundesländer, weitere Jahrgänge, ggf. weitere Fächer — jede Instanz wieder
    schmal und tief („Mathe-Abi Bayern 2028"), nie als generische Plattform.
@@ -243,7 +243,8 @@ Vision oben ist das Ziel, dies ist der Weg dorthin):
 
 Wie neue Inhalte entstehen (für Content-Sprints):
 
-- **Aufgaben** leben client-seitig in `src/lib/*Tasks.ts` (6 Dateien:
+- **Aufgaben** leben ausschließlich server-seitig in
+  `src/server/content/*Tasks.ts` (6 Dateien:
   analysis/linalg/stochastik × GK/LK). Datenmodell pro Aufgabe:
   `id` (kurz, stabil, z. B. `an4`), `tag` (Untertitel/Thema), `q`
   (Fragestellung), `steps[]` (`label` + `math`), `result`, optional
@@ -251,7 +252,7 @@ Wie neue Inhalte entstehen (für Content-Sprints):
   Neue Aufgaben sind IMMER Original-Formulierungen im Abi-Stil.
 - **Mathe-Notation:** Unicode direkt im Text (x², √, ·, →, f′(x), ∫),
   kein LaTeX, kein MathML. Lesbarkeit auf kleinen Screens geht vor.
-- **Formelsammlungen** in `src/lib/summaries.ts` (pro Thema × Stufe:
+- **Formelsammlungen** in `src/server/content/summaries.ts` (pro Thema × Stufe:
   Abschnitte mit `title`, `text`, `formulas[]`).
 - **Erklärvideos:** Szene in `src/lib/scenes.ts` definieren (Schritte,
   Sprechtexte, Graph), dann `node --env-file=.env.local
@@ -260,4 +261,5 @@ Wie neue Inhalte entstehen (für Content-Sprints):
   Untertiteln — nie mit Roboterstimme.
 - **Fortschritt** speichert die DB-Tabelle `lessons` (Slugs = Aufgaben-IDs).
   Neue Aufgaben brauchen einen Seed-Eintrag, sonst ist ihr Lernstatus nicht
-  speicherbar (bekannte Lücke: 79 DB-Lektionen vs. 133 Aufgaben).
+  speicherbar. `scripts/check-content.mjs` und `scripts/seed-lessons.mjs`
+  halten Index und Datenbankbestand konsistent.

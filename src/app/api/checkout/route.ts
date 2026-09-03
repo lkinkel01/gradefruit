@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { getStripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabaseAdmin';
+import { getTrustedSiteOrigin } from '@/lib/siteOrigin';
 
 // Läuft auf dem Server (Node). Hier werden KEINE Kartendaten verarbeitet –
 // wir schicken den Nutzer nur zur gehosteten Stripe-Bezahlseite weiter.
@@ -9,7 +10,10 @@ export const runtime = 'nodejs';
 function json(body: unknown, status: number) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+    },
   });
 }
 
@@ -43,17 +47,17 @@ export async function POST(req: Request) {
   //            statt stillschweigend in einen Einmalkauf umgedeutet.
   //    course: 'gk' = Grundkurs, 'lk' = Leistungskurs (getrennt kaufbar)
   let plan: 'full' | null = null;
-  let course: 'gk' | 'lk' = 'gk';
+  let course: 'gk' | 'lk' | null = null;
   try {
     const body = (await req.json()) as { plan?: string; course?: string };
     plan = body.plan === 'full' ? 'full' : null;
-    course = body.course === 'lk' ? 'lk' : 'gk';
+    course = body.course === 'gk' || body.course === 'lk' ? body.course : null;
   } catch {
     return json({ error: 'bad_request', message: 'Ungültige Anfrage.' }, 400);
   }
-  if (!plan) {
+  if (!plan || !course) {
     return json(
-      { error: 'bad_request', message: 'Gradefruit wird einmalig gekauft — ein Abo gibt es nicht.' },
+      { error: 'bad_request', message: 'Tarif oder Kurs ist ungültig.' },
       400,
     );
   }
@@ -84,24 +88,42 @@ export async function POST(req: Request) {
   try {
     const admin = createAdminClient();
     const stripe = getStripe();
+    const origin = getTrustedSiteOrigin(req);
 
     // 6) Kurs-ID bestimmen (für die Zuordnung des Kaufs)
-    const { data: course } = await admin
+    const { data: courseRow, error: courseError } = await admin
       .from('courses')
       .select('id')
       .eq('slug', COURSE_SLUG)
       .maybeSingle();
-    const courseId = course?.id as string | undefined;
-    if (!courseId) {
+    const courseId = courseRow?.id as string | undefined;
+    if (courseError || !courseId) {
       return json({ error: 'server_misconfig', message: 'Der Kurs wurde nicht gefunden.' }, 500);
     }
 
+    // Doppelte Käufe desselben bereits freigeschalteten Kurses verhindern.
+    const { data: existingPurchase, error: purchaseError } = await admin
+      .from('purchases')
+      .select('status')
+      .eq('user_id', user.id)
+      .eq('course_id', courseId)
+      .maybeSingle();
+    if (purchaseError) {
+      return json({ error: 'database_error', message: 'Der Kurszugang konnte nicht geprüft werden.' }, 500);
+    }
+    if (existingPurchase?.status === 'active') {
+      return json({ error: 'already_owned', message: 'Dieser Kurs ist für dein Konto bereits freigeschaltet.' }, 409);
+    }
+
     // 7) Stripe-Kunden wiederverwenden oder neu anlegen
-    const { data: profile } = await admin
+    const { data: profile, error: profileError } = await admin
       .from('users')
       .select('stripe_customer_id')
       .eq('id', user.id)
       .maybeSingle();
+    if (profileError || !profile) {
+      return json({ error: 'database_error', message: 'Dein Konto konnte nicht geladen werden.' }, 500);
+    }
     let customerId = (profile?.stripe_customer_id as string | null) ?? null;
     if (!customerId) {
       const customer = await stripe.customers.create({
@@ -109,12 +131,16 @@ export async function POST(req: Request) {
         metadata: { user_id: user.id },
       });
       customerId = customer.id;
-      await admin.from('users').update({ stripe_customer_id: customerId }).eq('id', user.id);
+      const { error: updateError } = await admin
+        .from('users')
+        .update({ stripe_customer_id: customerId })
+        .eq('id', user.id);
+      if (updateError) {
+        throw new Error(`Stripe-Kunde konnte nicht gespeichert werden: ${updateError.message}`);
+      }
     }
 
     // 8) Bezahlseite erstellen
-    const origin =
-      req.headers.get('origin') || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const metadata = {
       user_id: user.id,
       course_id: courseId,

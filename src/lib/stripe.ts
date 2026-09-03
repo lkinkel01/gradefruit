@@ -1,3 +1,5 @@
+import 'server-only';
+
 import Stripe from 'stripe';
 
 // Stripe-Client – nur auf dem Server. Der STRIPE_SECRET_KEY bleibt geheim

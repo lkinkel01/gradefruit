@@ -21,6 +21,15 @@ function idOf(value: string | { id: string } | null | undefined): string | null 
   return typeof value === 'string' ? value : value.id;
 }
 
+function assertDatabaseWrite(
+  error: { message: string } | null,
+  operation: string,
+): asserts error is null {
+  if (error) {
+    throw new Error(`${operation}: ${error.message}`);
+  }
+}
+
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!secret || !process.env.STRIPE_SECRET_KEY) {
@@ -54,7 +63,7 @@ export async function POST(req: Request) {
         const plan = session.metadata?.plan ?? (session.mode === 'subscription' ? 'subscription' : 'one_time');
 
         if (userId && courseId) {
-          await admin.from('purchases').upsert(
+          const { error } = await admin.from('purchases').upsert(
             {
               user_id: userId,
               course_id: courseId,
@@ -67,6 +76,7 @@ export async function POST(req: Request) {
             },
             { onConflict: 'user_id,course_id' },
           );
+          assertDatabaseWrite(error, 'Kauf konnte nicht freigeschaltet werden');
           console.log(`Zugang freigeschaltet für Nutzer ${userId} (${plan}).`);
         } else {
           console.warn('checkout.session.completed ohne user_id/course_id in den Metadaten.');
@@ -85,7 +95,7 @@ export async function POST(req: Request) {
         const courseId = sub.metadata?.course_id ?? null;
 
         if (userId && courseId) {
-          await admin.from('purchases').upsert(
+          const { error } = await admin.from('purchases').upsert(
             {
               user_id: userId,
               course_id: courseId,
@@ -98,12 +108,14 @@ export async function POST(req: Request) {
             },
             { onConflict: 'user_id,course_id' },
           );
+          assertDatabaseWrite(error, 'Abo-Status konnte nicht gespeichert werden');
         } else {
           // Fallback: über die Abo-ID zuordnen
-          await admin
+          const { error } = await admin
             .from('purchases')
             .update({ status, current_period_end: periodEnd, updated_at: new Date().toISOString() })
             .eq('stripe_subscription_id', sub.id);
+          assertDatabaseWrite(error, 'Abo-Status konnte nicht aktualisiert werden');
         }
         break;
       }
@@ -111,10 +123,11 @@ export async function POST(req: Request) {
       // Abo endgültig beendet -> Zugang entziehen
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription;
-        await admin
+        const { error } = await admin
           .from('purchases')
           .update({ status: 'cancelled', updated_at: new Date().toISOString() })
           .eq('stripe_subscription_id', sub.id);
+        assertDatabaseWrite(error, 'Abo-Zugang konnte nicht entzogen werden');
         break;
       }
 
@@ -132,10 +145,11 @@ export async function POST(req: Request) {
         });
         const refundedSession = sessions.data[0];
         if (refundedSession?.id) {
-          await admin
+          const { error } = await admin
             .from('purchases')
             .update({ status: 'cancelled', updated_at: new Date().toISOString() })
             .eq('stripe_checkout_session_id', refundedSession.id);
+          assertDatabaseWrite(error, 'Kaufzugang konnte nach Rückerstattung nicht entzogen werden');
           console.log(`Zugang nach Rückerstattung entzogen (Session ${refundedSession.id}).`);
         }
         break;

@@ -12,7 +12,10 @@ export const runtime = 'nodejs';
 function json(body: unknown, status: number) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store',
+    },
   });
 }
 
@@ -41,10 +44,17 @@ export async function POST(req: Request) {
 
   // 1) Laufende Abos beenden. Schlägt das fehl, wird NICHT gelöscht — sonst
   //    liefe die Abbuchung weiter, ohne dass jemand sie stoppen könnte.
-  const { data: purchases } = await admin
+  const { data: purchases, error: purchasesError } = await admin
     .from('purchases')
     .select('stripe_subscription_id, status')
     .eq('user_id', user.id);
+
+  if (purchasesError) {
+    return json({
+      error: 'database_error',
+      message: 'Deine Käufe konnten nicht sicher geprüft werden. Das Konto wurde nicht gelöscht.',
+    }, 500);
+  }
 
   const subscriptions = (purchases ?? [])
     .map(p => p.stripe_subscription_id as string | null)

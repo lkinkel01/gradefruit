@@ -4,7 +4,7 @@
 import { createClient } from '@supabase/supabase-js';
 
 const [email, password] = process.argv.slice(2);
-const base = 'http://localhost:3000';
+const base = 'http://127.0.0.1:3000';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -25,8 +25,8 @@ async function call(label, query, headers) {
 
 const auth = { Authorization: `Bearer ${token}` };
 const results = {
-  ohneToken: await call('ohne Anmeldung, Analysis  ', 'topic=analysis&level=gk', {}),
-  falscherToken: await call('gefälschter Token       ', 'topic=analysis&level=gk', { Authorization: 'Bearer abc.def.ghi' }),
+  gratisOhneToken: await call('ohne Anmeldung, Analysis  ', 'topic=analysis&level=gk', {}),
+  falscherToken: await call('gefälschter Token, LinAlg', 'topic=linalg&level=gk', { Authorization: 'Bearer abc.def.ghi' }),
   gratis: await call('angemeldet, Analysis GK  ', 'topic=analysis&level=gk', auth),
   bezahltGk: await call('angemeldet, LinAlg GK    ', 'topic=linalg&level=gk', auth),
   bezahltLk: await call('angemeldet, Stochastik LK', 'topic=stochastik&level=lk', auth),
@@ -34,7 +34,7 @@ const results = {
 };
 
 const ok =
-  results.ohneToken === 401 &&
+  results.gratisOhneToken === 200 &&
   results.falscherToken === 401 &&
   results.gratis === 200 &&
   results.bezahltGk === 403 &&

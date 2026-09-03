@@ -7,35 +7,39 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
 
 - **Aktiver Branch:** `codex/launch-readiness`, Basis `12a314f` = `main` =
   `origin/main` zum Start dieses Sprints.
-- **Aktueller Sprint:** sechs fachlich passende Erklärvideos für den
-  Leistungskurs ergänzen. Ziel ist ein gleichwertiges Grundangebot für GK und
-  LK vor dem ersten Verkauf. Status: `Wartet auf andere`. Leon hat am
-  03.09.2026 entschieden, externe Audioerzeugung zunächst zu vertagen und bis
-  auf Weiteres keine ElevenLabs-Kosten auszulösen.
-- **Lokal umgesetzt:** sechs LK-Szenen in `src/lib/scenes.ts`, Zuordnung zu je
-  zwei LK-Aufgaben aus Analysis, Linearer Algebra und Stochastik, getrennte
-  GK/LK-Auswahl in Videoübersicht und Reel-Modus sowie aktualisierter
-  Content-Index. Beim Zwei-Sigma-Beispiel ist die 95,4-%-Näherungsregel jetzt
-  sauber vom exakten Binomialwert 96,48 % getrennt.
-- **Prüfstand:** Content-Check mit 133 Aufgaben und 0 Befunden bestanden;
-  TypeScript bestanden; Produktions-Build bestanden; gezielter ESLint-Lauf
-  ohne Fehler. Zwei bekannte Hinweise betreffen vorhandene `<img>`-Elemente
-  der Landingpage. Desktop und 390-px-Landing wurden lokal im Browser geprüft:
-  kein horizontaler Überlauf und keine Konsolenfehler. Das Repository besitzt
-  kein `npm test`-Skript.
-- **Bewusst vertagt:** 42 fehlende MP3-Dateien mit zusammen 5.410 Zeichen Sprechtext für
-  die sechs neuen LK-Szenen. Der Generator kann sie jetzt gezielt auswählen,
-  vorab als Dry-Run zählen und atomar speichern. Der Content-Check verhindert
-  jetzt außerdem, dass eine unvollständige Szene versehentlich als vertont
-  ausgeliefert wird.
-  ElevenLabs wird vorerst nicht gestartet, weil Leon zunächst kostenlos
-  weiterarbeiten möchte. Erst nach einer späteren neuen Freigabe dürfen Texte
-  übertragen und Kontingent verbraucht werden. Erst vollständig erzeugte
-  Szenen erhalten `hasAudio`.
-- **Notion:** Launch-Plan auf MVP-first-Arbeitsweise aktualisiert; die
-  LK-Video-Aufgabe steht auf `Wartet auf andere`. Vier neue Ideen liegen bewusst im späteren
-  Ideen-Backlog: STARK-2027-Benchmark, Wettbewerbsvergleich, eigener
-  Sprach-/Erklärstil und authentische Bildwelt.
+- **Aktueller Sprint:** `Technischen Launch-Readiness-Audit durchführen`.
+  Genau diese eine technische Notion-Aufgabe ist aktiv. Die kostenlose lokale
+  Prüfung ist abgeschlossen; externe Produktionsschritte bleiben bewusst offen.
+- **Lokal umgesetzt:** Checkout und Stripe-Portal vertrauen nicht mehr dem frei
+  setzbaren Origin-Header, doppelte Käufe bereits freigeschalteter Kurse werden
+  verhindert und Datenbankfehler werden nicht mehr übergangen. Der Webhook
+  quittiert eine fehlgeschlagene Freischaltung oder Rückerstattung mit 500,
+  damit Stripe erneut zustellen kann. `supabase/schema.sql` kann die früheren
+  Kauf-Schreibrechte bei Wiederholung nicht mehr neu öffnen. Service-Role- und
+  Stripe-Helfer sind ausdrücklich `server-only`. Login- und KI-Anfragen haben
+  Größen- und Strukturgrenzen; Antworten mit Sitzung oder Kaufdaten sind nicht
+  cachebar. `/api/wachhalten` verlangt jetzt `CRON_SECRET`.
+- **Prüfstand:** TypeScript, gezielter ESLint, Produktions-Build und
+  Content-Check (133 Aufgaben, 0 Befunde) bestehen. Öffentliche API-Smokes:
+  freie Analysis 200, bezahltes Thema ohne Sitzung 401, Checkout/Portal/
+  Kontolöschung/KI ohne Sitzung 401, Webhook ohne Signatur 400 und Cron ohne
+  Secret 401. Die bedingte Hook-Reihenfolge in `TopicView` ist korrigiert.
+  Der globale Lint prüft dank rekursiver Build-Ignores wieder echten Quellcode,
+  zeigt aber noch 11 bereits vorhandene React-Effect-Fehler und 16 Warnungen.
+- **Externe Launch-Blocker:** Stripe läuft lokal im Testmodus;
+  `STRIPE_PRICE_LK_ONE_TIME` und `CRON_SECRET` fehlen lokal. Vor Produktion
+  müssen die entsprechenden Live-Werte ausschließlich in Vercel gesetzt, die
+  Rechtstexte juristisch freigegeben und ein vollständiger Kauf mit
+  Freischaltung und Rückerstattung getestet werden. Keine Werte in Chat oder
+  Git einfügen.
+- **Bewusst vertagt:** 42 fehlende MP3-Dateien mit zusammen 5.410 Zeichen
+  Sprechtext für sechs neue LK-Szenen. ElevenLabs bleibt aus, bis Leon eine
+  kommerzielle Lizenz beziehungsweise Kosten ausdrücklich freigibt.
+- **Notion:** Launch-Plan und LK-Video-Aufgabe sind synchron. Der technische
+  Launch-Audit ist die einzige aktive Aufgabe; die Audio-Aufgabe steht auf
+  `Wartet auf andere`. Vier Ideen bleiben im späteren Ideen-Backlog:
+  STARK-2027-Benchmark, Wettbewerbsvergleich, eigener Sprach-/Erklärstil und
+  authentische Bildwelt.
 - **Automatische Fortsetzung:** Der Codex-Task `Gradefruit Launch-Fortsetzung`
   arbeitet nach dem lokalen Sicherungs-Commit mit dem nächsten kostenlosen
   Launch-Blocker weiter. Mac und Codex-App können eingeschaltet bleiben; ein
@@ -52,9 +56,10 @@ Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten
 - **Nicht anfassen oder stagen:** die schon vorher geänderte übrige Übergabe,
   `# Gradefruit Logokonzept.zip`, `final/` und `stash@{0}` zur
   Creative-Direction-Validierung.
-- **Nächster Schritt:** Auf dem danach sauberen Arbeitsstand den nächsten
-  kostenlosen Launch-Blocker aus Notion auswählen. Die Audioerzeugung bleibt
-  vertagt. Kein Push, Merge oder Deployment ohne Leons ausdrückliche Freigabe.
+- **Nächster Schritt:** Nach dem geprüften lokalen Audit-Commit die bestehenden
+  React-Lintfehler als kleines kostenloses Stabilitätspaket abarbeiten. Parallel
+  braucht Leon für den echten Launch die oben genannten Rechts-, Stripe- und
+  Vercel-Schritte. Kein Push, Merge oder Deployment ohne ausdrückliche Freigabe.
 
 > Zweck: Diese Datei überbrückt den Chat-Wechsel. Nur Start-Anleitung, aktueller
 > Stand und offene Punkte. Details stehen genau einmal woanders:

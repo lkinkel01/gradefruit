@@ -135,18 +135,15 @@ drop policy if exists "progress_delete_own" on public.progress;
 create policy "progress_delete_own" on public.progress
   for delete using (auth.uid() = user_id);
 
--- PURCHASES: nur eigene Käufe
+-- PURCHASES: eigene Käufe lesen, aber niemals im Browser freischalten.
+-- Schreiben darf ausschließlich vertrauenswürdiger Servercode mit Service Role
+-- (Stripe-Webhook). Die Drops halten das Schema auch bei erneutem Ausführen sicher.
 drop policy if exists "purchases_select_own" on public.purchases;
 create policy "purchases_select_own" on public.purchases
   for select using (auth.uid() = user_id);
 
 drop policy if exists "purchases_insert_own" on public.purchases;
-create policy "purchases_insert_own" on public.purchases
-  for insert with check (auth.uid() = user_id);
-
 drop policy if exists "purchases_update_own" on public.purchases;
-create policy "purchases_update_own" on public.purchases
-  for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
 
 -- ------------------------------------------------------------

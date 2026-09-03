@@ -153,8 +153,6 @@ export default function TopicView({
     })();
   }, [user, ready, setStatus]);
 
-  if (!topic) return null;
-
   const hasAccess = isFree || (level === 'gk' ? owned : ownedLk);
   const levelLabel = level === 'lk' ? 'Leistungskurs' : 'Grundkurs';
 
@@ -268,6 +266,10 @@ export default function TopicView({
       document.removeEventListener('touchend', onUp);
     };
   }, []);
+
+  // Erst nach allen Hooks abbrechen. Auch ein unerwarteter View-Wert darf die
+  // Hook-Reihenfolge zwischen zwei Rendern nicht verändern.
+  if (!topic) return null;
 
   // Fließtext in Absätze zerlegen: je Satz eine Zeile. So beginnt kein Satz
   // mitten in einer Zeile und lange Texte bleiben lesbar.
