@@ -17,7 +17,10 @@
   --accent: #FF7A00;
   --accent-tx: #131315;
   --accent-d: #9A4200;
-  --accent-soft: #FFF1E3;
+  /* Blass genug, um als Markierung zu wirken statt als warme Fläche. Die
+     früheren Cremetöne (#FFF1E3 und Verwandte) haben die Seite in ein
+     Beige getaucht, das nach KI-Produkt aussah — nicht nach Gradefruit. */
+  --accent-soft: #FFF3EA;
   --accent-progress: #FFB36B;
   /* Originalfarben des freigegebenen Gradefruit-Logos. */
   --brand-rind: #FF7A00;
@@ -27,7 +30,9 @@
   --brand-rind-deep: color-mix(in srgb, var(--brand-rind) 58%, var(--brand-flesh));
   --brand-rind-deep-hover: color-mix(in srgb, var(--brand-rind) 74%, var(--brand-flesh));
   --brand-flesh: #F5152E;
-  --brand-app-bg: #FFF4E8;
+  /* Neutral wie der Rest. Vorher #FFF4E8 — ein warmer Beigeschleier über der
+     ganzen App. */
+  --brand-app-bg: #FFFFFF;
   --topic-analysis: #FF7A00;
   --topic-linalg: #FF7A00;
   --topic-stochastik: #FF7A00;
@@ -45,14 +50,14 @@
   --yellow: #E0A400;
   --warn-soft: #FBF1D8;
   /* Hero-Bild (Landing): warme, einladende Illustration. */
-  --hv-bg-top: #FFF3E9;
+  --hv-bg-top: #FBFBFC;
   --hv-bg-bottom: #FFFFFF;
-  --hv-line: #EFE6DE;
+  --hv-line: #E9E9EC;
   --hv-panel: #FFFFFF;
-  --hv-grid: #F1EBE5;
-  --hv-axis: #C9BFB6;
-  --hv-coach: #FFF1E3;
-  --hv-coach-line: #FBD9B8;
+  --hv-grid: #EFEFF2;
+  --hv-axis: #C2C2C8;
+  --hv-coach: #F4F4F6;
+  --hv-coach-line: #E2E2E7;
   /* Sidebar: immer echtes Schwarz mit heller Schrift (DESIGN.md-Regel),
      hebt das Menü ruhig und ästhetisch von der weißen Lernfläche ab. */
   --side: #050505;
@@ -272,14 +277,14 @@ body.dark {
   --warn: #F0B24C;
   --yellow: #F0B24C;
   --warn-soft: #2A1F08;
-  --hv-bg-top: #17130F;
+  --hv-bg-top: #141416;
   --hv-bg-bottom: #0D0D0F;
-  --hv-line: #2A2622;
-  --hv-panel: #141210;
-  --hv-grid: #221E1A;
-  --hv-axis: #4A423A;
-  --hv-coach: #241A10;
-  --hv-coach-line: #3A2A18;
+  --hv-line: #292A2E;
+  --hv-panel: #131315;
+  --hv-grid: #202024;
+  --hv-axis: #45464C;
+  --hv-coach: #1E1E22;
+  --hv-coach-line: #33343A;
   --side: #050505;
   --side-2: #111113;
   --side-3: #27272A;

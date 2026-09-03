@@ -149,9 +149,11 @@
 }
 
 .navSectionActive {
-  background: color-mix(in srgb, var(--accent-soft) 82%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 18%, transparent);
-  color: var(--accent-d);
+  /* Der aktive Punkt trug eine orange Fläche mit orangem Rand — drei
+     Akzentsignale für eine Kleinigkeit. Jetzt: ruhige neutrale Fläche,
+     schwarze Schrift. Wo man ist, sagt das Gewicht, nicht die Farbe. */
+  background: var(--surface-2);
+  color: var(--ink);
 }
 
 .navRight {
@@ -190,12 +192,20 @@
 }
 
 .continueButton {
-  /* Fester Ton, unabhängig vom Modus: vorher wurde mit --ink gemischt, wodurch
-     der Knopf hell und dunkel unterschiedlich aussah. */
-  border: 1px solid #C24E12;
-  background: #DC5A15;
-  color: #fff;
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 12%, transparent);
+  /* Schwarz, nicht orange.
+     Der Knopf war ein gebranntes Orange (#DC5A15) und damit die größte Fläche
+     der Seite. Das widerspricht der eigenen Regel in DESIGN.md — „Primäraktionen
+     sind Schwarz" und „Orange auf höchstens 10 % eines Screens" — und es war
+     genau der Ton, der die Seite nach einem beliebigen KI-Produkt aussehen
+     ließ. Als schwarzer Block trägt er mehr Gewicht, nicht weniger.
+     Über --btn-ink, nicht fest gesetzt: Ein fester schwarzer Ton verschwand
+     im Dunkelmodus auf schwarzem Grund. Die Hauptaktion muss in beiden Modi
+     die kräftigste Fläche sein — hell schwarz auf weiß, dunkel weiß auf
+     schwarz. */
+  border: 1px solid var(--btn-ink);
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 14%, transparent);
   transition:
     transform var(--dur-press) var(--ease-press),
     background-color var(--dur-hover) var(--ease-out),
@@ -276,7 +286,13 @@
 
 .heroContext {
   margin-bottom: 22px;
-  color: color-mix(in srgb, var(--brand-rind-deep) 42%, var(--ink));
+  /* Neutral statt gedämpftes Braun-Orange.
+     Der Vorspann war mit --brand-rind-deep und --ink gemischt und landete bei
+     einem matten Terrakotta — genau der Ton, der die Seite nach einem
+     beliebigen KI-Produkt aussehen ließ. Orange trägt jetzt nur noch das Logo
+     und ein paar Punkte; Text steht in Tinte oder Grau. Das ist die
+     Eine-Stimme-Regel aus DESIGN.md, wörtlich genommen. */
+  color: var(--muted);
   font-size: 13px;
   font-weight: 650;
   letter-spacing: .01em;
@@ -1056,9 +1072,12 @@
 /* Interaktion bleibt sparsam und funktioniert auf Touch ohne Hover-Fallen. */
 @media (hover: hover) and (pointer: fine) {
   .continueButton:hover {
-    border-color: var(--brand-rind-deep);
-    background: var(--brand-rind-deep-hover);
-    box-shadow: 0 12px 28px color-mix(in srgb, var(--brand-rind-deep) 25%, transparent);
+    /* Kein farbiger Schein — nur ein knappes Anheben und etwas mehr Tiefe.
+       Ein orangefarbener Schatten unter einem schwarzen Knopf wäre wieder
+       genau die Dekoration, die hier raus sollte. */
+    border-color: var(--btn-ink-hover);
+    background: var(--btn-ink-hover);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--ink) 22%, transparent);
     transform: translateY(-1px);
   }
 
@@ -1068,7 +1087,7 @@
   .faqItem summary:hover { color: var(--accent-d); }
 
   .navSection:hover,
-  .navSectionActive:hover { background: color-mix(in srgb, var(--accent-soft) 70%, transparent); color: var(--ink); }
+  .navSectionActive:hover { background: var(--control); color: var(--ink); }
   .iconBtn:hover { border-color: color-mix(in srgb, var(--ink) 52%, transparent); background: color-mix(in srgb, var(--surface) 72%, transparent); transform: scale(1.02); }
   .coachShell:hover { border-color: var(--accent); box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
   .methodRow:hover { transform: translateX(2px); }
@@ -1148,8 +1167,8 @@
   }
 
   .mobileSections a[aria-current='location'] {
-    background: color-mix(in srgb, var(--accent-soft) 82%, transparent);
-    color: var(--accent-d);
+    background: var(--surface-2);
+    color: var(--ink);
   }
 
   .mobileSections a:active { transform: scale(.98); }
@@ -1773,10 +1792,15 @@
    Farben wie in der Kopfzeile: heller Modus schwarz mit weißer Schrift,
    dunkler Modus weiß mit schwarzer Schrift. */
 .heroRegister {
+  /* Zweite Aktion, also Umriss statt Fläche.
+     Solange „Kostenlos testen" orange war, konnten beide Knöpfe gefüllt sein.
+     Jetzt sind beide schwarz beziehungsweise weiß — und zwei gleich schwere
+     Knöpfe nebeneinander sagen dem Auge nicht, welcher gemeint ist. DESIGN.md
+     verlangt genau eine Primäraktion pro Bildschirm. */
   display: none;
-  border: 1px solid var(--btn-ink);
-  background: var(--btn-ink);
-  color: var(--btn-ink-tx);
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
 }
 @media (max-width: 900px) {
   /* Beide Knöpfe nebeneinander: links testen, rechts registrieren. */
