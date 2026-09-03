@@ -4,17 +4,28 @@ import { SCENES, Scene } from '@/lib/scenes';
 import SceneModal from './SceneModal';
 import styles from './VideosView.module.css';
 import { useImAppRahmen } from '@/lib/nativeApp';
+import type { Stufe } from '@/lib/stufe';
 
-const VIDEOS = [
-  { id: 'v1', title: 'Ableitung: Grundregeln', sub: 'Analysis · 8 Min.', color: '#FF7A00', badge: 'Analysis' },
-  { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Analysis · 11 Min.', color: '#FF7A00', badge: 'Analysis' },
-  { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Analysis · 14 Min.', color: '#FF7A00', badge: 'Analysis' },
-  { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Lineare Algebra · 9 Min.', color: '#FF7A00', badge: 'Lin. Algebra' },
-  { id: 'v5', title: 'Geradengleichungen', sub: 'Lineare Algebra · 12 Min.', color: '#FF7A00', badge: 'Lin. Algebra' },
-  { id: 'v6', title: 'Binomialverteilung', sub: 'Stochastik · 10 Min.', color: '#FF7A00', badge: 'Stochastik' },
-];
+const VIDEOS: Record<Stufe, { id: string; title: string; sub: string; color: string; badge: string }[]> = {
+  gk: [
+    { id: 'v1', title: 'Ableitung: Grundregeln', sub: 'Grundkurs', color: '#FF7A00', badge: 'Analysis' },
+    { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Grundkurs', color: '#FF7A00', badge: 'Analysis' },
+    { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Grundkurs', color: '#FF7A00', badge: 'Analysis' },
+    { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Grundkurs', color: '#FF7A00', badge: 'Lin. Algebra' },
+    { id: 'v5', title: 'Geradengleichungen', sub: 'Grundkurs', color: '#FF7A00', badge: 'Lin. Algebra' },
+    { id: 'v6', title: 'Binomialverteilung', sub: 'Grundkurs', color: '#FF7A00', badge: 'Stochastik' },
+  ],
+  lk: [
+    { id: 'lk-a1', title: 'Produktregel mit e-Funktion', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Analysis' },
+    { id: 'lk-a2', title: 'Integral einer e-Funktion', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Analysis' },
+    { id: 'lk-g1', title: 'Ebene durch drei Punkte', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Lin. Algebra' },
+    { id: 'lk-g2', title: 'Abstand Punkt und Gerade', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Lin. Algebra' },
+    { id: 'lk-s1', title: 'Zwei-Sigma-Intervall', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Stochastik' },
+    { id: 'lk-s2', title: 'Fehler erster Art', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Stochastik' },
+  ],
+};
 
-export default function VideosView() {
+export default function VideosView({ level }: { level: Stufe }) {
   // Der Titel steht in der App bereits in der Kopfzeile.
   const imApp = useImAppRahmen();
   const [active, setActive] = useState<Scene | null>(null);
@@ -22,7 +33,7 @@ export default function VideosView() {
 
   const openVideo = (id: string) => {
     const scene = SCENES[id];
-    if (scene) {
+    if (scene?.hasAudio) {
       setActive(scene);
     } else {
       setNotice('Dieses Erklärvideo kommt bald.');
@@ -33,9 +44,9 @@ export default function VideosView() {
   return (
     <div className={styles.page}>
       {!imApp && <h1 className={styles.ph1}>Erklärvideos</h1>}
-      <p className={styles.pblurb}>Kurze, klare Erklärungen zu jedem Abiturthema.</p>
-      {VIDEOS.map(v => {
-        const ready = !!SCENES[v.id];
+      <p className={styles.pblurb}>Ausgewählte Themen kurz und klar erklärt.</p>
+      {VIDEOS[level].map(v => {
+        const ready = Boolean(SCENES[v.id]?.hasAudio);
         return (
           <button key={v.id} className={styles.vcard} onClick={() => openVideo(v.id)}>
             <div className={styles.vthumb} style={{ background: v.color }}>

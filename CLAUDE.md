@@ -35,10 +35,12 @@ Diese Datei verweist nur.
   GitHub, Hostinger. Dafür darf ich ihm Klick-Anleitungen geben.
 - Muss Leon einen Datei-Inhalt sehen? → **committen + pushen**, dann auf
   GitHubs „Copy raw file" verweisen.
-- **Nur committen/pushen, wenn Leon ausdrücklich darum bittet** (Push =
-  Live-Deploy auf Vercel). Sonst Änderungen nur lokal lassen.
-- ChatGPT berät Leon bei Produkt/Priorisierung und schreibt Sprint-Prompts
-  auf Basis von PROJECT_STATUS.md.
+- **Lokale Commits nach vollständig bestandener Prüfung selbstständig und nur
+  mit selektivem Staging erstellen. Pushen nur, wenn Leon ausdrücklich darum
+  bittet** (Push auf `main` = Live-Deploy auf Vercel).
+- Codex und Claude Code arbeiten abwechselnd dieselbe priorisierte Notion-Liste
+  ab. `HANDOUT.md` hält den lokalen Übergabestand fest, damit der nächste Agent
+  vorhandene Arbeit fortsetzt statt neu zu beginnen.
 
 ## Sicherheitsregeln (NICHT verhandelbar)
 

@@ -11,12 +11,14 @@ export interface AnalysisLkTask {
   result: string;
   mistakes: string[];
   locked: boolean;
+  videoId?: string;
 }
 
 export const ANALYSIS_LK_TASKS: AnalysisLkTask[] = [
   {
     id: "la1",
     tag: "Produktregel (e-Funktion)",
+    videoId: "lk-a1",
     src: "Original-Übung · LK-Stil A1",
     q: "Bilden Sie die erste Ableitung von f mit f(x) = x² · e^x.",
     steps: [
@@ -158,6 +160,7 @@ export const ANALYSIS_LK_TASKS: AnalysisLkTask[] = [
   {
     id: "la9",
     tag: "Integral (e-Funktion)",
+    videoId: "lk-a2",
     src: "Original-Übung · LK-Stil A9",
     q: "Berechnen Sie das bestimmte Integral ∫₀¹ e^(2x) dx.",
     steps: [

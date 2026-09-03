@@ -11,24 +11,27 @@ export interface StochastikLkTask {
   result: string;
   mistakes: string[];
   locked: boolean;
+  videoId?: string;
 }
 
 export const STOCHASTIK_LK_TASKS: StochastikLkTask[] = [
   {
     id: "sl1",
     tag: "σ-Regeln (Binomial)",
+    videoId: "lk-s1",
     src: "Original-Übung · LK-Stil S1",
     q: "Eine Münze wird 100-mal geworfen, X zählt die Anzahl „Kopf\" (p = 0,5). Bestimmen Sie das 2σ-Intervall und die Wahrscheinlichkeit, dass X darin liegt.",
     steps: [
       { label: "Erwartungswert", math: "μ = n·p = 100·0,5 = 50" },
       { label: "Standardabweichung", math: "σ = √(n·p·(1−p)) = √(100·0,5·0,5) = √25 = 5" },
       { label: "2σ-Intervall", math: "[μ − 2σ;  μ + 2σ] = [50 − 10;  50 + 10] = [40;  60]" },
-      { label: "Wahrscheinlichkeit (2σ-Regel)", math: "P(40 ≤ X ≤ 60) ≈ 95,4 %" },
+      { label: "Näherung mit der 2σ-Regel", math: "P(40 ≤ X ≤ 60) ≈ 95,4 %" },
+      { label: "Exakter Binomialwert", math: "P(40 ≤ X ≤ 60) = F(60) − F(39) ≈ 0,9648" },
     ],
-    result: "2σ-Intervall [40; 60],  P ≈ 95,4 %",
+    result: "2σ-Intervall [40; 60],  exakt P ≈ 96,48 %",
     mistakes: [
       "σ als n·p·(1−p) angeben und die Wurzel vergessen – die Standardabweichung ist die Wurzel der Varianz.",
-      "Die 95,4 % (2σ) mit den 68,3 % (1σ) oder 99,7 % (3σ) verwechseln.",
+      "Die Näherung der 2σ-Regel (95,4 %) mit der exakten Binomialwahrscheinlichkeit (hier etwa 96,48 %) verwechseln.",
     ],
     locked: false,
   },
@@ -125,6 +128,7 @@ export const STOCHASTIK_LK_TASKS: StochastikLkTask[] = [
   {
     id: "sl7",
     tag: "Hypothesentest · Fehler 1. Art",
+    videoId: "lk-s2",
     src: "Original-Übung · LK-Stil S7",
     q: "Getestet wird H₀: p = 0,5 bei n = 100 (μ = 50, σ = 5). Die Nullhypothese wird verworfen, falls X ≥ 59. Bestimmen Sie die Wahrscheinlichkeit für den Fehler 1. Art.",
     steps: [

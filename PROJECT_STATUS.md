@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-08-03 (Reels folgen dem Erscheinungsbild, Filter mehrfach wählbar, Offline repariert)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-09-03 (Launch-Sprint: LK-Erklärvideos lokal vorbereitet, kostenpflichtige Audioerzeugung vertagt)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -18,12 +18,21 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 
 ## Aktueller Stand (Kurzfassung, Stand Sprint 11)
 
-**Das Produkt ist funktional komplett für den Verkaufsstart** — es fehlt nur
-der Live-Gang (Stripe TEST→LIVE, Rechtstexte juristisch prüfen). Seit Sprint 11
-kommt die **native App** dazu, die noch nicht veröffentlicht ist.
+**Das Produkt ist technisch weit fortgeschritten, aber noch nicht verkaufsbereit.**
+Vor dem ersten Verkauf fehlen insbesondere die LK-Erklärvideos, die formale
+Gründung und Rechtsprüfung sowie der geprüfte Wechsel von Stripe TEST auf LIVE.
+Seit Sprint 11 kommt die **native App** dazu, die noch nicht veröffentlicht ist.
+
+**Aktueller WIP auf `codex/launch-readiness`:** Sechs LK-Erklärszenen sind
+fachlich vorbereitet und je zwei Aufgaben in Analysis, Linearer Algebra und
+Stochastik zugeordnet. Content-Check, Typecheck, relevanter Lint, Build sowie
+Landing-Smokes auf Desktop und 390 px sind erfolgreich. Die 42 zugehörigen
+Sprachdateien werden zunächst nicht erzeugt: Leon möchte bis auf Weiteres
+kostenlos weiterarbeiten. Die vorbereiteten Szenen bleiben deshalb ehrlich als
+noch nicht vertont gekennzeichnet.
 
 - **Landing** (`/`): Premium-Einstieg, geführter Lernweg, kontextueller Coach,
-  Lernmethoden, Kurse (GK 79 €/14,90 · LK 99 €/17,90), FAQ, Closing.
+  Lernmethoden, Kurse (GK 49 € · LK 69 €, jeweils einmalig), FAQ, Closing.
 - **Lernbereich:** 3 Themen × Zusammenfassung | Übungen; Lernhilfen und Status
   erst nach dem Öffnen; klickbare Formeln/Schritte öffnen den Coach.
 - **Wiederholungssystem:** drei Lernstufen pro Aufgabe, Wiederholen-Seite mit
@@ -82,9 +91,10 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
 - Secrets nur serverseitig (`.env.local` / Vercel Env), nie im Browser.
 
 ## Architektur — wichtige Entscheidungen
-- **Inhalte liegen client-seitig** in `src/lib/*Tasks.ts` (6 Dateien: analysis/linalg/
-  stochastik × GK/LK). Werden an den Browser ausgeliefert → Bezahlschranke ist ein
-  **UX-Gate, keine harte Grenze** (server-seitiges Laden = offener Härtungspunkt).
+- **Inhalte liegen serverseitig** unter `src/server/content/` (Analysis, lineare
+  Algebra und Stochastik × GK/LK). `/api/content` liefert Analysis als kostenlose
+  Probe und prüft für bezahlte Themen serverseitig Sitzung, Kurs und aktiven Kauf.
+  Der Browser erhält im generierten `contentIndex` nur Navigation und Zuordnungen.
 - **Alle Aufgaben sind ORIGINAL** (selbst formuliert im Abi-Stil, NICHT aus echten
   Klausuren) → urheberrechtssicher & skalierbar. Werbetexte müssen ehrlich
   „prüfungsnahe Übungsaufgaben" sagen, NICHT „echte Abituraufgaben".
@@ -92,7 +102,7 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   signatur-geprüften, idempotenten **Stripe-Webhook** freigeschaltet
   (`upsert on user_id,course_id`), nie clientseitig.
 - **KI-Coach** serverseitig (`/api/ask`), Key server-only, mit Tages-/Rate-Limit.
-- **Kurse:** `mathe-gk` (79 € / 14,90 €/Mon), `mathe-lk` (99 € / 17,90 €/Mon).
+- **Kurse:** `mathe-gk` (49 € einmalig), `mathe-lk` (69 € einmalig). Kein Abo.
 
 ## Sprint-Historie (chronologisch, vollständig)
 
@@ -132,8 +142,9 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   prüfen lassen"** (Foto/PDF, bestehende Funktion) und **Mikrofon-Platzhalter**
   für kommende Spracheingabe (bewusst deaktiviert, ehrlich beschriftet)
 - ✅ Erklärvideos (ElevenLabs-Stimme + animierte Szenen)
-- ✅ Checkout-Flow (GK+LK, einmalig+Abo), Webhook (inkl. Rückerstattung →
-  Zugang entziehen), Stripe-Kundenportal
+- ✅ Checkout-Flow (GK+LK, jeweils Einmalkauf), Webhook (inkl. Rückerstattung →
+  Zugang entziehen). Der frühere Abo-Verkauf wurde später entfernt;
+  verbliebene Abo-Pfade dienen nur noch der Behandlung älterer Datensätze.
 - ✅ Konto-Seite
 - ✅ **Wiederholungssystem (Sprint 10, 07/2026):** statt „Verstanden/Gespeichert"
   gibt es drei Lernstufen — **Verstanden / Wiederholen / Nicht verstanden**
@@ -158,7 +169,8 @@ kommt die **native App** dazu, die noch nicht veröffentlicht ist.
   herausgezogenem Segment, SVG), Sticky-Nav mit Milchglas, Hero für GK+LK,
   USP-Leiste, **interaktive Produkt-Demo mit GK/LK-Umschalter** *(→ Demo in
   Sprint 07 durch die Funktions-Übersicht ersetzt)*, Preisbereich mit
-  GK- und LK-Karte (je Einmalzahlung + Abo, nur UI), global aufgewertete Buttons
+  GK- und LK-Karte (damals Einmalzahlung + Abo, später auf reinen Einmalkauf
+  umgestellt), global aufgewertete Buttons
 - ✅ Impressum, Datenschutz, **AGB (`/agb`) + Widerrufsbelehrung (`/widerruf`)**
   (Sprint 09; Entwürfe mit Platzhaltern, juristisch prüfen lassen!) und
   **rechtssicherer Checkout**: „inkl. MwSt."-Ausweis + Pflicht-Checkbox

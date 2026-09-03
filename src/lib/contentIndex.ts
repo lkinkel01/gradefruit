@@ -153,7 +153,8 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
       "tasks": [
         {
           "id": "la1",
-          "tag": "Produktregel (e-Funktion)"
+          "tag": "Produktregel (e-Funktion)",
+          "videoId": "lk-a1"
         },
         {
           "id": "la2",
@@ -185,7 +186,8 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
         },
         {
           "id": "la9",
-          "tag": "Integral (e-Funktion)"
+          "tag": "Integral (e-Funktion)",
+          "videoId": "lk-a2"
         },
         {
           "id": "la10",
@@ -386,7 +388,8 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
       "tasks": [
         {
           "id": "ll1",
-          "tag": "Ebene durch 3 Punkte"
+          "tag": "Ebene durch 3 Punkte",
+          "videoId": "lk-g1"
         },
         {
           "id": "ll2",
@@ -406,7 +409,8 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
         },
         {
           "id": "ll6",
-          "tag": "Abstand Punkt–Gerade"
+          "tag": "Abstand Punkt–Gerade",
+          "videoId": "lk-g2"
         },
         {
           "id": "ll7",
@@ -614,7 +618,8 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
       "tasks": [
         {
           "id": "sl1",
-          "tag": "σ-Regeln (Binomial)"
+          "tag": "σ-Regeln (Binomial)",
+          "videoId": "lk-s1"
         },
         {
           "id": "sl2",
@@ -638,7 +643,8 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
         },
         {
           "id": "sl7",
-          "tag": "Hypothesentest · Fehler 1. Art"
+          "tag": "Hypothesentest · Fehler 1. Art",
+          "videoId": "lk-s2"
         },
         {
           "id": "sl8",

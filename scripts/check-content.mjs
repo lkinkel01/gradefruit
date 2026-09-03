@@ -7,6 +7,8 @@ import { LINALG_LK_TASKS } from '../src/server/content/linalgLkTasks.ts';
 import { STOCHASTIK_TASKS } from '../src/server/content/stochastikTasks.ts';
 import { STOCHASTIK_LK_TASKS } from '../src/server/content/stochastikLkTasks.ts';
 import { SUMMARIES } from '../src/server/content/summaries.ts';
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 
 const QUELLEN = {
   analysis: { gk: ANALYSIS_TASKS, lk: ANALYSIS_LK_TASKS },
@@ -16,6 +18,7 @@ const QUELLEN = {
 const alleSzenen = Object.values(SCENES);
 const szenen = new Set(Object.keys(SCENES));
 const befunde = [];
+const audioWartet = [];
 
 for (const thema of ['analysis', 'linalg', 'stochastik']) {
   for (const stufe of ['gk', 'lk']) {
@@ -61,10 +64,14 @@ for (const thema of ['analysis', 'linalg', 'stochastik']) {
 
     // 5) Zusammenfassungen
     const zf = SUMMARIES[thema][stufe];
-    if (!zf?.intro?.trim()) befunde.push(`${thema}/${stufe}: Zusammenfassung ohne Einleitung`);
+    if (zf?.sections?.[0]?.title !== 'Einleitung') {
+      befunde.push(`${thema}/${stufe}: erster Abschnitt ist keine Einleitung`);
+    }
     zf?.sections?.forEach(s => {
       if (!s.text?.trim()) befunde.push(`${thema}/${stufe}/"${s.title}": Abschnitt ohne Text`);
-      if (!s.formulas?.length) befunde.push(`${thema}/${stufe}/"${s.title}": Abschnitt ohne Formeln`);
+      if (s.title !== 'Einleitung' && !s.formulas?.length) {
+        befunde.push(`${thema}/${stufe}/"${s.title}": Abschnitt ohne Formeln`);
+      }
     });
     const titel = (zf?.sections ?? []).map(s => s.title);
     titel.forEach((t, i) => {
@@ -79,10 +86,37 @@ for (const thema of Object.keys(QUELLEN)) for (const stufe of ['gk', 'lk'])
   QUELLEN[thema][stufe].forEach(a => a.videoId && genutzt.add(a.videoId));
 const ungenutzt = alleSzenen.filter(s => !genutzt.has(s.id));
 
+// 7) Szenen und Sprachdateien müssen exakt zusammenpassen. `hasAudio` darf
+// erst gesetzt werden, wenn Intro, alle Schritte und Outro wirklich vorliegen.
+for (const szene of alleSzenen) {
+  if (!szene.intro?.trim()) befunde.push(`Video ${szene.id}: kein Intro`);
+  if (!szene.outro?.trim()) befunde.push(`Video ${szene.id}: kein Outro`);
+  szene.steps?.forEach((schritt, index) => {
+    if (!schritt.title?.trim() || !schritt.say?.trim()) {
+      befunde.push(`Video ${szene.id}: Schritt ${index + 1} unvollständig`);
+    }
+  });
+
+  const anzahl = (szene.steps?.length ?? 0) + 2;
+  const vorhanden = Array.from({ length: anzahl }, (_, index) =>
+    existsSync(path.join(process.cwd(), 'public', 'audio', `${szene.id}-${index}.mp3`)),
+  ).filter(Boolean).length;
+
+  if (szene.hasAudio && vorhanden !== anzahl) {
+    befunde.push(`Video ${szene.id}: hasAudio ist gesetzt, aber nur ${vorhanden}/${anzahl} MP3-Dateien sind vorhanden`);
+  } else if (!szene.hasAudio && vorhanden === anzahl) {
+    befunde.push(`Video ${szene.id}: alle ${anzahl} MP3-Dateien sind vorhanden, aber hasAudio fehlt`);
+  } else if (!szene.hasAudio) {
+    audioWartet.push(`${szene.id} (${vorhanden}/${anzahl})`);
+  }
+}
+
 console.log(`Aufgaben geprüft:  ${Object.values(QUELLEN).flatMap(t => [...t.gk, ...t.lk]).length}`);
 console.log(`Videos vorhanden:  ${alleSzenen.length}, davon einer Aufgabe zugeordnet: ${genutzt.size}`);
 if (ungenutzt.length) console.log(`Videos ohne Aufgabe: ${ungenutzt.map(s => s.id).join(', ')}`);
+if (audioWartet.length) console.log(`Audio noch nicht vollständig: ${audioWartet.join(', ')}`);
 console.log(`\nBefunde: ${befunde.length}`);
 befunde.slice(0, 40).forEach(b => console.log('  · ' + b));
 if (befunde.length > 40) console.log(`  … und ${befunde.length - 40} weitere`);
 console.log(`\nVERDICT: ${befunde.length === 0 ? 'PASS — Inhalte sind in sich stimmig.' : 'FAIL — siehe Befunde.'}`);
+if (befunde.length > 0) process.exitCode = 1;

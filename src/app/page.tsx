@@ -132,8 +132,11 @@ export default function Home() {
   // der Webseite — und sah damit aus wie eine Webseite im Rahmen.
   useEffect(() => {
     if (!imApp || !user || loading || !routeReady || view !== 'landing') return;
-    setView('dashboard');
-    window.history.replaceState({}, '', locationFor('dashboard', 'zusammenfassung', null));
+    const frame = window.setTimeout(() => {
+      setView('dashboard');
+      window.history.replaceState({}, '', locationFor('dashboard', 'zusammenfassung', null));
+    }, 0);
+    return () => window.clearTimeout(frame);
   }, [imApp, user, loading, routeReady, view]);
 
   // Ein bewusster Login führt zur Übersicht. Eine bereits vorhandene Session
@@ -408,11 +411,14 @@ export default function Home() {
   // Startseite, damit niemand vor einer halb leeren Lernoberfläche sitzt.
   useEffect(() => {
     if (!signedOutReason || user) return;
-    setNavOpen(false);
-    setView('landing');
-    // Auch die URL zurücksetzen, sonst stellt der Standort-Effekt beim
-    // nächsten Durchlauf wieder die alte Ansicht her.
-    window.history.replaceState({}, '', window.location.pathname);
+    const frame = window.setTimeout(() => {
+      setNavOpen(false);
+      setView('landing');
+      // Auch die URL zurücksetzen, sonst stellt der Standort-Effekt beim
+      // nächsten Durchlauf wieder die alte Ansicht her.
+      window.history.replaceState({}, '', window.location.pathname);
+    }, 0);
+    return () => window.clearTimeout(frame);
   }, [signedOutReason, user]);
 
   // Ein Schritt zurück: aus einer geöffneten Aufgabe in die Liste, aus einer
@@ -530,7 +536,7 @@ export default function Home() {
           />
         );
       case 'themen': return <ThemenView owned={owned} ownedLk={ownedLk} level={level} onNavigate={navigate} />;
-      case 'videos': return <VideosView />;
+      case 'videos': return <VideosView level={level} />;
       case 'tutors': return <TutorsView />;
       case 'profil': return <ProfilView onFertig={() => navigate('account')} />;
       case 'account': return <AccountView onNavigate={(v) => navigate(v as View)} onOpenCheckout={openCheckout} dark={dark} onToggleDark={() => setTheme(!dark)} level={level} levelChoosable={levelChoosable} onChooseLevel={chooseLevel} />;

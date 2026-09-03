@@ -60,9 +60,10 @@ Gradefruit sein.
 
 **Aktueller Fokus.** Schriftliches Mathe-Abitur Hessen 2027, Grundkurs und
 Leistungskurs — vollständig und exzellent, bevor irgendetwas verbreitert wird.
-Prüfungsnahe Original-Aufgaben, Lösungen, die jeden Schritt erklären,
+Selbst entwickelte, prüfungsnahe Aufgaben, Lösungen, die jeden Schritt erklären,
 Erklärvideos, ein KI-Coach und ein Wiederholungssystem, das festhält, was
-sitzt und was nicht. Erfolg heute: Nutzer:innen kaufen (79 €/99 € oder Abo),
+sitzt und was nicht. Erfolg heute: Nutzer:innen kaufen den Grundkurs für 49 €
+oder den Leistungskurs für 69 €, jeweils einmalig,
 lernen regelmäßig bis zur Prüfung und würden Gradefruit einem Freund
 weiterempfehlen — weil es sich besser anfühlt als alles, was nach Schule
 aussieht.

@@ -89,10 +89,13 @@ function videoCard(scene: Scene, stufe: Stufe): VideoCard {
   };
 }
 
-const ALL_VIDEO_IDS = ['v1', 'v2', 'v3', 'v4', 'v5', 'v6'];
+const VIDEO_IDS: Record<Stufe, string[]> = {
+  gk: ['v1', 'v2', 'v3', 'v4', 'v5', 'v6'],
+  lk: ['lk-a1', 'lk-a2', 'lk-g1', 'lk-g2', 'lk-s1', 'lk-s2'],
+};
 
 function buildFeed(topic: TopicId | null, stufe: Stufe): VideoCard[] {
-  const allVideos = ALL_VIDEO_IDS
+  const allVideos = VIDEO_IDS[stufe]
     .map(id => SCENES[id])
     .filter((scene): scene is Scene => Boolean(scene))
     .map(scene => videoCard(scene, stufe));
@@ -123,7 +126,10 @@ export default function FeedPage() {
   // Kursstufe aus page.tsx vorbei — er ermittelt sie deshalb selbst, nach
   // derselben Regel.
   const [wahl, setWahl] = useState<Stufe>('gk');
-  useEffect(() => { setWahl(gespeicherteStufe()); }, []);
+  useEffect(() => {
+    const frame = window.setTimeout(() => setWahl(gespeicherteStufe()), 0);
+    return () => window.clearTimeout(frame);
+  }, []);
   const stufe = stufeAus(owned, ownedLk, wahl);
   const [index, setIndex] = useState(0);
   const [topic, setTopic] = useState<TopicId | null>(null);
@@ -131,7 +137,13 @@ export default function FeedPage() {
   // Navigationsleiste wissen, welches gerade gilt. Der Wert steht am <body>,
   // gesetzt vom Inline-Skript in layout.tsx, bevor React anläuft.
   const [dunkel, setDunkel] = useState(false);
-  useEffect(() => { setDunkel(document.body.classList.contains('dark')); }, []);
+  useEffect(() => {
+    const frame = window.setTimeout(
+      () => setDunkel(document.body.classList.contains('dark')),
+      0,
+    );
+    return () => window.clearTimeout(frame);
+  }, []);
   const feedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -322,6 +322,256 @@ export const SCENES: Record<string, Scene> = {
     hasAudio: true,
   },
 
+  'lk-a1': {
+    id: 'lk-a1',
+    title: 'Produktregel mit e-Funktion',
+    topic: 'Analysis',
+    color: '#FF7A00',
+    func: 'f(x) = x² · eˣ',
+    intro:
+      'Wir leiten die Funktion f von x gleich x Quadrat mal e hoch x ab. Hier werden zwei Funktionen miteinander multipliziert. Genau dafür brauchst du die Produktregel.',
+    steps: [
+      {
+        title: 'Beide Faktoren benennen',
+        math: 'u(x) = x²     v(x) = eˣ',
+        say: 'Wir nennen den ersten Faktor u und den zweiten Faktor v. Damit ist u von x gleich x Quadrat und v von x gleich e hoch x.',
+      },
+      {
+        title: 'Faktoren ableiten',
+        math: "u'(x) = 2x     v'(x) = eˣ",
+        say: 'Jetzt leiten wir beide Faktoren einzeln ab. Aus x Quadrat wird zwei x. Die Ableitung von e hoch x ist wieder e hoch x.',
+      },
+      {
+        title: 'Produktregel einsetzen',
+        math: "f'(x) = u' · v + u · v'",
+        say: 'Die Produktregel lautet: erster Faktor abgeleitet mal zweiter Faktor plus erster Faktor mal zweiter Faktor abgeleitet.',
+      },
+      {
+        title: 'Terme zusammensetzen',
+        math: "f'(x) = 2x · eˣ + x² · eˣ",
+        say: 'Wir setzen die vier Teile ein. So erhalten wir zwei x mal e hoch x plus x Quadrat mal e hoch x.',
+      },
+      {
+        title: 'Gemeinsamen Faktor ausklammern',
+        math: "f'(x) = eˣ · (x² + 2x)",
+        say: 'In beiden Summanden steckt e hoch x. Wir klammern diesen gemeinsamen Faktor aus. Übrig bleibt x Quadrat plus zwei x.',
+      },
+    ],
+    outro:
+      'Bei einem Produkt leitest du beide Faktoren getrennt ab und setzt sie mit der Produktregel zusammen. Das Ergebnis ist e hoch x mal Klammer auf x Quadrat plus zwei x Klammer zu.',
+    result: "f'(x) = eˣ · (x² + 2x)",
+    graph: { fn: (x) => x * x * Math.exp(x), xMin: -3, xMax: 1.2 },
+  },
+
+  'lk-a2': {
+    id: 'lk-a2',
+    title: 'Integral einer e-Funktion',
+    topic: 'Analysis',
+    color: '#FF7A00',
+    func: '∫₀¹ e²ˣ dx',
+    intro:
+      'Wir berechnen das bestimmte Integral von null bis eins über e hoch zwei x. Der entscheidende Punkt ist der Faktor zwei im Exponenten.',
+    steps: [
+      {
+        title: 'Innere Ableitung erkennen',
+        math: '(2x)′ = 2',
+        say: 'Im Exponenten steht zwei x. Seine Ableitung ist zwei. Diesen zusätzlichen Faktor müssen wir bei der Stammfunktion ausgleichen.',
+      },
+      {
+        title: 'Stammfunktion bilden',
+        math: 'F(x) = ½ · e²ˣ',
+        say: 'Eine Stammfunktion ist ein Halb mal e hoch zwei x. Beim Ableiten entsteht durch die Kettenregel wieder der Faktor zwei. Ein Halb mal zwei ergibt eins.',
+      },
+      {
+        title: 'Obere Grenze einsetzen',
+        math: 'F(1) = ½ · e²',
+        say: 'Für die obere Grenze setzen wir eins ein. Aus e hoch zwei mal eins wird e Quadrat.',
+      },
+      {
+        title: 'Untere Grenze einsetzen',
+        math: 'F(0) = ½ · e⁰ = ½',
+        say: 'Für die untere Grenze setzen wir null ein. e hoch null ist eins. Damit ist groß F von null gleich ein Halb.',
+      },
+      {
+        title: 'Oben minus unten',
+        math: '½ · e² − ½ = ½ · (e² − 1)',
+        say: 'Nach dem Hauptsatz rechnen wir obere Grenze minus untere Grenze. Wir klammern ein Halb aus und erhalten ein Halb mal e Quadrat minus eins.',
+      },
+    ],
+    outro:
+      'Bei e hoch a x steht in der Stammfunktion der Faktor eins durch a davor. Hier ist a gleich zwei. Das Integral ist ein Halb mal Klammer auf e Quadrat minus eins Klammer zu.',
+    result: '∫₀¹ e²ˣ dx = ½ · (e² − 1) ≈ 3,19',
+    graph: { fn: (x) => Math.exp(2 * x), xMin: -0.5, xMax: 1.2, shadeFrom: 0, shadeTo: 1 },
+  },
+
+  'lk-g1': {
+    id: 'lk-g1',
+    title: 'Ebene durch drei Punkte',
+    topic: 'Lineare Algebra',
+    color: '#FF7A00',
+    func: 'A(1|0|0)   B(0|2|0)   C(0|0|3)',
+    intro:
+      'Wir bestimmen die Koordinatengleichung einer Ebene durch drei Punkte. Dafür bilden wir zwei Spannvektoren und daraus einen Normalenvektor.',
+    steps: [
+      {
+        title: 'Ersten Spannvektor bilden',
+        math: 'AB⃗ = B − A = (−1|2|0)',
+        say: 'Wir ziehen A von B ab. So entsteht der erste Spannvektor mit den Komponenten minus eins, zwei und null.',
+      },
+      {
+        title: 'Zweiten Spannvektor bilden',
+        math: 'AC⃗ = C − A = (−1|0|3)',
+        say: 'Danach ziehen wir A von C ab. Der zweite Spannvektor lautet minus eins, null und drei.',
+      },
+      {
+        title: 'Normalenvektor bestimmen',
+        math: 'n⃗ = AB⃗ × AC⃗ = (6|3|2)',
+        say: 'Das Kreuzprodukt der beiden Spannvektoren steht senkrecht auf der Ebene. Es ergibt den Normalenvektor sechs, drei und zwei.',
+      },
+      {
+        title: 'Koordinatenform ansetzen',
+        math: '6x + 3y + 2z = d',
+        say: 'Die Komponenten des Normalenvektors werden zu den Koeffizienten der Koordinatengleichung. Nur die rechte Seite d fehlt noch.',
+      },
+      {
+        title: 'Einen Punkt einsetzen',
+        math: 'A einsetzen: 6 · 1 + 3 · 0 + 2 · 0 = 6',
+        say: 'Wir setzen den Punkt A ein. Damit erhalten wir für d den Wert sechs.',
+      },
+    ],
+    outro:
+      'Aus zwei Spannvektoren entsteht per Kreuzprodukt der Normalenvektor. Ein eingesetzter Punkt liefert die rechte Seite. Die Ebene lautet sechs x plus drei y plus zwei z gleich sechs.',
+    result: 'E: 6x + 3y + 2z = 6',
+  },
+
+  'lk-g2': {
+    id: 'lk-g2',
+    title: 'Abstand Punkt und Gerade',
+    topic: 'Lineare Algebra',
+    color: '#FF7A00',
+    func: 'P(4|6|5)   g: x⃗ = (1|2|0) + t·(0|0|1)',
+    intro:
+      'Wir berechnen den senkrechten Abstand eines Punktes von einer Geraden im Raum. Dafür nutzen wir ein Kreuzprodukt.',
+    steps: [
+      {
+        title: 'Aufpunkt und Richtung ablesen',
+        math: 'A(1|2|0)     u⃗ = (0|0|1)',
+        say: 'Aus der Geradengleichung lesen wir den Aufpunkt A und den Richtungsvektor u ab.',
+      },
+      {
+        title: 'Verbindungsvektor bilden',
+        math: 'AP⃗ = P − A = (3|4|5)',
+        say: 'Wir verbinden den Aufpunkt der Geraden mit P. Vier minus eins, sechs minus zwei und fünf minus null ergibt drei, vier und fünf.',
+      },
+      {
+        title: 'Kreuzprodukt berechnen',
+        math: 'AP⃗ × u⃗ = (4|−3|0)',
+        say: 'Das Kreuzprodukt aus dem Verbindungsvektor und dem Richtungsvektor ergibt vier, minus drei und null.',
+      },
+      {
+        title: 'Beträge bestimmen',
+        math: '|AP⃗ × u⃗| = 5     |u⃗| = 1',
+        say: 'Der Betrag des Kreuzprodukts ist die Wurzel aus sechzehn plus neun, also fünf. Der Richtungsvektor hat die Länge eins.',
+      },
+      {
+        title: 'Abstandsformel anwenden',
+        math: 'd = |AP⃗ × u⃗| / |u⃗| = 5',
+        say: 'Wir teilen den Betrag des Kreuzprodukts durch die Länge des Richtungsvektors. Der senkrechte Abstand beträgt fünf Längeneinheiten.',
+      },
+    ],
+    outro:
+      'Der direkte Abstand zum Aufpunkt wäre falsch. Gesucht ist die senkrechte Entfernung zur ganzen Geraden. Mit der Kreuzproduktformel erhalten wir fünf Längeneinheiten.',
+    result: 'd(P, g) = 5 LE',
+  },
+
+  'lk-s1': {
+    id: 'lk-s1',
+    title: 'Zwei-Sigma-Intervall',
+    topic: 'Stochastik',
+    color: '#FF7A00',
+    func: 'X ~ B(100; 0,5)',
+    intro:
+      'Wir bestimmen das Zwei-Sigma-Intervall einer Binomialverteilung. Bei hundert Münzwürfen zählt X, wie oft Kopf erscheint.',
+    steps: [
+      {
+        title: 'Erwartungswert berechnen',
+        math: 'μ = n · p = 100 · 0,5 = 50',
+        say: 'Der Erwartungswert ist n mal p. Bei hundert Versuchen mit Trefferwahrscheinlichkeit null Komma fünf liegt er bei fünfzig.',
+      },
+      {
+        title: 'Standardabweichung berechnen',
+        math: 'σ = √(n · p · (1 − p)) = √25 = 5',
+        say: 'Die Standardabweichung ist die Wurzel aus n mal p mal eins minus p. Das ergibt die Wurzel aus fünfundzwanzig, also fünf.',
+      },
+      {
+        title: 'Zwei Sigma nach unten',
+        math: 'μ − 2σ = 50 − 10 = 40',
+        say: 'Für die untere Grenze ziehen wir zweimal die Standardabweichung vom Erwartungswert ab. So erhalten wir vierzig.',
+      },
+      {
+        title: 'Zwei Sigma nach oben',
+        math: 'μ + 2σ = 50 + 10 = 60',
+        say: 'Für die obere Grenze addieren wir zweimal die Standardabweichung. Das ergibt sechzig.',
+      },
+      {
+        title: 'Wahrscheinlichkeit bestimmen',
+        math: 'P(40 ≤ X ≤ 60) = F(60) − F(39) ≈ 96,48 %',
+        say: 'Die Zwei-Sigma-Regel liefert eine Näherung von fünfundneunzig Komma vier Prozent. Mit der Binomialverteilung berechnet ergibt sich für das Intervall hier ein genauerer Wert von ungefähr sechsundneunzig Komma vier acht Prozent.',
+      },
+    ],
+    outro:
+      'Das Zwei-Sigma-Intervall liegt symmetrisch um den Erwartungswert. Hier reicht es von vierzig bis sechzig. Die exakte Binomialwahrscheinlichkeit für dieses Intervall beträgt ungefähr sechsundneunzig Komma vier acht Prozent.',
+    result: '2σ-Intervall: [40; 60]     exakt P ≈ 96,48 %',
+    graph: { fn: (x) => Math.exp(-0.5 * x * x), xMin: -3.5, xMax: 3.5, shadeFrom: -2, shadeTo: 2 },
+  },
+
+  'lk-s2': {
+    id: 'lk-s2',
+    title: 'Fehler erster Art',
+    topic: 'Stochastik',
+    color: '#FF7A00',
+    func: 'H₀: p = 0,5     Ablehnung ab X ≥ 59',
+    intro:
+      'Wir berechnen bei einem Hypothesentest die Wahrscheinlichkeit für einen Fehler erster Art. Dabei wird die Nullhypothese abgelehnt, obwohl sie wahr ist.',
+    steps: [
+      {
+        title: 'Fehlerwahrscheinlichkeit benennen',
+        math: 'α = P(H₀ ablehnen | H₀ ist wahr)',
+        say: 'Die Wahrscheinlichkeit für den Fehler erster Art heißt Alpha. Sie beschreibt den Fall, dass wir H null ablehnen, obwohl H null stimmt.',
+      },
+      {
+        title: 'Ablehnungsbereich einsetzen',
+        math: 'α = P(X ≥ 59 | p = 0,5)',
+        say: 'Der Test verwirft ab neunundfünfzig Treffern. Unter der Nullhypothese rechnen wir deshalb mit p gleich null Komma fünf.',
+      },
+      {
+        title: 'Stetigkeitskorrektur',
+        math: 'P(X ≥ 59) ≈ P(X ≥ 58,5)',
+        say: 'Für die Normalapproximation verschieben wir die Grenze um ein Halb nach unten. Aus neunundfünfzig wird achtundfünfzig Komma fünf.',
+      },
+      {
+        title: 'Standardisieren',
+        math: 'z = (58,5 − 50) / 5 = 1,7',
+        say: 'Wir ziehen den Erwartungswert fünfzig ab und teilen durch die Standardabweichung fünf. Der z-Wert ist eins Komma sieben.',
+      },
+      {
+        title: 'Rechten Rand berechnen',
+        math: 'α ≈ 1 − Φ(1,7) = 1 − 0,9554 = 0,0446',
+        say: 'Die Tabelle liefert die Fläche links von eins Komma sieben. Gesucht ist der rechte Rand. Deshalb rechnen wir eins minus null Komma neun fünf fünf vier.',
+      },
+    ],
+    outro:
+      'Die Wahrscheinlichkeit für einen Fehler erster Art beträgt ungefähr null Komma null vier vier sechs, also rund vier Komma fünf Prozent.',
+    result: 'α ≈ 0,0446 = 4,5 %',
+    graph: {
+      fn: (x) => Math.exp(-0.5 * ((x - 50) / 5) ** 2),
+      xMin: 30,
+      xMax: 70,
+      shadeFrom: 58.5,
+      shadeTo: 70,
+    },
+  },
+
   l1: {
     id: 'l1',
     title: 'Abstand zweier Punkte',

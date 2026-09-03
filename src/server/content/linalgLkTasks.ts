@@ -11,12 +11,14 @@ export interface LinalgLkTask {
   result: string;
   mistakes: string[];
   locked: boolean;
+  videoId?: string;
 }
 
 export const LINALG_LK_TASKS: LinalgLkTask[] = [
   {
     id: "ll1",
     tag: "Ebene durch 3 Punkte",
+    videoId: "lk-g1",
     src: "Original-Übung · LK-Stil G1",
     q: "Bestimmen Sie eine Koordinatengleichung der Ebene E durch A(1|0|0), B(0|2|0) und C(0|0|3).",
     steps: [
@@ -108,6 +110,7 @@ export const LINALG_LK_TASKS: LinalgLkTask[] = [
   {
     id: "ll6",
     tag: "Abstand Punkt–Gerade",
+    videoId: "lk-g2",
     src: "Original-Übung · LK-Stil G6",
     q: "Berechnen Sie den Abstand des Punktes P(4|6|5) von der Geraden g: X = (1,2,0) + t·(0, 0, 1).",
     steps: [

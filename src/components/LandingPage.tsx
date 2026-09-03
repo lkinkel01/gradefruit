@@ -602,7 +602,7 @@ export default function LandingPage({
             </h1>
             <ul className={styles.heroHighlights}>
               <li>24/7 KI-Tutor</li>
-              <li>Originale Abituraufgaben</li>
+              <li>Prüfungsnahe Aufgaben</li>
               <li>Erklärvideos</li>
             </ul>
             <div className={styles.heroActions}>
@@ -710,7 +710,7 @@ export default function LandingPage({
                 <strong>Frag so, wie du denkst</strong>
                 <span>
                   Keine saubere Formulierung nötig, keine Angst vor einer dummen
-                  Frage. „Kapier ich nicht" reicht völlig aus.
+                  Frage. „Kapier ich nicht“ reicht völlig aus.
                 </span>
               </li>
               <li>
