@@ -1,75 +1,41 @@
-# HANDOUT — Übergabe für die nächste Claude-Code-Session
+# HANDOUT — Übergabe für die nächste Session
 
-## Aktuelle operative Übergabe — 2026-09-03
+## Aktuelle operative Übergabe — 2026-09-03 (Claude Code, nach Codex)
 
-Dieser Abschnitt ist die aktuelle Wahrheit für den Wechsel zwischen Codex und
-Claude Code. Die ältere Übergabe darunter bleibt vorerst als Historie erhalten.
-
-- **Aktiver Branch:** `codex/launch-readiness`, Basis `12a314f` = `main` =
-  `origin/main` zum Start dieses Sprints.
-- **Aktueller Sprint:** `Produktionskonfiguration vor Deployment automatisch
-  prüfen`. Der kostenlose Launch-Gate ist lokal abgeschlossen; externe
-  Produktionsschritte bleiben bewusst offen.
-- **Lokal umgesetzt:** Checkout und Stripe-Portal vertrauen nicht mehr dem frei
-  setzbaren Origin-Header, doppelte Käufe bereits freigeschalteter Kurse werden
-  verhindert und Datenbankfehler werden nicht mehr übergangen. Der Webhook
-  quittiert eine fehlgeschlagene Freischaltung oder Rückerstattung mit 500,
-  damit Stripe erneut zustellen kann. `supabase/schema.sql` kann die früheren
-  Kauf-Schreibrechte bei Wiederholung nicht mehr neu öffnen. Service-Role- und
-  Stripe-Helfer sind ausdrücklich `server-only`. Login- und KI-Anfragen haben
-  Größen- und Strukturgrenzen; Antworten mit Sitzung oder Kaufdaten sind nicht
-  cachebar. `/api/wachhalten` verlangt jetzt `CRON_SECRET`.
-- **Prüfstand:** TypeScript, gezielter ESLint, Produktions-Build und
-  Content-Check (133 Aufgaben, 0 Befunde) bestehen. Öffentliche API-Smokes:
-  freie Analysis 200, bezahltes Thema ohne Sitzung 401, Checkout/Portal/
-  Kontolöschung/KI ohne Sitzung 401, Webhook ohne Signatur 400 und Cron ohne
-  Secret 401. Die bedingte Hook-Reihenfolge in `TopicView` ist korrigiert. Die
-  elf verbliebenen React-Fehler in Profil, App-Navigation, Erinnerung,
-  Offline-Ablage, Video, Auth und Inhaltskontext sind ohne sichtbare
-  Produktänderung bereinigt. Der globale Lint besteht jetzt mit 0 Fehlern und
-  16 älteren Warnungen; TypeScript und Produktions-Build bestehen erneut.
-  Gast-Startseite und freie Analysis funktionieren auch bei 390 px und ohne
-  horizontalen Überlauf; Light/Dark-Wechsel funktioniert. Zusätzlich prüft
-  `npm run check:launch-env` jetzt vor einem Deployment die erforderlichen
-  Variablen und offensichtliche Testkonfigurationen, ohne Werte auszugeben.
-  Der zugehörige Positiv-/Negativtest, globaler ESLint, TypeScript und
-  Produktions-Build bestehen.
-- **Externe Launch-Blocker:** Stripe läuft lokal im Testmodus;
-  `STRIPE_PRICE_LK_ONE_TIME` und `CRON_SECRET` fehlen lokal. Vor Produktion
-  müssen die entsprechenden Live-Werte ausschließlich in Vercel gesetzt, die
-  Rechtstexte juristisch freigegeben und ein vollständiger Kauf mit
-  Freischaltung und Rückerstattung getestet werden. Keine Werte in Chat oder
-  Git einfügen.
-- **Bewusst vertagt:** 42 fehlende MP3-Dateien mit zusammen 5.410 Zeichen
-  Sprechtext für sechs neue LK-Szenen. ElevenLabs bleibt aus, bis Leon eine
-  kommerzielle Lizenz beziehungsweise Kosten ausdrücklich freigibt.
-- **Notion:** Launch-Plan, technischer Launch-Audit, React-Stabilität und
-  Produktions-Konfigurationscheck sind synchron. Die Audio-Aufgabe steht auf
-  `Wartet auf andere`. Vier Ideen bleiben im späteren Ideen-Backlog:
-  STARK-2027-Benchmark, Wettbewerbsvergleich, eigener Sprach-/Erklärstil und
-  authentische Bildwelt.
-- **Automatische Fortsetzung:** Der Codex-Task `Gradefruit Launch-Fortsetzung`
-  arbeitet nach dem lokalen Sicherungs-Commit mit dem nächsten kostenlosen
-  Launch-Blocker weiter. Mac und Codex-App können eingeschaltet bleiben; ein
-  lokaler
-  Wachprozess läuft. Die
-  Automatik arbeitet nie parallel, führt keine kostenpflichtigen oder externen
-  Aktionen ohne Freigabe aus und veröffentlicht nicht selbst. Vollständig
-  geprüfte lokale Zwischenstände dürfen selektiv committet werden.
-  Erreicht Codex sein Nutzungslimit, übernimmt Claude Code nicht technisch von
-  allein: Leon startet Claude einmal, danach reicht `HANDOUT.md` für die
-  nahtlose Fortsetzung.
-- **Aktuelle Geschäftsentscheidung:** nur Einmalkauf, GK 49 €, LK 69 €. Ältere
-  Angaben zu Abonnements oder 79 €/99 € weiter unten sind überholt.
-- **Nicht anfassen oder stagen:** die schon vorher geänderte übrige Übergabe,
-  `# Gradefruit Logokonzept.zip`, `final/` und `stash@{0}` zur
-  Creative-Direction-Validierung.
-- **Nächster Schritt:** Leon klärt zuerst Rechtsform, Steuern und Rechtstexte.
-  Vor einem späteren Produktionsdeployment werden die geschützten Live-Werte
-  ausschließlich in Vercel gesetzt und mit `npm run check:launch-env` geprüft.
-  Lokal blockiert der Gate derzeit erwartungsgemäß die lokale Site-URL, den
-  Stripe-Testschlüssel sowie fehlende Werte für `STRIPE_PRICE_LK_ONE_TIME` und
-  `CRON_SECRET`. Kein Push, Merge oder Deployment ohne ausdrückliche Freigabe.
+- **Stand:** `codex/launch-readiness` ist per Fast-Forward nach `main` gemerged
+  und gepusht. `main` = `origin/main` = `9dc3171`, **live auf
+  www.gradefruit.de**. Der Branch bleibt als Historie stehen.
+- **Von Codex übernommen und selbst nachgeprüft:** Server-Grenzen gehärtet,
+  React-Lint-Fehler beseitigt, Launch-Env-Gate (`npm run check:launch-env`),
+  sechs LK-Erklärvideos angelegt und mit LK-Aufgaben verknüpft. Eigene
+  Prüfung: tsc, ESLint (0 Fehler, 16 Altwarnungen), Produktions-Build,
+  `check-content` (PASS), `check-launch-env.test.mjs`, dazu ein Rundum-Check
+  der geänderten API-Grenzen (freie Analysis 200; bezahltes Thema, Checkout,
+  Portal, Kontolöschung und KI ohne Sitzung 401; Webhook ohne Signatur 400).
+- **Danach ergänzt:**
+  - `fix(videos)`: Dasselbe LK-Video war in der Liste „kommt bald" und
+    gesperrt, lief im Reel-Modus aber längst. Jetzt überall spielbar und
+    überall gleich beschriftet: **„noch ohne Ton"**. Der Inhalt ist
+    vollständig (Schritte, Formeln, Sprechtext als Untertitel) — es fehlt nur
+    die Stimme.
+  - `fix(wachhalten)`: Fehlte `CRON_SECRET`, wies die Route **jeden** Aufruf
+    ab, auch Vercels Cron. Der Weckruf wäre still ausgefallen und Supabase
+    hätte pausiert — die Seite wäre tot gewesen. Jetzt: Geheimnis gesetzt →
+    wird verlangt (401/401/200 geprüft); Geheimnis fehlt → Weckruf läuft und
+    meldet `ungeschuetzt: true`. `check:launch-env` verlangt es weiterhin.
+- **Offen, nur Leon:** Gewerbe/ELSTER/Steuernummer, juristische Freigabe der
+  Rechtstexte, Stripe TEST → LIVE samt Live-Preisen (GK 49 €, LK 69 €,
+  Einmalkauf), `CRON_SECRET` und `STRIPE_PRICE_LK_ONE_TIME` in Vercel,
+  Supabase auf einen bezahlten Tarif. Werte nur im Vercel-Dashboard, nie in
+  Chat oder Git.
+- **Bewusst vertagt (kostet Geld, braucht Leons Freigabe):** 42 fehlende
+  mp3-Dateien für die sechs LK-Szenen. Bis dahin laufen die Videos stumm mit
+  Untertiteln und sind als „noch ohne Ton" gekennzeichnet.
+- **Nicht anfassen oder stagen:** `# Gradefruit Logokonzept.zip`, `final/`,
+  `stash@{0}` (Creative Direction).
+- **Nächster Schritt:** Durchgang durch die verbliebenen Wege fortsetzen —
+  Wiederholen-Seite, Anmelde- und Kaufweg —, jeweils in Webseite **und** App,
+  hell und dunkel.
 
 > Zweck: Diese Datei überbrückt den Chat-Wechsel. Nur Start-Anleitung, aktueller
 > Stand und offene Punkte. Details stehen genau einmal woanders:
