@@ -361,6 +361,7 @@ export const SCENES: Record<string, Scene> = {
       'Bei einem Produkt leitest du beide Faktoren getrennt ab und setzt sie mit der Produktregel zusammen. Das Ergebnis ist e hoch x mal Klammer auf x Quadrat plus zwei x Klammer zu.',
     result: "f'(x) = eˣ · (x² + 2x)",
     graph: { fn: (x) => x * x * Math.exp(x), xMin: -3, xMax: 1.2 },
+    hasAudio: true,
   },
 
   'lk-a2': {
@@ -402,6 +403,7 @@ export const SCENES: Record<string, Scene> = {
       'Bei e hoch a x steht in der Stammfunktion der Faktor eins durch a davor. Hier ist a gleich zwei. Das Integral ist ein Halb mal Klammer auf e Quadrat minus eins Klammer zu.',
     result: '∫₀¹ e²ˣ dx = ½ · (e² − 1) ≈ 3,19',
     graph: { fn: (x) => Math.exp(2 * x), xMin: -0.5, xMax: 1.2, shadeFrom: 0, shadeTo: 1 },
+    hasAudio: true,
   },
 
   'lk-g1': {
@@ -442,6 +444,7 @@ export const SCENES: Record<string, Scene> = {
     outro:
       'Aus zwei Spannvektoren entsteht per Kreuzprodukt der Normalenvektor. Ein eingesetzter Punkt liefert die rechte Seite. Die Ebene lautet sechs x plus drei y plus zwei z gleich sechs.',
     result: 'E: 6x + 3y + 2z = 6',
+    hasAudio: true,
   },
 
   'lk-g2': {
@@ -482,6 +485,7 @@ export const SCENES: Record<string, Scene> = {
     outro:
       'Der direkte Abstand zum Aufpunkt wäre falsch. Gesucht ist die senkrechte Entfernung zur ganzen Geraden. Mit der Kreuzproduktformel erhalten wir fünf Längeneinheiten.',
     result: 'd(P, g) = 5 LE',
+    hasAudio: true,
   },
 
   'lk-s1': {
@@ -523,6 +527,7 @@ export const SCENES: Record<string, Scene> = {
       'Das Zwei-Sigma-Intervall liegt symmetrisch um den Erwartungswert. Hier reicht es von vierzig bis sechzig. Die exakte Binomialwahrscheinlichkeit für dieses Intervall beträgt ungefähr sechsundneunzig Komma vier acht Prozent.',
     result: '2σ-Intervall: [40; 60]     exakt P ≈ 96,48 %',
     graph: { fn: (x) => Math.exp(-0.5 * x * x), xMin: -3.5, xMax: 3.5, shadeFrom: -2, shadeTo: 2 },
+    hasAudio: true,
   },
 
   'lk-s2': {
@@ -570,6 +575,7 @@ export const SCENES: Record<string, Scene> = {
       shadeFrom: 58.5,
       shadeTo: 70,
     },
+    hasAudio: true,
   },
 
   l1: {
@@ -605,5 +611,6 @@ export const SCENES: Record<string, Scene> = {
     outro:
       'Zusammengefasst: Den Abstand zweier Punkte bekommst du, indem du den Verbindungsvektor bildest und dann seine Länge berechnest. Hier beträgt der Abstand genau fünf. So einfach ist das!',
     result: '|AB⃗| = 5',
+    hasAudio: true,
   },
 };
