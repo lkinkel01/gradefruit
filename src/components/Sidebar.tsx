@@ -5,7 +5,7 @@ import { useProgress } from '@/lib/ProgressContext';
 import { indexFor } from '@/lib/contentIndex';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import { BrandMark } from './BrandMark';
-import { CheckIcon, ChevronIcon, CoursesIcon, LockIcon, OverviewIcon, ReviewIcon, TutorIcon } from './UiIcons';
+import { CheckIcon, ChevronIcon, CoursesIcon, LockIcon, OverviewIcon, ReelIcon, ReviewIcon, TutorIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -15,10 +15,11 @@ interface Props {
   owned: boolean;
   ownedLk: boolean;
   level: 'gk' | 'lk';
-  levelChoosable: boolean;
   onChooseLevel: (l: 'gk' | 'lk') => void;
   onNavigate: NavigateTo;
   onOpenCheckout: () => void;
+  /** Reel-Modus liegt auf einer eigenen Route, deshalb kein View-Wechsel. */
+  onReels: () => void;
 }
 
 const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
@@ -37,7 +38,7 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
 ];
 
 
-export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, levelChoosable, onChooseLevel, onNavigate, onOpenCheckout }: Props) {
+export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, onChooseLevel, onNavigate, onOpenCheckout, onReels }: Props) {
   const { topicDone, topicTotal } = useProgress();
   // In der App darf nirgends zum Kauf aufgefordert werden — Apples Regel für
   // Apps ohne eigenen In-App-Kauf. Im Browser bleibt alles wie bisher.
@@ -94,22 +95,11 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
     if (subTimer.current) window.clearTimeout(subTimer.current);
   }, []);
 
-  // Ein Klick klappt sofort zu — auch wenn die Maus liegen bleibt.
-  //
-  // Vorher hielt der Hover-Zustand das Untermenü offen: `expanded` ist wahr,
-  // sobald die Maus auf dem Thema liegt. Man klickte also auf „zu", und nichts
-  // geschah, bis man den Zeiger wegbewegte. Deshalb wird der Hover-Zustand hier
-  // mit gelöscht; er kommt erst wieder, wenn man die Fläche verlässt und neu
-  // betritt.
-  const toggleCollapse = (id: View) => {
-    leaveTopic();
-    setCollapsedTopics(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
+  // Nur die tatsächlich freigeschalteten Kurse.
+  const meineKurse = ([
+    { id: 'gk' as const, label: 'Grundkurs', hat: owned },
+    { id: 'lk' as const, label: 'Leistungskurs', hat: ownedLk },
+  ]).filter(k => k.hat);
 
   return (
     <aside className={styles.sidebar}>
@@ -271,9 +261,21 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
             <span className={styles.ti}>{item.label}</span>
           </button>
         ))}
-        {/* „Meine Kurse" klappt die gekauften Kurse aus; der aktuelle ist
-            markiert. Erscheint nur, wenn es wirklich mehr als einen gibt. */}
-        {levelChoosable && (
+        {/* Reel-Modus gehört in die Navigation: Wiederholen im Swipe-Format ist
+            eine eigene Art zu lernen, kein Untermenü. Liegt auf einer eigenen
+            Route, deshalb ein eigener Aufruf statt eines View-Wechsels. */}
+        <button onClick={onReels}>
+          <span className={styles.icon}><ReelIcon /></span>
+          <span className={styles.ti}>Reel-Modus</span>
+        </button>
+
+        {/* „Meine Kurse" zeigt nur, was man wirklich hat.
+            Vorher erschien der Punkt auch für Gäste und listete beide Kurse —
+            also überwiegend Dinge, die einem nicht gehören. Wer keinen Kurs
+            hat, sieht ihn gar nicht; wer einen hat, sieht diesen einen; wer
+            beide hat, kann wechseln. Was es sonst noch gibt, steht unter
+            „Weitere Kurse" — eine Preisliste gehört nicht in die Navigation. */}
+        {meineKurse.length > 0 && (
           <>
             <button
               className={styles.courseSwap}
@@ -288,10 +290,7 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
             </button>
             {coursesOpen && (
               <div className={styles.courseList}>
-                {([
-                  { id: 'gk' as const, label: 'Grundkurs' },
-                  { id: 'lk' as const, label: 'Leistungskurs' },
-                ]).map(course => (
+                {meineKurse.map(course => (
                   <button
                     key={course.id}
                     className={`${styles.courseItem} ${level === course.id ? styles.courseItemOn : ''}`}
@@ -308,6 +307,15 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
             )}
           </>
         )}
+
+        <button
+          className={view === 'kurse' ? styles.on : ''}
+          aria-current={view === 'kurse' ? 'page' : undefined}
+          onClick={() => onNavigate('kurse')}
+        >
+          <span className={styles.icon}><CoursesIcon /></span>
+          <span className={styles.ti}>Weitere Kurse</span>
+        </button>
       </nav>
 
       <div className={styles.spacer} />

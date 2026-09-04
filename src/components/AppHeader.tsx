@@ -20,6 +20,7 @@ const TITEL: Partial<Record<View, string>> = {
   account: 'Mein Konto',
   tutors: '1:1 Nachhilfe',
   videos: 'Erklärvideos',
+  kurse: 'Kurse',
   profil: 'Profil bearbeiten',
   analysis: 'Analysis',
   linalg: 'Lineare Algebra',

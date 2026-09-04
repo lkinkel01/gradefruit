@@ -1,0 +1,95 @@
+/* Kursübersicht — mittig gesetzt wie der Rest der Seite.
+   Kein Kartenraster mit Rändern: Haarlinien und Weißraum tragen die Ordnung,
+   so wie es DESIGN.md für die editorialen Bausteine vorsieht. */
+
+.seite {
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 8px 0 64px;
+  text-align: center;
+}
+
+.kopf h1 {
+  color: var(--ink);
+  font-size: clamp(30px, 5vw, 46px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.kopf p {
+  max-width: 52ch;
+  margin: 14px auto 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.liste {
+  display: grid;
+  gap: 0;
+  margin-top: 44px;
+  padding: 0;
+  list-style: none;
+}
+
+.karte {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 38px 8px;
+  border-top: 1px solid var(--line);
+}
+
+.karte:last-child { border-bottom: 1px solid var(--line); }
+
+.titel {
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.preis {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.preis strong {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-optical-sizing: auto;
+  color: var(--ink);
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.preis span { color: var(--faint); font-size: 13px; }
+
+.text {
+  max-width: 46ch;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.65;
+}
+
+.aktiv {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--success);
+  font-size: 13.5px;
+  font-weight: 650;
+}
+
+.appHinweis { color: var(--faint); font-size: 13.5px; }
+
+.fussnote {
+  max-width: 52ch;
+  margin: 30px auto 0;
+  color: var(--faint);
+  font-size: 12.5px;
+  line-height: 1.6;
+}

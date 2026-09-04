@@ -14,6 +14,7 @@ const LABELS: Partial<Record<View, string>> = {
   review: 'Wiederholen',
   tutors: '1:1 Nachhilfe',
   account: 'Mein Konto',
+  kurse: 'Kurse',
 };
 
 // Themenseiten besitzen eine zweite Brotkrumen-Ebene (den aktiven Tab).

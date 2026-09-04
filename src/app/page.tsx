@@ -26,6 +26,7 @@ import AppEinstieg from '@/components/AppEinstieg';
 import AppTabBar from '@/components/AppTabBar';
 import AppHeader from '@/components/AppHeader';
 import ThemenView from '@/components/ThemenView';
+import KurseView from '@/components/KurseView';
 import Startbild from '@/components/Startbild';
 import styles from './page.module.css';
 
@@ -34,11 +35,11 @@ import styles from './page.module.css';
 // zeigt Gästen nur die Vorschau-Sperre mit Kauf-Hinweis.
 // 'tutors' ist eine reine Info-Seite (Nachhilfe „bald verfügbar") – kein Kauf nötig.
 // 'review' (Wiederholen) ist persönlicher Lernfortschritt – nie hinter der Bezahlschranke.
-const FREE_VIEWS: View[] = ['dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors', 'review', 'profil'];
+const FREE_VIEWS: View[] = ['dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'account', 'landing', 'tutors', 'review', 'profil', 'kurse'];
 // Themen-Seiten mit eigener Bezahlschranke – Eingeloggte dürfen sie immer öffnen
 // (die Sperre pro Kursstufe steckt direkt in der Themenseite).
 const TOPIC_VIEWS: View[] = ['analysis', 'linalg', 'stochastik'];
-const APP_VIEWS: View[] = ['landing', 'dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'videos', 'review', 'tutors', 'account', 'profil'];
+const APP_VIEWS: View[] = ['landing', 'dashboard', 'themen', 'analysis', 'linalg', 'stochastik', 'videos', 'review', 'tutors', 'account', 'profil', 'kurse'];
 
 interface LocationState {
   view: View;
@@ -536,6 +537,7 @@ export default function Home() {
           />
         );
       case 'themen': return <ThemenView owned={owned} ownedLk={ownedLk} level={level} onNavigate={navigate} />;
+      case 'kurse': return <KurseView owned={owned} ownedLk={ownedLk} onOpenCheckout={openCheckout} />;
       case 'videos': return <VideosView level={level} />;
       case 'tutors': return <TutorsView />;
       case 'profil': return <ProfilView onFertig={() => navigate('account')} />;
@@ -564,10 +566,10 @@ export default function Home() {
           owned={owned}
           ownedLk={ownedLk}
           level={level}
-          levelChoosable={levelChoosable}
           onChooseLevel={chooseLevel}
           onNavigate={navigate}
           onOpenCheckout={() => openCheckout('gk')}
+          onReels={() => router.push('/feed')}
         />}
         <div className={styles.content}>
           {/* Persönliches Wasserzeichen über allen Kursinhalten — Screenshots
