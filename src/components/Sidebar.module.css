@@ -250,8 +250,21 @@
   border-top: 1px solid var(--side-3);
 }
 .unlockCard p { margin-bottom: 11px; color: var(--side-tx); font-size: 12.5px; line-height: 1.5; }
-.unlockCard :global(.btn.primary) { width: 100%; background: var(--btn-ink); color: var(--btn-ink-tx); box-shadow: none; font-size: 13px; }
-.unlockCard :global(.btn.primary:hover) { background: var(--btn-ink-hover); }
+/* Die Seitenleiste ist IMMER schwarz — in beiden Modi. Der Knopf darf sich
+   deshalb nicht am Theme orientieren: Im hellen Modus ist --btn-ink schwarz,
+   und dann stand hier ein schwarzer Knopf auf schwarzem Grund. Lesbar war nur
+   die weiße Schrift; als Knopf war er unsichtbar — ausgerechnet an der einen
+   Stelle, an der ein Gast zum Kauf eingeladen wird.
+   Hell auf dunkel, fest verdrahtet an die Leistenfarben. */
+.unlockCard :global(.btn.primary) {
+  width: 100%;
+  background: var(--side-tx);
+  color: var(--side);
+  border-color: var(--side-tx);
+  box-shadow: none;
+  font-size: 13px;
+}
+.unlockCard :global(.btn.primary:hover) { background: #FFFFFF; color: var(--side); }
 
 @media (hover: hover) and (pointer: fine) {
   .snav button:hover {
