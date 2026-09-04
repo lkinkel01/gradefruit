@@ -633,7 +633,11 @@ export default function TopicView({
                             taskSource(stepIndex + 1),
                           )}
                         >
-                          <span className={styles.readerLabel}>Schritt {stepIndex + 1}: {step.label}</span>
+                          <span className={styles.readerNummer} aria-hidden="true">{stepIndex + 1}</span>
+                          <span className={styles.readerLabel}>
+                            <span className={styles.nurVorleser}>Schritt {stepIndex + 1}: </span>
+                            {step.label}
+                          </span>
                           {step.math.split('\n').map(line => line.trim()).filter(Boolean).map((line, lineIndex) => (
                             <p key={lineIndex} className={styles.readerMath}>{line}</p>
                           ))}
