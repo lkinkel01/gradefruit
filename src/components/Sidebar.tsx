@@ -48,12 +48,17 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
   const [collapsedTopics, setCollapsedTopics] = useState<Set<View>>(new Set());
   // Eingeklappte Unterlisten (Zusammenfassung/Übungen), Schlüssel „id:tab".
   const [collapsedSubs, setCollapsedSubs] = useState<Set<string>>(new Set());
-  const toggleSub = (key: string) => setCollapsedSubs(prev => {
-    const next = new Set(prev);
-    if (next.has(key)) next.delete(key);
-    else next.add(key);
-    return next;
-  });
+  // Wie `toggleCollapse`, nur eine Ebene tiefer: Auch hier hielt der
+  // Hover-Zustand die Liste offen, bis man den Zeiger wegbewegte.
+  const toggleSub = (key: string) => {
+    leaveSub();
+    setCollapsedSubs(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
   // Hover öffnet Untermenüs erst, wenn die Maus einen Moment liegen bleibt
   // (280 ms) — lang genug, dass beim Vorbeifahren nichts versehentlich
   // aufklappt, kurz genug, dass es sich nicht zäh anfühlt.
@@ -89,7 +94,15 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
     if (subTimer.current) window.clearTimeout(subTimer.current);
   }, []);
 
+  // Ein Klick klappt sofort zu — auch wenn die Maus liegen bleibt.
+  //
+  // Vorher hielt der Hover-Zustand das Untermenü offen: `expanded` ist wahr,
+  // sobald die Maus auf dem Thema liegt. Man klickte also auf „zu", und nichts
+  // geschah, bis man den Zeiger wegbewegte. Deshalb wird der Hover-Zustand hier
+  // mit gelöscht; er kommt erst wieder, wenn man die Fläche verlässt und neu
+  // betritt.
   const toggleCollapse = (id: View) => {
+    leaveTopic();
     setCollapsedTopics(prev => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
