@@ -686,7 +686,7 @@
   transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
 }
 
-.coachContext { text-align: left; display: flex; flex-direction: column; gap: 11px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.coachContext { text-align: center; display: flex; flex-direction: column; gap: 11px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
 .coachContext span { color: var(--muted); font-size: 12.5px; font-weight: 600; }
 .coachContext strong { color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: clamp(19px, 2.4vw, 28px); font-weight: 600; letter-spacing: -0.02em; }
 
@@ -907,7 +907,7 @@
 .focusIntro { padding: 58px 52px 58px 0; text-align: center; }
 .focusIntro > p { margin-top: 24px; }
 
-.trustBlock { padding: 58px 0 58px 48px; border-left: 1px solid var(--line-strong); text-align: left; }
+.trustBlock { padding: 58px 0 58px 48px; border-left: 1px solid var(--line-strong); text-align: center; }
 .trustBlock > p { max-width: 50ch; margin: 12px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
 .trustFacts { display: flex; flex-direction: column; margin-top: 32px; }
 .trustFacts > div { display: flex; flex-direction: column; gap: 5px; padding: 17px 0; border-top: 1px solid var(--line); }
@@ -1448,13 +1448,17 @@
 
 /* Ruhiger, linksbündiger Aufbau in den Zwei-Spalten-Blöcken.
    Die einspaltigen Abschnitts-Überschriften (.sectionIntro) bleiben zentriert. */
+/* Alles mittig — auch auf dem Desktop.
+   Vorher waren diese Blöcke linksbündig und die Abschnitts-Überschriften
+   zentriert. Auf einer Seite abwechselnd links und mittig zu setzen wirkt
+   nicht abwechslungsreich, sondern unentschieden. */
 .heroCopy,
 .coachCopy,
 .visualCopy,
 .focusIntro,
 .trustBlock,
 .libraryIntro,
-.libraryPromise { text-align: left; }
+.libraryPromise { text-align: center; }
 
 /* HERO: das Foto sitzt rechts und reicht bis zum ECHTEN Viewport-Rand (die
    Sektion hat kein seitliches Padding mehr — daher keine rechte Kante und mehr
@@ -1562,12 +1566,13 @@
      randlos bleibt. Rechts ein fester Sicherheitsabstand zur Bildspalte. */
   padding: 56px 30px 56px 0;
   max-width: 460px;
-  text-align: left;
+  text-align: center;
 }
-.heroHighlights { justify-content: flex-start; }
-/* Der Haupt-Knopf sitzt zwischen linkem Rand und Mitte der Textspalte. */
-.heroActions { justify-content: flex-start; padding-left: 14%; }
-.heroPrimaryAction { align-items: flex-start; }
+/* Stichpunkte, Knopf und Textspalte stehen gemeinsam mittig — sonst zieht der
+   Knopf die Aufmerksamkeit an eine Kante, an der sonst nichts liegt. */
+.heroHighlights { justify-content: center; }
+.heroActions { justify-content: center; padding-left: 0; }
+.heroPrimaryAction { align-items: center; }
 
 /* Dark Mode: eigenes, dunkel aufgenommenes Motiv — deshalb KEINE nachträgliche
    Abdunklung mehr. Nur die Schleierfarbe wechselt auf die dunkle Seitenfarbe. */
