@@ -1,17 +1,39 @@
-// Einzige Quelle für alles, was auf der Seite über Preise steht.
+// Einzige Quelle für alles, was auf der Seite über Preise steht — und für das,
+// was tatsächlich abgebucht wird.
 //
-// Vorher standen die Preise doppelt — in der Startseite und im Checkout — mit
-// einem Kommentar „Halte beide Werte gleich". Genau so etwas läuft irgendwann
-// auseinander, und dann steht auf der Startseite ein anderer Preis als im
-// Bezahlfenster. Deshalb jetzt an einer Stelle.
+// Die Preise standen früher doppelt (Startseite und Bezahlfenster) mit dem
+// Kommentar „Halte beide Werte gleich". Danach standen sie zwar an einer
+// Stelle, aber der abgerechnete Betrag hing weiter an einer Umgebungsvariablen
+// in Vercel. Genau das ist schiefgegangen: Auf der Seite stand 49 €, Stripe
+// verlangte 79 €, weil dort noch die alte Preis-ID hinterlegt war.
 //
-// WICHTIG: Abgerechnet wird IMMER der echte Preis aus Stripe. Wer hier etwas
-// ändert, muss ihn in Stripe genauso ändern — sonst weicht die Anzeige von der
-// Abbuchung ab, und das ist ein Rechtsproblem, kein Schönheitsfehler.
+// Deshalb ist der Betrag hier jetzt die Wahrheit. Der Server prüft vor jedem
+// Kauf, ob der in Stripe hinterlegte Preis dazu passt, und bildet ihn sonst
+// selbst — siehe `src/app/api/checkout/route.ts`. Eine vergessene Variable
+// kann damit keinen falschen Betrag mehr abbuchen.
+
+export type Kurs = 'gk' | 'lk';
+
+/** Betrag in Cent — das ist der Wert, der abgerechnet wird. */
+const CENT: Record<Kurs, number> = {
+  gk: 4900,
+  lk: 6900,
+};
+
+/** Produktname in Stripe. Wird gesucht und bei Bedarf angelegt. */
+const PRODUKTNAME: Record<Kurs, string> = {
+  gk: 'Mathe-Abi Hessen 2027 – Grundkurs',
+  lk: 'Mathe-Abi Hessen 2027 – Leistungskurs',
+};
+
+const alsEuro = (cent: number) =>
+  cent % 100 === 0
+    ? `${cent / 100} €`
+    : `${(cent / 100).toFixed(2).replace('.', ',')} €`;
 
 export const PREISE = {
-  gk: { label: 'Grundkurs', einmalig: '49 €' },
-  lk: { label: 'Leistungskurs', einmalig: '69 €' },
+  gk: { label: 'Grundkurs', cent: CENT.gk, produktname: PRODUKTNAME.gk, einmalig: alsEuro(CENT.gk) },
+  lk: { label: 'Leistungskurs', cent: CENT.lk, produktname: PRODUKTNAME.lk, einmalig: alsEuro(CENT.lk) },
 } as const;
 
 /**

@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { getStripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabaseAdmin';
 import { getTrustedSiteOrigin } from '@/lib/siteOrigin';
+import { PREISE } from '@/lib/preise';
 
 // Läuft auf dem Server (Node). Hier werden KEINE Kartendaten verarbeitet –
 // wir schicken den Nutzer nur zur gehosteten Stripe-Bezahlseite weiter.
@@ -64,15 +65,10 @@ export async function POST(req: Request) {
 
   const COURSE_SLUG = course === 'lk' ? 'mathe-lk' : 'mathe-gk';
 
-  // 4) Passende Preis-ID (in .env.local / Vercel hinterlegt) auswählen
-  const priceId =
+  // 4) Der Betrag steht in `preise.ts` — nicht in einer Umgebungsvariablen.
+  //    Die hinterlegte Preis-ID wird nur benutzt, wenn sie dazu passt.
+  const hinterlegtePreisId =
     course === 'lk' ? process.env.STRIPE_PRICE_LK_ONE_TIME : process.env.STRIPE_PRICE_ONE_TIME;
-  if (!priceId) {
-    return json(
-      { error: 'server_misconfig', message: 'Für diesen Tarif ist auf dem Server kein Preis hinterlegt.' },
-      500,
-    );
-  }
 
   // 5) Nutzer prüfen
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -89,6 +85,65 @@ export async function POST(req: Request) {
     const admin = createAdminClient();
     const stripe = getStripe();
     const origin = getTrustedSiteOrigin(req);
+
+    /*
+     * Den Rechnungsposten bestimmen.
+     *
+     * Maßgeblich ist der Betrag aus `preise.ts` — also genau die Zahl, die dem
+     * Käufer angezeigt wurde. Eine in Stripe hinterlegte Preis-ID wird nur
+     * verwendet, wenn sie dazu passt. Tut sie es nicht, bildet der Server den
+     * Posten selbst, statt den falschen Betrag abzubuchen.
+     *
+     * Der Grund ist ein echter Vorfall: Auf der Seite standen 49 €, Stripe
+     * verlangte 79 €, weil in Vercel noch die alte Preis-ID stand. Eine
+     * vergessene Umgebungsvariable darf keinen anderen Betrag abbuchen als den
+     * angezeigten — das ist kein Schönheitsfehler, sondern ein Rechtsproblem.
+     */
+    const gewuenschtCent = PREISE[course].cent;
+    let posten: { price: string; quantity: number } | {
+      price_data: { currency: string; unit_amount: number; product: string };
+      quantity: number;
+    } | null = null;
+
+    if (hinterlegtePreisId) {
+      try {
+        const preis = await stripe.prices.retrieve(hinterlegtePreisId);
+        const passt =
+          preis.active &&
+          preis.type === 'one_time' &&
+          preis.currency === 'eur' &&
+          preis.unit_amount === gewuenschtCent;
+        if (passt) {
+          posten = { price: hinterlegtePreisId, quantity: 1 };
+        } else {
+          // Produkt übernehmen, damit die Auswertung in Stripe sauber bleibt.
+          const produkt = typeof preis.product === 'string' ? preis.product : preis.product.id;
+          console.warn(
+            `Gradefruit: Hinterlegter Stripe-Preis passt nicht (${preis.unit_amount} statt ${gewuenschtCent}) — Betrag wird selbst gebildet.`,
+          );
+          posten = {
+            price_data: { currency: 'eur', unit_amount: gewuenschtCent, product: produkt },
+            quantity: 1,
+          };
+        }
+      } catch {
+        console.warn('Gradefruit: Hinterlegte Stripe-Preis-ID nicht abrufbar — Betrag wird selbst gebildet.');
+      }
+    }
+
+    if (!posten) {
+      // Kein brauchbarer Preis hinterlegt: Produkt über seinen Namen finden
+      // oder anlegen. So funktioniert der Kauf auch dann, wenn in Vercel gar
+      // nichts eingetragen ist — im Testmodus wie im Livebetrieb.
+      const name = PREISE[course].produktname;
+      const liste = await stripe.products.list({ active: true, limit: 100 });
+      const gefunden = liste.data.find(p => p.name === name);
+      const produktId = gefunden ? gefunden.id : (await stripe.products.create({ name })).id;
+      posten = {
+        price_data: { currency: 'eur', unit_amount: gewuenschtCent, product: produktId },
+        quantity: 1,
+      };
+    }
 
     // 6) Kurs-ID bestimmen (für die Zuordnung des Kaufs)
     const { data: courseRow, error: courseError } = await admin
@@ -150,7 +205,7 @@ export async function POST(req: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       customer: customerId,
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [posten],
       success_url: `${origin}/?checkout=success`,
       cancel_url: `${origin}/?checkout=cancel`,
       client_reference_id: user.id,
