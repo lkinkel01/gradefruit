@@ -123,6 +123,22 @@ export const CONTENT_INDEX: Record<ContentTopic, Record<ContentLevel, TopicIndex
         {
           "id": "an23",
           "tag": "Sachkontext (Bestand)"
+        },
+        {
+          "id": "an24",
+          "tag": "Produktregel"
+        },
+        {
+          "id": "an25",
+          "tag": "Krümmungsverhalten"
+        },
+        {
+          "id": "an26",
+          "tag": "Steigungswinkel"
+        },
+        {
+          "id": "an27",
+          "tag": "Exponentielles Wachstum"
         }
       ],
       "sections": [

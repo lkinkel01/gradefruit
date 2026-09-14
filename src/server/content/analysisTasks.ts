@@ -1,4 +1,4 @@
-// 23 originale Übungsaufgaben "Analysis" im Abitur-Stil (Mathe-Abi Hessen, Grundkurs).
+// 27 originale Übungsaufgaben "Analysis" im Abitur-Stil (Mathe-Abi Hessen, Grundkurs).
 // Selbst formuliert – NICHT aus echten Klausuren kopiert.
 // Struktur kompatibel mit dem Task-Typ der Plattform (TopicView), erweitert um "mistakes".
 
@@ -448,6 +448,88 @@ export const ANALYSIS_TASKS: AnalysisTask[] = [
     mistakes: [
       "Den Anfangsbestand (20 L) vergessen – das Integral liefert nur die ZUGEFLOSSENE Menge, nicht den Gesamtbestand.",
       "Den Funktionswert f(5) = 15 als Menge deuten; die zugeflossene Menge ist das Integral der Rate, nicht ihr Funktionswert.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an24",
+    tag: "Produktregel",
+    src: "Original-Übung · Abi-Stil A24",
+    q: "Gegeben ist f mit f(x) = (2x − 1) · eˣ. Bestimmen Sie f'(x) und den Tiefpunkt des Graphen.",
+    steps: [
+      { label: "Faktoren benennen", math: "u(x) = 2x − 1,   v(x) = eˣ" },
+      { label: "Beide Faktoren ableiten", math: "u'(x) = 2,   v'(x) = eˣ" },
+      { label: "Produktregel anwenden", math: "f'(x) = u'v + uv' = 2eˣ + (2x − 1)eˣ" },
+      { label: "eˣ ausklammern", math: "f'(x) = eˣ · (2x + 1)" },
+      { label: "Notwendige Bedingung f'(x) = 0", math: "eˣ ≠ 0  →  2x + 1 = 0  →  x = −0,5" },
+      { label: "Zweite Ableitung", math: "f''(x) = eˣ · (2x + 3)" },
+      { label: "Art der Stelle prüfen", math: "f''(−0,5) = 2 · e^(−0,5) ≈ 1,21 > 0  →  Tiefpunkt" },
+      { label: "y-Wert berechnen", math: "f(−0,5) = (−2) · e^(−0,5) ≈ −1,21" },
+    ],
+    result: "f'(x) = eˣ·(2x + 1); der Graph hat den Tiefpunkt T(−0,5 | −1,21).",
+    mistakes: [
+      "Die Produktregel vergessen und einfach beide Faktoren getrennt ableiten — das ergibt 2·eˣ und ist falsch.",
+      "eˣ = 0 setzen: Die e-Funktion wird nie null, deshalb kommt die Nullstelle allein aus dem Klammerterm.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an25",
+    tag: "Krümmungsverhalten",
+    src: "Original-Übung · Abi-Stil A25",
+    q: "Untersuchen Sie das Krümmungsverhalten des Graphen von f mit f(x) = x³ − 6x² + 5 und geben Sie den Wendepunkt an.",
+    steps: [
+      { label: "Erste Ableitung", math: "f'(x) = 3x² − 12x" },
+      { label: "Zweite Ableitung", math: "f''(x) = 6x − 12" },
+      { label: "Notwendige Bedingung f''(x) = 0", math: "6x − 12 = 0  →  x = 2" },
+      { label: "Vorzeichenwechsel prüfen", math: "f''(1) = −6 < 0,   f''(3) = 6 > 0  →  Wechsel bei x = 2" },
+      { label: "y-Wert berechnen", math: "f(2) = 8 − 24 + 5 = −11" },
+      { label: "Krümmung links von x = 2", math: "f''(x) < 0  →  rechtsgekrümmt" },
+      { label: "Krümmung rechts von x = 2", math: "f''(x) > 0  →  linksgekrümmt" },
+    ],
+    result: "Für x < 2 ist der Graph rechtsgekrümmt, für x > 2 linksgekrümmt. Wendepunkt: W(2 | −11).",
+    mistakes: [
+      "Rechts- und Linkskrümmung vertauschen: f''(x) < 0 heißt rechtsgekrümmt, f''(x) > 0 linksgekrümmt.",
+      "Nur f''(x) = 0 lösen und den Vorzeichenwechsel nicht prüfen — ohne ihn ist es kein Wendepunkt.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an26",
+    tag: "Steigungswinkel",
+    src: "Original-Übung · Abi-Stil A26",
+    q: "Gegeben ist f mit f(x) = 0,5x². Bestimmen Sie den Steigungswinkel der Tangente an den Graphen im Punkt P(2 | f(2)).",
+    steps: [
+      { label: "y-Wert des Punktes", math: "f(2) = 0,5 · 4 = 2  →  P(2 | 2)" },
+      { label: "Ableitung bilden", math: "f'(x) = x" },
+      { label: "Steigung an der Stelle x = 2", math: "m = f'(2) = 2" },
+      { label: "Zusammenhang Steigung und Winkel", math: "tan(α) = m" },
+      { label: "Winkel bestimmen", math: "α = arctan(2) ≈ 63,43°" },
+    ],
+    result: "Die Tangente in P(2 | 2) hat die Steigung m = 2 und den Steigungswinkel α ≈ 63,4°.",
+    mistakes: [
+      "Den Funktionswert f(2) = 2 als Steigung verwenden; die Steigung liefert die ABLEITUNG, nicht die Funktion.",
+      "Den Taschenrechner im Bogenmaß rechnen lassen — arctan(2) ergibt dann 1,107 statt 63,43°.",
+    ],
+    locked: false,
+  },
+  {
+    id: "an27",
+    tag: "Exponentielles Wachstum",
+    src: "Original-Übung · Abi-Stil A27",
+    q: "Eine Bakterienkultur wächst nach N(t) = 200 · e^(0,4t) (t in Stunden). Nach welcher Zeit sind 1000 Bakterien vorhanden, und wie schnell wächst die Kultur zu diesem Zeitpunkt?",
+    steps: [
+      { label: "Gleichung aufstellen", math: "200 · e^(0,4t) = 1000" },
+      { label: "Durch 200 teilen", math: "e^(0,4t) = 5" },
+      { label: "Logarithmieren", math: "0,4t = ln(5)" },
+      { label: "Nach t auflösen", math: "t = ln(5) / 0,4 ≈ 1,609 / 0,4 ≈ 4,02" },
+      { label: "Wachstumsrate ist die Ableitung", math: "N'(t) = 200 · 0,4 · e^(0,4t) = 80 · e^(0,4t)" },
+      { label: "Bekannten Wert einsetzen", math: "e^(0,4t) = 5  →  N'(t) = 80 · 5 = 400" },
+    ],
+    result: "Nach etwa 4,02 Stunden sind 1000 Bakterien vorhanden; die Kultur wächst dann um 400 Bakterien pro Stunde.",
+    mistakes: [
+      "Beim Logarithmieren den Faktor 200 mitlogarithmieren — erst durch 200 teilen, dann ln anwenden.",
+      "Die Wachstumsrate mit dem Bestand verwechseln: Gefragt ist N'(t), nicht N(t).",
     ],
     locked: false,
   },
