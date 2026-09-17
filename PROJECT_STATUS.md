@@ -1,7 +1,7 @@
 # Gradefruit — Projekt-Status
 
 > Gemeinsame Wissensbasis für **Claude Code** (Umsetzung) & **ChatGPT** (Beratung).
-> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-09-03 (technischer Launch-Audit lokal abgeschlossen, externe Live-Schritte offen)
+> **Nach jeder größeren Änderung aktualisieren.** Stand: 2026-09-17 (Checkout-Rückkehr lokal stabilisiert und Browserprüfung abgeschlossen)
 >
 > Aufbau: erst der **kompakte Ist-Zustand**, darunter die **vollständige
 > Sprint-Historie** (chronologisch; ältere Einträge beschreiben den Stand
@@ -19,26 +19,26 @@ Aufgaben, Schritt-für-Schritt-Lösungen, KI-Hilfe („Gradefruit-Coach") und Er
 ## Aktueller Stand (Kurzfassung, Stand Sprint 11)
 
 **Das Produkt ist technisch weit fortgeschritten, aber noch nicht verkaufsbereit.**
-Vor dem ersten Verkauf fehlen insbesondere die LK-Erklärvideos, die formale
-Gründung und Rechtsprüfung sowie der geprüfte Wechsel von Stripe TEST auf LIVE.
-Seit Sprint 11 kommt die **native App** dazu, die noch nicht veröffentlicht ist.
+Vor dem ersten Verkauf fehlen vor allem die formale Gründung und Rechtsprüfung,
+der geprüfte Wechsel von Stripe TEST auf LIVE sowie der echte Testkauf mit
+Erstattung und Zugangsentzug. Die LK-Erklärvideos besitzen inzwischen Ton. Seit
+Sprint 11 kommt die **native App** dazu, die noch nicht veröffentlicht ist.
 
-**Aktueller WIP auf `codex/launch-readiness`:** Die sechs LK-Erklärszenen sind
-im lokalen Commit `bca9ad7` fachlich vorbereitet. Danach wurde der technische
-Launch-Audit durchgeführt: Checkout, Webhook, Kauf-RLS, privilegierte
-Servermodule, KI-Eingaben und Cron-Endpunkt sind lokal gehärtet. Typecheck,
-relevanter Lint, Build, Content-Check und unauthentifizierte API-Smokes sind
-erfolgreich. Extern offen bleiben Stripe LIVE, der LK-Preis, das neue
-`CRON_SECRET`, juristische Freigabe und der reale End-to-End-Kauftest. Die 42
-LK-Sprachdateien bleiben kostenbewusst vertagt und sind nicht als vorhanden
-markiert. Im anschließenden Stabilitätssprint wurden die elf verbliebenen
-React-Lintfehler in Profil-, App-, Offline-, Video-, Auth- und Inhaltslogik
-ohne sichtbare Produktänderung bereinigt. Der globale Lint läuft nun mit
-0 Fehlern und 16 älteren Warnungen; TypeScript und Produktions-Build bestehen.
-Ein zusätzlicher lokaler Launch-Gate prüft die Produktionskonfiguration, ohne
-Werte auszugeben. Er blockiert aktuell erwartungsgemäß die lokale Site-URL, den
-Stripe-Testschlüssel sowie die fehlenden Werte `STRIPE_PRICE_LK_ONE_TIME` und
-`CRON_SECRET`.
+**Aktueller lokaler WIP auf `codex/launch-browser-qa`:** Der abschließende
+Browserdurchlauf hat Anmeldung, Dashboard, kostenlose und geschützte Inhalte,
+Wiederholen, Deep Links, Verlauf, mobile Darstellung sowie den Stripe-Sandbox-
+Checkout geprüft. Der Grundkurs wird dort korrekt mit 49 € angeboten. Ein
+verbliebener Bedienfehler beim Zurückgehen von Stripe wurde behoben: Der
+Kaufdialog entsperrt sich nun auch nach einer Wiederherstellung aus dem
+Back-forward-Cache. TypeScript, ESLint und Produktions-Build bestehen; kein
+Kauf wurde abgeschlossen und die Testkonten wurden wieder gelöscht.
+
+**Launch-Readiness ist auf `main`:** Checkout, Webhook, Kauf-RLS,
+privilegierte Servermodule, KI-Eingaben und Cron-Endpunkt sind gehärtet. Der
+Produktions-Konfigurationscheck gibt keine Werte aus. Die Preise 49 € und 69 €
+sind im Code verbindlich; der Checkout gleicht eine alte oder fehlende
+Stripe-Preiszuordnung selbstständig ab. Extern offen bleiben Stripe LIVE,
+`CRON_SECRET`, juristische Freigabe und der reale End-to-End-Kauftest.
 
 - **Landing** (`/`): Premium-Einstieg, geführter Lernweg, kontextueller Coach,
   Lernmethoden, Kurse (GK 49 € · LK 69 €, jeweils einmalig), FAQ, Closing.

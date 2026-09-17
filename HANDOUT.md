@@ -1,5 +1,31 @@
 # HANDOUT — Übergabe für die nächste Session
 
+## Aktuelle operative Übergabe — 2026-09-17 (Codex)
+
+- **Branch:** `codex/launch-browser-qa` mit geprüftem lokalem
+  Sicherungs-Commit; Basis `main`/`origin/main` = `e1eb5a4`.
+- **Aktive technische Aufgabe:** den letzten Checkout-Rückkehrfehler schließen.
+  Nach dem Wechsel zur Stripe-Bezahlseite blieb der Kaufdialog beim Zurückgehen
+  über den Browser-Verlauf zuvor im Ladezustand gesperrt.
+- **Änderung:** `CheckoutModal.tsx` entsperrt den Dialog beim `pageshow`-Ereignis.
+  Das deckt insbesondere Seiten ab, die Safari oder Chromium aus dem
+  Back-forward-Cache wiederherstellen.
+- **Praktisch geprüft:** Anmeldung mit isoliertem Testkonto, Checkout für den
+  Grundkurs, Stripe-Sandbox mit **49,00 €**, Browser-Zurück zum Dashboard. Die
+  Oberfläche war danach wieder bedienbar. Es wurde kein Kauf abgeschlossen.
+  Beide für den Browserdurchlauf angelegten Testkonten wurden anschließend
+  gelöscht.
+- **Technik geprüft:** TypeScript sauber, gezielter ESLint sauber, globaler
+  ESLint mit 0 Fehlern und 15 bekannten Warnungen, Launch-Env-Tests bestanden,
+  Produktions-Build bestanden. Das frühere Script `check:content` existiert
+  nicht mehr; die Zugangsschranke zeigte im lokalen Browserlauf weiterhin
+  Analysis 200 und bezahlte Themen 403 für das Testkonto.
+- **Nicht angefasst:** `# Gradefruit Logokonzept.zip`, `final/` und
+  `stash@{0}` (Creative Direction).
+- **Nächster Schritt:** Nach Leons ausdrücklicher Freigabe den Branch pushen,
+  sicher nach `main` übernehmen und das Produktionsdeployment prüfen. Bis dahin
+  bleibt der Commit ausschließlich lokal.
+
 ## Aktuelle operative Übergabe — 2026-09-03 (Claude Code, nach Codex)
 
 - **Stand:** `codex/launch-readiness` ist per Fast-Forward nach `main` gemerged

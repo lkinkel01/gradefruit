@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
 import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 import styles from './Modal.module.css';
@@ -38,6 +38,15 @@ function CheckoutDialog({ onClose, course }: { onClose: () => void; course: 'gk'
   // Inhalten mit sofortiger Freischaltung, § 356 Abs. 5 BGB).
   const [consent, setConsent] = useState(false);
   const info = COURSE_INFO[course];
+
+  // Safari and Chromium can restore this page from the back-forward cache
+  // after a user leaves Stripe with the browser's back button. React state is
+  // restored as well, so the dialog would otherwise stay locked in `busy`.
+  useEffect(() => {
+    const unlockAfterHistoryReturn = () => setBusy(false);
+    window.addEventListener('pageshow', unlockAfterHistoryReturn);
+    return () => window.removeEventListener('pageshow', unlockAfterHistoryReturn);
+  }, []);
 
   async function startCheckout() {
     if (busy) return;
