@@ -6,18 +6,11 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 # Gemeinsame Arbeitsweise für Codex und Claude Code
 
-- Vor Änderungen `CLAUDE.md`, `PRODUCT.md`, `DESIGN.md`,
-  `PROJECT_STATUS.md` und `HANDOUT.md` lesen sowie Branch, `git status` und den
-  vorhandenen Diff prüfen.
-- Notion ist das priorisierte Arbeitsboard. Pro Sprint gibt es genau eine
-  aktive technische Aufgabe; neue Ideen kommen zuerst ins Backlog.
-- Immer nur ein Coding-Agent arbeitet im lokalen Arbeitsbaum. Bei einem Wechsel
-  werden Branch, Diff, erledigte Schritte, Prüfungen, offene Punkte und der
-  nächste Schritt in `HANDOUT.md` festgehalten.
+- Vor Änderungen `CLAUDE.md` und `DESIGN.md` lesen sowie Branch und
+  `git status` prüfen.
 - Vorhandene Änderungen, ungetrackte Dateien und Stashes nicht überschreiben,
-  löschen, anwenden oder neu formatieren, bevor Herkunft und Zweck geklärt sind.
-- Leon nur für echte Produkt-, Kreativ-, Rechts-, Kosten- oder externe
-  Freigaben unterbrechen. Technische Detailentscheidungen selbstständig treffen.
-- Nach vollständig bestandener Prüfung dürfen Codex und Claude Code einen
-  lokalen, selektiv gestagten Sicherungs-Commit selbstständig erstellen.
-  Push, Merge und Deployment bleiben ausdrücklich freigabepflichtig.
+  löschen oder neu formatieren, bevor Herkunft und Zweck geklärt sind.
+- Leon nur für echte Produkt-, Kreativ-, Rechts- oder Kostenentscheidungen
+  unterbrechen. Technische Details selbstständig entscheiden.
+- Nach bestandener Prüfung selbstständig committen und pushen — selektiv
+  gestagt, nie `git add -A`.

@@ -35,12 +35,11 @@ Diese Datei verweist nur.
   GitHub, Hostinger. Dafür darf ich ihm Klick-Anleitungen geben.
 - Muss Leon einen Datei-Inhalt sehen? → **committen + pushen**, dann auf
   GitHubs „Copy raw file" verweisen.
-- **Lokale Commits nach vollständig bestandener Prüfung selbstständig und nur
-  mit selektivem Staging erstellen. Pushen nur, wenn Leon ausdrücklich darum
-  bittet** (Push auf `main` = Live-Deploy auf Vercel).
-- Codex und Claude Code arbeiten abwechselnd dieselbe priorisierte Notion-Liste
-  ab. `HANDOUT.md` hält den lokalen Übergabestand fest, damit der nächste Agent
-  vorhandene Arbeit fortsetzt statt neu zu beginnen.
+- **Committen und pushen nach bestandener Prüfung selbstständig** — Leon hat
+  das dauerhaft freigegeben. Selektiv stagen, nie `git add -A`. Push auf
+  `main` = Live-Deploy auf Vercel.
+- Arbeitet gerade ein zweiter Agent (Codex) im selben Arbeitsbaum, dessen
+  ungespeicherte Änderungen nicht anfassen.
 
 ## Sicherheitsregeln (NICHT verhandelbar)
 
@@ -95,7 +94,7 @@ Diese Datei verweist nur.
    anlegen, nach dem Test mit `scripts/delete-test-user.mjs <zweck>` löschen.
    (E-Mail-Muster `gradefruit.<zweck>.test@gmail.com`, Bestätigung ist aus.)
 5. Gezielt stagen: `git add <dateien>` — nie pauschal `git add -A`.
-6. Commit/Push nur auf Leons Ansage; danach PROJECT_STATUS.md aktualisieren.
+6. Committen, pushen, fertig. PROJECT_STATUS.md nur nach größeren Änderungen.
 
 ## Projektstruktur
 
@@ -118,10 +117,7 @@ Diese Datei verweist nur.
   `build-content-index.mjs`, `check-content-gate.mjs`,
   `create-test-user.mjs`, `delete-test-user.mjs`
 - `public/audio/` — mp3s der Erklärvideos
-- `.claude/` — Settings (Impeccable-Hook), `launch.json`, Skills;
-  `.agents/skills/` — Emil-Kowalski-Skills; `skills/` + `templates/` —
-  TasteSkill; `.impeccable/` — Impeccable-Cache (ignoriert) +
-  `design.json` (Design-Token-Sidecar, versioniert)
+- `.claude/` — `launch.json` (Dev-Server für die Browser-Vorschau)
 
 ## Architektur-Grundentscheidungen (die tragenden Fakten)
 
@@ -165,24 +161,6 @@ etwas falsch. Alle bewusst so getroffen — nicht „aufräumen":
   animierte Eltern fangen `position: fixed` sonst ein.
 - **Keine Emojis im UI.** Fortschritt nur als `GrapefruitProgress`.
 - Nur `transform`/`opacity`/Farben animieren; nie `transition: all`.
-
-## Installierte Skills & Hooks
-
-- **Impeccable** (`.claude/skills/impeccable/`, aufrufbar als `/impeccable`):
-  Design-Arbeit jeder Art (craft/polish/audit/critique/…). Lädt PRODUCT.md +
-  DESIGN.md automatisch. Ein **PostToolUse-Hook** (`.claude/settings.local.json`)
-  scannt jede UI-Datei-Änderung und meldet Design-Verstöße als Reminder —
-  Funde ernst nehmen: echte Probleme fixen, bewusste Ausnahmen begründen.
-- **Emil-Kowalski-Skills** (`.agents/skills/`): `emil-design-eng`
-  (UI-Polish-Philosophie), `apple-design` (fluide, physische Interaktionen),
-  `animation-vocabulary` (Namen für Motion-Effekte), `review-animations`
-  (strenger Motion-Review; nur explizit aufrufen). Bei Motion-/
-  Interaktions-Arbeit den passenden Skill laden.
-- **TasteSkill** (`skills/taste/` + Prompt-Vorlagen in `templates/taste/`,
-  angebunden über `.claude/skills/taste/`): Anti-Slop-Grundregeln in 7
-  Varianten (default, soft-calm, editorial, redesign, …). Bei Konflikten
-  gilt: **DESIGN.md > Impeccable > TasteSkill.**
-- Skill-Versionen: `skills-lock.json` (Quelle: github.com/emilkowalski/skills).
 
 ## localStorage-Register (alle Schlüssel mit `gf-`-Präfix)
 
