@@ -10,6 +10,7 @@
 
 import puppeteer from 'puppeteer-core';
 import sharp from 'sharp';
+import { createClient } from '@supabase/supabase-js';
 import { mkdir } from 'node:fs/promises';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -24,6 +25,36 @@ if (!EMAIL || !PASSWORT) {
 }
 
 const warte = ms => new Promise(r => setTimeout(r, ms));
+
+/**
+ * Füllt den Lernstand des Wegwerf-Kontos mit einer glaubwürdigen Mischung.
+ *
+ * Ein frisches Konto steht überall auf 0 % — als Werbebild ist das schlechter
+ * als gar keins. Hier wird nur der Lernfortschritt gesetzt, nie ein Kauf:
+ * Zugang schaltet ausschließlich der Stripe-Webhook frei.
+ */
+async function lernstandFuellen() {
+  const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+  const { data: nutzer } = await admin.auth.admin.listUsers({ perPage: 1000 });
+  const konto = (nutzer?.users ?? []).find(u => u.email === EMAIL);
+  if (!konto) throw new Error('Wegwerf-Konto nicht gefunden');
+
+  // Nur Analysis — das ist der frei zugängliche Teil, und genau der ist
+  // auf den Aufnahmen zu sehen.
+  const { data: lektionen } = await admin.from('lessons').select('id, slug').like('slug', 'an%');
+  const zeilen = (lektionen ?? []).map((l, i) => {
+    const r = i % 7;
+    // verstanden = (1,0), wiederholen = (0,1), unklar = (1,1)
+    const [understood, saved] = r < 4 ? [true, false] : r < 6 ? [false, true] : [true, true];
+    return { user_id: konto.id, lesson_id: l.id, understood, saved };
+  });
+  if (zeilen.length) {
+    await admin.from('progress').upsert(zeilen, { onConflict: 'user_id,lesson_id' });
+  }
+  console.log('Lernstand gefüllt:', zeilen.length, 'Lektionen');
+}
 
 /** Blendet alles aus, was auf einem Werbebild nichts verloren hat. */
 async function aufraeumen(page) {
@@ -98,6 +129,7 @@ const browser = await puppeteer.launch({
 await mkdir(ZIEL, { recursive: true });
 const page = await browser.newPage();
 await page.setViewport({ width: 1280, height: 900, deviceScaleFactor: 2 });
+await lernstandFuellen();
 await anmelden(page);
 console.log('angemeldet');
 

@@ -1818,3 +1818,45 @@
   .heroRegister { display: inline-flex; }
   .heroActions :global(.btn) { flex: 1 1 0; min-width: 0; padding-inline: 14px; }
 }
+
+/* ---------------------------------------------------------------------------
+   Produktaufnahmen
+   Dieselbe Ansicht in hell und dunkel, übereinandergelegt und per body.dark
+   getauscht. Das erste Bild bestimmt die Höhe, das zweite liegt darüber —
+   so gibt es beim Themenwechsel kein Nachladen und kein Flackern.
+--------------------------------------------------------------------------- */
+.shot {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  /* Die Aufnahmen zeigen eine App mit eigenen Kanten; ein dezenter Schatten
+     hebt sie von der Seite ab, ohne sie wie einen Aufkleber wirken zu lassen. */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 12px 32px rgba(0, 0, 0, .07);
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.shot img + img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  opacity: 0;
+}
+:global(body.dark) .shot { box-shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px rgba(0, 0, 0, .45); }
+:global(body.dark) .shot img:first-child { opacity: 0; }
+:global(body.dark) .shot img + img { opacity: 1; }
+
+/* Der Reel-Modus ist hochkant aufgenommen — ohne Deckel läuft er sonst über
+   die ganze Spaltenhöhe. */
+.shotHochkant {
+  max-width: 300px;
+  margin-inline: auto;
+}
+.shotHochkant .shot { border-radius: 26px; }

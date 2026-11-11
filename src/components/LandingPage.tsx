@@ -8,6 +8,21 @@ import { Logo } from './Logo';
 import { daysUntilExam } from '@/lib/exam';
 import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 
+/**
+ * Eine echte Aufnahme aus dem Produkt, in hell und dunkel übereinandergelegt.
+ * Getauscht wird per CSS über `body.dark` — ohne JavaScript, damit beim
+ * Themenwechsel nichts flackert. Die Bilder liegen unter /public/produkt und
+ * entstehen mit `scripts/produktbilder.mjs`.
+ */
+function ProduktBild({ name, alt, breite, hoehe }: { name: string; alt: string; breite: number; hoehe: number }) {
+  return (
+    <div className={styles.shot}>
+      <img src={`/produkt/${name}-hell.webp`} alt={alt} width={breite} height={hoehe} loading="lazy" draggable={false} />
+      <img src={`/produkt/${name}-dunkel.webp`} alt="" aria-hidden="true" width={breite} height={hoehe} loading="lazy" draggable={false} />
+    </div>
+  );
+}
+
 const Arrow = () => (
   <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="5" y1="12" x2="19" y2="12" />
@@ -667,22 +682,17 @@ export default function LandingPage({
             </p>
           </div>
           <div className={styles.systemLayout}>
-            <div
-              className={styles.systemVisual}
-              role="img"
-              aria-label="Klarer Lernweg, KI und Tutorhilfe, eigene Inhalte, moderne Lernmethoden, Reel-Modus und Community-Wissen bilden das Gradefruit-Lernsystem."
-            >
-              <div className={styles.systemDiagram} aria-hidden="true">
-                <div className={styles.systemCore}>
-                  <Logo size={76} />
-                  <strong>Gradefruit</strong>
-                </div>
-                <div className={styles.systemLabels}>
-                  {SYSTEM_POINTS.map(point => (
-                    <span key={point.title}>{point.title}</span>
-                  ))}
-                </div>
-              </div>
+            {/* Vorher kreisten hier sechs Pillen um das Logo. Dieses Rad ist
+                die Signatur generierter Landingpages — und es zeigte nichts,
+                was es nicht schon als Liste daneben gab. Jetzt steht hier die
+                echte Übersicht aus dem Produkt. */}
+            <div className={styles.systemVisual}>
+              <ProduktBild
+                name="uebersicht"
+                alt="Die Übersicht in Gradefruit: Lernfortschritt pro Thema, offene Aufgaben und der nächste empfohlene Schritt."
+                breite={2560}
+                hoehe={1800}
+              />
             </div>
             <div className={styles.systemPoints}>
               {SYSTEM_POINTS.map(point => (
@@ -777,33 +787,17 @@ export default function LandingPage({
               dem Prinzip der Spaced Repetition.
             </p>
           </div>
-          <div className={styles.visualStage} aria-label="Reel-Modus: Lernkarten im Hochformat zum Durchswipen">
-            <div className={styles.reelPhone}>
-              <div className={styles.reelCard}>
-                <div className={styles.reelTop}>
-                  <span className={styles.reelTag}>Analysis · Extrempunkte</span>
-                </div>
-                <div className={styles.reelBody}>
-                  <p className={styles.reelQ}>Wann liegt ein Hochpunkt vor?</p>
-                  <p className={styles.reelMath}>f′(x₀) = 0 und f″(x₀) &lt; 0</p>
-                  <p className={styles.reelHint}>Erst Steigung null, dann Vorzeichen prüfen.</p>
-                </div>
-                <div className={styles.reelStatus}>
-                  <span className={styles.reelDotGreen} />Verstanden
-                  <span className={styles.reelDotYellow} />Wiederholen
-                  <span className={styles.reelDotRed} />Unklar
-                </div>
-              </div>
-              <div className={`${styles.reelCard} ${styles.reelCardNext}`} aria-hidden="true">
-                <div className={styles.reelTop}><span className={styles.reelTag}>Analysis · Wendepunkte</span></div>
-                <div className={styles.reelBody}><p className={styles.reelQ}>Was gilt am Wendepunkt?</p></div>
-              </div>
-              <span className={styles.reelSwipe} aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 5v14" /><polyline points="6 13 12 19 18 13" />
-                </svg>
-                Weiterswipen
-              </span>
+          {/* Der nachgebaute Handybildschirm ist einer echten Aufnahme
+              gewichen — der Reel-Modus sieht in Wirklichkeit besser aus, als
+              er sich mit CSS nachzeichnen ließ. */}
+          <div className={styles.visualStage}>
+            <div className={styles.shotHochkant}>
+              <ProduktBild
+                name="reel"
+                alt="Der Reel-Modus auf dem Handy: eine Funktion mit ihrem Graphen im Hochformat, darunter die Auswahl zwischen verstanden, wiederholen und nicht verstanden."
+                breite={860}
+                hoehe={1760}
+              />
             </div>
           </div>
         </section>

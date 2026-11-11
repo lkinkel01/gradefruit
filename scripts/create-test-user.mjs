@@ -34,7 +34,9 @@ const { data, error } = await admin.auth.admin.createUser({
   email,
   password,
   email_confirm: true,
-  user_metadata: { full_name: 'Test Konto' },
+  // Zweites Argument setzt den Anzeigenamen — die Produktaufnahmen brauchen
+  // einen glaubwürdigen Vornamen statt „Test" in der Begrüßung.
+  user_metadata: { full_name: process.argv[3]?.trim() || 'Test Konto' },
 });
 if (error) {
   console.error('FEHLER:', error.message);
