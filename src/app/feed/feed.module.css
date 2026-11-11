@@ -135,7 +135,7 @@
 
 .posterCurve path {
   fill: none;
-  stroke: #ff7a00;
+  stroke: var(--accent);
   stroke-width: 6;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;

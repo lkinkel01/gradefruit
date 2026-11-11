@@ -14,14 +14,18 @@
   --faint: #6E7078;
   --line: #E6E6E9;
   --line-strong: #D3D3D8;
-  --accent: #FF7A00;
+  /* Grapefruit heißt Korallrot, nicht Orange. Das frühere #FF7A00 war ein
+     Signal-Orange von der Stange — die Farbe, die jedes zweite KI-Produkt
+     trägt. Eine rosa Grapefruit ist innen korallrot; genau das ist jetzt die
+     Akzentfarbe. */
+  --accent: #F0505E;
   --accent-tx: #131315;
-  --accent-d: #9A4200;
+  --accent-d: #B3263A;
   /* Blass genug, um als Markierung zu wirken statt als warme Fläche. Die
      früheren Cremetöne (#FFF1E3 und Verwandte) haben die Seite in ein
      Beige getaucht, das nach KI-Produkt aussah — nicht nach Gradefruit. */
-  --accent-soft: #FFF3EA;
-  --accent-progress: #FFB36B;
+  --accent-soft: #FFF0F1;
+  --accent-progress: #F79AA3;
   /* Originalfarben des freigegebenen Gradefruit-Logos. */
   --brand-rind: #FF7A00;
   --brand-rind-hover: #FF9133;
@@ -33,9 +37,9 @@
   /* Neutral wie der Rest. Vorher #FFF4E8 — ein warmer Beigeschleier über der
      ganzen App. */
   --brand-app-bg: #FFFFFF;
-  --topic-analysis: #FF7A00;
-  --topic-linalg: #FF7A00;
-  --topic-stochastik: #FF7A00;
+  --topic-analysis: #F0505E;
+  --topic-linalg: #F0505E;
+  --topic-stochastik: #F0505E;
   --green: #198754;
   --green-soft: #EAF7F0;
   --control: #ECECEF;
@@ -262,10 +266,10 @@ body.dark {
   --faint: #92939B;
   --line: #2E2E32;
   --line-strong: #414147;
-  --accent-d: #FF9A3C;
+  --accent-d: #FF8A94;
   --accent-tx: #131315;
-  --accent-soft: #2A1608;
-  --accent-progress: #6F3300;
+  --accent-soft: #2E1116;
+  --accent-progress: #7A2531;
   --green-soft: #102A1D;
   --control: #26262A;
   --bubble-ai: #232326;

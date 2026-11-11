@@ -8,20 +8,20 @@ import type { Stufe } from '@/lib/stufe';
 
 const VIDEOS: Record<Stufe, { id: string; title: string; sub: string; color: string; badge: string }[]> = {
   gk: [
-    { id: 'v1', title: 'Ableitung: Grundregeln', sub: 'Grundkurs', color: '#FF7A00', badge: 'Analysis' },
-    { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Grundkurs', color: '#FF7A00', badge: 'Analysis' },
-    { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Grundkurs', color: '#FF7A00', badge: 'Analysis' },
-    { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Grundkurs', color: '#FF7A00', badge: 'Lin. Algebra' },
-    { id: 'v5', title: 'Geradengleichungen', sub: 'Grundkurs', color: '#FF7A00', badge: 'Lin. Algebra' },
-    { id: 'v6', title: 'Binomialverteilung', sub: 'Grundkurs', color: '#FF7A00', badge: 'Stochastik' },
+    { id: 'v1', title: 'Ableitung: Grundregeln', sub: 'Grundkurs', color: 'var(--accent)', badge: 'Analysis' },
+    { id: 'v2', title: 'Extrempunkte berechnen', sub: 'Grundkurs', color: 'var(--accent)', badge: 'Analysis' },
+    { id: 'v3', title: 'Integralrechnung Einführung', sub: 'Grundkurs', color: 'var(--accent)', badge: 'Analysis' },
+    { id: 'v4', title: 'Vektoren & Skalarprodukt', sub: 'Grundkurs', color: 'var(--accent)', badge: 'Lin. Algebra' },
+    { id: 'v5', title: 'Geradengleichungen', sub: 'Grundkurs', color: 'var(--accent)', badge: 'Lin. Algebra' },
+    { id: 'v6', title: 'Binomialverteilung', sub: 'Grundkurs', color: 'var(--accent)', badge: 'Stochastik' },
   ],
   lk: [
-    { id: 'lk-a1', title: 'Produktregel mit e-Funktion', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Analysis' },
-    { id: 'lk-a2', title: 'Integral einer e-Funktion', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Analysis' },
-    { id: 'lk-g1', title: 'Ebene durch drei Punkte', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Lin. Algebra' },
-    { id: 'lk-g2', title: 'Abstand Punkt und Gerade', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Lin. Algebra' },
-    { id: 'lk-s1', title: 'Zwei-Sigma-Intervall', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Stochastik' },
-    { id: 'lk-s2', title: 'Fehler erster Art', sub: 'Leistungskurs', color: '#FF7A00', badge: 'Stochastik' },
+    { id: 'lk-a1', title: 'Produktregel mit e-Funktion', sub: 'Leistungskurs', color: 'var(--accent)', badge: 'Analysis' },
+    { id: 'lk-a2', title: 'Integral einer e-Funktion', sub: 'Leistungskurs', color: 'var(--accent)', badge: 'Analysis' },
+    { id: 'lk-g1', title: 'Ebene durch drei Punkte', sub: 'Leistungskurs', color: 'var(--accent)', badge: 'Lin. Algebra' },
+    { id: 'lk-g2', title: 'Abstand Punkt und Gerade', sub: 'Leistungskurs', color: 'var(--accent)', badge: 'Lin. Algebra' },
+    { id: 'lk-s1', title: 'Zwei-Sigma-Intervall', sub: 'Leistungskurs', color: 'var(--accent)', badge: 'Stochastik' },
+    { id: 'lk-s2', title: 'Fehler erster Art', sub: 'Leistungskurs', color: 'var(--accent)', badge: 'Stochastik' },
   ],
 };
 
