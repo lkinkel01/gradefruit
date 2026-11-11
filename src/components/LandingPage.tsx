@@ -509,62 +509,35 @@ export default function LandingPage({
       </button>
 
       <main id="main-content">
+        {/* Startbild über die volle Höhe, darüber nur Logo und zwei Knöpfe.
+            Vorher standen hier Vorspann, dreizeilige Überschrift, drei
+            Stichpunkte und zwei Knöpfe neben einem Foto — fünf Dinge, die
+            gleichzeitig um Aufmerksamkeit baten. Wer auf einer Startseite
+            ankommt, braucht genau zwei Auskünfte: wo bin ich, und was kann ich
+            hier tun. */}
         <header className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <p className={styles.heroContext}>Online-Intensivkurs für das Mathematik-Abitur in Hessen 2027</p>
-            <h1 className={styles.headline}>
-              <span>Deine gesamte </span>
-              <span className={styles.headlineNoBreak}>Mathe-Abiturvorbereitung </span>
-              <span>an einem Ort.</span>
-            </h1>
-            <ul className={styles.heroHighlights}>
-              <li>24/7 KI-Tutor</li>
-              <li>Prüfungsnahe Aufgaben</li>
-              <li>Erklärvideos</li>
-            </ul>
-            <div className={styles.heroActions}>
-              <div className={styles.heroPrimaryAction}>
-                <button
-                  className={`btn big ${styles.continueButton}`}
-                  onClick={onEnter}
-                >
-                  {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
-                </button>
-                {/* Mobil ist die Kopfzeile eingeklappt — Abgemeldete bekommen
-                    den Registrieren-Knopf deshalb direkt neben den Haupt-CTA. */}
-                {!isAuthed && (
-                  <button type="button" className={`btn big ${styles.heroRegister}`} onClick={onRegister}>
-                    Registrieren
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.heroVisual}>
-            <div className={styles.heroPhoto}>
-              {/* Dasselbe Motiv in zwei Fassungen: heller Raum und dunkler Raum.
-                  Umgeschaltet wird per CSS über `body.dark` — ohne JavaScript,
-                  damit beim Themenwechsel nichts flackert. */}
-              <img
-                className={styles.heroPhotoLight}
-                src="/hero-lernplatz.jpg"
-                alt="Aufgeklappter Laptop auf einem hellen Schreibtisch, auf dem Bildschirm ist eine Gradefruit-Übungsaufgabe zur Kurvendiskussion geöffnet."
-                width={2560}
-                height={1440}
-                loading="eager"
-                draggable={false}
-              />
-              <img
-                className={styles.heroPhotoDark}
-                src="/hero-lernplatz-dark.jpg"
-                alt=""
-                aria-hidden="true"
-                width={2560}
-                height={1440}
-                loading="eager"
-                draggable={false}
-              />
+          <img
+            className={styles.heroBild}
+            src="/startbild.webp"
+            alt=""
+            aria-hidden="true"
+            width={2560}
+            height={1440}
+            loading="eager"
+            draggable={false}
+          />
+          <h1 className={styles.nurVorleser}>
+            Gradefruit — Online-Intensivkurs für das Mathematik-Abitur in Hessen 2027
+          </h1>
+          <div className={styles.heroMitte}>
+            <BrandMark className={styles.heroMarke} size={96} />
+            <p className={styles.heroName}>Gradefruit</p>
+            <p className={styles.heroZeile}>Mathe-Abitur Hessen 2027</p>
+            <div className={styles.heroKnoepfe}>
+              <button className={styles.heroKnopf} onClick={onEnter}>
+                {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
+              </button>
+              <a className={styles.heroKnopf} href="#kurse">Kurse</a>
             </div>
           </div>
         </header>
