@@ -29,7 +29,7 @@ export function GET() {
           <g transform="translate(0 6) translate(50 44) scale(.78) translate(-50 -50)">
             <path
               d="M 56.165 15.039 A 35.5 35.5 0 1 0 84.961 43.835 A 4.5 4.5 0 0 0 76.097 45.398 A 26.5 26.5 0 1 1 54.602 23.903 A 4.5 4.5 0 0 0 56.165 15.039 Z"
-              fill="#FF7A00"
+              fill="#FF8A6B"
             />
             <path
               d="M 50 50 L 50 27.5 A 22.5 22.5 0 1 0 72.5 50 Z"

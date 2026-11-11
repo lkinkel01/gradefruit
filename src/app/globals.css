@@ -26,13 +26,15 @@
      Beige getaucht, das nach KI-Produkt aussah — nicht nach Gradefruit. */
   --accent-soft: #FFF0F1;
   --accent-progress: #F79AA3;
-  /* Originalfarben des freigegebenen Gradefruit-Logos. */
-  --brand-rind: #FF7A00;
-  --brand-rind-hover: #FF9133;
-  /* Dunkleres Logo-Orange: aus den beiden Originalfarben gemischt —
-     für die Weiterlernen-Buttons. */
-  --brand-rind-deep: color-mix(in srgb, var(--brand-rind) 58%, var(--brand-flesh));
-  --brand-rind-deep-hover: color-mix(in srgb, var(--brand-rind) 74%, var(--brand-flesh));
+  /* Logo: Das Fruchtfleisch behält seine Originalfarbe, die Schale zieht in
+     die Korall-Familie um. Das grelle #FF7A00 war der einzige Ton, der nach
+     der Farbumstellung noch aus der Reihe tanzte. */
+  --brand-rind: #FF8A6B;
+  --brand-rind-hover: #FFA083;
+  /* Fest gesetzt statt aus Schale und Fleisch gemischt: Die Mischung landete
+     bei 3,4:1 auf Weiß und wurde trotzdem als Textfarbe benutzt — zu wenig
+     zum Lesen. Dieser Ton hat 5,2:1 und bleibt in derselben Familie. */
+  --brand-rind-deep: #C8362F;
   --brand-flesh: #F5152E;
   /* Neutral wie der Rest. Vorher #FFF4E8 — ein warmer Beigeschleier über der
      ganzen App. */
