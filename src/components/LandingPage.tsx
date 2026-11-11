@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import styles from './LandingPage.module.css';
 import { BrandMark } from './BrandMark';
-import { Logo } from './Logo';
 import { daysUntilExam } from '@/lib/exam';
 import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 
@@ -30,28 +29,8 @@ const Arrow = () => (
   </svg>
 );
 
-const DocumentIcon = () => (
-  <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M7 3h7l4 4v14H7z" />
-    <path d="M14 3v5h4M10 12h5M10 16h5" />
-  </svg>
-);
 
-const LockIcon = () => (
-  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="5" y="10" width="14" height="10" rx="2" />
-    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-  </svg>
-);
 
-const ShareIcon = () => (
-  <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="18" cy="5" r="2.5" />
-    <circle cx="6" cy="12" r="2.5" />
-    <circle cx="18" cy="19" r="2.5" />
-    <path d="m8.3 10.8 7.4-4.5M8.3 13.2l7.4 4.5" />
-  </svg>
-);
 
 const SOCIALS: Array<{ label: string; href: string | null; icon: ReactNode }> = [
   {
@@ -111,36 +90,39 @@ interface Props {
   onSignOut: () => void;
 }
 
-const SYSTEM_POINTS = [
+/**
+ * Was Gradefruit heute kann — und nur das.
+ *
+ * Vorher standen hier zwei Listen nebeneinander (sechs „Systempunkte" und fünf
+ * „Lernmethoden"), die sich überschnitten. Drei der Methoden waren im Code als
+ * `available: false` markiert und wurden auf der Seite trotzdem als vorhanden
+ * beworben. Was es nicht gibt, steht hier nicht mehr.
+ */
+const MERKMALE = [
   {
     icon: 'path',
-    title: 'Klarer Lernweg',
-    desc: 'Zusammenfassungen, Übungen und prüfungsnahe Aufgaben im Stil der hessischen Abiturprüfung.',
+    title: 'Ein klarer Weg durch den Stoff',
+    desc: 'Zusammenfassungen, Übungen und prüfungsnahe Aufgaben im Stil der hessischen Abiturprüfung — nach Themen sortiert, nicht als Katalog.',
   },
   {
     icon: 'help',
-    title: 'KI und Tutorhilfe',
-    desc: 'Fragen direkt im Lernkontext stellen.',
-  },
-  {
-    icon: 'content',
-    title: 'Eigene Inhalte',
-    desc: 'Hochladen, integrieren und damit lernen.',
+    title: 'Ein Coach, der die Stelle kennt',
+    desc: 'Frag direkt an der Aufgabe nach, vor der du sitzt. Du musst nichts noch einmal erklären, und „kapier ich nicht“ reicht völlig.',
   },
   {
     icon: 'methods',
-    title: 'Moderne Lernmethoden',
-    desc: 'Active Recall, Spaced Repetition und Interleaving.',
+    title: 'Erst selbst rechnen, dann vergleichen',
+    desc: 'Jede Aufgabe hat einen Lösungsweg Schritt für Schritt — und dazu die zwei Fehler, die man an genau dieser Stelle typischerweise macht.',
+  },
+  {
+    icon: 'content',
+    title: 'Deine eigenen Unterlagen',
+    desc: 'Lade deinen Rechenweg als Foto oder PDF hoch und geh ihn gemeinsam mit dem Coach durch.',
   },
   {
     icon: 'reel',
-    title: 'Reel-Modus',
-    desc: 'Lerninhalte wiederholen, wie bei TikTok, Instagram und Co.',
-  },
-  {
-    icon: 'community',
-    title: 'Community-Wissen',
-    desc: 'Unterlagen teilen und gemeinsam nutzen.',
+    title: 'Wiederholen im Swipe-Format',
+    desc: 'Der Reel-Modus zeigt dir Aufgaben und Formeln im Hochformat — so, wie du es von TikTok und Instagram kennst.',
   },
 ] satisfies Array<{
   icon: SystemIconName;
@@ -198,86 +180,6 @@ function SystemIcon({ name }: { name: SystemIconName }) {
   );
 }
 
-type MethodIconName = 'recall' | 'spacing' | 'errors' | 'adaptive' | 'interleaving';
-
-const LEARNING_METHODS: Array<{
-  icon: MethodIconName;
-  title: string;
-  desc: string;
-  available: boolean;
-}> = [
-  {
-    icon: 'recall',
-    title: 'Active Recall',
-    desc: 'Erst selbst lösen. Dann prüfen, was wirklich sitzt.',
-    available: true,
-  },
-  {
-    icon: 'errors',
-    title: 'Fehleranalyse',
-    desc: 'Den falschen Schritt finden und direkt klären.',
-    available: true,
-  },
-  {
-    icon: 'spacing',
-    title: 'Spaced Repetition',
-    desc: 'Wiederholen, bevor Wissen verloren geht.',
-    available: false,
-  },
-  {
-    icon: 'adaptive',
-    title: 'Adaptive Aufgaben',
-    desc: 'Aufgaben sollen sich an deinem Lernstand orientieren.',
-    available: false,
-  },
-  {
-    icon: 'interleaving',
-    title: 'Interleaving',
-    desc: 'Gemischte Themen trainieren die Wahl des richtigen Ansatzes.',
-    available: false,
-  },
-];
-
-function MethodIcon({ name }: { name: MethodIconName }) {
-  return (
-    <svg className={styles.methodIcon} aria-hidden="true" focusable="false" viewBox="0 0 40 40" fill="none">
-      {name === 'recall' && (
-        <>
-          <path d="M12 12a12 12 0 1 1-2.4 13.8" />
-          <path d="M12 6v6h6" />
-        </>
-      )}
-      {name === 'spacing' && (
-        <>
-          <path d="M7 20h26" />
-          <circle cx="8" cy="20" r="3" />
-          <circle cx="19" cy="20" r="3" />
-          <circle cx="32" cy="20" r="3" />
-        </>
-      )}
-      {name === 'errors' && (
-        <>
-          <circle cx="20" cy="20" r="13" />
-          <path d="m15 15 10 10m0-10L15 25" />
-        </>
-      )}
-      {name === 'adaptive' && (
-        <>
-          <path d="M7 20h7c7 0 7-9 14-9h5" />
-          <path d="M14 20c7 0 7 9 14 9h5" />
-          <path d="m30 8 3 3-3 3m0 12 3 3-3 3" />
-        </>
-      )}
-      {name === 'interleaving' && (
-        <>
-          <path d="M7 11h5c11 0 5 18 16 18h5" />
-          <path d="M7 29h5c11 0 5-18 16-18h5" />
-          <path d="m30 8 3 3-3 3m0 12 3 3-3 3" />
-        </>
-      )}
-    </svg>
-  );
-}
 
 const SUBJECTS = [
   {
@@ -675,17 +577,13 @@ export default function LandingPage({
 
         <section className={styles.section} id="system">
           <div className={styles.sectionIntro}>
-            <h2>Mehr als ein Kurs. Ein vollständiges Lernsystem.</h2>
+            <h2>So lernst du damit.</h2>
             <p>
-              Active Recall, Spaced Repetition und Interleaving. KI-Tutor rund um
-              die Uhr. Lernen im Swipe-Modus.
+              Fünf Dinge, die zusammenarbeiten — kein Katalog, durch den du dich
+              allein durchklickst.
             </p>
           </div>
           <div className={styles.systemLayout}>
-            {/* Vorher kreisten hier sechs Pillen um das Logo. Dieses Rad ist
-                die Signatur generierter Landingpages — und es zeigte nichts,
-                was es nicht schon als Liste daneben gab. Jetzt steht hier die
-                echte Übersicht aus dem Produkt. */}
             <div className={styles.systemVisual}>
               <ProduktBild
                 name="uebersicht"
@@ -695,80 +593,14 @@ export default function LandingPage({
               />
             </div>
             <div className={styles.systemPoints}>
-              {SYSTEM_POINTS.map(point => (
-                <article key={point.title} className={styles.systemPoint}>
-                  <SystemIcon name={point.icon} />
-                  <h3>{point.title}</h3>
-                  <p>{point.desc}</p>
+              {MERKMALE.map(merkmal => (
+                <article key={merkmal.title} className={styles.systemPoint}>
+                  <SystemIcon name={merkmal.icon} />
+                  <h3>{merkmal.title}</h3>
+                  <p>{merkmal.desc}</p>
                 </article>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section className={`${styles.section} ${styles.coachSection}`} id="coach">
-          <div className={styles.coachCopy}>
-            <p className={styles.sectionName}>24/7 KI-Assistent</p>
-            <h2>Jede Frage.<br />Sofort geklärt.</h2>
-            <p className={styles.sectionLead}>
-              Der Coach kennt die Aufgabe, die Formel und den Rechenschritt, vor
-              dem du gerade sitzt. Du musst nichts noch einmal erklären. Frag
-              einfach direkt an der Stelle nach.
-            </p>
-            <ul className={styles.capabilityList}>
-              <li>
-                <strong>Frag so, wie du denkst</strong>
-                <span>
-                  Keine saubere Formulierung nötig, keine Angst vor einer dummen
-                  Frage. „Kapier ich nicht“ reicht völlig aus.
-                </span>
-              </li>
-              <li>
-                <strong>Rund um die Uhr</strong>
-                <span>Auch um 23 Uhr am Abend vor der Klausur. Ohne Termin, ohne Warten.</span>
-              </li>
-              <li>
-                <strong>Eigene Lösung prüfen</strong>
-                <span>Rechenweg als Foto oder PDF hochladen und Schritt für Schritt durchgehen lassen.</span>
-              </li>
-            </ul>
-          </div>
-          <div className={styles.coachStage} aria-label="Beispielgespräch mit dem Gradefruit-Coach">
-            <div className={styles.coachShell}>
-              <div className={styles.coachContext}>
-                <span>Analysis · Übung 3 · Kurvendiskussion</span>
-                <strong>f(x) = x³ − 6x² + 9x</strong>
-              </div>
-              <div className={styles.chat}>
-                <p className={`${styles.bubble} ${styles.bubbleUser}`}>
-                  warum = 0 ?
-                </p>
-                <div className={`${styles.bubble} ${styles.bubbleAi}`}>
-                  <span className={styles.bubbleWho}><Logo size={18} /> Gradefruit-Coach</span>
-                  <p>Weil die Steigung im Hoch- oder Tiefpunkt waagerecht ist.</p>
-                  <p>Genau dort gilt <strong>f′(x) = 0</strong>. Deshalb setzt du die Ableitung null und suchst die x-Werte.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.section} id="lernweise">
-          <div className={styles.sectionIntro}>
-            <h2>Lernmethoden aus der<br />Gedächtnisforschung.</h2>
-            <p>
-              Active Recall, Spaced Repetition und Interleaving gehören zu den
-              am besten untersuchten Lernstrategien. Gradefruit baut darauf auf.
-            </p>
-          </div>
-          <div className={styles.methodList}>
-            {LEARNING_METHODS.map(method => (
-              <article key={method.title} className={styles.methodRow}>
-                <MethodIcon name={method.icon} />
-                <h3>{method.title}</h3>
-                <p>{method.desc}</p>
-              </article>
-            ))}
           </div>
         </section>
 
@@ -783,8 +615,7 @@ export default function LandingPage({
               dran sind.
             </p>
             <p className={styles.visualNote}>
-              Welche Karte als Nächstes kommt, entscheidet dein Lernstand nach
-              dem Prinzip der Spaced Repetition.
+              Was du als „wiederholen“ markierst, kommt dir hier wieder unter.
             </p>
           </div>
           {/* Der nachgebaute Handybildschirm ist einer echten Aufnahme
@@ -799,78 +630,6 @@ export default function LandingPage({
                 hoehe={1760}
               />
             </div>
-          </div>
-        </section>
-
-        <section className={styles.section} id="bibliothek">
-          <div className={styles.libraryIntro}>
-            <div>
-              <p className={styles.sectionName}>Ausblick · noch nicht verfügbar</p>
-              <h2>Deine Lernbibliothek wächst mit dir.</h2>
-            </div>
-            <div className={styles.libraryPromise}>
-              <p>
-                Geplant ist ein Ort für deine Zusammenfassungen,
-                Formelsammlungen, Aufgaben und Lösungen. Der Coach arbeitet mit
-                deinen Unterlagen. Du entscheidest, was privat bleibt.
-              </p>
-              {/* Zeigt auf den Preisteil, den es in der App nicht gibt. */}
-              {!imApp && <a className="gf-arrow" href="#kurse">Gradefruit heute entdecken <Arrow /></a>}
-            </div>
-          </div>
-
-          <div className={styles.libraryStage} aria-label="Konzept für eine zukünftige private Lernbibliothek mit freiwillig geteilten Inhalten">
-            <div className={styles.privateLibrary}>
-              <div className={styles.libraryHeader}>
-                <div>
-                  <Logo size={30} />
-                  <strong>Deine Bibliothek</strong>
-                </div>
-                <span><LockIcon /> Privat</span>
-              </div>
-              <div className={styles.libraryFiles}>
-                <div><DocumentIcon /><span><strong>Analysis zusammengefasst</strong><small>Zusammenfassung</small></span><em>Nur du</em></div>
-                <div><DocumentIcon /><span><strong>Formeln für die Prüfung</strong><small>Formelsammlung</small></span><em>Nur du</em></div>
-                <div><DocumentIcon /><span><strong>Eigene Aufgaben und Lösungen</strong><small>Sammlung</small></span><em>Nur du</em></div>
-              </div>
-            </div>
-
-            <div className={styles.libraryConnection} aria-hidden="true">
-              <span />
-              <div>
-                <Logo size={38} />
-                <strong>Mit dem Coach verstehen</strong>
-                <small>auf Basis deiner Inhalte</small>
-              </div>
-              <span />
-            </div>
-
-            <div className={styles.communityLibrary}>
-              <div className={styles.libraryHeader}>
-                <div>
-                  <ShareIcon />
-                  <strong>Freiwillig geteilt</strong>
-                </div>
-                <span>Öffentlich</span>
-              </div>
-              <div className={styles.sharedMaterial}>
-                <span>Stochastik · Zusammenfassung</span>
-                <strong>Hypothesentests kompakt erklärt</strong>
-                <p>Ein hilfreicher Inhalt aus der Community. Sichtbar, weil er bewusst geteilt wurde.</p>
-              </div>
-              <div className={styles.communitySignals} aria-label="Geplante Community-Funktionen">
-                <span>Entdecken</span>
-                <span>Gefällt mir</span>
-                <span>Kommentieren</span>
-                <span>Folgen</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.libraryPrinciples}>
-            <div><strong>Privat als Standard</strong><span>Nichts wird ohne deine Freigabe öffentlich.</span></div>
-            <div><strong>Teilen bleibt freiwillig</strong><span>Du wählst einzelne Inhalte, nie deine ganze Bibliothek.</span></div>
-            <div><strong>Hilfreiches wird sichtbar</strong><span>Reaktionen und Kommentare sollen Orientierung geben.</span></div>
           </div>
         </section>
 
