@@ -1147,3 +1147,105 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* ---------------------------------------------------------------------------
+   Bänder
+   Jeder Abschnitt ist ein Band über die volle Breite: gesperrte Bezeichnung,
+   kurze Überschrift, eine Zeile, dann der Beleg. Zwei Bänder sind dunkel —
+   der Farbwechsel gliedert die Seite, sodass es keine Trennlinien und keine
+   Kästen braucht.
+--------------------------------------------------------------------------- */
+.band {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding: clamp(76px, 12vh, 132px) 24px;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+/* Das dunkle Band setzt die Themenfarben lokal neu. Dadurch passen sich alle
+   Kinder an, ohne dass jede Regel eine eigene Dunkel-Fassung braucht. */
+.bandDunkel {
+  background: #121214;
+  --ink: #F8F8F9;
+  --muted: #B6B6BD;
+  --faint: #92939B;
+  --line: #2C2C31;
+  --line-strong: #3C3C43;
+  --surface: #121214;
+  color: var(--ink);
+}
+:global(body.dark) .bandDunkel { background: #09090B; --surface: #09090B; }
+
+.bandName {
+  margin-bottom: 18px;
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.bandTitel {
+  max-width: 18ch;
+  color: var(--ink);
+  font-size: clamp(30px, 5vw, 50px);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.04;
+}
+
+.bandZeile {
+  max-width: 46ch;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+.bandBild { width: min(100%, 980px); margin-top: 48px; }
+.bandHochkant { width: min(100%, 290px); margin-top: 44px; }
+.bandHochkant .shot { border-radius: 26px; }
+
+/* Die fünf Merkmale nur als Namen, ohne Beschreibungstexte: Was sie bedeuten,
+   zeigt das Bild darunter besser als drei Zeilen Fließtext. */
+.merkmalListe {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 28px;
+  margin-top: 32px;
+  padding: 0;
+  list-style: none;
+}
+.merkmalListe li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+.merkmalListe svg { width: 17px; height: 17px; color: var(--accent); }
+
+/* Themen als Zeilen mit Haarlinie — ruhiger als drei Kästen nebeneinander. */
+.themenListe {
+  width: min(100%, 760px);
+  margin-top: 44px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.themenListe li {
+  display: grid;
+  gap: 5px;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.themenListe strong { color: var(--ink); font-size: 16px; font-weight: 700; }
+.themenListe span { color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+.band .plans { margin-top: 48px; }
+.band .faqList { width: min(100%, 760px); margin-top: 40px; text-align: left; }
+.band .planNote { max-width: 52ch; margin-top: 26px; }

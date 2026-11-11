@@ -548,116 +548,91 @@ export default function LandingPage({
           <div><strong>{days ?? '…'} Tage</strong><span>Bis zur schriftlichen Prüfung</span></div>
         </div>
 
-        <section className={styles.section} id="system">
-          <div className={styles.sectionIntro}>
-            <h2>So lernst du damit.</h2>
-            <p>
-              Fünf Dinge, die zusammenarbeiten — kein Katalog, durch den du dich
-              allein durchklickst.
-            </p>
-          </div>
-          <div className={styles.systemLayout}>
-            <div className={styles.systemVisual}>
-              <ProduktBild
-                name="uebersicht"
-                alt="Die Übersicht in Gradefruit: Lernfortschritt pro Thema, offene Aufgaben und der nächste empfohlene Schritt."
-                breite={2560}
-                hoehe={1800}
-              />
-            </div>
-            <div className={styles.systemPoints}>
-              {MERKMALE.map(merkmal => (
-                <article key={merkmal.title} className={styles.systemPoint}>
-                  <SystemIcon name={merkmal.icon} />
-                  <h3>{merkmal.title}</h3>
-                  <p>{merkmal.desc}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className={`${styles.section} ${styles.visualSection}`}>
-          <div className={styles.visualCopy}>
-            <p className={styles.sectionName}>Reel-Modus</p>
-            <h2>Swipen.<br />Und dabei lernen.</h2>
-            <p className={styles.sectionLead}>
-              Mit Gradefruit lernst du im Swipe-Format, wie du es von TikTok und
-              Instagram kennst. Nur dass hier keine Videos über den Bildschirm
-              laufen, sondern genau die Aufgaben und Formeln, die bei dir gerade
-              dran sind.
-            </p>
-            <p className={styles.visualNote}>
-              Was du als „wiederholen“ markierst, kommt dir hier wieder unter.
-            </p>
-          </div>
-          {/* Der nachgebaute Handybildschirm ist einer echten Aufnahme
-              gewichen — der Reel-Modus sieht in Wirklichkeit besser aus, als
-              er sich mit CSS nachzeichnen ließ. */}
-          <div className={styles.visualStage}>
-            <div className={styles.shotHochkant}>
-              <ProduktBild
-                name="reel"
-                alt="Der Reel-Modus auf dem Handy: eine Funktion mit ihrem Graphen im Hochformat, darunter die Auswahl zwischen verstanden, wiederholen und nicht verstanden."
-                breite={860}
-                hoehe={1760}
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.section} id="ueber-uns">
-          <div className={styles.focusLayout}>
-            <div className={styles.focusIntro}>
-              <h2>Nur deine Prüfung.<br />Nichts drum herum.</h2>
-              <p>
-                Kein allgemeiner Lernkatalog. Gradefruit konzentriert sich auf
-                das schriftliche Mathe-Abitur in Hessen 2027.
-              </p>
-            </div>
-            <div className={styles.trustBlock}>
-              <h3>Aus Erfahrung entwickelt.</h3>
-              <p>Aus eigener Abitur- und Studienerfahrung. Mit Blick auf die Stellen, an denen Vorbereitung oft unklar wird.</p>
-              <div className={styles.trustFacts}>
-                <div><strong>Hessen</strong><span>passend zu den Prüfungsanforderungen</span></div>
-                <div><strong>Grundkurs und Leistungskurs</strong><span>getrennte Inhalte und Zugänge</span></div>
-                <div><strong>Eigene Erfahrung</strong><span>entwickelt aus Abitur und Studium</span></div>
-              </div>
-            </div>
-          </div>
-          <div className={styles.subjectList}>
-            {SUBJECTS.map(subject => (
-              <article key={subject.label} className={styles.subjectRow}>
-                <span className={`${styles.subjectMarker} ${styles[subject.tone]}`} aria-hidden="true" />
-                <h3>{subject.label}</h3>
-                <p>{subject.topics}</p>
-              </article>
+        {/* Ab hier folgt jeder Abschnitt demselben Takt: eine gesperrte
+            Bezeichnung, eine kurze Überschrift, eine Zeile, dann der Beleg.
+            Zwei Bänder sind dunkel — der Wechsel gliedert die Seite, ohne dass
+            es Trennlinien oder Kästen braucht. */}
+        <section className={`${styles.band}`} id="system">
+          <p className={styles.bandName}>Lernsystem</p>
+          <h2 className={styles.bandTitel}>So lernst du damit.</h2>
+          <p className={styles.bandZeile}>
+            Zusammenfassungen, Aufgaben mit vollständigem Lösungsweg und ein
+            Coach, der die Stelle kennt, vor der du sitzt.
+          </p>
+          <ul className={styles.merkmalListe}>
+            {MERKMALE.map(m => (
+              <li key={m.title}>
+                <SystemIcon name={m.icon} />
+                <span>{m.title}</span>
+              </li>
             ))}
+          </ul>
+          <div className={styles.bandBild}>
+            <ProduktBild
+              name="uebersicht"
+              alt="Die Übersicht in Gradefruit: Lernfortschritt pro Thema, offene Aufgaben und der nächste Schritt."
+              breite={2560}
+              hoehe={1800}
+            />
           </div>
+        </section>
+
+        <section className={`${styles.band} ${styles.bandDunkel}`}>
+          <p className={styles.bandName}>Reel-Modus</p>
+          <h2 className={styles.bandTitel}>Swipen. Und dabei lernen.</h2>
+          <p className={styles.bandZeile}>
+            Aufgaben und Formeln im Hochformat — wie bei TikTok, nur mit dem,
+            was bei dir gerade dran ist.
+          </p>
+          <div className={styles.bandHochkant}>
+            <ProduktBild
+              name="reel"
+              alt="Der Reel-Modus auf dem Handy: eine Funktion mit ihrem Graphen, darunter verstanden, wiederholen oder nicht verstanden."
+              breite={860}
+              hoehe={1760}
+            />
+          </div>
+        </section>
+
+        <section className={styles.band} id="ueber-uns">
+          <p className={styles.bandName}>Über uns</p>
+          <h2 className={styles.bandTitel}>Nur deine Prüfung.</h2>
+          <p className={styles.bandZeile}>
+            Kein allgemeiner Lernkatalog. Nur das schriftliche Mathe-Abitur in
+            Hessen 2027 — Grundkurs und Leistungskurs getrennt.
+          </p>
+          <ul className={styles.themenListe}>
+            {SUBJECTS.map(subject => (
+              <li key={subject.label}>
+                <strong>{subject.label}</strong>
+                <span>{subject.topics}</span>
+              </li>
+            ))}
+          </ul>
         </section>
 
         {!imApp && (
-        <section className={styles.section} id="kurse">
-          <div className={styles.sectionIntro}>
-            <h2>Ein Zugang.<br />Bis zur Prüfung.</h2>
-            <p>Einmal zahlen, fertig. Analysis kannst du vorher kostenlos ausprobieren.</p>
-          </div>
+        <section className={styles.band} id="kurse">
+          <p className={styles.bandName}>Kurse</p>
+          <h2 className={styles.bandTitel}>Ein Zugang. Bis zur Prüfung.</h2>
+          <p className={styles.bandZeile}>
+            Einmal zahlen, kein Abo. Analysis kannst du vorher kostenlos
+            ausprobieren.
+          </p>
           <div className={styles.plans}>
             {plan(PREISE.gk.label, PREISE.gk.einmalig, 'gk', 'analysis', owned)}
             {plan(PREISE.lk.label, PREISE.lk.einmalig, 'lk', 'linalg', ownedLk)}
           </div>
           <p className={styles.planNote}>
-            {STEUERHINWEIS} Sichere Bezahlung über Stripe. Kein Abo, keine automatische
-            Verlängerung — der Zugang gilt bis zum Ende des Prüfungszeitraums.
+            {STEUERHINWEIS} Bezahlung über Stripe. Der Zugang gilt bis zum Ende
+            des Prüfungszeitraums.
           </p>
         </section>
         )}
 
-        <section className={`${styles.section} ${styles.faqSection}`}>
-          <div className={styles.faqIntro}>
-            <h2>Kurz erklärt.</h2>
-            <p>Die wichtigsten Antworten, bevor du anfängst.</p>
-          </div>
+        <section className={`${styles.band} ${styles.bandDunkel}`}>
+          <p className={styles.bandName}>Fragen</p>
+          <h2 className={styles.bandTitel}>Kurz erklärt.</h2>
           <div className={styles.faqList}>
             {FAQS.map(item => (
               <details key={item.question} className={styles.faqItem}>
