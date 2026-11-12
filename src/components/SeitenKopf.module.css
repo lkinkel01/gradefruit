@@ -17,12 +17,22 @@
               border-color var(--dur-hover) var(--ease-out);
 }
 
-/* Beim Scrollen eine DECKENDE Fläche — kein Schleier, keine Transparenz.
-   Vorher schimmerte der Text darunter durch, was die Leiste unruhig und
-   schwer lesbar machte. */
+/* Mattglas statt harter Fläche: Der Inhalt darunter bleibt als Farbe und
+   Bewegung erahnbar, ist aber nicht mehr lesbar — die starke Unschärfe deckt
+   ihn zu. Eine schlicht deckende Fläche wirkte wie ein aufgeklebter Balken,
+   eine halbdurchsichtige ließ Text durchschimmern. */
 .kopfFest {
-  background: var(--surface);
-  border-bottom-color: var(--line);
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border-bottom-color: color-mix(in srgb, var(--line) 80%, transparent);
+  box-shadow: 0 1px 24px rgba(0, 0, 0, .05);
+}
+
+/* Browser ohne Mattglas bekommen eine deckende Fläche, sonst wäre der Text
+   darunter lesbar und die Leiste unbrauchbar. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .kopfFest { background: var(--surface); }
 }
 
 .marke {

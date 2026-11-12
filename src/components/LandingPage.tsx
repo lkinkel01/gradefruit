@@ -52,11 +52,11 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
       <main id="inhalt">
         <header className={styles.hero}>
           <h1 className={styles.nurVorleser}>
-            Gradefruit — Vorbereitungskurse fürs Mathe-Abitur in Hessen 2027
+            Gradefruit: Vorbereitungskurse fürs Mathe-Abitur in Hessen 2027
           </h1>
           <div className={styles.heroMitte}>
             <BrandMark className={styles.heroMarke} size={92} />
-            <p className={styles.heroName}>Gradefruit</p>
+            <p className={styles.heroName} id="kopf-schwelle">Gradefruit</p>
             {/* Sagt, was es ist. „Mathe-Abitur Hessen 2027" allein war eine
                 Jahreszahl, kein Angebot. */}
             <p className={styles.heroZeile}>Vorbereitungskurse fürs Mathe-Abitur</p>
@@ -87,10 +87,10 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
 
         <section className={band.band}>
           <p className={band.name}>Lernsystem</p>
-          <h2 className={band.titel}>So lernst du damit.</h2>
+          <h2 className={band.titel}>Ein einfaches Lernsystem.</h2>
           <p className={band.zeile}>
-            Aufgaben mit vollständigem Lösungsweg, ein Coach, der die Stelle
-            kennt, und Wiederholen im Swipe-Format.
+            Aufgabe rechnen, Lösungsweg vergleichen, nachfragen, wiederholen.
+            Mehr Schritte hat es nicht.
           </p>
           <div className={band.bild}>
             <ProduktBild
@@ -105,27 +105,27 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
 
         <section className={`${band.band} ${band.bandTon}`}>
           <p className={band.name}>Kurse</p>
-          <h2 className={band.titel}>Ein Zugang. Bis zur Prüfung.</h2>
+          <h2 className={band.titel}>Einmal zahlen. Lernen bis zur Prüfung.</h2>
           <p className={band.zeile}>
             Grundkurs {PREISE.gk.einmalig}, Leistungskurs {PREISE.lk.einmalig}.
-            Einmal zahlen, kein Abo.
+            Kein Abo, keine Verlängerung.
           </p>
           <Link className={band.knopf} href="/kurse">Zu den Kursen</Link>
         </section>
 
         <section className={band.band}>
           <p className={band.name}>Über uns</p>
-          <h2 className={band.titel}>Nur deine Prüfung.</h2>
+          <h2 className={band.titel}>Gebaut für ein Abitur.</h2>
           <p className={band.zeile}>
-            Kein allgemeiner Lernkatalog. Nur das schriftliche Mathe-Abitur in
-            Hessen 2027.
+            Mathe, Hessen, 2027. Kein Fach mehr, kein Bundesland mehr, kein
+            Jahrgang mehr.
           </p>
           <Link className={band.knopf} href="/ueber-uns">Mehr über uns</Link>
         </section>
 
         <section className={`${band.band} ${band.bandTon}`}>
           <h2 className={band.titel}>Fang an.</h2>
-          <p className={band.zeile}>Analysis ist kostenlos — ohne Zahlungsdaten.</p>
+          <p className={band.zeile}>Analysis ist kostenlos. Ohne Zahlungsdaten, ohne Frist.</p>
           <button className={band.knopf} onClick={isAuthed ? onEnter : onRegister}>
             {isAuthed ? 'Weiterlernen' : 'Kostenlos testen'}
           </button>

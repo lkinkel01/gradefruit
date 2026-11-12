@@ -6,7 +6,7 @@ import band from '@/components/SeitenBand.module.css';
 import styles from './lernsystem.module.css';
 
 export const metadata: Metadata = {
-  title: 'Lernsystem — Gradefruit',
+  title: 'Lernsystem | Gradefruit',
   description: 'Aufgaben mit vollständigem Lösungsweg, ein Coach im Lernkontext und Wiederholen im Swipe-Format.',
 };
 
@@ -17,8 +17,8 @@ export default function Lernsystem() {
         <p className={band.name}>Lernsystem</p>
         <h1 className={band.titel}>So lernst du damit.</h1>
         <p className={band.zeile}>
-          Fünf Dinge, die zusammenarbeiten — kein Katalog, durch den du dich
-          allein durchklickst.
+          Fünf Dinge, die zusammenarbeiten. Kein Katalog, durch den du dich allein
+          durchklickst.
         </p>
         <div className={band.bild}>
           <ProduktBild
@@ -46,8 +46,8 @@ export default function Lernsystem() {
         <p className={band.name}>Reel-Modus</p>
         <h2 className={band.titel}>Swipen. Und dabei lernen.</h2>
         <p className={band.zeile}>
-          Aufgaben und Formeln im Hochformat — wie bei TikTok, nur mit dem, was
-          bei dir gerade dran ist.
+          Aufgaben und Formeln im Hochformat, wie bei TikTok. Nur mit dem, was bei
+          dir gerade dran ist.
         </p>
         <div className={band.hochkant}>
           <ProduktBild

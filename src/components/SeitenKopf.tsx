@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BrandMark } from './BrandMark';
-import { useDunkelmodus } from '@/lib/dunkelmodus';
 import styles from './SeitenKopf.module.css';
 
 /**
@@ -42,9 +41,7 @@ export default function SeitenKopf({
   onSignOut: () => void;
 }) {
   const [menueOffen, setMenueOffen] = useState(false);
-  const [einstellungenOffen, setEinstellungenOffen] = useState(false);
   const [gescrollt, setGescrollt] = useState(false);
-  const { dunkel, waehlen } = useDunkelmodus();
   const pfad = usePathname();
 
   useEffect(() => {
@@ -58,7 +55,21 @@ export default function SeitenKopf({
       const element = ziel as HTMLElement | null;
       return element && typeof element.scrollTop === 'number' ? element.scrollTop : 0;
     };
-    const onScroll = (event?: Event) => setGescrollt(Math.max(0, scrollWert(event?.target)) > 40);
+    /**
+     * Umgeschaltet wird nicht nach festen Pixeln, sondern wenn die
+     * Markenschwelle unter die Leiste wandert: Auf der Startseite ist das der
+     * Schriftzug „Gradefruit". Erst wenn er verschwindet, braucht die Leiste
+     * eine Fläche — vorher steht sie über leerem Raum und darf transparent
+     * bleiben. Seiten ohne Schwelle fallen auf einen festen Wert zurück.
+     */
+    const schwelleErreicht = () => {
+      const marke = document.getElementById('kopf-schwelle');
+      if (!marke) return Math.max(0, scrollWert()) > 40;
+      const leistenHoehe = 72;
+      return marke.getBoundingClientRect().bottom <= leistenHoehe;
+    };
+
+    const onScroll = () => setGescrollt(schwelleErreicht());
 
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -72,10 +83,7 @@ export default function SeitenKopf({
   useEffect(() => {
     if (!menueOffen) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setEinstellungenOffen(false);
-        setMenueOffen(false);
-      }
+      if (event.key === 'Escape') setMenueOffen(false);
     };
     const vorher = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -86,10 +94,7 @@ export default function SeitenKopf({
     };
   }, [menueOffen]);
 
-  const schliessen = () => {
-    setEinstellungenOffen(false);
-    setMenueOffen(false);
-  };
+  const schliessen = () => setMenueOffen(false);
 
   return (
     <>
@@ -151,37 +156,11 @@ export default function SeitenKopf({
           </ul>
 
           <div className={styles.fuss}>
-            <button
-              className={styles.klein}
-              onClick={() => setEinstellungenOffen(offen => !offen)}
-              aria-expanded={einstellungenOffen}
-            >
+            <Link className={styles.klein} href="/einstellungen" onClick={schliessen}>
               <Zahnrad />
               Einstellungen
-            </button>
+            </Link>
           </div>
-
-          {einstellungenOffen && (
-            <div className={styles.einstellungen}>
-              <p className={styles.einstellungTitel}>Darstellung</p>
-              <div className={styles.wahl} role="group" aria-label="Darstellung">
-                <button
-                  className={!dunkel ? styles.wahlAktiv : styles.wahlOption}
-                  onClick={() => waehlen(false)}
-                  aria-pressed={!dunkel}
-                >
-                  Light Mode
-                </button>
-                <button
-                  className={dunkel ? styles.wahlAktiv : styles.wahlOption}
-                  onClick={() => waehlen(true)}
-                  aria-pressed={dunkel}
-                >
-                  Dark Mode
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       )}
     </>

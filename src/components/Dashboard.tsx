@@ -8,6 +8,7 @@ import { GrapefruitProgress } from './Logo';
 import { ArrowRightIcon, CalendarIcon } from './UiIcons';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import styles from './Dashboard.module.css';
+import { VORSCHAU_VORNAME } from '@/lib/vorschauNutzer';
 
 interface Props {
   onNavigate: (v: View) => void;
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export default function Dashboard({ onNavigate, level }: Props) {
-  const { anzeigeName } = useAuth();
+  const { user, anzeigeName } = useAuth();
   // In der App trägt der Bildschirm nur diese eine Seite — dort darf der
   // Countdown die Fläche nehmen, die ihm laut DESIGN.md zusteht (Zahl als
   // Motiv, Haarlinien statt Karten). Im Browser bleibt alles wie bisher.
@@ -35,10 +36,11 @@ export default function Dashboard({ onNavigate, level }: Props) {
     return () => window.clearTimeout(frame);
   }, []);
 
-  // Nur der erste Bestandteil: „Leon Kinkel" wird zu „Leon". Ist gar nichts
-  // hinterlegt, bleibt die Begrüßung unpersönlich — aus einer E-Mail einen
-  // Vornamen zu raten trifft oft daneben.
-  const anrede = anzeigeName?.trim().split(/\s+/)[0];
+  // Nur der erste Bestandteil: „Leon Kinkel" wird zu „Leon". Aus einer E-Mail
+  // einen Vornamen zu raten trifft oft daneben — deshalb lieber gar nichts.
+  // Ohne Konto läuft die Vorschau auf den Mustermann, damit die Oberfläche
+  // nicht halbfertig wirkt.
+  const anrede = anzeigeName?.trim().split(/\s+/)[0] ?? (user ? undefined : VORSCHAU_VORNAME);
 
   const openReview = (status: Exclude<LernStatus, 'none'>) => {
     try { localStorage.setItem('gf-review-status', status); } catch { /* Speicher gesperrt */ }

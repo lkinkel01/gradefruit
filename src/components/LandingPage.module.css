@@ -88,12 +88,14 @@
   letter-spacing: .16em;
   text-transform: uppercase;
   text-decoration: none;
-  animation: weiterTippen 2.4s var(--ease-out) infinite;
+  animation: weiterTippen 3.6s var(--ease-out) infinite;
 }
 .weiter:hover { color: var(--ink); }
+/* Dezenter als vorher: 2px statt 5px, und ein ruhigerer Takt. Die Bewegung
+   soll andeuten, nicht winken. */
 @keyframes weiterTippen {
   0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, 5px); }
+  50% { transform: translate(-50%, 2px); }
 }
 @media (prefers-reduced-motion: reduce) { .weiter { animation: none; } }
 
@@ -128,4 +130,32 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Bewegung
+   Nur Einblenden und ein paar Pixel Versatz — alles unter 0,5 Sekunden und
+   nur auf transform und opacity, damit nichts ruckelt. Wer Bewegung reduziert
+   haben will, bekommt sie gar nicht.
+--------------------------------------------------------------------------- */
+.heroMitte > * {
+  animation: hereinKommen .52s var(--ease-out) both;
+}
+.heroMitte > *:nth-child(2) { animation-delay: .06s; }
+.heroMitte > *:nth-child(3) { animation-delay: .12s; }
+.heroMitte > *:nth-child(4) { animation-delay: .18s; }
+
+@keyframes hereinKommen {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.fakten > div { animation: hereinKommen .5s var(--ease-out) both; }
+.fakten > div:nth-child(2) { animation-delay: .07s; }
+.fakten > div:nth-child(3) { animation-delay: .14s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .heroMitte > *,
+  .fakten > div { animation: none; }
 }

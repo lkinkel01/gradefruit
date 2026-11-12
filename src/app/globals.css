@@ -64,13 +64,17 @@
   --hv-axis: #C2C2C8;
   --hv-coach: #F4F4F6;
   --hv-coach-line: #E2E2E7;
-  /* Sidebar: immer echtes Schwarz mit heller Schrift (DESIGN.md-Regel),
-     hebt das Menü ruhig und ästhetisch von der weißen Lernfläche ab. */
-  --side: #050505;
-  --side-2: #111113;
-  --side-3: #27272A;
-  --side-tx: #EEEEF0;
-  --side-faint: #A0A0A8;
+  /* Seitenleiste folgt dem Thema, statt immer schwarz zu sein.
+     Die frühere Regel „immer echtes Schwarz" erzeugte im hellen Modus einen
+     harten schwarzen Block neben einer weißen Lernfläche — das wirkte wie
+     zwei verschiedene Programme nebeneinander. Jetzt ist sie eine ruhige,
+     leicht abgesetzte Fläche; der Unterschied kommt aus einem Hauch Grau und
+     einer Haarlinie, nicht aus maximalem Kontrast. */
+  --side: #F1F1F3;
+  --side-2: #E9E9EC;
+  --side-3: #DCDCE0;
+  --side-tx: #1A1A1D;
+  --side-faint: #65666D;
   /* Milchglas für obere Leisten – als Variable, damit Dark Mode in
      CSS-Modulen zuverlässig greift (globale Klassen matchen dort nicht). */
   --glass: rgba(247, 247, 248, 0.82);
@@ -291,11 +295,13 @@ body.dark {
   --hv-axis: #45464C;
   --hv-coach: #1E1E22;
   --hv-coach-line: #33343A;
-  --side: #050505;
-  --side-2: #111113;
-  --side-3: #27272A;
+  /* Im dunklen Modus bleibt die Leiste dunkel — aber etwas abgesetzt vom
+     Inhalt, damit die Kante sichtbar bleibt. */
+  --side: #0E0E10;
+  --side-2: #17171A;
+  --side-3: #2A2A2E;
   --side-tx: #EEEEF0;
-  --side-faint: #A0A0A8;
+  --side-faint: #9A9BA2;
   --glass: rgba(5, 5, 5, 0.84);
   --glass-strong: rgba(13, 13, 15, 0.80);
   --glass-line: rgba(255, 255, 255, 0.12);

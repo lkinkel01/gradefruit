@@ -8,6 +8,13 @@ import styles from './ProduktBild.module.css';
  * Flackern beim Themenwechsel. Die Bilder entstehen mit
  * `scripts/produktbilder.mjs`.
  */
+/**
+ * Versionsnummer an den Bildpfaden. Die Dateinamen bleiben gleich, wenn die
+ * Aufnahmen neu entstehen — Browser zeigen dann weiter die alte Fassung.
+ * Nach jedem Lauf von `scripts/produktbilder.mjs` hier hochzählen.
+ */
+const BILD_VERSION = '4';
+
 export default function ProduktBild({
   name,
   alt,
@@ -21,8 +28,8 @@ export default function ProduktBild({
 }) {
   return (
     <div className={styles.shot}>
-      <img src={`/produkt/${name}-hell.webp`} alt={alt} width={breite} height={hoehe} loading="lazy" draggable={false} />
-      <img src={`/produkt/${name}-dunkel.webp`} alt="" aria-hidden="true" width={breite} height={hoehe} loading="lazy" draggable={false} />
+      <img src={`/produkt/${name}-hell.webp?v=${BILD_VERSION}`} alt={alt} width={breite} height={hoehe} loading="lazy" draggable={false} />
+      <img src={`/produkt/${name}-dunkel.webp?v=${BILD_VERSION}`} alt="" aria-hidden="true" width={breite} height={hoehe} loading="lazy" draggable={false} />
     </div>
   );
 }

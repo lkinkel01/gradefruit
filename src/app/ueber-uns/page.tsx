@@ -5,7 +5,7 @@ import band from '@/components/SeitenBand.module.css';
 import styles from './ueber-uns.module.css';
 
 export const metadata: Metadata = {
-  title: 'Über uns — Gradefruit',
+  title: 'Über uns | Gradefruit',
   description: 'Gradefruit bereitet auf genau eine Prüfung vor: das schriftliche Mathe-Abitur in Hessen 2027.',
 };
 
@@ -17,7 +17,7 @@ export default function UeberUns() {
         <h1 className={band.titel}>Nur deine Prüfung.</h1>
         <p className={band.zeile}>
           Kein allgemeiner Lernkatalog. Nur das schriftliche Mathe-Abitur in
-          Hessen 2027 — Grundkurs und Leistungskurs getrennt.
+          Hessen 2027. Grundkurs und Leistungskurs getrennt.
         </p>
       </section>
 

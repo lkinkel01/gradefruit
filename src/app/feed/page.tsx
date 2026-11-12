@@ -286,7 +286,7 @@ export default function FeedPage() {
             an keine Aufgabe gebunden. Das gehört gesagt, nicht versteckt. */}
         {!activeCard.task && (
           <span className={styles.statusHinweis}>
-            Erklärvideo aus dem Grundkurs — im Leistungskurs ohne Aufgabe zum Bewerten.
+            Erklärvideo aus dem Grundkurs. Im Leistungskurs ohne Aufgabe zum Bewerten.
           </span>
         )}
         {STATUS_OPTIONS.map(option => (

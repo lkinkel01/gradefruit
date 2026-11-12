@@ -12,7 +12,7 @@
 export const MERKMALE = [
   {
     titel: 'Ein klarer Weg durch den Stoff',
-    text: 'Zusammenfassungen, Übungen und prüfungsnahe Aufgaben im Stil der hessischen Abiturprüfung — nach Themen sortiert.',
+    text: 'Zusammenfassungen, Übungen und prüfungsnahe Aufgaben im Stil der hessischen Abiturprüfung, nach Themen sortiert.',
   },
   {
     titel: 'Ein Coach, der die Stelle kennt',
@@ -20,7 +20,7 @@ export const MERKMALE = [
   },
   {
     titel: 'Erst selbst rechnen, dann vergleichen',
-    text: 'Jede Aufgabe mit Lösungsweg Schritt für Schritt — und den zwei Fehlern, die man dabei typischerweise macht.',
+    text: 'Jede Aufgabe mit Lösungsweg Schritt für Schritt. Dazu die zwei Fehler, die man dabei typischerweise macht.',
   },
   {
     titel: 'Deine eigenen Unterlagen',
@@ -28,7 +28,7 @@ export const MERKMALE = [
   },
   {
     titel: 'Wiederholen im Swipe-Format',
-    text: 'Der Reel-Modus zeigt Aufgaben und Formeln im Hochformat — wie du es von TikTok kennst.',
+    text: 'Der Reel-Modus zeigt Aufgaben und Formeln im Hochformat, wie du es von TikTok kennst.',
   },
 ] as const;
 
@@ -70,6 +70,6 @@ export const FRAGEN = [
   },
   {
     frage: 'Welche Bundesländer werden unterstützt?',
-    antwort: 'Hessen, Abiturjahrgang 2027. Mehr nicht — dafür dieses eine richtig.',
+    antwort: 'Hessen, Abiturjahrgang 2027. Mehr nicht, dafür dieses eine richtig.',
   },
 ] as const;

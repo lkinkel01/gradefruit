@@ -4,6 +4,7 @@ import { NavigateTo, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { MenuIcon, MoonIcon, SunIcon } from './UiIcons';
 import styles from './Topbar.module.css';
+import { VORSCHAU_INITIALEN } from '@/lib/vorschauNutzer';
 
 const LABELS: Partial<Record<View, string>> = {
   dashboard: 'Dashboard',
@@ -39,7 +40,8 @@ export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleD
   // ohne beides die E-Mail. Anders als bei der Begrüßung braucht die Kachel
   // zwingend etwas — sie wäre sonst leer.
   const initials = (() => {
-    if (!user) return null;
+    // Ohne Konto zeigt die Vorschau den Mustermann statt einer leeren Kachel.
+    if (!user) return VORSCHAU_INITIALEN;
     const name = anzeigeName?.trim();
     if (name) {
       const parts = name.split(/\s+/).filter(Boolean);

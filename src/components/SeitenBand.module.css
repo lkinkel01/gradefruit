@@ -8,23 +8,15 @@
   text-align: center;
 }
 
-/* Das kräftige Band: tiefes Grapefruit-Rot mit heller Schrift.
-   Der vorherige blasse Rosaton wirkte wie ein Textmarker über der Seite —
-   er hatte zu wenig Abstand zum Weiß, um als eigene Fläche zu lesen. Mit dem
-   dunklen Ton entsteht derselbe klare Wechsel wie bei kräftig gesetzten
-   Seiten: hell, dunkel, hell. */
-.bandTon {
-  background: #5C1A24;
-  --ink: #FFFFFF;
-  --muted: rgba(255, 255, 255, .74);
-  --faint: rgba(255, 255, 255, .58);
-  --line: rgba(255, 255, 255, .17);
-  --line-strong: rgba(255, 255, 255, .3);
-  --surface: #5C1A24;
-  --control: rgba(255, 255, 255, .1);
-  color: var(--ink);
-}
-:global(body.dark) .bandTon { background: #44121B; --surface: #44121B; }
+/* Das zweite Band ist keine Farbfläche, sondern eine zweite Oberfläche:
+   warmes Off-White mit einem Hauch Grapefruit. Der Wechsel entsteht durch den
+   Flächenwechsel, nicht durch Farbe.
+
+   Zwei Versuche davor lagen daneben: ein blasses Rosa sah aus wie mit dem
+   Textmarker gezogen, ein tiefes Rot war schlicht zu laut für eine Lernseite.
+   Die Schrift bleibt deshalb schwarz — kein Umkippen der Farben. */
+.bandTon { background: #F4EEEB; }
+:global(body.dark) .bandTon { background: #1C1A1A; }
 
 .name {
   margin-bottom: 16px;
@@ -34,7 +26,6 @@
   letter-spacing: .2em;
   text-transform: uppercase;
 }
-.bandTon .name { color: #FF9D8E; }
 
 .titel {
   max-width: 18ch;
@@ -77,3 +68,32 @@
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
 .knopf:hover { background: var(--ink); color: var(--surface); }
+
+/* ---------------------------------------------------------------------------
+   Bewegung beim Scrollen
+   Moderne Browser können Animationen an die Scrollposition koppeln. Das
+   braucht kein JavaScript und keinen Beobachter: Der Browser blendet ein,
+   während das Element ins Bild läuft. Wo das nicht unterstützt wird, ist
+   einfach alles sofort da — nichts bleibt unsichtbar.
+   Bewusst klein gehalten: acht Pixel Versatz, sonst wirkt es wie eine
+   Präsentation.
+--------------------------------------------------------------------------- */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .name,
+    .titel,
+    .zeile,
+    .bild,
+    .hochkant,
+    .knopf {
+      animation: bandRein linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 22%;
+    }
+  }
+}
+
+@keyframes bandRein {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
