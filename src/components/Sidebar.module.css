@@ -305,3 +305,27 @@
   :global(body.navopen) .sidebar { transform: translateX(0); }
   .flyItem { min-height: 44px; }
 }
+
+/* Kopfzeile der Leiste: Marke links, Einklappen rechts. */
+.kopfZeile {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.kopfZeile .brand { padding-right: 0; }
+
+.einklappen {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-top: 3px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--side-faint);
+  cursor: pointer;
+  transition: color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
+}
+.einklappen:hover { color: var(--side-tx); border-color: var(--side-3); }

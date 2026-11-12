@@ -79,6 +79,9 @@ export default function Home() {
   const [view, setView] = useState<View>('landing');
   const [routeReady, setRouteReady] = useState(false);
   const [dark, setDark] = useState(false);
+  // Eingeklappte Seitenleiste: Wer an einer Aufgabe sitzt, will die Fläche.
+  // Die Wahl überlebt das Neuladen, sonst müsste man sie ständig wiederholen.
+  const [leisteOffen, setLeisteOffen] = useState(true);
   // Kursstufe: Wer gekauft hat, hat sich entschieden. Nur Gäste (und wer beide
   // Kurse besitzt) wählen selbst; die Wahl wird lokal gemerkt.
   const [prefLevel, setPrefLevel] = useState<'gk' | 'lk'>('gk');
@@ -190,6 +193,20 @@ export default function Home() {
   // Das Inline-Skript in layout.tsx hat das gespeicherte Theme schon vor dem
   // ersten Rendern als Body-Klasse gesetzt (kein Aufblitzen). React gleicht
   // seinen Zustand hier einmalig daran an.
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      try {
+        setLeisteOffen(localStorage.getItem('gf-leiste') !== 'zu');
+      } catch { /* Speicher gesperrt */ }
+    }, 0);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  const leisteUmschalten = (offen: boolean) => {
+    setLeisteOffen(offen);
+    try { localStorage.setItem('gf-leiste', offen ? 'auf' : 'zu'); } catch { /* Speicher gesperrt */ }
+  };
+
   useEffect(() => {
     const initialDark = document.body.classList.contains('dark');
     const initialLevel = gespeicherteStufe();
@@ -556,7 +573,7 @@ export default function Home() {
       )}
       {/* In der App ersetzt die untere Leiste die Seitenleiste: Sie liegt in
           Daumenreichweite und versteckt die Navigation nicht hinter einem Knopf. */}
-      <div className={`${styles.shell} ${imApp ? styles.shellApp : ''}`} key={themeKey}>
+      <div className={`${styles.shell} ${imApp ? styles.shellApp : ''} ${leisteOffen ? '' : styles.shellZu}`} key={themeKey}>
         {!imApp && <Sidebar
           view={view}
           topicTab={topicTab}
@@ -568,7 +585,22 @@ export default function Home() {
           onNavigate={navigate}
           onOpenCheckout={() => openCheckout('gk')}
           onReels={() => router.push('/feed')}
+          onEinklappen={() => leisteUmschalten(false)}
         />}
+        {/* Kommt nur zum Vorschein, wenn die Leiste weg ist. */}
+        {!imApp && !leisteOffen && (
+          <button
+            type="button"
+            className={styles.leisteAuf}
+            onClick={() => leisteUmschalten(true)}
+            aria-label="Menü einblenden"
+            title="Menü einblenden"
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        )}
         <div className={styles.content}>
           {/* Persönliches Wasserzeichen über allen Kursinhalten — Screenshots
               bleiben möglich, sind aber dem Konto zuzuordnen. */}

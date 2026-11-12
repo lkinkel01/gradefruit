@@ -20,6 +20,8 @@ interface Props {
   onOpenCheckout: () => void;
   /** Reel-Modus liegt auf einer eigenen Route, deshalb kein View-Wechsel. */
   onReels: () => void;
+  /** Klappt die Leiste nach links weg. */
+  onEinklappen: () => void;
 }
 
 const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
@@ -38,7 +40,7 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
 ];
 
 
-export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, onChooseLevel, onNavigate, onOpenCheckout, onReels }: Props) {
+export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, level, onChooseLevel, onNavigate, onOpenCheckout, onReels, onEinklappen }: Props) {
   const { topicDone, topicTotal } = useProgress();
   // In der App darf nirgends zum Kauf aufgefordert werden — Apples Regel für
   // Apps ohne eigenen In-App-Kauf. Im Browser bleibt alles wie bisher.
@@ -103,10 +105,25 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
 
   return (
     <aside className={styles.sidebar}>
-      <button className={styles.brand} onClick={() => onNavigate('landing')} aria-label="Zur Startseite">
-        <BrandMark size={24} />
-        Gradefruit
-      </button>
+      <div className={styles.kopfZeile}>
+        <button className={styles.brand} onClick={() => onNavigate('landing')} aria-label="Zur Startseite">
+          <BrandMark size={24} />
+          Gradefruit
+        </button>
+        {/* Wer lange an einer Aufgabe sitzt, will die Fläche. Die Leiste lässt
+            sich wegschieben und kommt über den Knopf am Rand zurück. */}
+        <button
+          type="button"
+          className={styles.einklappen}
+          onClick={onEinklappen}
+          aria-label="Menü einklappen"
+          title="Menü einklappen"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+      </div>
 
       <div className={styles.navsec}>Themen</div>
       <nav className={styles.snav}>

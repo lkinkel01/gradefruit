@@ -95,6 +95,7 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               alt="Die Übersicht in Gradefruit: Lernfortschritt pro Thema und der nächste Schritt."
               breite={2560}
               hoehe={1800}
+              hinweis={t('start.kostenlosTesten')}
             />
           </div>
           <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>

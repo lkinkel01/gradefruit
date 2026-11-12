@@ -18,3 +18,39 @@
 :global(body.dark) .shot { box-shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px rgba(0, 0, 0, .45); }
 :global(body.dark) .shot img:first-child { opacity: 0; }
 :global(body.dark) .shot img + img { opacity: 1; }
+
+/* Als Link: Das Bild zeigt das Produkt, also führt der Klick hinein. */
+.shot {
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform var(--dur-hover) var(--ease-out), box-shadow var(--dur-hover) var(--ease-out);
+}
+.shot:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(0, 0, 0, .05), 0 18px 44px rgba(0, 0, 0, .1); }
+.shot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.hinweis {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translate(-50%, 6px);
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--surface);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+.shot:hover .hinweis,
+.shot:focus-visible .hinweis { opacity: 1; transform: translate(-50%, 0); }
+
+/* Auf Touchgeräten gibt es kein Überfahren: Dort steht der Hinweis dauerhaft. */
+@media (hover: none) {
+  .hinweis { opacity: 1; transform: translate(-50%, 0); }
+}
