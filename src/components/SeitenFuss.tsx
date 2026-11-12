@@ -1,8 +1,13 @@
+'use client';
+
 import { BrandMark } from './BrandMark';
+import { useSprache } from '@/lib/sprache';
 import styles from './SeitenFuss.module.css';
 
 /** Fußzeile für alle öffentlichen Seiten. */
 export default function SeitenFuss() {
+  const { t } = useSprache();
+
   return (
     <footer className={styles.fuss}>
       <div className={styles.marke}>
@@ -15,7 +20,7 @@ export default function SeitenFuss() {
         <a href="/agb">AGB</a>
         <a href="/widerruf">Widerruf</a>
       </div>
-      <p>© 2026 Gradefruit · Mathe-Abitur Hessen 2027 · Zahlung über Stripe</p>
+      <p>{t('fuss.hinweis')}</p>
     </footer>
   );
 }

@@ -16,7 +16,10 @@
    Textmarker gezogen, ein tiefes Rot war schlicht zu laut für eine Lernseite.
    Die Schrift bleibt deshalb schwarz — kein Umkippen der Farben. */
 .bandTon { background: #F4EEEB; }
-:global(body.dark) .bandTon { background: #1C1A1A; }
+/* Im dunklen Modus ein neutrales Grau statt eines warmen Tons: #1C1A1A hatte
+   einen Braunstich, der neben dem neutralen Seitengrund schmutzig wirkte.
+   Hier zählt nur, dass sich die Fläche vom Grund abhebt. */
+:global(body.dark) .bandTon { background: #1F1F22; }
 
 .name {
   margin-bottom: 16px;

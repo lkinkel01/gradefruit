@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
+import { SpracheProvider } from "@/lib/sprache";
 import { ProgressProvider } from "@/lib/ProgressContext";
 import { ContentProvider } from "@/lib/ContentContext";
 import ServiceWorker from "@/components/ServiceWorker";
@@ -95,7 +96,8 @@ setTimeout(function(){
 },8000)}catch(e){}})()`,
           }}
         />
-        <AuthProvider>
+        <SpracheProvider>
+          <AuthProvider>
           <ProgressProvider>
             <ContentProvider>
               <ServiceWorker />
@@ -107,6 +109,7 @@ setTimeout(function(){
             </ContentProvider>
           </ProgressProvider>
         </AuthProvider>
+        </SpracheProvider>
       </body>
     </html>
   );

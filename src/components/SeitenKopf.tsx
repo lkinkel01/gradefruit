@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSprache } from '@/lib/sprache';
 import { BrandMark } from './BrandMark';
 import styles from './SeitenKopf.module.css';
 
@@ -12,10 +13,10 @@ import styles from './SeitenKopf.module.css';
  * Jeder Punkt führt auf eine eigene Seite, nicht auf eine Sprungmarke.
  */
 export const MENUE_PUNKTE = [
-  { label: 'Lernsystem', href: '/lernsystem' },
-  { label: 'Kurse', href: '/kurse' },
-  { label: 'Über uns', href: '/ueber-uns' },
-  { label: 'Fragen', href: '/fragen' },
+  { schluessel: 'menue.lernsystem', href: '/lernsystem' },
+  { schluessel: 'menue.kurse', href: '/kurse' },
+  { schluessel: 'menue.ueberUns', href: '/ueber-uns' },
+  { schluessel: 'menue.fragen', href: '/fragen' },
 ] as const;
 
 function Zahnrad() {
@@ -43,6 +44,7 @@ export default function SeitenKopf({
   const [menueOffen, setMenueOffen] = useState(false);
   const [gescrollt, setGescrollt] = useState(false);
   const pfad = usePathname();
+  const { t } = useSprache();
 
   useEffect(() => {
     // Woher der Scrollwert kommt, ist je nach Umgebung verschieden: im Browser
@@ -99,7 +101,7 @@ export default function SeitenKopf({
   return (
     <>
       <nav className={`${styles.kopf} ${gescrollt ? styles.kopfFest : ''}`} aria-label="Hauptnavigation">
-        <Link className={styles.marke} href="/" onClick={schliessen} aria-label="Zur Startseite">
+        <Link className={styles.marke} href="/" onClick={schliessen} aria-label={t('kopf.zurStartseite')}>
           <BrandMark size={26} />
           <span>Gradefruit</span>
         </Link>
@@ -107,21 +109,21 @@ export default function SeitenKopf({
         <div className={styles.rechts}>
           {isAuthed ? (
             <>
-              <button className={styles.textLink} onClick={onSignOut}>Abmelden</button>
-              <button className={styles.knopf} onClick={onEnter}>Weiterlernen</button>
+              <button className={styles.textLink} onClick={onSignOut}>{t('kopf.abmelden')}</button>
+              <button className={styles.knopf} onClick={onEnter}>{t('kopf.weiterlernen')}</button>
             </>
           ) : (
             <>
               {/* Anmelden gehört sichtbar in die Leiste: Wer schon ein Konto
                   hat, darf nicht erst ein Menü suchen müssen. */}
-              <button className={styles.textLink} onClick={onLogin}>Anmelden</button>
-              <button className={styles.knopf} onClick={onRegister}>Registrieren</button>
+              <button className={styles.textLink} onClick={onLogin}>{t('kopf.anmelden')}</button>
+              <button className={styles.knopf} onClick={onRegister}>{t('kopf.registrieren')}</button>
             </>
           )}
           <button
             aria-controls="hauptmenue"
             aria-expanded={menueOffen}
-            aria-label={menueOffen ? 'Menü schließen' : 'Menü öffnen'}
+            aria-label={menueOffen ? t('kopf.menueSchliessen') : t('kopf.menueOeffnen')}
             className={styles.striche}
             onClick={() => setMenueOffen(offen => !offen)}
             type="button"
@@ -142,7 +144,7 @@ export default function SeitenKopf({
                   onClick={schliessen}
                   aria-current={pfad === punkt.href ? 'page' : undefined}
                 >
-                  <span>{punkt.label}</span>
+                  <span>{t(punkt.schluessel)}</span>
                   {/* Der Pfeil macht sichtbar, dass hier etwas anklickbar ist
                       und wohin es geht — reine Großbuchstaben sahen aus wie
                       Überschriften. */}
@@ -158,7 +160,7 @@ export default function SeitenKopf({
           <div className={styles.fuss}>
             <Link className={styles.klein} href="/einstellungen" onClick={schliessen}>
               <Zahnrad />
-              Einstellungen
+              {t('kopf.einstellungen')}
             </Link>
           </div>
         </div>
