@@ -63,6 +63,28 @@ export const TEXTE = {
       en: 'Basic course {gk}, advanced course {lk}. Access runs until the end of the exam period.',
     },
     knopf: { de: 'Zu den Kursen', en: 'See courses' },
+    titelEinKurs: { de: 'Noch ein Kurs fehlt dir.', en: 'One course still missing.' },
+    zeileEinKurs: {
+      de: 'Du hast einen Kurs freigeschaltet. Der zweite ist einzeln dazubuchbar.',
+      en: 'You have one course. The second can be added separately.',
+    },
+    titelAlle: { de: 'Alles freigeschaltet.', en: 'Everything unlocked.' },
+    zeileAlle: {
+      de: 'Grundkurs und Leistungskurs liegen bereit. Keine weiteren Kosten.',
+      en: 'Basic and advanced course are ready. No further costs.',
+    },
+    knopfKurs: { de: 'Zum Kurs', en: 'Go to course' },
+  },
+  bandSchlussZustand: {
+    titelAngemeldet: { de: 'Weiter, wo du warst.', en: 'Pick up where you left off.' },
+    zeileOhneKurs: {
+      de: 'Analysis ist für dich freigeschaltet. Lineare Algebra und Stochastik brauchen einen Kurs.',
+      en: 'Calculus is unlocked for you. Linear algebra and stochastics need a course.',
+    },
+    zeileMitKurs: {
+      de: 'Dein Zugang gilt bis zum Ende des Prüfungszeitraums.',
+      en: 'Your access runs until the end of the exam period.',
+    },
   },
   bandUeberUns: {
     name: { de: 'Über uns', en: 'About' },

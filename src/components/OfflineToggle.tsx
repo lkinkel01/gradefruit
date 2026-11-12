@@ -68,10 +68,13 @@ export default function OfflineToggle({ topic, level }: { topic: string; level: 
   // Ohne Konto gibt es keine Ablage — dann auch keinen Knopf.
   if (!userId || zustand === 'unbekannt') return null;
 
-  const text = zustand === 'speichert' ? 'Wird gespeichert …'
-    : zustand === 'gespeichert' ? 'Offline verfügbar'
-    : zustand === 'fehler' ? 'Hat nicht geklappt, erneut versuchen'
-    : 'Für offline speichern';
+  // Kurz halten. „Offline verfügbar" stand vorher als voller Knopf mitten
+  // unter den Karten und wirkte wie ein Hauptangebot, obwohl es eine
+  // Zusatzfunktion ist.
+  const text = zustand === 'speichert' ? 'Wird geladen …'
+    : zustand === 'gespeichert' ? 'Offline gespeichert'
+    : zustand === 'fehler' ? 'Hat nicht geklappt'
+    : 'Offline speichern';
 
   return (
     <button
@@ -83,7 +86,21 @@ export default function OfflineToggle({ topic, level }: { topic: string; level: 
         ? 'Dieses Thema liegt auf dem Gerät. Nochmal antippen, um es zu entfernen.'
         : 'Dieses Thema aufs Gerät laden, damit es ohne Internet lesbar ist.'}
     >
-      <span className={styles.dot} aria-hidden="true" />
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        {zustand === 'gespeichert' ? (
+          <>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </>
+        ) : (
+          <>
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </>
+        )}
+      </svg>
       {text}
     </button>
   );

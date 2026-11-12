@@ -2,7 +2,7 @@
 
 import MarketingSeite, { useAuthDialog } from '@/components/MarketingSeite';
 import { PREISE, STEUERHINWEIS } from '@/lib/preise';
-import { useAuth } from '@/lib/AuthContext';
+import { useKundenstand } from '@/lib/kundenstand';
 import { useRouter } from 'next/navigation';
 import band from '@/components/SeitenBand.module.css';
 import styles from './kurse.module.css';
@@ -22,17 +22,23 @@ const KURSE = [
 
 function Inhalt() {
   const { anmelden, registrieren } = useAuthDialog();
-  const { user } = useAuth();
+  const { stand, angemeldet, owned, ownedLk } = useKundenstand();
   const router = useRouter();
+  const hat = { gk: owned, lk: ownedLk };
 
   return (
     <>
       <section className={band.band}>
         <p className={band.name}>Kurse</p>
-        <h1 className={band.titel}>Ein Zugang. Bis zur Prüfung.</h1>
+        <h1 className={band.titel}>
+          {stand === 'alleKurse' ? 'Alles freigeschaltet.' : 'Einmal zahlen, kein Abo.'}
+        </h1>
         <p className={band.zeile}>
-          Einmal zahlen, kein Abo. Analysis kannst du vorher kostenlos
-          ausprobieren.
+          {stand === 'alleKurse'
+            ? 'Grundkurs und Leistungskurs liegen bereit. Keine weiteren Kosten.'
+            : stand === 'einKurs'
+              ? 'Einen Kurs hast du. Der zweite ist einzeln dazubuchbar.'
+              : 'Einmal zahlen, kein Abo. Analysis kannst du vorher kostenlos ausprobieren.'}
         </p>
 
         <div className={styles.karten}>
@@ -46,15 +52,23 @@ function Inhalt() {
               <ul>
                 {kurs.punkte.map(p => <li key={p}>{p}</li>)}
               </ul>
-              {/* Kaufen setzt ein Konto voraus — der Zugang wird ausschließlich
+              {/* Kaufen setzt ein Konto voraus; der Zugang wird ausschließlich
                   über den Stripe-Webhook freigeschaltet. Deshalb führt der Weg
-                  hier bewusst erst zum Konto und nicht direkt zur Kasse. */}
-              <button
-                className={band.knopf}
-                onClick={() => (user ? router.push('/?view=kurse') : registrieren())}
-              >
-                {user ? 'Zum Kurs' : 'Kostenlos starten'}
-              </button>
+                  hier erst zum Konto und nicht direkt zur Kasse.
+                  Wer den Kurs schon hat, bekommt keinen Kaufknopf mehr,
+                  sondern den Weg hinein. */}
+              {hat[kurs.id] ? (
+                <button className={band.knopf} onClick={() => router.push('/?view=dashboard')}>
+                  Zu deinem Kurs
+                </button>
+              ) : (
+                <button
+                  className={band.knopf}
+                  onClick={() => (angemeldet ? router.push('/?view=kurse') : registrieren())}
+                >
+                  {angemeldet ? 'Freischalten' : 'Kostenlos starten'}
+                </button>
+              )}
             </article>
           ))}
         </div>
@@ -63,7 +77,7 @@ function Inhalt() {
           {STEUERHINWEIS} Bezahlung über Stripe. Der Zugang gilt bis zum Ende des
           Prüfungszeitraums.
         </p>
-        {!user && (
+        {!angemeldet && (
           <p className={styles.hinweis}>
             Schon ein Konto? <button className={styles.textLink} onClick={anmelden}>Anmelden</button>
           </p>

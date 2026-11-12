@@ -9,6 +9,7 @@ import ProduktBild from './ProduktBild';
 import Bildband from './Bildband';
 import { daysUntilExam } from '@/lib/exam';
 import { useSprache } from '@/lib/sprache';
+import { useKundenstand } from '@/lib/kundenstand';
 import { PREISE } from '@/lib/preise';
 import band from './SeitenBand.module.css';
 import styles from './LandingPage.module.css';
@@ -32,6 +33,7 @@ interface Props {
 export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, onSignOut }: Props) {
   const [tage, setTage] = useState<number | null>(null);
   const { t } = useSprache();
+  const { stand } = useKundenstand();
 
   useEffect(() => {
     // Kein requestAnimationFrame: Im Hintergrund wird nicht gezeichnet, und der
@@ -99,7 +101,7 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               alt="Die Übersicht in Gradefruit: Lernfortschritt pro Thema und der nächste Schritt."
               breite={2560}
               hoehe={1800}
-              hinweis={t('start.kostenlosTesten')}
+              hinweis={isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
               onKlick={onEnter}
             />
           </div>
@@ -112,12 +114,28 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
         />
 
         <section className={`${band.band} ${band.bandTon}`}>
+          {/* Preise interessieren nur, wer sie noch braucht. Wer beide Kurse
+              hat, bekommt stattdessen die Bestätigung und den Weg hinein. */}
           <p className={band.name}>{t('bandKurse.name')}</p>
-          <h2 className={band.titel}>{t('bandKurse.titel')}</h2>
+          <h2 className={band.titel}>
+            {stand === 'alleKurse'
+              ? t('bandKurse.titelAlle')
+              : stand === 'einKurs'
+                ? t('bandKurse.titelEinKurs')
+                : t('bandKurse.titel')}
+          </h2>
           <p className={band.zeile}>
-            {t('bandKurse.zeile', { gk: PREISE.gk.einmalig, lk: PREISE.lk.einmalig })}
+            {stand === 'alleKurse'
+              ? t('bandKurse.zeileAlle')
+              : stand === 'einKurs'
+                ? t('bandKurse.zeileEinKurs')
+                : t('bandKurse.zeile', { gk: PREISE.gk.einmalig, lk: PREISE.lk.einmalig })}
           </p>
-          <Link className={band.knopf} href="/kurse">{t('bandKurse.knopf')}</Link>
+          {stand === 'alleKurse' ? (
+            <button className={band.knopf} onClick={onEnter}>{t('bandKurse.knopfKurs')}</button>
+          ) : (
+            <Link className={band.knopf} href="/kurse">{t('bandKurse.knopf')}</Link>
+          )}
         </section>
 
         <section className={band.band}>
@@ -133,8 +151,16 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
         />
 
         <section className={`${band.band} ${band.bandTon}`}>
-          <h2 className={band.titel}>{t('bandSchluss.titel')}</h2>
-          <p className={band.zeile}>{t('bandSchluss.zeile')}</p>
+          <h2 className={band.titel}>
+            {isAuthed ? t('bandSchlussZustand.titelAngemeldet') : t('bandSchluss.titel')}
+          </h2>
+          <p className={band.zeile}>
+            {stand === 'gast'
+              ? t('bandSchluss.zeile')
+              : stand === 'ohneKurs'
+                ? t('bandSchlussZustand.zeileOhneKurs')
+                : t('bandSchlussZustand.zeileMitKurs')}
+          </p>
           <button className={band.knopf} onClick={isAuthed ? onEnter : onRegister}>
             {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
           </button>

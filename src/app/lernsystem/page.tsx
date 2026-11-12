@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import MarketingSeite from '@/components/MarketingSeite';
-import ProduktBild from '@/components/ProduktBild';
+import LernsystemBilder from './LernsystemBilder';
 import { MERKMALE } from '@/lib/marketing';
 import band from '@/components/SeitenBand.module.css';
 import styles from './lernsystem.module.css';
@@ -21,12 +21,7 @@ export default function Lernsystem() {
           durchklickst.
         </p>
         <div className={band.bild}>
-          <ProduktBild
-            name="uebersicht"
-            alt="Die Übersicht in Gradefruit: Lernfortschritt pro Thema, offene Aufgaben und der nächste Schritt."
-            breite={2560}
-            hoehe={1800}
-          />
+          <LernsystemBilder art="uebersicht" />
         </div>
       </section>
 
@@ -50,12 +45,7 @@ export default function Lernsystem() {
           dir gerade dran ist.
         </p>
         <div className={band.hochkant}>
-          <ProduktBild
-            name="reel"
-            alt="Der Reel-Modus auf dem Handy: eine Funktion mit ihrem Graphen, darunter verstanden, wiederholen oder nicht verstanden."
-            breite={860}
-            hoehe={1760}
-          />
+          <LernsystemBilder art="reel" />
         </div>
       </section>
     </MarketingSeite>
