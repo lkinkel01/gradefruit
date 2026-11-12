@@ -1,0 +1,197 @@
+/* Kopfleiste und Vollbild-Menü — auf allen Seiten dieselbe. */
+
+.kopf {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px clamp(16px, 3vw, 34px);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color var(--dur-hover) var(--ease-out),
+              border-color var(--dur-hover) var(--ease-out);
+}
+
+/* Beim Scrollen eine DECKENDE Fläche — kein Schleier, keine Transparenz.
+   Vorher schimmerte der Text darunter durch, was die Leiste unruhig und
+   schwer lesbar machte. */
+.kopfFest {
+  background: var(--surface);
+  border-bottom-color: var(--line);
+}
+
+.marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -.02em;
+  text-decoration: none;
+}
+
+.rechts { display: flex; align-items: center; gap: 8px; }
+
+.textLink {
+  padding: 10px 10px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.textLink:hover { color: var(--ink); }
+
+.knopf {
+  min-height: 40px;
+  padding: 0 17px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.knopf:hover { background: var(--ink); color: var(--surface); }
+
+.striche {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: transparent;
+  cursor: pointer;
+}
+.striche span { display: grid; gap: 4px; }
+.striche i { display: block; width: 17px; height: 1.5px; background: var(--ink); }
+
+/* Auf schmalen Bildschirmen tritt der Registrieren-Knopf zurück; Anmelden und
+   das Menü bleiben, weil beides häufiger gebraucht wird. */
+@media (max-width: 560px) {
+  .knopf { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Vollbild-Menü
+-------------------------------------------------------------------------- */
+.menue {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 104px 24px 48px;
+  background: var(--canvas);
+  overflow-y: auto;
+  animation: menueAuf var(--dur-enter) var(--ease-out) both;
+}
+@keyframes menueAuf { from { opacity: 0; } to { opacity: 1; } }
+
+.punkte {
+  width: min(100%, 520px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.punkte li { border-bottom: 1px solid var(--line); }
+
+/* Haarlinie, Pfeil und Hover-Farbe zeigen, dass es Menüpunkte sind.
+   Als reine Schriftzeilen sahen sie aus wie Überschriften. */
+.punkt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 6px;
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-optical-sizing: auto;
+  font-size: clamp(26px, 4.6vw, 38px);
+  font-weight: 750;
+  letter-spacing: -.03em;
+  text-decoration: none;
+  transition: color var(--dur-hover) var(--ease-out), padding-left var(--dur-hover) var(--ease-out);
+}
+.punkt svg { flex: none; color: var(--faint); transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out); }
+.punkt:hover { color: var(--accent); padding-left: 14px; }
+.punkt:hover svg { color: var(--accent); transform: translateX(4px); }
+.punkt[aria-current='page'] { color: var(--accent); }
+
+.fuss { margin-top: 30px; }
+
+.klein {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.klein:hover { color: var(--ink); border-color: var(--ink); }
+
+.einstellungen {
+  width: min(100%, 360px);
+  margin-top: 18px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.einstellungTitel {
+  margin-bottom: 12px;
+  color: var(--faint);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.wahl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--control);
+}
+
+.wahlOption,
+.wahlAktiv {
+  min-height: 40px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.wahlAktiv { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }

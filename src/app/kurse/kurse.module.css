@@ -1,0 +1,52 @@
+.karten {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0;
+  width: min(100%, 820px);
+  margin-top: 46px;
+  border-top: 1px solid var(--line);
+}
+
+/* Zeilen statt Kästen: Dieselbe ruhige Preisdarstellung wie eine Eintrittsliste
+   — Haarlinien tragen die Ordnung, nicht Rahmen und Schatten. */
+.karte {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 34px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.karte + .karte { border-left: 1px solid var(--line); }
+
+.karte h2 { color: var(--ink); font-size: 20px; font-weight: 750; letter-spacing: -.02em; }
+
+.preis { display: flex; align-items: baseline; gap: 8px; }
+.preis strong {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-optical-sizing: auto;
+  color: var(--ink);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1;
+}
+.preis span { color: var(--faint); font-size: 13px; }
+
+.karte ul { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.karte li { color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+.hinweis { max-width: 50ch; margin-top: 24px; color: var(--faint); font-size: 12.5px; line-height: 1.6; }
+
+.textLink {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media (max-width: 620px) {
+  .karte + .karte { border-left: 0; }
+}

@@ -1,0 +1,46 @@
+/* Rahmen der öffentlichen Seiten. Bewusst schmal gehalten — den Takt geben
+   die Bänder in SeitenBand.module.css vor. */
+
+.seite {
+  position: relative;
+  overflow-x: clip;
+}
+
+.skipLink {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: var(--radius-control);
+  background: var(--ink);
+  color: var(--surface);
+  font-size: 13px;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.skipLink:focus { transform: none; }
+
+.fuss {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  padding: 64px 24px 56px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.fussMarke {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.fussLinks { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.fussLinks a { color: var(--muted); font-size: 13.5px; text-decoration: none; }
+.fussLinks a:hover { color: var(--ink); text-decoration: underline; }
+
+.fuss p { color: var(--faint); font-size: 12.5px; }

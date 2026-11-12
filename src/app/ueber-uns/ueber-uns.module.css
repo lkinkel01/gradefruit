@@ -1,0 +1,16 @@
+.themen {
+  width: min(100%, 760px);
+  margin-top: 40px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+.themen li {
+  display: grid;
+  gap: 6px;
+  padding: 24px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.themen strong { color: var(--ink); font-size: 17px; font-weight: 700; }
+.themen span { color: var(--muted); font-size: 14.5px; line-height: 1.6; }

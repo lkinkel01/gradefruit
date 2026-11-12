@@ -1,0 +1,20 @@
+.fuss {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  padding: 64px 24px 56px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+.marke {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
+}
+.links { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.links a { color: var(--muted); font-size: 13.5px; text-decoration: none; }
+.links a:hover { color: var(--ink); text-decoration: underline; }
+.fuss p { color: var(--faint); font-size: 12.5px; }

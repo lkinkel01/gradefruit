@@ -1,0 +1,16 @@
+.liste {
+  width: min(100%, 720px);
+  margin-top: 40px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+.liste li {
+  display: grid;
+  gap: 6px;
+  padding: 22px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.liste strong { color: var(--ink); font-size: 16.5px; font-weight: 700; }
+.liste span { color: var(--muted); font-size: 14.5px; line-height: 1.6; }

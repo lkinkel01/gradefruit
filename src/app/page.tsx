@@ -489,17 +489,15 @@ export default function Home() {
 
     return (
       <>
+        {/* Kauf und Dunkelmodus liegen nicht mehr hier: Preise haben eine
+            eigene Seite (/kurse), der Dunkelmodus sitzt in den Einstellungen
+            im Menü. */}
         <LandingPage
           key={themeKey}
           isAuthed={!!user}
-          owned={owned}
-          ownedLk={ownedLk}
-          dark={dark}
-          onToggleDark={() => setTheme(!dark)}
           onEnter={() => navigate(user ? 'dashboard' : 'analysis')}
           onLogin={() => openAuth('login')}
           onRegister={() => openAuth('register')}
-          onOpenCheckout={(course) => user ? openCheckout(course) : openAuth('register')}
           onSignOut={handleSignOut}
         />
         <SignedOutNotice

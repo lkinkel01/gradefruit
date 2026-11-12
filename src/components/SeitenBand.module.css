@@ -1,0 +1,79 @@
+/* Der Takt aller öffentlichen Seiten: ein Band je Thema. Bezeichnung,
+   Überschrift, eine Zeile, dann der Beleg. */
+
+.band {
+  padding: clamp(78px, 12vh, 136px) 24px;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+/* Das kräftige Band: tiefes Grapefruit-Rot mit heller Schrift.
+   Der vorherige blasse Rosaton wirkte wie ein Textmarker über der Seite —
+   er hatte zu wenig Abstand zum Weiß, um als eigene Fläche zu lesen. Mit dem
+   dunklen Ton entsteht derselbe klare Wechsel wie bei kräftig gesetzten
+   Seiten: hell, dunkel, hell. */
+.bandTon {
+  background: #5C1A24;
+  --ink: #FFFFFF;
+  --muted: rgba(255, 255, 255, .74);
+  --faint: rgba(255, 255, 255, .58);
+  --line: rgba(255, 255, 255, .17);
+  --line-strong: rgba(255, 255, 255, .3);
+  --surface: #5C1A24;
+  --control: rgba(255, 255, 255, .1);
+  color: var(--ink);
+}
+:global(body.dark) .bandTon { background: #44121B; --surface: #44121B; }
+
+.name {
+  margin-bottom: 16px;
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.bandTon .name { color: #FF9D8E; }
+
+.titel {
+  max-width: 18ch;
+  color: var(--ink);
+  font-size: clamp(30px, 5vw, 50px);
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1.04;
+}
+
+.zeile {
+  max-width: 44ch;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+
+.bild { width: min(100%, 980px); margin-top: 44px; }
+.hochkant { width: min(100%, 288px); margin-top: 40px; }
+
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  margin-top: 30px;
+  padding: 0 26px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.knopf:hover { background: var(--ink); color: var(--surface); }

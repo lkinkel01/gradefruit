@@ -1,566 +1,36 @@
-/* Gradefruit Landing
-   Eine ruhige Produktseite mit einer klaren Abfolge: Fokus, System, Coach,
-   Lernweise, Prüfung und Zugang. Keine austauschbare Feature-Kartenwand. */
+/* Startseite: Startbereich, Faktenleiste, Teaser. Der Takt der Bänder liegt
+   in SeitenBand.module.css — hier steht nur, was die Startseite allein hat. */
 
-.lpage {
-  position: relative;
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 40px 40px;
-  overflow-x: clip;
-}
+.seite { position: relative; overflow-x: clip; }
 
 .skipLink {
   position: fixed;
   top: 10px;
   left: 10px;
-  z-index: 60;
+  z-index: 100;
   padding: 10px 14px;
-  min-height: 44px;
   border-radius: var(--radius-control);
   background: var(--ink);
-  color: var(--canvas);
+  color: var(--surface);
   font-size: 13px;
-  font-weight: 600;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-160%);
-  transition: opacity var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+  text-decoration: none;
+  transform: translateY(-200%);
 }
+.skipLink:focus { transform: none; }
 
-.skipLink:focus-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
-
-.brand,
-.iconBtn,
-.navLink,
-.menuBtn {
-  appearance: none;
-  border: 0;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  justify-self: start;
-  gap: 10px;
-  min-height: 42px;
-  padding: 6px 10px 6px 8px;
-  background: transparent;
-  color: var(--ink);
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  transition: color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
-}
-
-.brand :global(svg) { color: var(--accent); }
-
-.continueButton {
-  /* Schwarz, nicht orange.
-     Der Knopf war ein gebranntes Orange (#DC5A15) und damit die größte Fläche
-     der Seite. Das widerspricht der eigenen Regel in DESIGN.md — „Primäraktionen
-     sind Schwarz" und „Orange auf höchstens 10 % eines Screens" — und es war
-     genau der Ton, der die Seite nach einem beliebigen KI-Produkt aussehen
-     ließ. Als schwarzer Block trägt er mehr Gewicht, nicht weniger.
-     Über --btn-ink, nicht fest gesetzt: Ein fester schwarzer Ton verschwand
-     im Dunkelmodus auf schwarzem Grund. Die Hauptaktion muss in beiden Modi
-     die kräftigste Fläche sein — hell schwarz auf weiß, dunkel weiß auf
-     schwarz. */
-  border: 1px solid var(--btn-ink);
-  background: var(--btn-ink);
-  color: var(--btn-ink-tx);
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--ink) 14%, transparent);
-  transition:
-    transform var(--dur-press) var(--ease-press),
-    background-color var(--dur-hover) var(--ease-out),
-    border-color var(--dur-hover) var(--ease-out),
-    box-shadow var(--dur-hover) var(--ease-out);
-}
-
-.brand:active,
-.iconBtn:active,
-.navLink:active,
-.continueButton:active,
-.navSection:active,
-.navSectionActive:active { transform: scale(.98); }
-
-.brand:focus-visible,
-.iconBtn:focus-visible,
-.navLink:focus-visible,
-.navSection:focus-visible,
-.navSectionActive:focus-visible,
-.mobileSections a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-@keyframes heroCopyIn {
-  from { opacity: 0; transform: translate3d(0, 12px, 0); }
-  to { opacity: 1; transform: none; }
-}
-
-.proofStrip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-bottom: 1px solid var(--line-strong);
-}
-
-.proofStrip > div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 27px 28px;
-  border-left: 1px solid var(--line);
-  text-align: center;
-}
-
-.proofStrip > div:first-child { padding-left: 0; border-left: 0; }
-.proofStrip strong { color: var(--ink); font-size: 15px; font-weight: 650; }
-.proofStrip span { color: var(--muted); font-size: 13px; }
-
-.section h2,
-.closing h2 {
-  color: var(--ink);
-  font-family: 'Bricolage Grotesque', sans-serif;
-  /* Untergrenze von 38 auf 32: „Gedächtnisforschung." braucht bei 38 Punkten
-     rund 360 Punkte Breite, auf einem 393 Punkte breiten Gerät stehen nach
-     Seitenrand aber nur etwa 345 zur Verfügung — das Wort lief hinaus.
-     Trennung als zusätzliche Sicherung für andere lange Komposita. */
-  font-size: clamp(32px, 5.4vw, 66px);
-  font-optical-sizing: auto;
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: .98;
-  text-wrap: balance;
-  hyphens: auto;
-  overflow-wrap: break-word;
-}
-
-.systemIcon {
-  width: 31px;
-  height: 31px;
-  margin-bottom: 3px;
-  color: var(--brand-rind-deep);
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.subjectMarker,
-.planMarker { display: block; background: var(--faint); }
-.analysis { background: var(--topic-analysis); }
-.linalg { background: var(--topic-linalg); }
-.stochastik { background: var(--topic-stochastik); }
-
-/* Kurse */
-.plans { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-.plan {
-  display: flex;
-  flex-direction: column;
-  padding: 32px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-card);
-  background: var(--surface);
-  text-align: center;
-  transition: transform var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out);
-}
-
-.planHeading { display: flex; align-items: center; justify-content: center; gap: 12px; }
-.planHeading h3 { color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
-.planMarker { width: 10px; height: 10px; border-radius: 2px; }
-.planPrice { display: flex; align-items: baseline; justify-content: center; gap: 12px; margin-top: 26px; }
-.planPrice strong { color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; font-weight: 800; letter-spacing: -0.04em; line-height: .9; }
-.planPrice span,
-.planAlternative { color: var(--faint); font-size: 13.5px; }
-.planAlternative { margin-top: 10px; }
-
-.planFeatures { display: flex; flex: 1; flex-direction: column; gap: 12px; margin: 28px 0; list-style: none; }
-.planFeatures li { position: relative; width: fit-content; margin-inline: auto; padding-left: 20px; color: var(--muted); font-size: 14.5px; line-height: 1.45; }
-.planFeatures li::before { content: ''; position: absolute; top: .48em; left: 0; width: 8px; height: 8px; border: 1.5px solid var(--accent); border-radius: 50%; }
-.planNote { max-width: 65ch; margin: 22px auto 0; color: var(--faint); font-size: 13px; line-height: 1.55; }
-.faqList { border-top: 1px solid var(--line-strong); }
-.faqItem { border-bottom: 1px solid var(--line-strong); }
-
-.faqItem summary {
-  display: flex;
-  min-height: 80px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 20px 0;
-  color: var(--ink);
-  cursor: pointer;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  list-style: none;
-  transition: color var(--dur-hover) var(--ease-out);
-}
-
-.faqItem summary > span:first-child { flex: 1; text-align: center; }
-
-.faqItem summary::-webkit-details-marker { display: none; }
-.faqItem summary:focus-visible { border-radius: var(--radius-control); outline: 2px solid var(--accent); outline-offset: 4px; }
-.faqItem[open] summary { color: var(--accent-d); }
-.faqItem p { max-width: 62ch; margin-inline: auto; padding: 0 24px 24px; color: var(--muted); font-size: 15px; line-height: 1.65; text-align: center; }
-
-.faqPlus { position: relative; width: 18px; height: 18px; flex: 0 0 auto; }
-.faqPlus::before,
-.faqPlus::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 16px;
-  height: 1.5px;
-  background: currentColor;
-  transform: translate(-50%, -50%);
-  transition: transform var(--dur-hover) var(--ease-out);
-}
-.faqPlus::after { transform: translate(-50%, -50%) rotate(90deg); }
-.faqItem[open] .faqPlus::after { transform: translate(-50%, -50%) rotate(0deg); }
-
-/* Abschluss und Footer */
-.closing {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 38px;
-  margin-top: clamp(96px, 13vw, 156px);
-  padding: clamp(84px, 12vw, 140px) 0 104px;
-  border-top: 1px solid var(--line-strong);
-  text-align: center;
-}
-
-.closing h2 { font-size: clamp(52px, 8vw, 104px); line-height: .92; }
-.closingActions { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 26px; }
-
-/* Social-Media: Instagram, TikTok, Facebook — nach dem Abschluss-CTA. */
-.social { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 6px; }
-.socialLabel { color: var(--muted); font-size: 13px; font-weight: 600; }
-.socialRow { display: flex; align-items: center; gap: 14px; }
-.socialLink {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-pill);
-  color: var(--ink);
-  background: var(--surface);
-  transition: border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
-}
-.socialLink:active { transform: scale(.96); }
-.socialLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-/* TikTok/Facebook: noch kein Konto – als ruhiger Platzhalter, nicht klickbar. */
-.socialLinkSoon { color: var(--faint); opacity: .55; cursor: default; }
-.socialLinkSoon:active { transform: none; }
-@media (hover: hover) and (pointer: fine) {
-  .socialLink:not(.socialLinkSoon):hover { border-color: var(--brand-rind-deep); color: #fff; background: var(--brand-rind-deep); transform: translateY(-1px); }
-}
-
-.footer {
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-items: center;
-  gap: 22px;
-  align-items: center;
-  padding: 32px 0 18px;
-  border-top: 1px solid var(--line-strong);
-  text-align: center;
-}
-
-.footerBrand { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--ink); font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 800; }
-.footerBrand small { padding-left: 8px; color: var(--faint); font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 400; }
-.footerLinks { display: flex; justify-content: center; gap: 22px; }
-.footerLinks a { color: var(--muted); font-size: 13px; transition: color var(--dur-hover) var(--ease-out); }
-.footerLinks a { display: inline-flex; min-height: 44px; align-items: center; }
-.footer > p { grid-column: 1 / -1; color: var(--faint); font-size: 12.5px; }
-
-/* Interaktion bleibt sparsam und funktioniert auf Touch ohne Hover-Fallen. */
-@media (hover: hover) and (pointer: fine) {
-  .continueButton:hover {
-    /* Kein farbiger Schein — nur ein knappes Anheben und etwas mehr Tiefe.
-       Ein orangefarbener Schatten unter einem schwarzen Knopf wäre wieder
-       genau die Dekoration, die hier raus sollte. */
-    border-color: var(--btn-ink-hover);
-    background: var(--btn-ink-hover);
-    box-shadow: 0 10px 24px color-mix(in srgb, var(--ink) 22%, transparent);
-    transform: translateY(-1px);
-  }
-
-  .brand:hover,
-  .navLink:hover,
-  .footerLinks a:hover,
-  .faqItem summary:hover { color: var(--accent-d); }
-
-  .navSection:hover,
-  .navSectionActive:hover { background: var(--control); color: var(--ink); }
-  .iconBtn:hover { border-color: color-mix(in srgb, var(--ink) 52%, transparent); background: color-mix(in srgb, var(--surface) 72%, transparent); transform: scale(1.02); }
-  .coachShell:hover { border-color: var(--accent); box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
-  .methodRow:hover { transform: translateX(2px); }
-  .plan:hover { border-color: var(--ink); box-shadow: var(--shadow-card-hover); transform: translateY(-1px); }
-}
-
-/* Scrollgebundene Bewegung ist nur progressive Dekoration. Der Inhalt ist
-   ohne Unterstützung oder bei Reduced Motion vollständig sichtbar. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .systemDiagram {
-      animation: systemArrive linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 38%;
-    }
-
-    .visualStage {
-      animation: visualArrive linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 34%;
-    }
-  }
-}
-
-@keyframes systemArrive {
-  from { opacity: .72; transform: translate3d(0, 10px, 0) scale(.985); }
-  to { opacity: 1; transform: none; }
-}
-
-@keyframes visualArrive {
-  from { opacity: .78; transform: translate3d(12px, 0, 0) scale(.985); }
-  to { opacity: 1; transform: none; }
-}
-
-/* Responsive */
-@media (max-width: 980px) {
-  .navBar { grid-template-columns: 1fr auto; }
-  .navCenter,
-  .desktopAccount { display: none; }
-  .menuBtn { display: grid; }
-
-  .mobileNav {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    padding: 0 14px 14px;
-    border-top: 1px solid color-mix(in srgb, var(--line-strong) 70%, transparent);
-  }
-
-  .mobileSections {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 4px;
-    order: 2;
-    padding-top: 10px;
-    border-top: 1px solid color-mix(in srgb, var(--line-strong) 68%, transparent);
-  }
-
-  .mobileSections a {
-    display: grid;
-    min-height: 44px;
-    place-items: center;
-    border-radius: var(--radius-control);
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 650;
-    transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
-  }
-
-  .mobileSections a[aria-current='location'] {
-    background: var(--surface-2);
-    color: var(--ink);
-  }
-
-  .mobileSections a:active { transform: scale(.98); }
-
-  .mobileAccount {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 8px;
-    order: 1;
-    padding: 12px 0;
-  }
-
-  .mobileAccount .navLink,
-  .mobileAccount :global(.btn) {
-    display: grid;
-    width: 100%;
-    min-height: 44px;
-    place-items: center;
-    margin: 0;
-  }
-
-  .mobileAccount .navLink {
-    border: 1px solid color-mix(in srgb, var(--line-strong) 76%, transparent);
-    border-radius: var(--radius-control);
-    background: color-mix(in srgb, var(--surface) 34%, transparent);
-  }
-}
-
-@media (max-width: 900px) {
-  .lpage { padding: 0 24px 32px; }
-  .footer { grid-template-columns: 1fr; }
-  .footerLinks { flex-wrap: wrap; }
-}
-
-@media (max-width: 560px) {
-  .lpage { padding: 0 18px 28px; }
-  .brand { min-height: 44px; padding-left: 7px; font-size: 18px; }
-  .brand :global(svg) { width: 25px; height: 25px; }
-  .proofStrip { grid-template-columns: 1fr; padding: 20px 0; }
-  .proofStrip > div,
-  .proofStrip > div:first-child { padding: 16px 0; border-left: 0; }
-  .section h2,
-  .closing h2 { font-size: clamp(36px, 11.5vw, 50px); }
-
-  .plans { grid-template-columns: 1fr; }
-  .plan { padding: 26px 22px; }
-  .planPrice strong { font-size: 48px; }
-
-  .faqItem summary { min-height: 72px; font-size: 17px; }
-  .faqItem p { padding-right: 22px; }
-
-  .closing { margin-top: 92px; padding: 72px 0; }
-  .closing h2 { font-size: clamp(48px, 15vw, 68px); }
-  .closingActions { align-items: stretch; flex-direction: column; width: 100%; gap: 16px; }
-  .closingActions :global(.btn) { width: 100%; }
-
-  .footerBrand { align-items: flex-start; flex-wrap: wrap; }
-  .footerBrand small { width: 100%; padding-left: 32px; }
-}
-
-@media (prefers-contrast: more) {
-  .plan,
-  .coachShell { border-color: var(--ink); }
-}
-
-/* Karten flacher & weniger rund: feine Linien statt weicher Schatten */
-.coachShell,
-.plan,
-.privateLibrary,
-.communityLibrary,
-.visualStage,
-.trustBlock,
-.faqItem,
-.coachStage {
-  border-radius: 8px;
-  box-shadow: none;
-}
-
-/* Dark Mode: eigenes, dunkel aufgenommenes Motiv — deshalb KEINE nachträgliche
-   Abdunklung mehr. Nur die Schleierfarbe wechselt auf die dunkle Seitenfarbe. */
-:global(body.dark) .hero { --scrim: 19, 19, 21; }
-
-/* Die frühere mobile Umsortierung ist entfallen. Sie gehörte zum
-   zweispaltigen Hero (Text links, Foto rechts) und schob auf dem Handy die
-   Kennzahlen zwischen Text und Bild. Mit dem Vollbild-Startbild stand sie
-   plötzlich ÜBER dem Bild — die Seite begann mit drei Zahlen statt mit der
-   Marke. Ohne die Regel steht wieder alles in der Reihenfolge des Markups. */
-
-@media (hover: hover) and (pointer: fine) {
-  .coachShell:hover,
-  .plan:hover { box-shadow: none; border-color: var(--line-strong); transform: translateY(-1px); }
-  .navSectionActive:hover { background: var(--control); color: var(--ink); }
-}
-
-/* --------------------------------------------------------------------------
-   Mobil: die beiden Beispiel-Bühnen ruhiger und kompakter setzen
-   ----------------------------------------------------------------------- */
-@media (max-width: 900px) {
-  .coachSection,
-  .visualSection {
-    grid-template-columns: 1fr;
-    gap: 26px;
-  }
-  .coachStage,
-  .visualStage {
-    padding: 20px 16px;
-    border-radius: var(--radius-card);
-  }
-  .coachShell { padding: 18px 16px; }
-  .coachContext strong { font-size: 20px; }
-  .bubbleMath, .reelMath { font-size: 15px; }
-  .reelPhone { width: min(240px, 72%); }
-  .reelQ { font-size: 19px; }
-  .capabilityList li { text-align: center; padding: 14px 0; }
-}
-
-/* ---------------------------------------------------------------------------
-   Produktaufnahmen
-   Dieselbe Ansicht in hell und dunkel, übereinandergelegt und per body.dark
-   getauscht. Das erste Bild bestimmt die Höhe, das zweite liegt darüber —
-   so gibt es beim Themenwechsel kein Nachladen und kein Flackern.
---------------------------------------------------------------------------- */
-.shot {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--surface);
-  /* Die Aufnahmen zeigen eine App mit eigenen Kanten; ein dezenter Schatten
-     hebt sie von der Seite ab, ohne sie wie einen Aufkleber wirken zu lassen. */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 12px 32px rgba(0, 0, 0, .07);
-}
-.shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-  pointer-events: none;
-  -webkit-user-drag: none;
-  user-select: none;
-}
-.shot img + img {
-  position: absolute;
-  inset: 0;
-  height: 100%;
-  opacity: 0;
-}
-:global(body.dark) .shot { box-shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px rgba(0, 0, 0, .45); }
-:global(body.dark) .shot img:first-child { opacity: 0; }
-:global(body.dark) .shot img + img { opacity: 1; }
-.shotHochkant .shot { border-radius: 26px; }
-
-
-/* ---------------------------------------------------------------------------
-   Startbild
-   Ein Bild über die volle Breite und Höhe, darüber nur die Marke, eine Zeile
-   und zwei Knöpfe. Vorher standen hier Vorspann, dreizeilige Überschrift, drei
-   Stichpunkte, zwei Knöpfe und daneben ein Foto. Wer auf einer Startseite
-   ankommt, braucht zwei Auskünfte: wo bin ich, und was kann ich hier tun.
---------------------------------------------------------------------------- */
 .hero {
   position: relative;
-  /* Aus dem zentrierten Inhaltsrahmen ausbrechen, bis an beide Ränder. */
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
   min-height: min(100svh, 820px);
   background: var(--canvas);
   display: grid;
-  /* Inhalt etwas oberhalb der Mitte: Darunter bleibt Bild stehen, das zum
-     Weiterscrollen einlädt. */
   align-content: center;
   justify-items: center;
-  padding: 104px 24px 140px;
-  overflow: hidden;
-  isolation: isolate;
+  padding: 108px 24px 108px;
 }
 
+.heroMitte { display: grid; justify-items: center; gap: 14px; text-align: center; }
 
-.heroMitte {
-  display: grid;
-  justify-items: center;
-  gap: 14px;
-  text-align: center;
-}
-
-.heroMarke { width: clamp(62px, 8.5vw, 92px); height: auto; }
+.heroMarke { width: clamp(60px, 8vw, 88px); height: auto; }
 
 .heroName {
   font-family: 'Bricolage Grotesque', sans-serif;
@@ -575,21 +45,13 @@
 .heroZeile {
   color: var(--muted);
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .18em;
+  font-weight: 650;
+  letter-spacing: .17em;
   text-transform: uppercase;
 }
 
-.heroKnoepfe {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 18px;
-}
+.heroKnoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 18px; }
 
-/* Umrissknöpfe auf dem Bild: Eine gefüllte Fläche würde das Foto zerschneiden.
-   Beim Überfahren kehrt sich der Knopf um. */
 .heroKnopf {
   display: inline-flex;
   align-items: center;
@@ -603,14 +65,58 @@
   font-family: inherit;
   font-size: 12px;
   font-weight: 650;
-  letter-spacing: .16em;
+  letter-spacing: .15em;
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color var(--dur-hover) var(--ease-out),
-              color var(--dur-hover) var(--ease-out);
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
 .heroKnopf:hover { background: var(--ink); color: var(--surface); }
+
+/* Hinweis, dass es weitergeht. */
+.weiter {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  color: var(--faint);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  animation: weiterTippen 2.4s var(--ease-out) infinite;
+}
+.weiter:hover { color: var(--ink); }
+@keyframes weiterTippen {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 5px); }
+}
+@media (prefers-reduced-motion: reduce) { .weiter { animation: none; } }
+
+.fakten {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.fakten > div {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  padding: 26px 18px;
+  text-align: center;
+}
+.fakten > div + div { border-left: 1px solid var(--line); }
+.fakten strong { color: var(--ink); font-size: 16px; font-weight: 750; letter-spacing: -.01em; }
+.fakten span { color: var(--muted); font-size: 13px; }
+
+@media (max-width: 620px) {
+  .fakten > div + div { border-left: 0; border-top: 1px solid var(--line); }
+}
 
 /* Nur für Vorleseprogramme und Suchmaschinen. */
 .nurVorleser {
@@ -623,214 +129,3 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-
-/* ---------------------------------------------------------------------------
-   Bänder
-   Jeder Abschnitt ist ein Band über die volle Breite: gesperrte Bezeichnung,
-   kurze Überschrift, eine Zeile, dann der Beleg. Zwei Bänder sind dunkel —
-   der Farbwechsel gliedert die Seite, sodass es keine Trennlinien und keine
-   Kästen braucht.
---------------------------------------------------------------------------- */
-.band {
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
-  padding: clamp(76px, 12vh, 132px) 24px;
-  display: grid;
-  justify-items: center;
-  text-align: center;
-}
-
-/* Das dunkle Band setzt die Themenfarben lokal neu. Dadurch passen sich alle
-   Kinder an, ohne dass jede Regel eine eigene Dunkel-Fassung braucht. */
-:global(body.dark) 
-.bandTitel {
-  max-width: 18ch;
-  color: var(--ink);
-  font-size: clamp(30px, 5vw, 50px);
-  font-weight: 800;
-  letter-spacing: -.035em;
-  line-height: 1.04;
-}
-
-.bandZeile {
-  max-width: 46ch;
-  margin-top: 18px;
-  color: var(--muted);
-  font-size: 15.5px;
-  line-height: 1.6;
-}
-
-.bandBild { width: min(100%, 980px); margin-top: 48px; }
-.bandHochkant { width: min(100%, 290px); margin-top: 44px; }
-.bandHochkant .shot { border-radius: 26px; }
-
-/* Die fünf Merkmale nur als Namen, ohne Beschreibungstexte: Was sie bedeuten,
-   zeigt das Bild darunter besser als drei Zeilen Fließtext. */
-.merkmalListe {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px 28px;
-  margin-top: 32px;
-  padding: 0;
-  list-style: none;
-}
-.merkmalListe li {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 600;
-}
-.merkmalListe svg { width: 17px; height: 17px; color: var(--accent); }
-
-/* Themen als Zeilen mit Haarlinie — ruhiger als drei Kästen nebeneinander. */
-.themenListe {
-  width: min(100%, 760px);
-  margin-top: 44px;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--line);
-}
-.themenListe li {
-  display: grid;
-  gap: 5px;
-  padding: 22px 4px;
-  border-bottom: 1px solid var(--line);
-}
-.themenListe strong { color: var(--ink); font-size: 16px; font-weight: 700; }
-.themenListe span { color: var(--muted); font-size: 14px; line-height: 1.55; }
-
-.band .plans { margin-top: 48px; }
-.band .faqList { width: min(100%, 760px); margin-top: 40px; text-align: left; }
-.band .planNote { max-width: 52ch; margin-top: 26px; }
-
-
-/* ---------------------------------------------------------------------------
-   Kopfleiste
-   Über dem Startbereich unsichtbar, beim Scrollen legt sich eine Fläche
-   darunter. Links die Marke, rechts ein Knopf und die drei Striche.
---------------------------------------------------------------------------- */
-.kopf {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 60;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px clamp(16px, 3vw, 34px);
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  transition: background-color var(--dur-hover) var(--ease-out),
-              border-color var(--dur-hover) var(--ease-out);
-}
-.kopfFest {
-  background: color-mix(in srgb, var(--canvas) 88%, transparent);
-  backdrop-filter: saturate(1.6) blur(14px);
-  -webkit-backdrop-filter: saturate(1.6) blur(14px);
-  border-bottom-color: var(--line);
-}
-
-.kopfRechts { display: flex; align-items: center; gap: 10px; }
-
-.kopfKnopf {
-  min-height: 40px;
-  padding: 0 18px;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius-control);
-  background: transparent;
-  color: var(--ink);
-  font-family: inherit;
-  font-size: 11.5px;
-  font-weight: 650;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
-}
-.kopfKnopf:hover { background: var(--ink); color: var(--surface); }
-
-/* Die drei Striche sitzen ganz rechts — vorher lagen sie als schwebender
-   Knopf oben links, also auf der Seite, auf der schon die Marke steht. */
-.striche {
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-control);
-  background: transparent;
-  cursor: pointer;
-}
-.striche span { display: grid; gap: 4px; }
-.striche i { display: block; width: 17px; height: 1.5px; background: var(--ink); }
-
-/* ---------------------------------------------------------------------------
-   Vollflächiges Menü
---------------------------------------------------------------------------- */
-.menue {
-  position: fixed;
-  inset: 0;
-  z-index: 55;
-  display: grid;
-  place-items: center;
-  padding: 96px 24px 48px;
-  background: var(--canvas);
-  animation: menueAuf var(--dur-enter) var(--ease-out) both;
-}
-@keyframes menueAuf { from { opacity: 0; } to { opacity: 1; } }
-
-.menueInhalt { display: grid; justify-items: center; gap: 4px; text-align: center; }
-
-.menuePunkt {
-  display: block;
-  padding: 10px 8px;
-  color: var(--ink);
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-optical-sizing: auto;
-  font-size: clamp(30px, 6vw, 52px);
-  font-weight: 800;
-  letter-spacing: -.03em;
-  line-height: 1.12;
-  text-decoration: none;
-}
-.menuePunkt:hover { color: var(--accent); }
-
-.menueFuss {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 36px;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
-}
-
-.menueKlein {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 0 16px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-control);
-  background: transparent;
-  color: var(--muted);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.menueKlein:hover { color: var(--ink); border-color: var(--ink); }
-
-/* ---------------------------------------------------------------------------
-   Band in abgehelltem Grapefruit
-   Statt eines schwarzen Bandes ein heller Hauch der Markenfarbe. Im dunklen
-   Modus derselbe Gedanke, nur von der dunklen Seite her gemischt.
---------------------------------------------------------------------------- */
-.bandTon { background: color-mix(in srgb, var(--accent) 9%, #FFFFFF); }
-:global(body.dark) .bandTon { background: color-mix(in srgb, var(--accent) 15%, #0E0E10); }
