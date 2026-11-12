@@ -54,3 +54,13 @@
 @media (hover: none) {
   .hinweis { opacity: 1; transform: translate(-50%, 0); }
 }
+
+/* Als Knopf dieselbe Darstellung wie als Link: kein Eigenleben vom Browser. */
+button.shot {
+  appearance: none;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+}

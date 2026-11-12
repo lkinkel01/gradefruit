@@ -48,9 +48,17 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
 
   // Eingeklappte Themen: Ein Klick auf das bereits aktive Thema klappt sein
   // Untermenü zu (und wieder auf), ohne zu navigieren.
-  const [collapsedTopics, setCollapsedTopics] = useState<Set<View>>(new Set());
+  //
+  // Beim Einstieg sind ALLE Themen zu. Vorher sprang die Liste beim Öffnen
+  // des Kurses sofort auf und zeigte Zusammenfassung und Übungen — wer
+  // hereinkommt, sieht dann als Erstes eine lange Liste statt des Themas.
+  const [collapsedTopics, setCollapsedTopics] = useState<Set<View>>(
+    () => new Set(TOPICS.map(t => t.id)),
+  );
   // Eingeklappte Unterlisten (Zusammenfassung/Übungen), Schlüssel „id:tab".
-  const [collapsedSubs, setCollapsedSubs] = useState<Set<string>>(new Set());
+  const [collapsedSubs, setCollapsedSubs] = useState<Set<string>>(
+    () => new Set(TOPICS.flatMap(t => [`${t.id}:zusammenfassung`, `${t.id}:uebungen`])),
+  );
   // Wie `toggleCollapse`, nur eine Ebene tiefer: Auch hier hielt der
   // Hover-Zustand die Liste offen, bis man den Zeiger wegbewegte.
   const toggleSub = (key: string) => {
@@ -337,9 +345,10 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
 
       <div className={styles.spacer} />
 
+      {/* Nur der Knopf. Der Satz darüber erklärte, was die Kursseite ohnehin
+          ausführlich sagt, und machte die Ecke voll. */}
       {!(owned || ownedLk) && !imApp && (
         <div className={styles.unlockCard}>
-          <p>Alle Aufgaben, Lösungen und Erklärvideos bis zur Prüfung.</p>
           <button className="btn primary btn sm" onClick={onOpenCheckout}>
             Kurs freischalten
           </button>

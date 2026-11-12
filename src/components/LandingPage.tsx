@@ -96,6 +96,7 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               breite={2560}
               hoehe={1800}
               hinweis={t('start.kostenlosTesten')}
+              onKlick={onEnter}
             />
           </div>
           <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
