@@ -30,72 +30,6 @@
 
 .skipLink:focus-visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
 
-/* Navigation */
-.nav {
-  position: sticky;
-  /* Der Abstand am Seitenkörper wirkt nur im Fluss. Sobald die Leiste klebt,
-     zählt allein dieser Wert — ohne den Sicherheitsabstand rutschte sie beim
-     Scrollen wieder unter die Uhrzeit. */
-  top: calc(12px + env(safe-area-inset-top, 0px));
-  z-index: 40;
-  width: 100%;
-  min-height: 58px;
-  margin-top: 12px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 26px;
-  background: color-mix(in srgb, var(--surface) 26%, transparent);
-  /* Liquid Glass: sehr starke Unschärfe mit kräftiger Sättigung, dazu ein
-     doppelter Innenrand (helle Oberkante, dunkle Unterkante) statt einer
-     durchgehenden Linie — so wirkt die Leiste wie eine Scheibe über dem
-     Inhalt und nicht wie eine Box mit Rahmen. */
-  -webkit-backdrop-filter: blur(52px) saturate(210%) brightness(1.08);
-  backdrop-filter: blur(52px) saturate(210%) brightness(1.08);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, #fff 40%, transparent),
-    inset 0 1.5px 0 color-mix(in srgb, #fff 78%, transparent),
-    inset 0 -1px 0 color-mix(in srgb, var(--ink) 8%, transparent),
-    inset 0 -18px 30px -22px color-mix(in srgb, var(--ink) 26%, transparent),
-    0 1px 1px color-mix(in srgb, var(--nav-shadow-strong) 18%, transparent),
-    0 22px 60px -12px color-mix(in srgb, var(--nav-shadow-strong) 52%, transparent);
-  isolation: isolate;
-  transform: translate3d(0, 0, 0);
-  transition:
-    opacity var(--dur-enter) var(--ease-out),
-    transform var(--dur-enter) var(--ease-out),
-    background-color var(--dur-hover) var(--ease-out),
-    border-color var(--dur-hover) var(--ease-out),
-    box-shadow var(--dur-hover) var(--ease-out);
-  will-change: transform, opacity;
-}
-
-.nav::before {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  border-radius: inherit;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, #fff 30%, transparent), transparent 58%),
-    radial-gradient(120% 140% at 50% -40%, color-mix(in srgb, #fff 22%, transparent), transparent 62%);
-  content: '';
-  opacity: 1;
-  pointer-events: none;
-}
-
-.navHidden {
-  opacity: 0;
-  pointer-events: none;
-  transform: translate3d(0, calc(-100% - 28px), 0);
-}
-
-.navBar {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: center;
-  min-height: 58px;
-  padding: 7px;
-}
-
 .brand,
 .iconBtn,
 .navLink,
@@ -123,73 +57,6 @@
 }
 
 .brand :global(svg) { color: var(--accent); }
-
-.navCenter {
-  display: flex;
-  align-items: center;
-  justify-self: center;
-  gap: 2px;
-  padding: 3px;
-  border: 1px solid color-mix(in srgb, var(--line) 66%, transparent);
-  border-radius: var(--radius-card);
-  background: color-mix(in srgb, var(--surface) 28%, transparent);
-}
-
-.navSection,
-.navSectionActive {
-  min-height: 34px;
-  padding: 8px 10px;
-  border-radius: var(--radius-control);
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: -0.008em;
-  line-height: 1;
-  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
-}
-
-.navSectionActive {
-  /* Der aktive Punkt trug eine orange Fläche mit orangem Rand — drei
-     Akzentsignale für eine Kleinigkeit. Jetzt: ruhige neutrale Fläche,
-     schwarze Schrift. Wo man ist, sagt das Gewicht, nicht die Farbe. */
-  background: var(--surface-2);
-  color: var(--ink);
-}
-
-.navRight {
-  display: flex;
-  align-items: center;
-  justify-self: end;
-  gap: 7px;
-}
-
-.desktopAccount { display: flex; align-items: center; gap: 6px; }
-
-.iconBtn {
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-  flex: 0 0 auto;
-  border: 1px solid color-mix(in srgb, var(--line-strong) 76%, transparent);
-  border-radius: var(--radius-control);
-  background: color-mix(in srgb, var(--surface) 38%, transparent);
-  color: var(--ink);
-  transition: transform var(--dur-press) var(--ease-press), border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
-}
-
-.navLink {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  padding: 8px 12px;
-  background: transparent;
-  color: var(--ink);
-  font-size: 14.5px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  transition: color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
-}
 
 .continueButton {
   /* Schwarz, nicht orange.
@@ -230,79 +97,6 @@
   outline-offset: 2px;
 }
 
-.menuBtn { display: none; }
-
-.menuIcon {
-  position: relative;
-  display: block;
-  width: 18px;
-  height: 14px;
-}
-
-.menuIcon i {
-  position: absolute;
-  left: 1px;
-  width: 16px;
-  height: 1.5px;
-  border-radius: 2px;
-  background: currentColor;
-  top: 6.5px;
-  transition: opacity var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
-}
-
-.menuIcon i:first-child { transform: translateY(-5px); }
-.menuIcon i:nth-child(2) { transform: translateY(0); }
-.menuIcon i:last-child { transform: translateY(5px); }
-.menuBtn[aria-expanded='true'] .menuIcon i:first-child { transform: rotate(45deg); }
-.menuBtn[aria-expanded='true'] .menuIcon i:nth-child(2) { opacity: 0; transform: scaleX(.4); }
-.menuBtn[aria-expanded='true'] .menuIcon i:last-child { transform: rotate(-45deg); }
-
-.mobileNav { display: none; }
-.mobileNav[hidden] { display: none; }
-
-.section[id] { scroll-margin-top: 96px; }
-
-.heroPrimaryAction :global(.btn) {
-  width: 100%;
-}
-
-/* Schwebender Menü-Knopf: erscheint beim Scrollen (die Leiste ist dann
-   ausgeblendet) klein oben links — auf Desktop und mobil. */
-.floatingMenu {
-  position: fixed;
-  top: 14px;
-  left: 14px;
-  z-index: 46;
-  display: grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid color-mix(in srgb, var(--line-strong) 72%, transparent);
-  border-radius: 13px;
-  background: color-mix(in srgb, var(--surface) 62%, transparent);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  backdrop-filter: blur(20px) saturate(160%);
-  color: var(--ink);
-  cursor: pointer;
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--nav-shadow-strong) 45%, transparent);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-6px);
-  transition:
-    opacity var(--dur-hover) var(--ease-out),
-    transform var(--dur-hover) var(--ease-out),
-    background-color var(--dur-hover) var(--ease-out);
-}
-
-.floatingMenuVisible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: none;
-}
-
-.floatingMenu:active { transform: scale(.96); }
-.floatingMenu:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
 @keyframes heroCopyIn {
   from { opacity: 0; transform: translate3d(0, 12px, 0); }
   to { opacity: 1; transform: none; }
@@ -328,21 +122,6 @@
 .proofStrip strong { color: var(--ink); font-size: 15px; font-weight: 650; }
 .proofStrip span { color: var(--muted); font-size: 13px; }
 
-/* Gemeinsame Sektionen */
-.section {
-  padding: clamp(88px, 11vw, 132px) 0 0;
-  text-align: center;
-}
-
-.sectionIntro {
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-items: center;
-  gap: 22px;
-  margin-bottom: 52px;
-  text-align: center;
-}
-
 .section h2,
 .closing h2 {
   color: var(--ink);
@@ -361,62 +140,6 @@
   overflow-wrap: break-word;
 }
 
-.sectionIntro > p,
-.focusIntro > p,
-.faqIntro > p {
-  max-width: 54ch;
-  margin-inline: auto;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.65;
-  text-wrap: pretty;
-}
-
-.sectionName {
-  margin-bottom: 18px;
-  color: var(--brand-rind-deep);
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.sectionLead {
-  max-width: 52ch;
-  margin: 22px auto 0;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.65;
-  text-wrap: pretty;
-}
-
-/* Das zusammenhängende System */
-.systemLayout {
-  display: grid;
-  grid-template-columns: minmax(340px, .88fr) minmax(0, 1.12fr);
-  border-block: 1px solid var(--line-strong);
-}
-
-.systemVisual {
-  display: grid;
-  min-height: 620px;
-  place-items: center;
-  border-right: 1px solid var(--line-strong);
-}
-
-.systemPoints { display: flex; flex-direction: column; }
-
-.systemPoint {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 25px 34px;
-  text-align: center;
-}
-
-.systemPoint + .systemPoint { border-top: 1px solid var(--line-strong); }
-
 .systemIcon {
   width: 31px;
   height: 31px;
@@ -428,98 +151,11 @@
   stroke-linejoin: round;
 }
 
-.systemPoint h3,
-.capabilityList strong,
-.subjectRow h3,
-.trustBlock h3 {
-  color: var(--ink);
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.12;
-}
-
-.systemPoint p,
-.capabilityList span {
-  max-width: 50ch;
-  margin-inline: auto;
-  color: var(--muted);
-  font-size: 14.5px;
-  line-height: 1.58;
-}
-
-/* Coach */
-.coachSection,
-.visualSection {
-  display: grid;
-  grid-template-columns: minmax(0, .86fr) minmax(390px, 1.14fr);
-}
-
-.coachCopy,
-.visualCopy {
-  padding: 58px 52px 58px 0;
-  border-block: 1px solid var(--line-strong);
-  text-align: center;
-}
-
-.coachStage,
-.visualStage {
-  display: grid;
-  place-items: center;
-  padding: 48px;
-  border-block: 1px solid var(--line-strong);
-  border-left: 1px solid var(--line-strong);
-  background: var(--surface-2);
-}
-
-/* Visuelles Lernen */
-.visualStage {
-  grid-template-rows: minmax(0, 1fr) auto;
-  align-items: center;
-  min-height: 540px;
-  color: var(--accent-d);
-}
-
-.visualNote { margin-top: 28px; color: var(--ink); font-size: 14px; font-weight: 650; }
-
-/* Fokus und Vertrauen */
-.focusLayout {
-  display: grid;
-  grid-template-columns: minmax(0, .92fr) minmax(390px, 1.08fr);
-  border-block: 1px solid var(--line-strong);
-}
-
-.focusIntro { padding: 58px 52px 58px 0; text-align: center; }
-.focusIntro > p { margin-top: 24px; }
-
-.trustBlock { padding: 58px 0 58px 48px; border-left: 1px solid var(--line-strong); text-align: center; }
-.trustBlock > p { max-width: 50ch; margin: 12px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
-.trustFacts { display: flex; flex-direction: column; margin-top: 32px; }
-.trustFacts > div { display: flex; flex-direction: column; gap: 5px; padding: 17px 0; border-top: 1px solid var(--line); }
-.trustFacts > div:last-child { border-bottom: 1px solid var(--line); }
-.trustFacts strong { color: var(--ink); font-size: 14.5px; font-weight: 650; }
-.trustFacts span { color: var(--muted); font-size: 13.5px; line-height: 1.5; }
-
-.subjectList { display: flex; flex-direction: column; }
-
-.subjectRow {
-  display: grid;
-  grid-template-columns: 14px minmax(230px, .8fr) minmax(0, 1.2fr);
-  gap: 24px;
-  align-items: baseline;
-  padding: 29px 0;
-  border-bottom: 1px solid var(--line-strong);
-  text-align: left;
-}
-
 .subjectMarker,
 .planMarker { display: block; background: var(--faint); }
-.subjectMarker { width: 10px; height: 10px; border-radius: 50%; }
 .analysis { background: var(--topic-analysis); }
 .linalg { background: var(--topic-linalg); }
 .stochastik { background: var(--topic-stochastik); }
-.subjectRow p { color: var(--muted); font-size: 15px; line-height: 1.58; }
 
 /* Kurse */
 .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -548,13 +184,6 @@
 .planFeatures li { position: relative; width: fit-content; margin-inline: auto; padding-left: 20px; color: var(--muted); font-size: 14.5px; line-height: 1.45; }
 .planFeatures li::before { content: ''; position: absolute; top: .48em; left: 0; width: 8px; height: 8px; border: 1.5px solid var(--accent); border-radius: 50%; }
 .planNote { max-width: 65ch; margin: 22px auto 0; color: var(--faint); font-size: 13px; line-height: 1.55; }
-
-/* FAQ */
-.faqSection { display: grid; grid-template-columns: minmax(250px, .68fr) minmax(0, 1.32fr); gap: clamp(42px, 8vw, 104px); align-items: start; }
-/* Bewusst nicht sticky: Die Intro scrollt normal mit, damit sich die
-   FAQ-Sektion genauso schnell durchscrollen lässt wie die anderen. */
-.faqIntro { text-align: center; }
-.faqIntro > p { margin-top: 18px; }
 .faqList { border-top: 1px solid var(--line-strong); }
 .faqItem { border-bottom: 1px solid var(--line-strong); }
 
@@ -698,10 +327,6 @@
   }
 }
 
-@media (min-width: 901px) {
-  .systemVisual { align-items: start; }
-}
-
 @keyframes systemArrive {
   from { opacity: .72; transform: translate3d(0, 10px, 0) scale(.985); }
   to { opacity: 1; transform: none; }
@@ -781,75 +406,19 @@
 
 @media (max-width: 900px) {
   .lpage { padding: 0 24px 32px; }
-  .nav { top: 10px; margin-top: 10px; }
-
-  .sectionIntro,
-  .libraryIntro,
-  .systemLayout,
-  .coachSection,
-  .visualSection,
-  .focusLayout,
-  .faqSection { grid-template-columns: 1fr; }
-
-  .sectionIntro { gap: 22px; align-items: center; }
-  .systemVisual { min-height: 430px; border-right: 0; border-bottom: 1px solid var(--line-strong); }
-  .systemPoint { padding: 25px 0; }
-
-  .coachCopy,
-  .visualCopy,
-  .focusIntro { padding: 50px 0; }
-
-  .coachStage,
-  .visualStage,
-  .trustBlock { border-left: 0; border-top: 0; }
-  .visualStage { min-height: 470px; }
-  .trustBlock { padding: 50px 0; border-top: 1px solid var(--line-strong); }
-
-  .subjectRow { grid-template-columns: 14px 1fr; gap: 8px 18px; }
-  .subjectRow p { grid-column: 2; }
-
-  .faqSection { gap: 36px; }
-  .faqIntro { position: static; }
   .footer { grid-template-columns: 1fr; }
   .footerLinks { flex-wrap: wrap; }
 }
 
 @media (max-width: 560px) {
   .lpage { padding: 0 18px 28px; }
-  .nav { top: 8px; margin-top: 8px; border-radius: var(--radius-panel); }
-  .navBar { min-height: 56px; padding: 6px; }
   .brand { min-height: 44px; padding-left: 7px; font-size: 18px; }
   .brand :global(svg) { width: 25px; height: 25px; }
-  .iconBtn { width: 44px; height: 44px; }
-  .navRight { gap: 5px; }
-  .mobileNav { gap: 0; padding: 0 10px 10px; }
-  .mobileSections { grid-template-columns: repeat(2, 1fr); }
-  .mobileAccount { padding: 10px 0; }
-  .mobileAccount .navLink { padding-inline: 8px; font-size: 13px; }
-  .mobileAccount :global(.btn) { padding-inline: 13px; }
-  .heroActions :global(.btn) { width: 100%; }
-  .heroActions :global(.gf-arrow) {
-    min-height: 44px;
-    align-self: center;
-    justify-content: center;
-  }
   .proofStrip { grid-template-columns: 1fr; padding: 20px 0; }
   .proofStrip > div,
   .proofStrip > div:first-child { padding: 16px 0; border-left: 0; }
-
-  .section { padding-top: 82px; }
   .section h2,
   .closing h2 { font-size: clamp(36px, 11.5vw, 50px); }
-  .sectionIntro { margin-bottom: 36px; }
-
-  .systemVisual { min-height: 390px; }
-
-  .coachCopy,
-  .visualCopy,
-  .focusIntro,
-  .trustBlock { padding: 42px 0; }
-
-  .visualStage { min-height: 390px; padding: 24px 14px; }
 
   .plans { grid-template-columns: 1fr; }
   .plan { padding: 26px 22px; }
@@ -867,35 +436,9 @@
   .footerBrand small { width: 100%; padding-left: 32px; }
 }
 
-@media (prefers-reduced-transparency: reduce) {
-  .nav { background: var(--canvas); -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .nav::before { display: none; }
-}
-
 @media (prefers-contrast: more) {
-  .nav { border: 2px solid var(--ink); background: var(--canvas); box-shadow: none; }
   .plan,
   .coachShell { border-color: var(--ink); }
-}
-
-/* ================================================================
-   BEHUTSAM WENIGER „KI": kühler, flacher, weniger Marketing-Mitte.
-   Struktur, Inhalte und Grafiken bleiben — nur ruhiger und eigenständiger.
-   ================================================================ */
-
-/* Navigation: solider, weniger Glas & Schwebe-Schatten */
-.nav {
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--surface) 90%, transparent);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 1px 0 var(--line-strong);
-}
-/* Aktiver Menüpunkt neutral statt warmes Orange-Feld */
-.navSectionActive {
-  background: var(--surface-2);
-  box-shadow: inset 0 0 0 1px var(--line-strong);
-  color: var(--ink);
 }
 
 /* Karten flacher & weniger rund: feine Linien statt weicher Schatten */
@@ -911,26 +454,9 @@
   box-shadow: none;
 }
 
-/* Ruhiger, linksbündiger Aufbau in den Zwei-Spalten-Blöcken.
-   Die einspaltigen Abschnitts-Überschriften (.sectionIntro) bleiben zentriert. */
-/* Alles mittig — auch auf dem Desktop.
-   Vorher waren diese Blöcke linksbündig und die Abschnitts-Überschriften
-   zentriert. Auf einer Seite abwechselnd links und mittig zu setzen wirkt
-   nicht abwechslungsreich, sondern unentschieden. */
-.heroCopy,
-.coachCopy,
-.visualCopy,
-.focusIntro,
-.trustBlock,
-.libraryIntro,
-.libraryPromise { text-align: center; }
-:global(body.dark) .heroPhotoLight { opacity: 0; }
-:global(body.dark) .heroPhotoDark { opacity: 1; }
-
 /* Dark Mode: eigenes, dunkel aufgenommenes Motiv — deshalb KEINE nachträgliche
    Abdunklung mehr. Nur die Schleierfarbe wechselt auf die dunkle Seitenfarbe. */
 :global(body.dark) .hero { --scrim: 19, 19, 21; }
-:global(body.dark) .heroPhoto { border: 0; box-shadow: none; }
 
 /* Die frühere mobile Umsortierung ist entfallen. Sie gehörte zum
    zweispaltigen Hero (Text links, Foto rechts) und schob auf dem Handy die
@@ -966,25 +492,6 @@
   .capabilityList li { text-align: center; padding: 14px 0; }
 }
 
-/* Im Dunkelmodus trägt das Glas eine kühle statt weiße Lichtkante. */
-:global(body.dark) .nav {
-  background: color-mix(in srgb, var(--surface) 34%, transparent);
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, #fff 10%, transparent),
-    inset 0 1.5px 0 color-mix(in srgb, #fff 20%, transparent),
-    inset 0 -1px 0 color-mix(in srgb, #000 44%, transparent),
-    inset 0 -18px 30px -22px color-mix(in srgb, #000 40%, transparent),
-    0 24px 64px -14px color-mix(in srgb, #000 68%, transparent);
-}
-:global(body.dark) .nav::before {
-  background:
-    linear-gradient(180deg, color-mix(in srgb, #fff 9%, transparent), transparent 58%),
-    radial-gradient(120% 140% at 50% -40%, color-mix(in srgb, #fff 7%, transparent), transparent 62%);
-}
-@media (max-width: 900px) {
-  .heroActions :global(.btn) { flex: 1 1 0; min-width: 0; padding-inline: 14px; }
-}
-
 /* ---------------------------------------------------------------------------
    Produktaufnahmen
    Dieselbe Ansicht in hell und dunkel, übereinandergelegt und per body.dark
@@ -1018,13 +525,6 @@
 :global(body.dark) .shot { box-shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px rgba(0, 0, 0, .45); }
 :global(body.dark) .shot img:first-child { opacity: 0; }
 :global(body.dark) .shot img + img { opacity: 1; }
-
-/* Der Reel-Modus ist hochkant aufgenommen — ohne Deckel läuft er sonst über
-   die ganze Spaltenhöhe. */
-.shotHochkant {
-  max-width: 300px;
-  margin-inline: auto;
-}
 .shotHochkant .shot { border-radius: 26px; }
 
 
@@ -1040,7 +540,8 @@
   /* Aus dem zentrierten Inhaltsrahmen ausbrechen, bis an beide Ränder. */
   width: 100vw;
   margin-inline: calc(50% - 50vw);
-  min-height: min(100svh, 860px);
+  min-height: min(100svh, 820px);
+  background: var(--canvas);
   display: grid;
   /* Inhalt etwas oberhalb der Mitte: Darunter bleibt Bild stehen, das zum
      Weiterscrollen einlädt. */
@@ -1051,31 +552,6 @@
   isolation: isolate;
 }
 
-.heroBild {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-  -webkit-user-drag: none;
-  user-select: none;
-}
-
-/* Ein Schleier statt zweier Bilder: Das Foto ist eine helle Wand, also legt
-   sich im hellen Modus ein weißer Hauch darüber und die Schrift bleibt
-   schwarz; im dunklen Modus kippt derselbe Schleier ins Dunkle und die
-   Schrift wird hell. Dadurch braucht es nur eine Bilddatei — und die
-   Schriftfarbe ist einfach die normale Textfarbe des Themas. */
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: rgba(255, 255, 255, .46);
-}
-:global(body.dark) .hero::after { background: rgba(8, 8, 10, .70); }
 
 .heroMitte {
   display: grid;
@@ -1166,27 +642,7 @@
 
 /* Das dunkle Band setzt die Themenfarben lokal neu. Dadurch passen sich alle
    Kinder an, ohne dass jede Regel eine eigene Dunkel-Fassung braucht. */
-.bandDunkel {
-  background: #121214;
-  --ink: #F8F8F9;
-  --muted: #B6B6BD;
-  --faint: #92939B;
-  --line: #2C2C31;
-  --line-strong: #3C3C43;
-  --surface: #121214;
-  color: var(--ink);
-}
-:global(body.dark) .bandDunkel { background: #09090B; --surface: #09090B; }
-
-.bandName {
-  margin-bottom: 18px;
-  color: var(--accent);
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-}
-
+:global(body.dark) 
 .bandTitel {
   max-width: 18ch;
   color: var(--ink);
@@ -1249,3 +705,132 @@
 .band .plans { margin-top: 48px; }
 .band .faqList { width: min(100%, 760px); margin-top: 40px; text-align: left; }
 .band .planNote { max-width: 52ch; margin-top: 26px; }
+
+
+/* ---------------------------------------------------------------------------
+   Kopfleiste
+   Über dem Startbereich unsichtbar, beim Scrollen legt sich eine Fläche
+   darunter. Links die Marke, rechts ein Knopf und die drei Striche.
+--------------------------------------------------------------------------- */
+.kopf {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px clamp(16px, 3vw, 34px);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color var(--dur-hover) var(--ease-out),
+              border-color var(--dur-hover) var(--ease-out);
+}
+.kopfFest {
+  background: color-mix(in srgb, var(--canvas) 88%, transparent);
+  backdrop-filter: saturate(1.6) blur(14px);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom-color: var(--line);
+}
+
+.kopfRechts { display: flex; align-items: center; gap: 10px; }
+
+.kopfKnopf {
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 650;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.kopfKnopf:hover { background: var(--ink); color: var(--surface); }
+
+/* Die drei Striche sitzen ganz rechts — vorher lagen sie als schwebender
+   Knopf oben links, also auf der Seite, auf der schon die Marke steht. */
+.striche {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: transparent;
+  cursor: pointer;
+}
+.striche span { display: grid; gap: 4px; }
+.striche i { display: block; width: 17px; height: 1.5px; background: var(--ink); }
+
+/* ---------------------------------------------------------------------------
+   Vollflächiges Menü
+--------------------------------------------------------------------------- */
+.menue {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: grid;
+  place-items: center;
+  padding: 96px 24px 48px;
+  background: var(--canvas);
+  animation: menueAuf var(--dur-enter) var(--ease-out) both;
+}
+@keyframes menueAuf { from { opacity: 0; } to { opacity: 1; } }
+
+.menueInhalt { display: grid; justify-items: center; gap: 4px; text-align: center; }
+
+.menuePunkt {
+  display: block;
+  padding: 10px 8px;
+  color: var(--ink);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-optical-sizing: auto;
+  font-size: clamp(30px, 6vw, 52px);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.12;
+  text-decoration: none;
+}
+.menuePunkt:hover { color: var(--accent); }
+
+.menueFuss {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.menueKlein {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.menueKlein:hover { color: var(--ink); border-color: var(--ink); }
+
+/* ---------------------------------------------------------------------------
+   Band in abgehelltem Grapefruit
+   Statt eines schwarzen Bandes ein heller Hauch der Markenfarbe. Im dunklen
+   Modus derselbe Gedanke, nur von der dunklen Seite her gemischt.
+--------------------------------------------------------------------------- */
+.bandTon { background: color-mix(in srgb, var(--accent) 9%, #FFFFFF); }
+:global(body.dark) .bandTon { background: color-mix(in srgb, var(--accent) 15%, #0E0E10); }

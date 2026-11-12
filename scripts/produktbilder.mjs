@@ -78,14 +78,30 @@ async function aufraeumen(page) {
 async function anmelden(page) {
   await page.goto(BASIS, { waitUntil: 'networkidle2' });
   await warte(1500);
+  // „Anmelden" liegt seit dem Umbau im Vollbild-Menü hinter den drei Strichen
+  // und nicht mehr in der Kopfzeile. Erst das Menü öffnen, dann den Knopf
+  // suchen — ohne diesen Schritt klickte das Skript ins Leere und scheiterte
+  // danach beim Ausfüllen der gar nicht vorhandenen Felder.
   await page.evaluate(() => {
     try { localStorage.setItem('gf-last-activity', String(Date.now())); } catch {}
+    const sichtbar = el => el && el.offsetParent !== null;
+    let b = [...document.querySelectorAll('button')].find(x => sichtbar(x) && x.textContent.trim() === 'Anmelden');
+    if (!b) {
+      document.querySelector('[aria-controls="hauptmenue"]')?.click();
+      return 'menue';
+    }
+    b.click();
+    return 'direkt';
+  });
+  await warte(900);
+  await page.evaluate(() => {
     const b = [...document.querySelectorAll('button')].find(x => x.textContent.trim() === 'Anmelden');
     b?.click();
   });
   await warte(1200);
   await page.evaluate(([mail, pw]) => {
     const setze = (el, v) => {
+      if (!el) throw new Error('Anmeldefeld nicht gefunden — hat sich das Anmeldefenster geändert?');
       const s = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
       s.call(el, v);
       el.dispatchEvent(new Event('input', { bubbles: true }));

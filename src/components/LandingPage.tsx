@@ -66,16 +66,18 @@ const SOCIALS: Array<{ label: string; href: string | null; icon: ReactNode }> = 
 
 type LandingSectionId = 'kurse' | 'system' | 'ueber-uns';
 
-const LANDING_NAV_ITEMS: ReadonlyArray<{
-  href: string;
-  id?: LandingSectionId;
-  label: string;
-}> = [
-  { href: '#kurse', id: 'kurse', label: 'Kursangebot' },
-  { href: '#system', id: 'system', label: 'Lernsystem' },
-  { href: '#ueber-uns', id: 'ueber-uns', label: 'Über uns' },
-  { href: '/impressum', label: 'Kontakt' },
-];
+/**
+ * Die Punkte im Vollbild-Menü. Bewusst kurz: Jeder Punkt führt zu etwas, das
+ * es wirklich gibt. Noch sind es Sprungmarken auf derselben Seite — eigene
+ * Seiten folgen, dann ändert sich hier nur das href.
+ */
+const MENUE_PUNKTE = [
+  { label: 'Lernsystem', href: '#system' },
+  { label: 'Reel-Modus', href: '#reel' },
+  { label: 'Kurse', href: '#kurse' },
+  { label: 'Über uns', href: '#ueber-uns' },
+  { label: 'Fragen', href: '#fragen' },
+] as const;
 
 interface Props {
   isAuthed: boolean;
@@ -250,15 +252,11 @@ export default function LandingPage({
   onSignOut,
 }: Props) {
   const [days, setDays] = useState<number | null>(null);
-  const [activeSection, setActiveSection] = useState<LandingSectionId | null>(null);
   // In der App darf es keinen Kaufweg geben — dann entfällt der Preisteil.
   const imApp = useImAppRahmen();
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [navHidden, setNavHidden] = useState(false);
-  // Nach einem Klick auf den schwebenden Menü-Knopf bleibt die Leiste stehen,
-  // bis wirklich neu gescrollt wird — sonst würde ein nachlaufendes
-  // Scroll-Ereignis (Momentum) sie sofort wieder verstecken.
-  const navPinnedAtY = useRef<number | null>(null);
+  const [menueOffen, setMenueOffen] = useState(false);
+  /* Sobald man den Startbereich verlässt, bekommt die Kopfleiste eine Fläche. */
+  const [gescrollt, setGescrollt] = useState(false);
 
   useEffect(() => {
     // Kein requestAnimationFrame: Im Hintergrund wird nicht gezeichnet, und der
@@ -268,15 +266,10 @@ export default function LandingPage({
   }, []);
 
   useEffect(() => {
-    const sectionElements = LANDING_NAV_ITEMS
-      .filter((item): item is typeof item & { id: LandingSectionId } => Boolean(item.id))
-      .map(item => document.getElementById(item.id))
-      .filter((element): element is HTMLElement => Boolean(element));
-
     // Woher der Scrollwert kommt, ist je nach Umgebung verschieden: im Browser
     // das Fenster, im Web-Bereich der App unter Umständen ein Element. Deshalb
-    // wird beides abgefragt, statt sich auf window.scrollY zu verlassen — genau
-    // dieser Unterschied hat die Leiste in der App stehen lassen.
+    // wird beides abgefragt — genau dieser Unterschied hat die Leiste in der
+    // App früher stehen lassen.
     const scrollWert = (ziel?: EventTarget | null) => {
       const vomFenster = window.scrollY;
       if (vomFenster > 0) return vomFenster;
@@ -287,73 +280,38 @@ export default function LandingPage({
     };
 
     const onScroll = (event?: Event) => {
-      const nextY = Math.max(0, scrollWert(event?.target));
-      if (navPinnedAtY.current !== null && Math.abs(nextY - navPinnedAtY.current) < 48) {
-        // Leiste wurde gerade über den Menü-Knopf geöffnet: stehen lassen.
-      } else {
-        navPinnedAtY.current = null;
-        setNavHidden(nextY > 12);
-        if (nextY > 12 && mobileNavOpen) setMobileNavOpen(false);
-      }
-      if (nextY < 260) setActiveSection(null);
+      setGescrollt(Math.max(0, scrollWert(event?.target)) > 40);
     };
 
-    const observer = new IntersectionObserver(
-      entries => {
-        const visible = entries
-          .filter(entry => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (visible && window.scrollY >= 260) {
-          setActiveSection(visible.target.id as LandingSectionId);
-        }
-      },
-      { rootMargin: '-14% 0px -68% 0px', threshold: [0, 0.2, 0.45] },
-    );
-
-    sectionElements.forEach(element => observer.observe(element));
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    // Zusätzlich in der Erfassungsphase am Dokument: Scroll-Ereignisse aus
-    // einzelnen Elementen steigen nicht auf und kämen am Fenster nie an.
     document.addEventListener('scroll', onScroll, { capture: true, passive: true });
-
     return () => {
-      observer.disconnect();
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('scroll', onScroll, { capture: true });
     };
-  }, [mobileNavOpen]);
+  }, []);
 
   useEffect(() => {
-    if (!mobileNavOpen) return;
-
+    if (!menueOffen) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMobileNavOpen(false);
+      if (event.key === 'Escape') setMenueOffen(false);
     };
-    const desktopQuery = window.matchMedia('(min-width: 981px)');
-    const onDesktop = (event: MediaQueryListEvent) => {
-      if (event.matches) setMobileNavOpen(false);
-    };
-
+    // Solange das Menü die ganze Fläche einnimmt, soll dahinter nichts scrollen.
+    const vorher = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKeyDown);
-    desktopQuery.addEventListener('change', onDesktop);
     return () => {
+      document.body.style.overflow = vorher;
       window.removeEventListener('keydown', onKeyDown);
-      desktopQuery.removeEventListener('change', onDesktop);
     };
-  }, [mobileNavOpen]);
-
-  const chooseSection = (id: LandingSectionId) => {
-    setActiveSection(id);
-    setMobileNavOpen(false);
-  };
+  }, [menueOffen]);
 
   // Logo-Klick: Die Startseite ist bereits die Home-Route — also ruhig an den
   // Seitenanfang, nie automatisch ins Produkt.
   const scrollToTop = () => {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    setMobileNavOpen(false);
+    setMenueOffen(false);
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
   };
 
@@ -389,124 +347,71 @@ export default function LandingPage({
     <div className={styles.lpage}>
       <a className={styles.skipLink} href="#main-content">Zum Inhalt</a>
 
+      {/* Kopfleiste nach Yumi-Vorbild: über dem Startbereich unsichtbar, erst
+          beim Scrollen legt sich eine Fläche darunter. Rechts ein Knopf und
+          die drei Striche — links nur die Marke. Der frühere Aufbau hatte
+          Menüpunkte in der Mitte, einen Dunkelmodus-Schalter, eine Leiste, die
+          sich beim Scrollen wegschob, und zusätzlich einen schwebenden Knopf
+          oben links. Vier Dinge für eine Aufgabe. */}
       <nav
-        className={`${styles.nav} ${navHidden ? styles.navHidden : ''}`}
+        className={`${styles.kopf} ${gescrollt ? styles.kopfFest : ''}`}
         aria-label="Hauptnavigation"
       >
-        <div className={styles.navBar}>
-          <button type="button" className={styles.brand} onClick={scrollToTop} aria-label="Zur Gradefruit Startseite">
-            <BrandMark size={28} />
-            <span>Gradefruit</span>
+        <button type="button" className={styles.brand} onClick={scrollToTop} aria-label="Zur Gradefruit Startseite">
+          <BrandMark size={26} />
+          <span>Gradefruit</span>
+        </button>
+
+        <div className={styles.kopfRechts}>
+          {isAuthed ? (
+            <button className={styles.kopfKnopf} onClick={onEnter}>Weiterlernen</button>
+          ) : (
+            <button className={styles.kopfKnopf} onClick={onRegister}>Registrieren</button>
+          )}
+          <button
+            aria-controls="hauptmenue"
+            aria-expanded={menueOffen}
+            aria-label={menueOffen ? 'Menü schließen' : 'Menü öffnen'}
+            className={styles.striche}
+            onClick={() => setMenueOffen(offen => !offen)}
+            type="button"
+          >
+            <span aria-hidden="true"><i /><i /><i /></span>
           </button>
-
-          <div className={styles.navCenter} aria-label="Bereiche der Startseite">
-            {LANDING_NAV_ITEMS.map(item => (
-              <a
-                aria-current={activeSection === item.id ? 'location' : undefined}
-                className={activeSection === item.id ? styles.navSectionActive : styles.navSection}
-                href={item.href}
-                key={item.label}
-                onClick={item.id ? () => chooseSection(item.id as LandingSectionId) : undefined}
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
-
-          <div className={styles.navRight}>
-          <button className={styles.iconBtn} onClick={onToggleDark} aria-label={dark ? 'Hellmodus aktivieren' : 'Dunkelmodus aktivieren'}>
-            {dark ? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </svg>
-            ) : (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
-              </svg>
-            )}
-          </button>
-            <div className={styles.desktopAccount}>
-              {isAuthed ? (
-                <>
-                  <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                  <button className={`btn sm ${styles.continueButton}`} onClick={onEnter}>Weiterlernen</button>
-                </>
-              ) : (
-                <>
-                  <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
-                  <button className="btn primary sm" onClick={onRegister}>Registrieren</button>
-                </>
-              )}
-            </div>
-            <button
-              aria-controls="mobile-landing-navigation"
-              aria-expanded={mobileNavOpen}
-              aria-label={mobileNavOpen ? 'Menü schließen' : 'Menü öffnen'}
-              className={`${styles.iconBtn} ${styles.menuBtn}`}
-              onClick={() => {
-                setNavHidden(false);
-                setMobileNavOpen(open => !open);
-              }}
-              type="button"
-            >
-              <span className={styles.menuIcon} aria-hidden="true"><i /><i /><i /></span>
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.mobileNav} hidden={!mobileNavOpen} id="mobile-landing-navigation">
-          <div className={styles.mobileAccount}>
-            {isAuthed ? (
-              <>
-                <button className={styles.navLink} onClick={onSignOut}>Abmelden</button>
-                <button className={`btn sm ${styles.continueButton}`} onClick={onEnter}>Weiterlernen</button>
-              </>
-            ) : (
-              <>
-                <button className={styles.navLink} onClick={onLogin}>Anmelden</button>
-                <button className={`btn sm ${styles.continueButton}`} onClick={onRegister}>Registrieren</button>
-              </>
-            )}
-          </div>
-          <div className={styles.mobileSections}>
-            {LANDING_NAV_ITEMS.map(item => (
-              <a
-                aria-current={activeSection === item.id ? 'location' : undefined}
-                href={item.href}
-                key={item.label}
-                onClick={item.id ? () => chooseSection(item.id as LandingSectionId) : undefined}
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
         </div>
       </nav>
 
-      {/* Beim Scrollen bleibt das Menü erreichbar: kleiner schwebender
-          Knopf oben links (Desktop und mobil). */}
-      <button
-        type="button"
-        className={`${styles.floatingMenu} ${navHidden && !mobileNavOpen ? styles.floatingMenuVisible : ''}`}
-        aria-label="Menü anzeigen"
-        onClick={() => {
-          navPinnedAtY.current = window.scrollY;
-          setNavHidden(false);
-          if (window.matchMedia('(max-width: 980px)').matches) setMobileNavOpen(true);
-        }}
-      >
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" />
-        </svg>
-      </button>
+      {/* Vollflächiges Menü statt einer aufklappenden Leiste. */}
+      {menueOffen && (
+      <div className={styles.menue} id="hauptmenue">
+        <div className={styles.menueInhalt}>
+          {MENUE_PUNKTE.map(punkt => (
+            <a key={punkt.label} className={styles.menuePunkt} href={punkt.href} onClick={() => setMenueOffen(false)}>
+              {punkt.label}
+            </a>
+          ))}
+          <div className={styles.menueFuss}>
+            {isAuthed ? (
+              <button className={styles.menueKlein} onClick={onSignOut}>Abmelden</button>
+            ) : (
+              <button className={styles.menueKlein} onClick={onLogin}>Anmelden</button>
+            )}
+            <button
+              className={styles.menueKlein}
+              onClick={onToggleDark}
+              aria-label={dark ? 'Hellmodus aktivieren' : 'Dunkelmodus aktivieren'}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6h.09A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+              {dark ? 'Heller Modus' : 'Dunkler Modus'}
+            </button>
+          </div>
+        </div>
+      </div>
+      )}
+
 
       <main id="main-content">
         {/* Startbild über die volle Höhe, darüber nur Logo und zwei Knöpfe.
@@ -515,17 +420,8 @@ export default function LandingPage({
             gleichzeitig um Aufmerksamkeit baten. Wer auf einer Startseite
             ankommt, braucht genau zwei Auskünfte: wo bin ich, und was kann ich
             hier tun. */}
+        {/* Kein Hintergrundbild. Fläche, Marke, zwei Knöpfe — sonst nichts. */}
         <header className={styles.hero}>
-          <img
-            className={styles.heroBild}
-            src="/startbild.webp"
-            alt=""
-            aria-hidden="true"
-            width={2560}
-            height={1440}
-            loading="eager"
-            draggable={false}
-          />
           <h1 className={styles.nurVorleser}>
             Gradefruit — Online-Intensivkurs für das Mathematik-Abitur in Hessen 2027
           </h1>
@@ -577,7 +473,7 @@ export default function LandingPage({
           </div>
         </section>
 
-        <section className={`${styles.band} ${styles.bandDunkel}`}>
+        <section className={`${styles.band} ${styles.bandTon}`} id="reel">
           <p className={styles.bandName}>Reel-Modus</p>
           <h2 className={styles.bandTitel}>Swipen. Und dabei lernen.</h2>
           <p className={styles.bandZeile}>
@@ -630,7 +526,7 @@ export default function LandingPage({
         </section>
         )}
 
-        <section className={`${styles.band} ${styles.bandDunkel}`}>
+        <section className={`${styles.band} ${styles.bandTon}`} id="fragen">
           <p className={styles.bandName}>Fragen</p>
           <h2 className={styles.bandTitel}>Kurz erklärt.</h2>
           <div className={styles.faqList}>
