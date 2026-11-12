@@ -6,6 +6,7 @@ import { BrandMark } from './BrandMark';
 import SeitenKopf from './SeitenKopf';
 import SeitenFuss from './SeitenFuss';
 import ProduktBild from './ProduktBild';
+import Bildband from './Bildband';
 import { daysUntilExam } from '@/lib/exam';
 import { useSprache } from '@/lib/sprache';
 import { PREISE } from '@/lib/preise';
@@ -53,6 +54,9 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
 
       <main id="inhalt">
         <header className={styles.hero}>
+          {/* Fast weiße Rasterstruktur: erinnert an Karopapier, ohne sich
+              vorzudrängen. Marke und Knöpfe stehen darauf ungestört. */}
+          <img className={styles.heroGrund} src="/bild-raster.webp" alt="" aria-hidden="true" loading="eager" draggable={false} />
           <h1 className={styles.nurVorleser}>{t('start.titelVersteckt')}</h1>
           <div className={styles.heroMitte}>
             <BrandMark className={styles.heroMarke} size={92} />
@@ -102,6 +106,11 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
         </section>
 
+        <Bildband
+          datei="/bild-laptop.webp"
+          alt="Ein aufgeklappter Laptop neben einem College-Block mit zwei Stiften."
+        />
+
         <section className={`${band.band} ${band.bandTon}`}>
           <p className={band.name}>{t('bandKurse.name')}</p>
           <h2 className={band.titel}>{t('bandKurse.titel')}</h2>
@@ -117,6 +126,11 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           <p className={band.zeile}>{t('bandUeberUns.zeile')}</p>
           <Link className={band.knopf} href="/ueber-uns">{t('bandUeberUns.knopf')}</Link>
         </section>
+
+        <Bildband
+          datei="/bild-karo.webp"
+          alt="Eine Hand schreibt mit einem Stift auf kariertem Papier."
+        />
 
         <section className={`${band.band} ${band.bandTon}`}>
           <h2 className={band.titel}>{t('bandSchluss.titel')}</h2>

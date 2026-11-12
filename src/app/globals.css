@@ -70,11 +70,11 @@
      zwei verschiedene Programme nebeneinander. Jetzt ist sie eine ruhige,
      leicht abgesetzte Fläche; der Unterschied kommt aus einem Hauch Grau und
      einer Haarlinie, nicht aus maximalem Kontrast. */
-  --side: #F1F1F3;
-  --side-2: #E9E9EC;
-  --side-3: #DCDCE0;
-  --side-tx: #1A1A1D;
-  --side-faint: #65666D;
+  --side: #E8E8EB;
+  --side-2: #DFDFE3;
+  --side-3: #CFCFD5;
+  --side-tx: #16161A;
+  --side-faint: #5E5F66;
   /* Milchglas für obere Leisten – als Variable, damit Dark Mode in
      CSS-Modulen zuverlässig greift (globale Klassen matchen dort nicht). */
   --glass: rgba(247, 247, 248, 0.82);

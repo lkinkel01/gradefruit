@@ -5,7 +5,7 @@ import { useProgress } from '@/lib/ProgressContext';
 import { indexFor } from '@/lib/contentIndex';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import { BrandMark } from './BrandMark';
-import { CheckIcon, ChevronIcon, CoursesIcon, LockIcon, OverviewIcon, ReelIcon, ReviewIcon, TutorIcon } from './UiIcons';
+import { CheckIcon, ChevronIcon, CoursesIcon, LockIcon, OverviewIcon, ReelIcon, ReviewIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -32,10 +32,6 @@ const NAV_ITEMS: { id: View; label: string; icon: React.ReactNode }[] = [
   {
     id: 'review', label: 'Wiederholen',
     icon: <ReviewIcon />,
-  },
-  {
-    id: 'tutors', label: '1:1 Nachhilfe',
-    icon: <TutorIcon />,
   },
 ];
 
@@ -333,27 +329,31 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
           </>
         )}
 
-        <button
-          className={view === 'kurse' ? styles.on : ''}
-          aria-current={view === 'kurse' ? 'page' : undefined}
-          onClick={() => onNavigate('kurse')}
-        >
-          <span className={styles.icon}><CoursesIcon /></span>
-          <span className={styles.ti}>Weitere Kurse</span>
-        </button>
       </nav>
 
       <div className={styles.spacer} />
 
-      {/* Nur der Knopf. Der Satz darüber erklärte, was die Kursseite ohnehin
-          ausführlich sagt, und machte die Ecke voll. */}
-      {!(owned || ownedLk) && !imApp && (
+      {/* Unten links genau ein Knopf, passend zum Kaufstand — und bewusst
+          UNTER der Navigation, nicht darin: Es ist kein Ort, an den man
+          navigiert, sondern eine Handlung.
+          Kein Kurs → freischalten. Ein Kurs, aber es gibt noch einen →
+          weitere Kurse. Beide gekauft → gar nichts, denn es gibt nichts
+          mehr zu holen. */}
+      {!imApp && (owned || ownedLk ? (
+        !(owned && ownedLk) && (
+          <div className={styles.unlockCard}>
+            <button className="btn sm" onClick={() => onNavigate('kurse')}>
+              Weitere Kurse
+            </button>
+          </div>
+        )
+      ) : (
         <div className={styles.unlockCard}>
           <button className="btn primary btn sm" onClick={onOpenCheckout}>
             Kurs freischalten
           </button>
         </div>
-      )}
+      ))}
     </aside>
   );
 }
