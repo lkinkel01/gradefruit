@@ -6,7 +6,7 @@ import styles from './fragen.module.css';
 
 export const metadata: Metadata = {
   title: 'Fragen | Gradefruit',
-  description: 'Die wichtigsten Antworten zu Gradefruit, dem Mathe-Abitur in Hessen 2027 und den Kursen.',
+  description: 'Antworten zu Gradefruit, dem Mathe-Abitur in Hessen 2027, den Kursen und dem Zugang.',
 };
 
 export default function Fragen() {

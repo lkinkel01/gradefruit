@@ -15,9 +15,10 @@ export default function Lernsystem() {
     <MarketingSeite>
       <section className={band.band}>
         <p className={band.name}>Lernsystem</p>
-        <h1 className={band.titel}>So lernst du damit.</h1>
+        <h1 className={band.titel}>Einfaches Lernsystem.</h1>
         <p className={band.zeile}>
-          Fünf Dinge, die zusammenarbeiten. Kein Katalog, durch den du dich allein
+          Fünf Dinge, die zusammenarbeiten. Jede Aufgabe im Stil der
+          hessischen Abiturprüfung, kein Katalog, durch den du dich allein
           durchklickst.
         </p>
         <div className={band.bild}>

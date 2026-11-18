@@ -31,7 +31,7 @@ export const TEXTE = {
     fragen: { de: 'Fragen', en: 'FAQ' },
   },
   start: {
-    zeile: { de: 'Vorbereitungskurse · Mathe-Abitur · Hessen 2027', en: 'Preparation courses · Maths A-levels · Hessen 2027' },
+    zeile: { de: 'Mathe-Abitur · Hessen 2027 · Nach deinem Lehrplan', en: 'Maths A-levels · Hessen 2027 · Built on your syllabus' },
     titelVersteckt: {
       de: 'Gradefruit: Vorbereitungskurse, Mathe-Abitur, Hessen 2027',
       en: 'Gradefruit: preparation courses for the Maths A-levels in Hessen 2027',
@@ -40,9 +40,9 @@ export const TEXTE = {
     kurse: { de: 'Kurse', en: 'Courses' },
     mehr: { de: 'Mehr', en: 'More' },
     faktenPruefung: { de: 'Hessen 2027', en: 'Hessen 2027' },
-    faktenPruefungSub: { de: 'Schriftliche Abiturprüfung', en: 'Written A-level exam' },
+    faktenPruefungSub: { de: 'Dein Bundesland, dein Jahrgang', en: 'Your state, your cohort' },
     faktenKurse: { de: 'GK und LK', en: 'Basic and advanced' },
-    faktenKurseSub: { de: 'Getrennte Inhalte', en: 'Separate content' },
+    faktenKurseSub: { de: 'Getrennt, nicht gemischt', en: 'Separate, not merged' },
     faktenTageSub: { de: 'Bis zur Prüfung', en: 'Until the exam' },
     tage: { de: 'Tage', en: 'days' },
   },
@@ -50,8 +50,8 @@ export const TEXTE = {
     name: { de: 'Lernsystem', en: 'How it works' },
     titel: { de: 'Einfaches Lernsystem.', en: 'A simple way to study.' },
     zeile: {
-      de: 'Aufgabe rechnen, Lösungsweg vergleichen, nachfragen, wiederholen. Mehr Schritte hat es nicht.',
-      en: 'Solve a task, compare the worked solution, ask, repeat. There are no more steps than that.',
+      de: 'Aufgabe rechnen, Lösungsweg vergleichen, nachfragen, wiederholen. Alles im Stil der hessischen Abiturprüfung.',
+      en: 'Solve a task, compare the worked solution, ask, repeat. All in the style of the Hessen exam.',
     },
     knopf: { de: 'Zum Lernsystem', en: 'See how it works' },
   },
@@ -88,16 +88,17 @@ export const TEXTE = {
   },
   bandUeberUns: {
     name: { de: 'Über uns', en: 'About' },
-    titel: { de: 'Mathe-Abitur Hessen 2027.', en: 'Maths A-levels, Hessen 2027.' },
+    titel: { de: 'Für dein Bundesland gebaut.', en: 'Built for your state.' },
     zeile: {
-      de: 'Ein Fach, ein Bundesland, ein Jahrgang. Grundkurs und Leistungskurs getrennt.',
-      en: 'One subject, one state, one year group. Basic and advanced courses kept separate.',
+      de: 'Hessen, Mathe, Abiturjahrgang 2027. Kein anderes Bundesland, kein anderes Fach. Dafür dieses eine vollständig, mit getrennten Inhalten für Grundkurs und Leistungskurs.',
+      en: 'Hessen, maths, the 2027 cohort. No other state, no other subject. This one in full instead, with separate content for basic and advanced courses.',
     },
     knopf: { de: 'Mehr über uns', en: 'More about us' },
   },
   bandSchluss: {
     titel: { de: 'Fang an.', en: 'Get started.' },
     zeile: { de: 'Analysis ist kostenlos. Ohne Zahlungsdaten, ohne Frist.', en: 'Calculus is free. No payment details, no time limit.' },
+    titelGast: { de: 'Fang an.', en: 'Get started.' },
   },
   einstellungen: {
     name: { de: 'Einstellungen', en: 'Settings' },

@@ -412,17 +412,26 @@ body {
 --------------------------------------------------------------------------- */
 .gf-verlauf {
   position: relative;
+  /* Drei Lagen übereinander: ein großer Korallkreis oben links, ein wärmerer
+     oben rechts, darunter ein Hauch, der nach unten ausläuft. Zusammen ergibt
+     das einen weichen Verlauf über den ganzen Startbereich statt eines
+     Farbflecks an einer Stelle.
+
+     Die Werte liegen bewusst deutlich höher als beim ersten Versuch: Der war
+     so blass, dass auf dem Bildschirm schlicht nichts zu sehen war. */
   background:
-    radial-gradient(90% 46% at 12% -8%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 62%),
-    radial-gradient(80% 40% at 88% -4%, color-mix(in srgb, var(--brand-rind, #FF8A6B) 14%, transparent) 0%, transparent 58%),
+    radial-gradient(125% 68% at 8% -4%, color-mix(in srgb, var(--accent) 24%, transparent) 0%, transparent 58%),
+    radial-gradient(115% 62% at 94% 2%, color-mix(in srgb, var(--brand-rind, #FF8A6B) 22%, transparent) 0%, transparent 56%),
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, transparent) 0%, transparent 46%),
     var(--canvas);
+  background-attachment: scroll;
 }
 
-/* Im dunklen Modus reicht ein Hauch: Auf Schwarz wirkt derselbe Wert sofort
-   wie ein Farbfleck. */
+/* Im dunklen Modus genügt ein Bruchteil: Auf Schwarz wirkt derselbe Wert
+   sofort wie ein Farbfleck statt wie Licht. */
 body.dark .gf-verlauf {
   background:
-    radial-gradient(90% 46% at 12% -8%, color-mix(in srgb, var(--accent) 9%, transparent) 0%, transparent 62%),
-    radial-gradient(80% 40% at 88% -4%, color-mix(in srgb, var(--brand-rind, #FF8A6B) 7%, transparent) 0%, transparent 58%),
+    radial-gradient(125% 68% at 8% -4%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 58%),
+    radial-gradient(115% 62% at 94% 2%, color-mix(in srgb, var(--brand-rind, #FF8A6B) 9%, transparent) 0%, transparent 56%),
     var(--canvas);
 }
