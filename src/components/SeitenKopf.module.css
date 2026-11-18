@@ -270,24 +270,70 @@
 .punkt:hover svg { color: var(--accent); transform: translateX(4px); }
 .punkt[aria-current='page'] { color: var(--accent); }
 
-.fuss { margin-top: 30px; }
+/* Fuß des Vollbild-Menüs: erst die Konto-Knöpfe, darunter die Einstellungen.
+   Vorher standen Registrieren und Einstellungen nebeneinander in einer Reihe
+   und saßen dabei minimal versetzt, weil der eine ein Knopf und der andere
+   ein Link mit Symbol war. Jetzt untereinander, jeder auf voller Breite. */
+.fuss {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  width: min(100%, 340px);
+  margin-top: 34px;
+}
+
+.kontoKnoepfe {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+
+.probe,
+.haupt,
+.zweit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+/* Registrieren ist der Hauptweg und als einziger gefüllt. */
+.haupt { border: 0; background: var(--accent); color: #fff; }
+.haupt:hover { background: var(--accent-d); }
+
+/* Kostenlos testen als Umriss in der Markenfarbe. */
+.probe { border: 1.5px solid var(--accent); background: transparent; color: var(--accent-d); }
+.probe:hover { background: var(--accent); color: #fff; }
+
+/* Anmelden tritt zurück: Wer ein Konto hat, sucht gezielt. */
+.zweit { border: 1px solid var(--line-strong); background: transparent; color: var(--ink); }
+.zweit:hover { border-color: var(--ink); }
 
 .klein {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   min-height: 42px;
   padding: 0 16px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-control);
+  border: 0;
+  border-radius: 999px;
   background: transparent;
   color: var(--muted);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 600;
+  text-decoration: none;
   cursor: pointer;
 }
-.klein:hover { color: var(--ink); border-color: var(--ink); }
+.klein:hover { color: var(--ink); }
 
 .einstellungen {
   width: min(100%, 360px);

@@ -62,7 +62,7 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           <h1 className={styles.nurVorleser}>{t('start.titelVersteckt')}</h1>
           <div className={styles.heroMitte}>
             <BrandMark className={styles.heroMarke} size={92} />
-            <p className={styles.heroName} id="kopf-schwelle">Gradefruit</p>
+            <p className={styles.heroName}>Gradefruit</p>
             {/* Drei Angaben, durch Punkte getrennt: was, welches Fach, welche
                 Prüfung. Ohne Umgangssprache wie „fürs". */}
             <p className={styles.heroZeile}>{t('start.zeile')}</p>

@@ -78,18 +78,12 @@ export default function SeitenKopf({
     };
 
     /**
-     * Umgeschaltet wird nicht nach festen Pixeln, sondern wenn die
-     * Markenschwelle unter die Leiste wandert: Auf der Startseite ist das der
-     * Schriftzug „Gradefruit". Seiten ohne Schwelle fallen auf einen festen
-     * Wert zurück.
+     * Sobald überhaupt gescrollt wird, wird die Leiste zur Pille. Vorher hing
+     * die Umschaltung am Schriftzug „Gradefruit" und kam dadurch erst nach
+     * etlichen hundert Pixeln — man scrollte, und nichts passierte.
+     * Acht Pixel sind genug, um versehentliches Zittern auszuschließen.
      */
-    const schwelleErreicht = () => {
-      const marke = document.getElementById('kopf-schwelle');
-      if (!marke) return Math.max(0, scrollWert()) > 40;
-      return marke.getBoundingClientRect().bottom <= 86;
-    };
-
-    const onScroll = () => setGescrollt(schwelleErreicht());
+    const onScroll = () => setGescrollt(Math.max(0, scrollWert()) > 8);
 
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -217,12 +211,30 @@ export default function SeitenKopf({
             ))}
           </ul>
 
+          {/* Auf dem Handy ist das Menü der einzige Ort für das Konto: In der
+              schmalen Leiste ist kein Platz für Anmelden und Registrieren.
+              Deshalb stehen sie hier als vollbreite Knöpfe ganz oben im Fuß,
+              so wie man es von anderen Seiten kennt. */}
           <div className={styles.fuss}>
-            {!isAuthed && (
-              <button className={styles.klein} onClick={() => { schliessen(); onRegister(); }}>
-                {t('kopf.registrieren')}
+            <div className={styles.kontoKnoepfe}>
+              <button className={styles.probe} onClick={() => { schliessen(); onEnter(); }}>
+                {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
               </button>
-            )}
+              {isAuthed ? (
+                <button className={styles.zweit} onClick={() => { schliessen(); onSignOut(); }}>
+                  {t('kopf.abmelden')}
+                </button>
+              ) : (
+                <>
+                  <button className={styles.haupt} onClick={() => { schliessen(); onRegister(); }}>
+                    {t('kopf.registrieren')}
+                  </button>
+                  <button className={styles.zweit} onClick={() => { schliessen(); onLogin(); }}>
+                    {t('kopf.anmelden')}
+                  </button>
+                </>
+              )}
+            </div>
             <Link className={styles.klein} href="/einstellungen" onClick={schliessen}>
               <Zahnrad />
               {t('kopf.einstellungen')}
