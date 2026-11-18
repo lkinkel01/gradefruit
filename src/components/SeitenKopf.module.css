@@ -11,29 +11,51 @@
   transform: translateX(-50%);
   z-index: 60;
   width: min(calc(100% - 24px), 1280px);
-  display: flex;
+
+  /* Drei Spalten: links Marke und Probe-Knopf, in der Mitte die Seitenlinks,
+     rechts das Konto. Die mittlere Spalte ist `auto`, die äußeren je `1fr` —
+     dadurch steht die Mitte wirklich in der Mitte der Leiste und wandert
+     nicht, wenn links oder rechts unterschiedlich breit sind. */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
   padding: 8px 8px 8px 18px;
-  border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+
+  /* Am Seitenanfang trägt die Leiste nichts: keine Fläche, kein Rahmen,
+     kein Schatten. Nur Marke und Bedienelemente stehen frei auf der Seite.
+     Erst beim Scrollen entsteht die Pille. */
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--surface) 78%, transparent);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .03), 0 10px 30px rgba(0, 0, 0, .07);
-  transition: background-color var(--dur-hover) var(--ease-out),
-              box-shadow var(--dur-hover) var(--ease-out);
+  background: transparent;
+  box-shadow: none;
+  transition: background-color var(--dur-enter) var(--ease-out),
+              border-color var(--dur-enter) var(--ease-out),
+              box-shadow var(--dur-enter) var(--ease-out),
+              backdrop-filter var(--dur-enter) var(--ease-out);
 }
 
-/* Sobald Inhalt unter die Pille wandert, wird sie dichter. */
+/* Sobald Inhalt unter die Leiste wandert, wird sie zur Pille aus Mattglas. */
 .kopfFest {
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 14px 38px rgba(0, 0, 0, .1);
+  border-color: color-mix(in srgb, var(--line) 60%, transparent);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 12px 34px rgba(0, 0, 0, .09);
 }
 
 /* Browser ohne Mattglas bekommen eine deckende Fläche. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .kopf { background: var(--surface); }
+  .kopfFest { background: var(--surface); }
+}
+
+/* Linke Spalte: Marke und Probe-Knopf. Der Abstand dazwischen ist bewusst
+   groß — direkt nebeneinander klebten beide am linken Rand. */
+.links {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 3.4vw, 52px);
+  min-width: 0;
 }
 
 .marke {
@@ -70,8 +92,9 @@
 .linkleiste {
   display: flex;
   align-items: center;
+  justify-content: center;
+  justify-self: center;
   gap: 4px;
-  margin-left: 6px;
 }
 
 .seitenLink {
@@ -90,8 +113,9 @@
 .rechts {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  justify-self: end;
   gap: 6px;
-  margin-left: auto;
 }
 
 /* Hell/Dunkel als Schalter mit zwei Symbolen, nicht als Zahnrad-Umweg.
@@ -186,6 +210,8 @@
 @media (max-width: 1100px) {
   .linkleiste { display: none; }
   .striche { display: grid; }
+  /* Ohne die mittlere Spalte bleibt links die Marke, rechts das Konto. */
+  .kopf { grid-template-columns: 1fr auto; }
 }
 @media (max-width: 760px) {
   .testen, .textLink { display: none; }

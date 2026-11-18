@@ -149,14 +149,16 @@ export default function SeitenKopf({
           allen Rändern, der Inhalt läuft sichtbar daneben vorbei. Beim Scrollen
           wird ihre Fläche dichter, damit der Text darunter nicht durchscheint. */}
       <nav className={`${styles.kopf} ${gescrollt ? styles.kopfFest : ''}`} aria-label="Hauptnavigation">
-        <Link className={styles.marke} href="/" onClick={schliessen} aria-label={t('kopf.zurStartseite')}>
-          <BrandMark size={24} />
-          <span>Gradefruit</span>
-        </Link>
+        <div className={styles.links}>
+          <Link className={styles.marke} href="/" onClick={schliessen} aria-label={t('kopf.zurStartseite')}>
+            <BrandMark size={24} />
+            <span>Gradefruit</span>
+          </Link>
 
-        <button className={styles.testen} onClick={onEnter}>
-          {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
-        </button>
+          <button className={styles.testen} onClick={onEnter}>
+            {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
+          </button>
+        </div>
 
         <div className={styles.linkleiste}>
           {MENUE_PUNKTE.map(punkt => (
