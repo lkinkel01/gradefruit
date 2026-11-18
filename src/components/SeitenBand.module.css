@@ -15,18 +15,14 @@ main > .band:first-child {
   padding-top: clamp(118px, 15vh, 168px);
 }
 
-/* Das zweite Band ist keine Farbfläche, sondern eine zweite Oberfläche:
-   warmes Off-White mit einem Hauch Grapefruit. Der Wechsel entsteht durch den
-   Flächenwechsel, nicht durch Farbe.
+/* Flächen im Wechsel: Ein Band trägt den Schimmer, das nächste ist schlicht
+   weiß. Der Rhythmus entsteht aus dem Wechsel, nicht aus Farbstärke.
 
-   Zwei Versuche davor lagen daneben: ein blasses Rosa sah aus wie mit dem
-   Textmarker gezogen, ein tiefes Rot war schlicht zu laut für eine Lernseite.
-   Die Schrift bleibt deshalb schwarz — kein Umkippen der Farben. */
-.bandTon { background: #F4EEEB; }
-/* Im dunklen Modus ein neutrales Grau statt eines warmen Tons: #1C1A1A hatte
-   einen Braunstich, der neben dem neutralen Seitengrund schmutzig wirkte.
-   Hier zählt nur, dass sich die Fläche vom Grund abhebt. */
-:global(body.dark) .bandTon { background: #1F1F22; }
+   Drei Versuche lagen davor daneben: blasses Rosa sah aus wie mit dem
+   Textmarker gezogen, ein tiefes Rot war zu laut, ein warmes Beige brachte
+   einen zweiten Farbton ins Spiel. */
+.band { background: var(--canvas); }
+.bandTon { background: var(--gf-schimmer), var(--canvas); }
 
 .name {
   margin-bottom: 16px;

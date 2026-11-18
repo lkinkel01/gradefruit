@@ -33,15 +33,15 @@ export const TEXTE = {
   start: {
     zeile: { de: 'Mathe-Abitur · Hessen 2027 · Nach deinem Lehrplan', en: 'Maths A-levels · Hessen 2027 · Built on your syllabus' },
     titelAnfang: { de: 'Online-Kurse für', en: 'Online courses for' },
-    titelAkzent: { de: 'dein Mathe\u2011Abi in Hessen', en: 'your maths A\u2011levels in Hessen' },
+    titelAkzent: { de: 'dein Mathe\u2011Abi 2027 in Hessen', en: 'your 2027 maths A\u2011levels in Hessen' },
     unterzeile: {
-      de: 'Alles für die schriftliche Prüfung, nach dem hessischen Kerncurriculum. Grundkurs und Leistungskurs getrennt.',
-      en: 'Everything for the written exam, based on the Hessen syllabus. Basic and advanced courses kept separate.',
+      de: 'Sowohl Grundkurs als auch Leistungskurs, nach dem hessischen Kerncurriculum.',
+      en: 'Both the basic and the advanced course, based on the Hessen syllabus.',
     },
-    nutzen1: { de: '137 prüfungsnahe Aufgaben', en: '137 exam-style tasks' },
-    nutzen2: { de: 'Lösungsweg Schritt für Schritt', en: 'Worked solutions step by step' },
-    nutzen3: { de: '14 Erklärvideos', en: '14 explainer videos' },
-    nutzen4: { de: 'Coach rund um die Uhr', en: 'Coach around the clock' },
+    nutzen1: { de: 'Prüfungsnahe Aufgaben', en: 'Exam-style tasks' },
+    nutzen2: { de: 'Lösungswege Schritt für Schritt', en: 'Worked solutions step by step' },
+    nutzen3: { de: 'Erklärvideos', en: 'Explainer videos' },
+    nutzen4: { de: 'KI-Coach rund um die Uhr', en: 'AI coach around the clock' },
     titelVersteckt: {
       de: 'Gradefruit: Vorbereitungskurse, Mathe-Abitur, Hessen 2027',
       en: 'Gradefruit: preparation courses for the Maths A-levels in Hessen 2027',

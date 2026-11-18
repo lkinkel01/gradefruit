@@ -24,18 +24,24 @@
   /* Blass genug, um als Markierung zu wirken statt als warme Fläche. Die
      früheren Cremetöne (#FFF1E3 und Verwandte) haben die Seite in ein
      Beige getaucht, das nach KI-Produkt aussah — nicht nach Gradefruit. */
-  --accent-soft: #FFF0F1;
-  --accent-progress: #F79AA3;
+  /* Tönungen, nicht eigene Farben: beide aus der Akzentfarbe gemischt, damit
+     auf der Seite wirklich nur zwei Rottöne vorkommen. */
+  --accent-soft: color-mix(in srgb, var(--accent) 8%, #FFFFFF);
+  --accent-progress: color-mix(in srgb, var(--accent) 45%, #FFFFFF);
   /* Logo: Das Fruchtfleisch behält seine Originalfarbe, die Schale zieht in
      die Korall-Familie um. Das grelle #FF7A00 war der einzige Ton, der nach
      der Farbumstellung noch aus der Reihe tanzte. */
-  --brand-rind: #FF8A6B;
-  --brand-rind-hover: #FFA083;
+  /* Die Schale war ein eigener Orangeton und damit ein dritter Farbton neben
+     Korall und dem dunklen Korall. Jetzt eine helle Mischung aus genau der
+     Akzentfarbe — dadurch bleibt die Zweifarbigkeit des Zeichens erhalten,
+     ohne eine weitere Farbe auf die Seite zu bringen. */
+  --brand-rind: color-mix(in srgb, var(--accent) 52%, #FFFFFF);
+  --brand-rind-hover: color-mix(in srgb, var(--accent) 38%, #FFFFFF);
   /* Fest gesetzt statt aus Schale und Fleisch gemischt: Die Mischung landete
      bei 3,4:1 auf Weiß und wurde trotzdem als Textfarbe benutzt — zu wenig
      zum Lesen. Dieser Ton hat 5,2:1 und bleibt in derselben Familie. */
-  --brand-rind-deep: #C8362F;
-  --brand-flesh: #F5152E;
+  --brand-rind-deep: var(--accent-d);
+  --brand-flesh: var(--accent);
   /* Neutral wie der Rest. Vorher #FFF4E8 — ein warmer Beigeschleier über der
      ganzen App. */
   --brand-app-bg: #FFFFFF;
@@ -410,28 +416,29 @@ body {
    Markenfarbe, oben links und oben rechts, laufen nach unten ins Nichts aus.
    Bewusst sehr blass: Es soll nach Licht aussehen, nicht nach Farbe.
 --------------------------------------------------------------------------- */
-.gf-verlauf {
-  position: relative;
-  /* Drei Lagen übereinander: ein großer Korallkreis oben links, ein wärmerer
-     oben rechts, darunter ein Hauch, der nach unten ausläuft. Zusammen ergibt
-     das einen weichen Verlauf über den ganzen Startbereich statt eines
-     Farbflecks an einer Stelle.
+/* ---------------------------------------------------------------------------
+   Der Schimmer
 
-     Die Werte liegen bewusst deutlich höher als beim ersten Versuch: Der war
-     so blass, dass auf dem Bildschirm schlicht nichts zu sehen war. */
-  background:
-    radial-gradient(125% 68% at 8% -4%, color-mix(in srgb, var(--accent) 24%, transparent) 0%, transparent 58%),
-    radial-gradient(115% 62% at 94% 2%, color-mix(in srgb, var(--brand-rind, #FF8A6B) 22%, transparent) 0%, transparent 56%),
-    linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, transparent) 0%, transparent 46%),
-    var(--canvas);
-  background-attachment: scroll;
+   Eine einzige Verlaufsdefinition für die ganze Seite, als Variable abgelegt.
+   Dadurch sieht jede Fläche, die ihn benutzt, gleich aus, und eine Änderung
+   wirkt überall.
+
+   Bewusst sehr schwach und tief angesetzt: Oben bleibt die Seite weiß, damit
+   die Leiste Kontrast hat; der Hauch Farbe liegt darunter. Der Versuch davor
+   war kräftig und begann ganz oben — die Seite wirkte rot statt weiß.
+--------------------------------------------------------------------------- */
+:root {
+  --gf-schimmer:
+    radial-gradient(92% 58% at 18% 46%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 64%),
+    radial-gradient(84% 52% at 86% 30%, color-mix(in srgb, var(--accent) 7%, transparent) 0%, transparent 60%);
 }
 
-/* Im dunklen Modus genügt ein Bruchteil: Auf Schwarz wirkt derselbe Wert
-   sofort wie ein Farbfleck statt wie Licht. */
-body.dark .gf-verlauf {
-  background:
-    radial-gradient(125% 68% at 8% -4%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 58%),
-    radial-gradient(115% 62% at 94% 2%, color-mix(in srgb, var(--brand-rind, #FF8A6B) 9%, transparent) 0%, transparent 56%),
-    var(--canvas);
+body.dark {
+  --gf-schimmer:
+    radial-gradient(92% 58% at 18% 46%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 64%),
+    radial-gradient(84% 52% at 86% 30%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 60%);
 }
+
+/* Flächen wechseln sich ab: eine mit Schimmer, die nächste schlicht weiß. */
+.gf-schimmer { background: var(--gf-schimmer), var(--canvas); }
+.gf-weiss { background: var(--canvas); }

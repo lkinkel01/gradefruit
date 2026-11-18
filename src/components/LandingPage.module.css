@@ -21,10 +21,9 @@
 .hero {
   position: relative;
   min-height: min(100svh, 820px);
-  /* Keine eigene Fläche: Der Grapefruit-Verlauf der Seite soll gerade hier
-     sichtbar sein. Vorher lag hier `background: var(--canvas)` und hat ihn
-     genau im Startbereich wieder zugedeckt. */
-  background: transparent;
+  /* Der Schimmer liegt tief im Bild, oben bleibt die Seite weiß — dort steht
+     die Leiste und braucht Kontrast. */
+  background: var(--gf-schimmer), var(--canvas);
   display: grid;
   align-content: center;
   justify-items: center;
@@ -188,20 +187,6 @@
 }
 
 
-/* Weicher Lichtkegel zur Mitte: trägt Marke und Knöpfe, ohne eine Kante zu
-   erzeugen. */
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  /* Nur ein Hauch Licht zur Mitte, damit die Schrift auf dem Verlauf sicher
-     steht. Vorher deckte dieser Schleier den Verlauf fast ganz ab. */
-  background: radial-gradient(62% 48% at 50% 44%,
-    color-mix(in srgb, var(--canvas) 42%, transparent) 0%,
-    transparent 72%);
-}
 
 
 /* Die vier Verkaufsargumente. Haken in der Markenfarbe, damit sie beim
