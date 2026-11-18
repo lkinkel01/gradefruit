@@ -91,15 +91,6 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
             </div>
           </div>
 
-          {/* Zeigt, dass es weitergeht. Ohne diesen Hinweis wirkte der leere
-              Startbereich wie das Ende der Seite. */}
-          <a className={styles.weiter} href="#teaser" aria-label="Weiter nach unten">
-            <span>{t('start.mehr')}</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <polyline points="6 13 12 19 18 13" />
-            </svg>
-          </a>
         </header>
 
         <div className={styles.fakten} id="teaser">
@@ -109,7 +100,6 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
         </div>
 
         <section className={band.band}>
-          <p className={band.name}>{t('bandLernsystem.name')}</p>
           <h2 className={band.titel}>{t('bandLernsystem.titel')}</h2>
           <p className={band.zeile}>{t('bandLernsystem.zeile')}</p>
           <div className={band.bild}>
@@ -133,7 +123,6 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
         <section className={`${band.band} ${band.bandTon}`}>
           {/* Preise interessieren nur, wer sie noch braucht. Wer beide Kurse
               hat, bekommt stattdessen die Bestätigung und den Weg hinein. */}
-          <p className={band.name}>{t('bandKurse.name')}</p>
           <h2 className={band.titel}>
             {stand === 'alleKurse'
               ? t('bandKurse.titelAlle')
@@ -156,7 +145,6 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
         </section>
 
         <section className={band.band}>
-          <p className={band.name}>{t('bandUeberUns.name')}</p>
           <h2 className={band.titel}>{t('bandUeberUns.titel')}</h2>
           <p className={band.zeile}>{t('bandUeberUns.zeile')}</p>
           <Link className={band.knopf} href="/ueber-uns">{t('bandUeberUns.knopf')}</Link>

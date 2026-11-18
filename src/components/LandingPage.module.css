@@ -27,7 +27,7 @@
   display: grid;
   align-content: center;
   justify-items: center;
-  padding: 132px 24px 112px;
+  padding: 136px 22px 104px;
 }
 
 .heroMitte { display: grid; justify-items: center; gap: 14px; text-align: center; }
@@ -86,9 +86,10 @@
   border: 0;
   background: var(--accent);
   color: #fff;
-  box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 34%, transparent);
 }
-.heroKnopf:first-child:hover { background: var(--accent-d); transform: translateY(-1px); }
+/* Kein farbiger Schein unter dem Knopf: Dieses Leuchten ist das Erkennungs-
+   zeichen schnell zusammengeklickter Seiten und wirkt sofort unecht. */
+.heroKnopf:first-child:hover { background: var(--accent-d); }
 
 /* Der zweite tritt zurück, bleibt aber in derselben Farbfamilie. */
 .heroKnopf:not(:first-child) {
@@ -98,31 +99,6 @@
 }
 .heroKnopf:not(:first-child):hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-/* Hinweis, dass es weitergeht. */
-.weiter {
-  position: absolute;
-  left: 50%;
-  bottom: 34px;
-  transform: translateX(-50%);
-  display: grid;
-  justify-items: center;
-  gap: 6px;
-  color: var(--faint);
-  font-size: 11px;
-  font-weight: 650;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  text-decoration: none;
-  animation: weiterTippen 3.6s var(--ease-out) infinite;
-}
-.weiter:hover { color: var(--ink); }
-/* Dezenter als vorher: 2px statt 5px, und ein ruhigerer Takt. Die Bewegung
-   soll andeuten, nicht winken. */
-@keyframes weiterTippen {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, 2px); }
-}
-@media (prefers-reduced-motion: reduce) { .weiter { animation: none; } }
 
 .fakten {
   display: grid;
@@ -210,3 +186,18 @@
   font-weight: 620;
 }
 .nutzen svg { flex: none; color: var(--accent); }
+
+
+/* Auf dem Handy braucht alles mehr Luft: Überschrift, Zeile und Punkte
+   standen zu dicht beieinander und wirkten gequetscht. */
+@media (max-width: 760px) {
+  .hero { padding: 116px 22px 76px; min-height: auto; }
+  .heroMitte { gap: 18px; }
+  .heroTitel { max-width: 14ch; }
+  .heroUnterzeile { margin-top: 4px; }
+  .nutzen { gap: 12px 18px; margin-top: 10px; }
+  .nutzen li { font-size: 14px; }
+  .heroKnoepfe { margin-top: 8px; width: 100%; flex-direction: column; }
+  .heroKnopf { width: 100%; }
+  .fakten > div { padding: 22px 18px; }
+}

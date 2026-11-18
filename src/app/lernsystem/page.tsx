@@ -14,12 +14,11 @@ export default function Lernsystem() {
   return (
     <MarketingSeite>
       <section className={band.band}>
-        <p className={band.name}>Lernsystem</p>
         <h1 className={band.titel}>Einfaches Lernsystem.</h1>
         <p className={band.zeile}>
-          Fünf Dinge, die zusammenarbeiten. Jede Aufgabe im Stil der
-          hessischen Abiturprüfung, kein Katalog, durch den du dich allein
-          durchklickst.
+          Zusammenfassung lesen, Übungsaufgabe rechnen, mit dem Lösungsweg
+          vergleichen, Erklärvideo ansehen und am Ende prüfungsnahe Aufgaben
+          lösen.
         </p>
         <div className={band.bild}>
           <LernsystemBilder art="uebersicht" />
@@ -39,7 +38,6 @@ export default function Lernsystem() {
       </section>
 
       <section className={band.band}>
-        <p className={band.name}>Reel-Modus</p>
         <h2 className={band.titel}>Swipen. Und dabei lernen.</h2>
         <p className={band.zeile}>
           Aufgaben und Formeln im Hochformat, wie bei TikTok. Nur mit dem, was bei

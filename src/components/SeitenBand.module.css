@@ -24,14 +24,6 @@ main > .band:first-child {
 .band { background: var(--canvas); }
 .bandTon { background: var(--gf-schimmer), var(--canvas); }
 
-.name {
-  margin-bottom: 16px;
-  color: var(--accent);
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-}
 
 .titel {
   max-width: 18ch;
@@ -60,20 +52,20 @@ main > .band:first-child {
   min-height: 46px;
   margin-top: 30px;
   padding: 0 26px;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius-control);
+  border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 999px;
   background: transparent;
-  color: var(--ink);
+  color: var(--accent-d);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 14.5px;
   font-weight: 650;
-  letter-spacing: .15em;
-  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
-.knopf:hover { background: var(--ink); color: var(--surface); }
+/* Korall statt Schwarz: Auf der ganzen Seite ist das die Farbe für „hier
+   geht es weiter". */
+.knopf:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* ---------------------------------------------------------------------------
    Bewegung beim Scrollen

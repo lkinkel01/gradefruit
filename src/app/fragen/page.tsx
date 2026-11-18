@@ -13,7 +13,6 @@ export default function Fragen() {
   return (
     <MarketingSeite>
       <section className={band.band}>
-        <p className={band.name}>Fragen</p>
         <h1 className={band.titel}>Kurz erklärt.</h1>
         <div className={styles.liste}>
           {FRAGEN.map(f => (

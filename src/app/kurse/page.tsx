@@ -29,7 +29,6 @@ function Inhalt() {
   return (
     <>
       <section className={band.band}>
-        <p className={band.name}>Kurse</p>
         <h1 className={band.titel}>
           {stand === 'alleKurse' ? 'Alles freigeschaltet.' : 'Einmal zahlen, kein Abo.'}
         </h1>

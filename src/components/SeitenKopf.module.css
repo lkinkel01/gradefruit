@@ -221,6 +221,35 @@
   .kopf { padding-left: 14px; }
 }
 
+/* Auf dem Handy nimmt die Leiste beim Scrollen Platz weg, den der Inhalt
+   besser gebrauchen kann. Sobald gescrollt wird, verschwindet sie deshalb
+   ganz; übrig bleiben die drei Striche, die immer anklickbar sind und das
+   Menü öffnen. Sie bekommen eine eigene Fläche, damit sie über jedem Inhalt
+   sichtbar bleiben. */
+@media (max-width: 900px) {
+  .kopfFest {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding-left: 0;
+    padding-right: 0;
+    pointer-events: none;
+  }
+  .kopfFest .links,
+  .kopfFest .modus,
+  .kopfFest .textLink,
+  .kopfFest .knopf { display: none; }
+
+  .kopfFest .striche {
+    pointer-events: auto;
+    background: var(--surface);
+    border-color: var(--line);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05), 0 8px 24px rgba(0, 0, 0, .12);
+  }
+}
+
 /* --------------------------------------------------------------------------
    Vollbild-Menü
 -------------------------------------------------------------------------- */

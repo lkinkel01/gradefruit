@@ -33,7 +33,7 @@ export const TEXTE = {
   start: {
     zeile: { de: 'Mathe-Abitur · Hessen 2027 · Nach deinem Lehrplan', en: 'Maths A-levels · Hessen 2027 · Built on your syllabus' },
     titelAnfang: { de: 'Online-Kurse für', en: 'Online courses for' },
-    titelAkzent: { de: 'dein Mathe\u2011Abi 2027 in Hessen', en: 'your 2027 maths A\u2011levels in Hessen' },
+    titelAkzent: { de: 'dein Mathe\u2011Abitur 2027 in Hessen', en: 'your 2027 maths A\u2011levels in Hessen' },
     unterzeile: {
       de: 'Sowohl Grundkurs als auch Leistungskurs, nach dem hessischen Kerncurriculum.',
       en: 'Both the basic and the advanced course, based on the Hessen syllabus.',
@@ -52,7 +52,7 @@ export const TEXTE = {
     faktenPruefung: { de: 'Hessen 2027', en: 'Hessen 2027' },
     faktenPruefungSub: { de: 'Dein Bundesland, dein Jahrgang', en: 'Your state, your cohort' },
     faktenKurse: { de: 'GK und LK', en: 'Basic and advanced' },
-    faktenKurseSub: { de: 'Getrennt, nicht gemischt', en: 'Separate, not merged' },
+    faktenKurseSub: { de: 'Kurse für beide Niveaus', en: 'Courses for both levels' },
     faktenTageSub: { de: 'Bis zur Prüfung', en: 'Until the exam' },
     tage: { de: 'Tage', en: 'days' },
   },
@@ -60,8 +60,8 @@ export const TEXTE = {
     name: { de: 'Lernsystem', en: 'How it works' },
     titel: { de: 'Einfaches Lernsystem.', en: 'A simple way to study.' },
     zeile: {
-      de: 'Aufgabe rechnen, Lösungsweg vergleichen, nachfragen, wiederholen. Alles im Stil der hessischen Abiturprüfung.',
-      en: 'Solve a task, compare the worked solution, ask, repeat. All in the style of the Hessen exam.',
+      de: 'Zusammenfassung lesen, Übungsaufgabe rechnen, mit dem Lösungsweg vergleichen, Erklärvideo ansehen und am Ende prüfungsnahe Aufgaben lösen.',
+      en: 'Read the summary, work through an exercise, compare it with the solution, watch the explainer video, then tackle exam-style tasks.',
     },
     knopf: { de: 'Zum Lernsystem', en: 'See how it works' },
   },
@@ -100,8 +100,8 @@ export const TEXTE = {
     name: { de: 'Über uns', en: 'About' },
     titel: { de: 'Für dein Bundesland gebaut.', en: 'Built for your state.' },
     zeile: {
-      de: 'Hessen, Mathe, Abiturjahrgang 2027. Kein anderes Bundesland, kein anderes Fach. Dafür dieses eine vollständig, mit getrennten Inhalten für Grundkurs und Leistungskurs.',
-      en: 'Hessen, maths, the 2027 cohort. No other state, no other subject. This one in full instead, with separate content for basic and advanced courses.',
+      de: 'Mathe-Abitur in Hessen 2027, sowohl für den Grundkurs als auch für den Leistungskurs.',
+      en: 'Maths A-levels in Hessen 2027, for the basic course as well as the advanced one.',
     },
     knopf: { de: 'Mehr über uns', en: 'More about us' },
   },

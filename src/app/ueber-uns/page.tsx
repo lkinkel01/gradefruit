@@ -13,13 +13,10 @@ export default function UeberUns() {
   return (
     <MarketingSeite>
       <section className={band.band}>
-        <p className={band.name}>Über uns</p>
         <h1 className={band.titel}>Für dein Bundesland gebaut.</h1>
         <p className={band.zeile}>
-          Die meisten Lernplattformen decken alles ab und passen deshalb
-          nirgends genau. Gradefruit kennt nur eine Prüfung: das schriftliche
-          Mathe-Abitur in Hessen 2027, nach dem hessischen Kerncurriculum,
-          mit getrennten Inhalten für Grundkurs und Leistungskurs.
+          Mathe-Abitur in Hessen 2027, nach dem hessischen Kerncurriculum.
+          Sowohl für den Grundkurs als auch für den Leistungskurs.
         </p>
       </section>
 

@@ -13,7 +13,6 @@ export default function Einstellungen() {
   return (
     <MarketingSeite>
       <section className={band.band}>
-        <p className={band.name}>{t('einstellungen.name')}</p>
         <h1 className={band.titel}>{t('einstellungen.titel')}</h1>
 
         <div className={styles.gruppen}>
