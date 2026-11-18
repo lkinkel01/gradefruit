@@ -108,16 +108,23 @@
 }
 .fakten > div {
   display: grid;
+  align-content: start;
   justify-items: center;
-  gap: 5px;
+  gap: 6px;
   padding: 26px 18px;
   text-align: center;
 }
+/* Gleich hohe Zeilen, damit der Abstand zwischen Zahl und Beschreibung
+   überall gleich aussieht — auch wenn eine Beschreibung umbricht. */
+.fakten span { min-height: 2.9em; }
 .fakten > div + div { border-left: 1px solid var(--line); }
 .fakten strong { color: var(--ink); font-size: 16px; font-weight: 750; letter-spacing: -.01em; }
 .fakten span { color: var(--muted); font-size: 13px; }
 
-@media (max-width: 620px) {
+/* Unter 760px passten zwei Spalten ins Raster und die dritte Angabe stand
+   allein in der zweiten Reihe. Jetzt stehen alle drei untereinander. */
+@media (max-width: 760px) {
+  .fakten { grid-template-columns: 1fr; }
   .fakten > div + div { border-left: 0; border-top: 1px solid var(--line); }
 }
 
