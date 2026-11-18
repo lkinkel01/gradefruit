@@ -32,6 +32,12 @@ export const TEXTE = {
   },
   start: {
     zeile: { de: 'Mathe-Abitur · Hessen 2027 · Nach deinem Lehrplan', en: 'Maths A-levels · Hessen 2027 · Built on your syllabus' },
+    titelAnfang: { de: 'Online-Kurse für', en: 'Online courses for' },
+    titelAkzent: { de: 'dein Mathe-Abi in Hessen', en: 'your maths A-levels in Hessen' },
+    unterzeile: {
+      de: 'Aufgaben im Stil der Abiturprüfung, vollständige Lösungswege und ein Coach, der die Stelle kennt. Grundkurs und Leistungskurs getrennt.',
+      en: 'Tasks in the style of the exam, complete worked solutions and a coach that knows where you are stuck. Basic and advanced courses kept separate.',
+    },
     titelVersteckt: {
       de: 'Gradefruit: Vorbereitungskurse, Mathe-Abitur, Hessen 2027',
       en: 'Gradefruit: preparation courses for the Maths A-levels in Hessen 2027',

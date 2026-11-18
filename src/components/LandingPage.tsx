@@ -59,13 +59,19 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           {/* Fast weiße Rasterstruktur: erinnert an Karopapier, ohne sich
               vorzudrängen. Marke und Knöpfe stehen darauf ungestört. */}
           <img className={styles.heroGrund} src="/bild-raster.webp" alt="" aria-hidden="true" loading="eager" draggable={false} />
-          <h1 className={styles.nurVorleser}>{t('start.titelVersteckt')}</h1>
           <div className={styles.heroMitte}>
-            <BrandMark className={styles.heroMarke} size={92} />
-            <p className={styles.heroName}>Gradefruit</p>
-            {/* Drei Angaben, durch Punkte getrennt: was, welches Fach, welche
-                Prüfung. Ohne Umgangssprache wie „fürs". */}
-            <p className={styles.heroZeile}>{t('start.zeile')}</p>
+            <BrandMark className={styles.heroMarke} size={64} />
+
+            {/* Die Startseite sagt jetzt in einem Satz, für wen das hier ist.
+                Vorher stand nur der Markenname groß da, und für wen es
+                gemacht ist, erfuhr man erst auf den Unterseiten. */}
+            <h1 className={styles.heroTitel}>
+              {t('start.titelAnfang')}{' '}
+              <span className={styles.heroAkzent}>{t('start.titelAkzent')}</span>
+            </h1>
+
+            <p className={styles.heroUnterzeile}>{t('start.unterzeile')}</p>
+
             <div className={styles.heroKnoepfe}>
               <button className={styles.heroKnopf} onClick={onEnter}>
                 {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}

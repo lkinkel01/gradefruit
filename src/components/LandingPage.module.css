@@ -30,24 +30,31 @@
 
 .heroMitte { display: grid; justify-items: center; gap: 14px; text-align: center; }
 
-.heroMarke { width: clamp(60px, 8vw, 88px); height: auto; }
+.heroMarke { width: clamp(46px, 5vw, 62px); height: auto; margin-bottom: 6px; }
 
-.heroName {
+/* Die Überschrift trägt die Aussage, nicht mehr der Markenname. Der steht
+   links oben in der Leiste und muss hier nicht zweimal groß erscheinen. */
+.heroTitel {
+  max-width: 17ch;
   font-family: 'Bricolage Grotesque', sans-serif;
   font-optical-sizing: auto;
   color: var(--ink);
-  font-size: clamp(38px, 7vw, 68px);
+  font-size: clamp(34px, 6.2vw, 62px);
   font-weight: 800;
   letter-spacing: -.035em;
-  line-height: 1;
+  line-height: 1.04;
+  text-wrap: balance;
 }
 
-.heroZeile {
+/* Der Teil, der sagt, für wen es ist, steht in der Markenfarbe. */
+.heroAkzent { color: var(--accent-d); }
+
+.heroUnterzeile {
+  max-width: 52ch;
+  margin-top: 18px;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-  letter-spacing: .17em;
-  text-transform: uppercase;
+  font-size: clamp(15px, 1.6vw, 17.5px);
+  line-height: 1.6;
 }
 
 .heroKnoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 18px; }
@@ -145,6 +152,7 @@
 .heroMitte > *:nth-child(2) { animation-delay: .06s; }
 .heroMitte > *:nth-child(3) { animation-delay: .12s; }
 .heroMitte > *:nth-child(4) { animation-delay: .18s; }
+.heroMitte > *:nth-child(5) { animation-delay: .24s; }
 
 @keyframes hereinKommen {
   from { opacity: 0; transform: translateY(8px); }
