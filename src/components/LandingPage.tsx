@@ -56,9 +56,6 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
 
       <main id="inhalt">
         <header className={styles.hero}>
-          {/* Fast weiße Rasterstruktur: erinnert an Karopapier, ohne sich
-              vorzudrängen. Marke und Knöpfe stehen darauf ungestört. */}
-          <img className={styles.heroGrund} src="/bild-raster.webp" alt="" aria-hidden="true" loading="eager" draggable={false} />
           <div className={styles.heroMitte}>
             <BrandMark className={styles.heroMarke} size={64} />
 
@@ -71,6 +68,20 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
             </h1>
 
             <p className={styles.heroUnterzeile}>{t('start.unterzeile')}</p>
+
+            {/* Die vier Verkaufsargumente als kurze Punkte statt als Fließtext:
+                So sieht man beim Überfliegen, was man bekommt. Jede Angabe ist
+                nachgezählt — 137 Aufgaben, 14 Erklärvideos. */}
+            <ul className={styles.nutzen}>
+              {['nutzen1', 'nutzen2', 'nutzen3', 'nutzen4'].map(schluessel => (
+                <li key={schluessel}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  {t(`start.${schluessel}` as Parameters<typeof t>[0])}
+                </li>
+              ))}
+            </ul>
 
             <div className={styles.heroKnoepfe}>
               <button className={styles.heroKnopf} onClick={onEnter}>
