@@ -41,9 +41,9 @@
 }
 .kopfTitel {
   color: var(--ink);
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   font-size: 17px;
-  font-weight: 750;
+  font-weight: 800;
   letter-spacing: -0.02em;
 }
 .zu {

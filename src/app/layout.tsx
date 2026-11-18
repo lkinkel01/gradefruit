@@ -40,6 +40,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning>
         {/* Setzt das gespeicherte Theme VOR dem ersten Rendern, damit die Seite
             nicht kurz hell aufblitzt und dann auf Dunkel springt. */}
+        {/* Schriften: Cabinet Grotesk für Überschriften, Switzer für Fließtext.
+            Beide von Fontshare, kommerziell frei. preconnect zuerst, damit die
+            Verbindung schon steht, wenn das Stylesheet angefordert wird. */}
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="" />
+        {/* Zwei getrennte Anfragen: Bei einer kombinierten URL liefert
+            Fontshare nur die erste Familie aus, die zweite fehlt wortlos. */}
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f%5B%5D=cabinet-grotesk@700,800,900&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f%5B%5D=switzer@400,500,600,700&display=swap"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `try{if(localStorage.getItem('gf-theme')==='dark'){document.body.classList.add('dark');document.documentElement.dataset.theme='dark'}}catch(e){}`,

@@ -1,4 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
+/* Schriften von Fontshare, kommerziell frei nutzbar.
+
+   Vorher: Inter für Fließtext, Bricolage Grotesque für Überschriften. Das ist
+   die Standardkombination maschinell erzeugter Seiten — Inter ist die
+   meistbenutzte Oberflächenschrift der letzten Jahre und die Vorgabe fast
+   jedes generierten Entwurfs. Wer viele solcher Seiten gesehen hat, erkennt
+   sie sofort, ohne sagen zu können warum.
+
+   Jetzt: Cabinet Grotesk für Überschriften (redaktionell, etwas eckig),
+   Switzer für Fließtext (schweizerisch, sachlich). Beide kaum verbreitet und
+   damit nicht vorbelastet. Getrennte Anfragen, weil Fontshare bei einer
+   kombinierten URL die zweite Familie verschluckt. */
+/* Die Schriften werden im Dokumentkopf geladen (layout.tsx), nicht hier.
+
+   Über @import hat es nicht funktioniert: Der CSS-Parser verwarf die Zeilen
+   stillschweigend, weil die Fontshare-Adresse eckige Klammern und ein @ im
+   Parameter enthält. Es erschien kein Fehler, die Schriften fehlten einfach.
+   Ein <link> im Kopf umgeht den Parser und lädt zudem früher, statt erst
+   nachdem das Stylesheet selbst da ist. */
 
 :root {
   /* Höhe der unteren Navigationsleiste in der App, gemessen von der Unterkante
@@ -124,7 +142,7 @@
   --dur-hover: 180ms;
   --dur-enter: 240ms;
 
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Switzer', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -164,10 +182,8 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   letter-spacing: -0.022em;
-  /* Bricolage ist optisch skaliert: enger im Großen, offener im Kleinen. */
-  font-optical-sizing: auto;
 }
 
 /* ---------------------------------------------------------------------------
@@ -206,16 +222,15 @@ h1, h2, h3, h4 {
    --------------------------------------------------------------------------- */
 /* Meta-Label: klein, ruhig und in natürlicher Schreibweise. */
 .gf-meta {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Switzer', sans-serif;
   font-size: 12.5px; font-weight: 650; letter-spacing: 0.01em;
   color: var(--muted);
 }
 /* Haarlinie als Trenner – trägt die editoriale Ordnung statt Karten-Ränder. */
 .gf-rule { height: 1px; background: var(--line-strong); border: none; width: 100%; }
-/* Übergroße Index-/Kennzahl (Bricolage) – das Zahl-als-Motiv-Element. */
+/* Übergroße Index-/Kennzahl in Cabinet Grotesk – das Zahl-als-Motiv-Element. */
 .gf-index {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-optical-sizing: auto;
+  font-family: 'Cabinet Grotesk', sans-serif;
   font-weight: 800; letter-spacing: -0.04em; line-height: 0.9;
   font-variant-numeric: tabular-nums;
 }

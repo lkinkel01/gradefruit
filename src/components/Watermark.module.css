@@ -33,7 +33,7 @@
   color: var(--ink);
   /* Auf dem Bildschirm unsichtbar — es soll beim Lernen nicht stören. */
   opacity: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Switzer', sans-serif;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: .04em;

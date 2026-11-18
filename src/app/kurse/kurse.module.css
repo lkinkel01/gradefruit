@@ -22,8 +22,7 @@
 
 .preis { display: flex; align-items: baseline; gap: 8px; }
 .preis strong {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-optical-sizing: auto;
+  font-family: 'Cabinet Grotesk', sans-serif;
   color: var(--ink);
   font-size: 40px;
   font-weight: 800;

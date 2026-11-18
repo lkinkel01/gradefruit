@@ -61,8 +61,8 @@
 .areaCard:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .areaCardHead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .areaCardTitle {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 750; font-size: 20px; letter-spacing: -.025em;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 800; font-size: 20px; letter-spacing: -.025em;
 }
 .areaCardMeta { color: var(--faint); font-size: 12.5px; font-variant-numeric: tabular-nums; }
 /* Wie weit man in genau diesem Bereich ist. Steht dort, wo vorher die ganze
@@ -76,7 +76,7 @@
 }
 .areaCardGo {
   display: inline-flex; align-items: center; gap: 8px; margin-top: auto;
-  color: var(--accent-d); font-size: 13.5px; font-weight: 650;
+  color: var(--accent-d); font-size: 13.5px; font-weight: 700;
 }
 
 /* Bereichs-Titel statt Umschalter: Zusammenfassung und Übungen sind eigene
@@ -110,8 +110,8 @@
 .areaTitle {
   margin: 0;
   color: var(--ink);
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 750;
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-weight: 800;
   font-size: clamp(19px, 2.4vw, 24px);
   letter-spacing: -.025em;
 }
@@ -191,7 +191,7 @@
 .indexVideo {
   color: var(--accent-d);
   font-size: 11.5px;
-  font-weight: 650;
+  font-weight: 700;
 }
 /* Lernstatus als farbiger Punkt: grün/gelb/rot (statt Textlabel). */
 .statusDot {
@@ -257,7 +257,7 @@
   width: 100%;
   overflow: hidden;
   font-size: 13.5px;
-  font-weight: 650;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -351,7 +351,7 @@
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-pill);
   color: var(--muted);
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   font-size: 12.5px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -362,7 +362,7 @@
   margin-bottom: 10px;
   color: var(--muted);
   font-size: 12.5px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: .01em;
 }
 /* Nur für Vorleseprogramme: Der Schritt hat eine Nummer, aber sie steht
@@ -399,7 +399,7 @@
 /* Mehrere Formeln in einem Schritt: jede in eine eigene Zeile. */
 .readerMath + .readerMath { margin-top: 4px; }
 .readerResult {
-  font-weight: 750;
+  font-weight: 800;
   color: var(--accent-d);
 }
 
@@ -426,9 +426,9 @@
 }
 /* Der erste Satz trägt die Aussage — er steht etwas größer. */
 .introBox p:first-child {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   font-size: 19px;
-  font-weight: 650;
+  font-weight: 700;
   letter-spacing: -.02em;
   line-height: 1.45;
 }
@@ -477,7 +477,7 @@
   cursor: pointer;
   font-family: inherit;
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 700;
   transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
 .pagerBtn:active { transform: scale(.98); }
@@ -509,7 +509,7 @@
   display: flex; align-items: center; justify-content: center;
 }
 .cardNumDone { background: var(--green); color: #fff; }
-.cardTitle { flex: 1; font-size: 14.5px; font-weight: 650; color: var(--ink); transition: color .15s; letter-spacing: -0.01em; }
+.cardTitle { flex: 1; font-size: 14.5px; font-weight: 700; color: var(--ink); transition: color .15s; letter-spacing: -0.01em; }
 .cardMeta { display: flex; align-items: center; gap: 8px; color: var(--faint); }
 .chev { color: var(--faint); flex-shrink: 0; }
 
@@ -555,7 +555,7 @@
   padding-top: 6px; animation: contentReveal var(--dur-enter) var(--ease-out) both;
 }
 .solHead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 13px 0 6px; }
-.solTitle { font-size: 12px; font-weight: 650; letter-spacing: .01em; color: var(--muted); }
+.solTitle { font-size: 12px; font-weight: 700; letter-spacing: .01em; color: var(--muted); }
 .solHint { font-size: 12px; color: var(--faint); }
 .mistakesList { margin: 14px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
 .mistakesList li { font-size: 13.5px; line-height: 1.5; color: var(--ink); }
@@ -594,7 +594,7 @@
 
 /* Status-Hinweis im zugeklappten Kartenkopf */
 .headStatus {
-  font-size: 11px; font-weight: 650; color: var(--faint);
+  font-size: 11px; font-weight: 700; color: var(--faint);
   border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 3px 9px;
   white-space: nowrap;
 }
@@ -699,7 +699,7 @@
   cursor: pointer;
   font-family: inherit;
   font-size: 12.5px;
-  font-weight: 650;
+  font-weight: 700;
   white-space: nowrap;
 }
 .selectAsk :global(svg) { color: var(--accent-d); }

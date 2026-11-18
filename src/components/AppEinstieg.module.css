@@ -23,7 +23,7 @@
 .titel {
   margin-top: 4px;
   color: var(--ink);
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   font-size: 30px;
   font-weight: 800;
   letter-spacing: -0.035em;
@@ -44,7 +44,7 @@
   display: block;
   margin-bottom: 6px;
   color: var(--ink);
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;

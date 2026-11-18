@@ -13,7 +13,7 @@
   border-bottom: 1px solid var(--line);
 }
 .brand {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   font-weight: 800;
   font-size: 20px;
   display: flex;
@@ -58,7 +58,7 @@
   margin-bottom: 18px;
 }
 .title {
-  font-family: 'Bricolage Grotesque', sans-serif;
+  font-family: 'Cabinet Grotesk', sans-serif;
   font-size: 40px;
   font-weight: 800;
   letter-spacing: -0.03em;
