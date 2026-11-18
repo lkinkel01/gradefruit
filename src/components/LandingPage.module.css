@@ -25,7 +25,7 @@
   display: grid;
   align-content: center;
   justify-items: center;
-  padding: 108px 24px 108px;
+  padding: 132px 24px 112px;
 }
 
 .heroMitte { display: grid; justify-items: center; gap: 14px; text-align: center; }

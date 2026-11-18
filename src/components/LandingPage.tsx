@@ -43,7 +43,7 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
   }, []);
 
   return (
-    <div className={styles.seite}>
+    <div className={`${styles.seite} gf-verlauf`}>
       <a className={styles.skipLink} href="#inhalt">Zum Inhalt</a>
 
       <SeitenKopf

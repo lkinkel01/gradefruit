@@ -401,3 +401,28 @@ body {
      dort trat der hineingezoomte Bildschirm auch weiterhin auf. */
   input, select, textarea { font-size: 16px !important; }
 }
+
+/* ---------------------------------------------------------------------------
+   Grapefruit-Verlauf für die öffentlichen Seiten
+
+   Reines Weiß wirkt neben der schwebenden Pille flach — die Form braucht
+   etwas, wovon sie sich abheben kann. Zwei weiche Farbkreise aus der
+   Markenfarbe, oben links und oben rechts, laufen nach unten ins Nichts aus.
+   Bewusst sehr blass: Es soll nach Licht aussehen, nicht nach Farbe.
+--------------------------------------------------------------------------- */
+.gf-verlauf {
+  position: relative;
+  background:
+    radial-gradient(90% 46% at 12% -8%, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 62%),
+    radial-gradient(80% 40% at 88% -4%, color-mix(in srgb, var(--brand-rind, #FF8A6B) 14%, transparent) 0%, transparent 58%),
+    var(--canvas);
+}
+
+/* Im dunklen Modus reicht ein Hauch: Auf Schwarz wirkt derselbe Wert sofort
+   wie ein Farbfleck. */
+body.dark .gf-verlauf {
+  background:
+    radial-gradient(90% 46% at 12% -8%, color-mix(in srgb, var(--accent) 9%, transparent) 0%, transparent 62%),
+    radial-gradient(80% 40% at 88% -4%, color-mix(in srgb, var(--brand-rind, #FF8A6B) 7%, transparent) 0%, transparent 58%),
+    var(--canvas);
+}

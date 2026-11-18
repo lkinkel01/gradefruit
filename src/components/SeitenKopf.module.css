@@ -1,92 +1,198 @@
-/* Kopfleiste und Vollbild-Menü — auf allen Seiten dieselbe. */
+/* Schwebende Pille statt durchgehender Leiste.
 
+   Sie sitzt mit Abstand zu allen Rändern, sodass der Seiteninhalt sichtbar
+   daneben vorbeiläuft — genau das macht die Form erkennbar. Die Fläche ist
+   Mattglas: durchscheinend genug, um leicht zu wirken, dicht genug, dass
+   darunterliegender Text nicht lesbar durchschlägt. */
 .kopf {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 60;
+  width: min(calc(100% - 24px), 1280px);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 15px clamp(16px, 3vw, 34px);
-  background: transparent;
-  border-bottom: 1px solid transparent;
+  gap: 8px;
+  padding: 8px 8px 8px 18px;
+  border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .03), 0 10px 30px rgba(0, 0, 0, .07);
   transition: background-color var(--dur-hover) var(--ease-out),
-              border-color var(--dur-hover) var(--ease-out);
+              box-shadow var(--dur-hover) var(--ease-out);
 }
 
-/* Sobald die Leiste erscheint, deckt sie vollständig ab: Der Text darunter
-   darf nicht mehr sichtbar sein. Eine halbdurchsichtige Fläche ließ ihn
-   durchscheinen, und auch starke Unschärfe zeigte noch Form und Farbe.
-   Die Glas-Anmutung tragen jetzt die Haarlinie und der weiche Schatten,
-   nicht die Durchsicht. */
+/* Sobald Inhalt unter die Pille wandert, wird sie dichter. */
 .kopfFest {
-  background: var(--surface);
-  border-bottom-color: var(--line);
-  box-shadow: 0 1px 20px rgba(0, 0, 0, .06);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 14px 38px rgba(0, 0, 0, .1);
+}
+
+/* Browser ohne Mattglas bekommen eine deckende Fläche. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .kopf { background: var(--surface); }
 }
 
 .marke {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
+  flex: none;
   color: var(--ink);
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 750;
   letter-spacing: -.02em;
   text-decoration: none;
 }
 
-.rechts { display: flex; align-items: center; gap: 8px; }
+/* „Kostenlos testen" als Umrissknopf direkt neben der Marke: der eine Weg,
+   den ein Besucher am häufigsten gehen soll. */
+.testen {
+  flex: none;
+  min-height: 38px;
+  padding: 0 18px;
+  border: 1.5px solid var(--accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--accent-d);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.testen:hover { background: var(--accent); color: #fff; }
+
+.linkleiste {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+}
+
+.seitenLink {
+  padding: 9px 12px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
+}
+.seitenLink:hover { color: var(--ink); background: var(--control); }
+.seitenLink[aria-current='page'] { color: var(--accent-d); }
+
+.rechts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+/* Hell/Dunkel als Schalter mit zwei Symbolen, nicht als Zahnrad-Umweg.
+   Die aktive Seite ist hinterlegt, sodass man ohne Text sieht, was gilt. */
+.modus {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--control);
+}
+
+.modusAus,
+.modusAn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.modusAus:hover { color: var(--ink); }
+.modusAn {
+  background: var(--surface);
+  color: var(--accent-d);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+}
 
 .textLink {
-  padding: 10px 10px;
+  padding: 9px 12px;
   border: 0;
   background: none;
   color: var(--muted);
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
 }
 .textLink:hover { color: var(--ink); }
 
+/* Registrieren ist der einzige gefüllte Knopf der Leiste. Ohne Pfeil: Der
+   zeigte nur, dass ein Knopf ein Knopf ist. */
 .knopf {
+  flex: none;
   min-height: 40px;
-  padding: 0 17px;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius-control);
-  background: transparent;
-  color: var(--ink);
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
   font-family: inherit;
-  font-size: 11.5px;
+  font-size: 14px;
   font-weight: 650;
-  letter-spacing: .13em;
-  text-transform: uppercase;
   cursor: pointer;
-  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+  white-space: nowrap;
+  transition: background-color var(--dur-hover) var(--ease-out);
 }
-.knopf:hover { background: var(--ink); color: var(--surface); }
+.knopf:hover { background: var(--accent-d); }
 
 .striche {
-  display: grid;
+  display: none;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-control);
+  border-radius: 999px;
   background: transparent;
   cursor: pointer;
 }
 .striche span { display: grid; gap: 4px; }
-.striche i { display: block; width: 17px; height: 1.5px; background: var(--ink); }
+.striche i { display: block; width: 16px; height: 1.5px; background: var(--ink); }
 
-/* Auf schmalen Bildschirmen tritt der Registrieren-Knopf zurück; Anmelden und
-   das Menü bleiben, weil beides häufiger gebraucht wird. */
+.nurVorleser {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Schmale Bildschirme: Die Links wandern ins Menü, übrig bleiben Marke,
+   Darstellung und die drei Striche. */
+@media (max-width: 1100px) {
+  .linkleiste { display: none; }
+  .striche { display: grid; }
+}
+@media (max-width: 760px) {
+  .testen, .textLink { display: none; }
+}
 @media (max-width: 560px) {
   .knopf { display: none; }
+  .kopf { padding-left: 14px; }
 }
 
 /* --------------------------------------------------------------------------

@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSprache } from '@/lib/sprache';
+import { useDunkelmodus } from '@/lib/dunkelmodus';
 import { BrandMark } from './BrandMark';
 import styles from './SeitenKopf.module.css';
 
 /**
  * Die Menüpunkte. Reihenfolge nach der Frage, die ein Besucher zuerst hat:
- * Was ist das — was kostet es — wer steckt dahinter — was ist noch offen.
+ * Was ist das, was kostet es, wer steckt dahinter, was ist noch offen.
  * Jeder Punkt führt auf eine eigene Seite, nicht auf eine Sprungmarke.
  */
 export const MENUE_PUNKTE = [
@@ -18,6 +19,23 @@ export const MENUE_PUNKTE = [
   { schluessel: 'menue.ueberUns', href: '/ueber-uns' },
   { schluessel: 'menue.fragen', href: '/fragen' },
 ] as const;
+
+function Sonne() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.2" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </svg>
+  );
+}
+
+function Mond() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+    </svg>
+  );
+}
 
 function Zahnrad() {
   return (
@@ -45,6 +63,7 @@ export default function SeitenKopf({
   const [gescrollt, setGescrollt] = useState(false);
   const pfad = usePathname();
   const { t } = useSprache();
+  const { dunkel, waehlen } = useDunkelmodus();
 
   useEffect(() => {
     // Woher der Scrollwert kommt, ist je nach Umgebung verschieden: im Browser
@@ -57,18 +76,17 @@ export default function SeitenKopf({
       const element = ziel as HTMLElement | null;
       return element && typeof element.scrollTop === 'number' ? element.scrollTop : 0;
     };
+
     /**
      * Umgeschaltet wird nicht nach festen Pixeln, sondern wenn die
      * Markenschwelle unter die Leiste wandert: Auf der Startseite ist das der
-     * Schriftzug „Gradefruit". Erst wenn er verschwindet, braucht die Leiste
-     * eine Fläche — vorher steht sie über leerem Raum und darf transparent
-     * bleiben. Seiten ohne Schwelle fallen auf einen festen Wert zurück.
+     * Schriftzug „Gradefruit". Seiten ohne Schwelle fallen auf einen festen
+     * Wert zurück.
      */
     const schwelleErreicht = () => {
       const marke = document.getElementById('kopf-schwelle');
       if (!marke) return Math.max(0, scrollWert()) > 40;
-      const leistenHoehe = 72;
-      return marke.getBoundingClientRect().bottom <= leistenHoehe;
+      return marke.getBoundingClientRect().bottom <= 86;
     };
 
     const onScroll = () => setGescrollt(schwelleErreicht());
@@ -98,24 +116,67 @@ export default function SeitenKopf({
 
   const schliessen = () => setMenueOffen(false);
 
+  /* Ein Schalter, zwei Zustände. Die Symbole sagen, wohin es geht: Sonne für
+     hell, Mond für dunkel. Der aktive Zustand ist hinterlegt. */
+  const Darstellung = (
+    <div className={styles.modus} role="group" aria-label={t('einstellungen.darstellung')}>
+      <button
+        type="button"
+        className={!dunkel ? styles.modusAn : styles.modusAus}
+        onClick={() => waehlen(false)}
+        aria-pressed={!dunkel}
+        title="Light Mode"
+      >
+        <Sonne />
+        <span className={styles.nurVorleser}>Light Mode</span>
+      </button>
+      <button
+        type="button"
+        className={dunkel ? styles.modusAn : styles.modusAus}
+        onClick={() => waehlen(true)}
+        aria-pressed={dunkel}
+        title="Dark Mode"
+      >
+        <Mond />
+        <span className={styles.nurVorleser}>Dark Mode</span>
+      </button>
+    </div>
+  );
+
   return (
     <>
+      {/* Schwebende Pille statt durchgehender Leiste: Sie sitzt mit Abstand zu
+          allen Rändern, der Inhalt läuft sichtbar daneben vorbei. Beim Scrollen
+          wird ihre Fläche dichter, damit der Text darunter nicht durchscheint. */}
       <nav className={`${styles.kopf} ${gescrollt ? styles.kopfFest : ''}`} aria-label="Hauptnavigation">
         <Link className={styles.marke} href="/" onClick={schliessen} aria-label={t('kopf.zurStartseite')}>
-          <BrandMark size={26} />
+          <BrandMark size={24} />
           <span>Gradefruit</span>
         </Link>
 
+        <button className={styles.testen} onClick={onEnter}>
+          {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
+        </button>
+
+        <div className={styles.linkleiste}>
+          {MENUE_PUNKTE.map(punkt => (
+            <Link
+              key={punkt.href}
+              className={styles.seitenLink}
+              href={punkt.href}
+              aria-current={pfad === punkt.href ? 'page' : undefined}
+            >
+              {t(punkt.schluessel)}
+            </Link>
+          ))}
+        </div>
+
         <div className={styles.rechts}>
+          {Darstellung}
           {isAuthed ? (
-            <>
-              <button className={styles.textLink} onClick={onSignOut}>{t('kopf.abmelden')}</button>
-              <button className={styles.knopf} onClick={onEnter}>{t('kopf.weiterlernen')}</button>
-            </>
+            <button className={styles.textLink} onClick={onSignOut}>{t('kopf.abmelden')}</button>
           ) : (
             <>
-              {/* Anmelden gehört sichtbar in die Leiste: Wer schon ein Konto
-                  hat, darf nicht erst ein Menü suchen müssen. */}
               <button className={styles.textLink} onClick={onLogin}>{t('kopf.anmelden')}</button>
               <button className={styles.knopf} onClick={onRegister}>{t('kopf.registrieren')}</button>
             </>
@@ -145,10 +206,7 @@ export default function SeitenKopf({
                   aria-current={pfad === punkt.href ? 'page' : undefined}
                 >
                   <span>{t(punkt.schluessel)}</span>
-                  {/* Der Pfeil macht sichtbar, dass hier etwas anklickbar ist
-                      und wohin es geht — reine Großbuchstaben sahen aus wie
-                      Überschriften. */}
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
@@ -158,6 +216,11 @@ export default function SeitenKopf({
           </ul>
 
           <div className={styles.fuss}>
+            {!isAuthed && (
+              <button className={styles.klein} onClick={() => { schliessen(); onRegister(); }}>
+                {t('kopf.registrieren')}
+              </button>
+            )}
             <Link className={styles.klein} href="/einstellungen" onClick={schliessen}>
               <Zahnrad />
               {t('kopf.einstellungen')}

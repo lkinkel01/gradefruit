@@ -3,6 +3,11 @@
 
 .band {
   padding: clamp(78px, 12vh, 136px) 24px;
+}
+
+/* Das erste Band einer Seite liegt unter der schwebenden Pille. */
+main > .band:first-child {
+  padding-top: clamp(118px, 15vh, 168px);
   display: grid;
   justify-items: center;
   text-align: center;

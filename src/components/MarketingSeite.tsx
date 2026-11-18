@@ -41,7 +41,7 @@ export default function MarketingSeite({ children }: { children: ReactNode }) {
 
   return (
     <AuthDialog.Provider value={dialog}>
-    <div className={styles.seite}>
+    <div className={`${styles.seite} gf-verlauf`}>
       <a className={styles.skipLink} href="#inhalt">Zum Inhalt</a>
 
       <SeitenKopf
