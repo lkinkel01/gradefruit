@@ -106,8 +106,15 @@
   --glass-line: rgba(5, 5, 5, 0.10);
   --nav-shadow-soft: rgba(0, 0, 0, 0.055);
   --nav-shadow-strong: rgba(0, 0, 0, 0.10);
-  --btn-ink: #050505;
-  --btn-ink-hover: #1A1A1C;
+  /* Der Hauptknopf trägt die Markenfarbe, nicht Schwarz. Schwarz neben einem
+     roten Akzent waren zwei konkurrierende Signale; jetzt ist Grapefruit
+     überall die Farbe für „hier geht es weiter".
+
+     Bewusst der dunkle Ton: Weiß auf #F0505E erreicht nur 3,49:1 und fiele
+     damit unter die Norm für Schrift dieser Größe. Auf #B3263A sind es
+     6,45:1. Siehe Kontrastregel in DESIGN.md. */
+  --btn-ink: #B3263A;
+  --btn-ink-hover: #96182C;
   --btn-ink-tx: #FFFFFF;
   /* Ein gemeinsames Geometrie- und Tiefensystem fuer Landing und Produkt. */
   --radius-control: 8px;
@@ -207,7 +214,9 @@ h1, h2, h3, h4 {
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn.primary { background: var(--btn-ink); color: var(--btn-ink-tx); }
 .btn.primary:active { transform: translateY(0) scale(.98); }
-.btn.light { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+/* Umrissknopf in der Markenfarbe, nicht in Schwarz — siehe Brandbook,
+   Abschnitt Knöpfe. */
+.btn.light { background: transparent; color: var(--accent-d); border: 1.5px solid var(--accent); }
 .btn.light:active { transform: translateY(0) scale(.98); }
 .btn.dark { background: var(--btn-ink); color: var(--btn-ink-tx); }
 .btn.dark:active { transform: scale(.98); }
@@ -252,7 +261,7 @@ h1, h2, h3, h4 {
     transform: translateY(-1px);
     box-shadow: 0 10px 24px -12px rgba(0,0,0,.52);
   }
-  .btn.light:hover { background: var(--ink); color: var(--canvas); transform: translateY(-1px); }
+  .btn.light:hover { background: var(--accent); color: #FFFFFF; border-color: var(--accent); transform: translateY(-1px); }
   .btn.dark:hover { background: var(--btn-ink-hover); transform: translateY(-1px); }
   .gf-arrow:hover { color: var(--accent-d); }
   .gf-arrow:hover svg { transform: translateX(4px); }
@@ -330,9 +339,12 @@ body.dark {
   --nav-shadow-strong: rgba(0, 0, 0, 0.34);
   --shadow-float: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px rgba(0,0,0,.28);
   /* Im Dunkeln invertiert: heller Button auf dunklem Grund (Apple-artig) */
-  --btn-ink: #F8F8F9;
-  --btn-ink-hover: #FFFFFF;
-  --btn-ink-tx: #050505;
+  /* Im dunklen Modus trägt das helle Grapefruit mit dunkler Schrift: 5,31:1
+     und ein kräftiger Punkt auf dunklem Grund. Weiße Schrift darauf käme nur
+     auf 3,49:1, der dunkle Ton wäre auf Schwarz kaum zu sehen. */
+  --btn-ink: #F0505E;
+  --btn-ink-hover: #FF6B77;
+  --btn-ink-tx: #131315;
 }
 
 /* Beim Hell/Dunkel-Wechsel kurz ALLE Übergänge aus, damit die ganze Seite

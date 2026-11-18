@@ -137,7 +137,7 @@
   .hamb:hover { border-color: var(--line); background: var(--surface-2); }
   .darkBtn:hover { border-color: var(--line); background: var(--surface-2); color: var(--accent-d); }
   .avatarBtn:hover { background: var(--accent-d); }
-  .loginBtn:hover { border-color: var(--ink); background: var(--ink); color: var(--canvas); }
+  .loginBtn:hover { border-color: var(--accent); background: var(--accent); color: #FFFFFF; }
   .crumbLink:hover { color: var(--accent-d); }
 }
 
