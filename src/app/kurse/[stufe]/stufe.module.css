@@ -3,23 +3,12 @@
    Gleich breit und gleich hoch, damit keiner wie der Trostpreis aussieht.
    Unterschieden werden sie nur durch den Rahmen des Hauptwegs. */
 
-.zurueck {
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: var(--raum-lg);
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-}
-.zurueck:hover { color: var(--ink); text-decoration: underline; }
-
 .wege {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--raum-lg);
-  width: 100%;
-  margin-top: var(--raum-2xl);
+  gap: var(--raum-md);
+  width: min(100%, 880px);
+  margin-top: var(--raum-xl);
 }
 
 /* Spalte statt Raster, damit der Knopf unten abschließt: Die beiden Karten
@@ -31,7 +20,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--raum-sm);
-  padding: var(--raum-xl);
+  /* Kompakter als vorher: Beide Wege sollen zusammen auf einen Blick
+     passen, damit man sie vergleicht statt zu scrollen. */
+  padding: var(--raum-lg);
   border-radius: var(--radius-card);
   background: var(--surface);
 }
@@ -51,7 +42,7 @@
 .wegPreis {
   color: var(--ink);
   font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 40px;
+  font-size: 32px;
   font-weight: 800;
   letter-spacing: -.035em;
   line-height: 1;
@@ -66,8 +57,8 @@
   align-items: flex-start;
   gap: var(--raum-xs);
   color: var(--ink);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.45;
 }
 .enthalten svg { flex: none; margin-top: 3px; color: var(--btn-ink); }
 
@@ -77,7 +68,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 50px;
+  min-height: 46px;
   /* Schiebt den Knopf ans untere Ende der Karte. */
   margin-top: auto;
   padding: 0 var(--raum-lg);

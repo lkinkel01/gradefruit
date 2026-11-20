@@ -45,7 +45,7 @@
      trägt. Eine rosa Grapefruit ist innen korallrot; genau das ist jetzt die
      Akzentfarbe. */
   --accent: #EE4068;
-  --accent-tx: #0A0A0C;
+  --accent-tx: #0B0B0F;
   --accent-d: #AB2E4B;
   /* Blass genug, um als Markierung zu wirken statt als warme Fläche. Die
      früheren Cremetöne (#FFF1E3 und Verwandte) haben die Seite in ein
@@ -197,7 +197,7 @@ html { overflow-x: clip; max-width: 100%; }
    Dokuments. Stand sie nur am <body>, blieb dort im dunklen Erscheinungsbild
    ein weißer Streifen stehen. */
 html { background: #F7F7F8; }
-html[data-theme="dark"] { background: #0A0A0C; }
+html[data-theme="dark"] { background: #0B0B0F; }
 * { min-width: 0; }
 img, svg, video, canvas { max-width: 100%; }
 html { scroll-behavior: smooth; }
@@ -321,27 +321,32 @@ h1, h2, h3, h4 {
 
 /* Dark Mode ist ein eigenes neutrales Materialsystem, keine Invertierung. */
 body.dark {
-  /* Tief und strikt neutral.
+  /* Tief und leicht kühl, wie ein gewöhnlicher Dunkelmodus.
 
-     Die vorherigen Werte lagen heller und hatten einen Hauch Wärme; auf einem
-     großen Bildschirm las sich das als Graubraun statt als Dunkelmodus. Jetzt
-     stehen Rot, Grün und Blau fast gleich, und der Grund liegt so tief, dass
-     die Markenfarbe darauf leuchtet statt mitzuschwimmen. */
-  --canvas: #0A0A0C;
-  --surface: #111113;
-  --surface-2: #1A1A1D;
+     Die Grautöne waren schon neutral. Bräunlich wirkte etwas anderes:
+     --accent-soft war ein warmes Dunkelrot (#2E1116, Rot 46 gegen Blau 22),
+     und dieser Ton liegt als Fläche hinter den Symbolen und unter aktiven
+     Zeilen. Auf dunklem Grund liest sich so ein Fleck als Braun, egal wie
+     neutral der Grund daneben ist.
+
+     Deshalb jetzt zweierlei: Die Grautöne bekommen einen Hauch Blau, so wie
+     es gängige dunkle Oberflächen halten, und --accent-soft ist ein kühles
+     Pflaumenton statt eines Rostrots. */
+  --canvas: #0B0B0F;
+  --surface: #131319;
+  --surface-2: #1C1C23;
   --ink: #F8F8F9;
   --muted: #B6B6BD;
   --faint: #92939B;
-  --line: #26262A;
-  --line-strong: #3A3A40;
+  --line: #292933;
+  --line-strong: #3C3C49;
   --accent-d: #FF8099;
-  --accent-tx: #0A0A0C;
-  --accent-soft: #2E1116;
+  --accent-tx: #0B0B0F;
+  --accent-soft: #2A1A24;
   --accent-progress: #7A2531;
   --green-soft: #102A1D;
-  --control: #1F1F23;
-  --bubble-ai: #1A1A1D;
+  --control: #22222A;
+  --bubble-ai: #1C1C23;
   --danger: #FF6B64;
   --danger-soft: #2A1110;
   --danger-line: #622824;
@@ -350,19 +355,19 @@ body.dark {
   --warn: #F0B24C;
   --yellow: #F0B24C;
   --warn-soft: #2A1F08;
-  --hv-bg-top: #111113;
-  --hv-bg-bottom: #0A0A0C;
-  --hv-line: #26262A;
-  --hv-panel: #0A0A0C;
-  --hv-grid: #1C1C20;
+  --hv-bg-top: #131319;
+  --hv-bg-bottom: #0B0B0F;
+  --hv-line: #292933;
+  --hv-panel: #0B0B0F;
+  --hv-grid: #1E1E26;
   --hv-axis: #45464C;
-  --hv-coach: #17171B;
-  --hv-coach-line: #2E2E34;
+  --hv-coach: #1A1A22;
+  --hv-coach-line: #31313C;
   /* Im dunklen Modus bleibt die Leiste dunkel — aber etwas abgesetzt vom
      Inhalt, damit die Kante sichtbar bleibt. */
-  --side: #070709;
-  --side-2: #131316;
-  --side-3: #26262A;
+  --side: #08080C;
+  --side-2: #141420;
+  --side-3: #292933;
   --side-tx: #EEEEF0;
   --side-faint: #9A9BA2;
   --glass: rgba(5, 5, 5, 0.84);

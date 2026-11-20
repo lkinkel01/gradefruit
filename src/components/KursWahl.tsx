@@ -27,7 +27,7 @@ const STUFEN = [
   { id: 'lk' as const, label: 'Leistungskurs', pfad: '/kurse/leistungskurs' },
 ];
 
-export default function KursWahl() {
+export default function KursWahl({ onTesten }: { onTesten?: () => void }) {
   const merken = (id: 'gk' | 'lk') => {
     try {
       localStorage.setItem('gf-level', id);
@@ -38,8 +38,25 @@ export default function KursWahl() {
 
   return (
     <div className={styles.wahl}>
-      <p className={styles.titel}>Kostenlos testen</p>
-      <p className={styles.frage} id="kurswahl-frage">Wähle deinen Kurs</p>
+      {/* Die Überschrift ist selbst der kürzeste Weg hinein.
+
+          Zwei Arten von Besuchern stehen hier: Die einen wissen, welchen Kurs
+          sie schreiben, und wählen. Die anderen wollen einfach reinsehen und
+          interessieren sich für die Unterscheidung noch gar nicht. Für die
+          war der Kasten vorher eine Sackgasse — er verlangte eine
+          Entscheidung, bevor überhaupt etwas zu sehen war. */}
+      {onTesten ? (
+        <button type="button" className={styles.titelKnopf} onClick={onTesten}>
+          Kostenlos testen
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </button>
+      ) : (
+        <p className={styles.titel}>Kostenlos testen</p>
+      )}
+      <p className={styles.frage} id="kurswahl-frage">Oder wähle deinen Kurs</p>
 
       <div className={styles.knoepfe} aria-labelledby="kurswahl-frage">
         {STUFEN.map(s => (

@@ -1,0 +1,19 @@
+/* Oben links in jeder Unterseite, oberhalb der Überschrift. */
+.pfeil {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--raum-xs);
+  margin-bottom: var(--raum-lg);
+  padding: var(--raum-2xs) var(--raum-sm) var(--raum-2xs) var(--raum-2xs);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
+}
+.pfeil:hover { color: var(--ink); background: var(--surface-2); }
+.pfeil:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

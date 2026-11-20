@@ -83,7 +83,7 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               Bildschirmhöhe weiter unten, in der Galerie, und dort
               beantwortet es auch eine Frage. */}
           <div className={styles.heroWahl}>
-            <KursWahl />
+            <KursWahl onTesten={isAuthed ? onEnter : onRegister} />
           </div>
           </div>
         </header>
@@ -191,11 +191,15 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
                 </li>
               ))}
             </ul>
-            {stand === 'alleKurse' ? (
-              <button className={band.knopf} onClick={onEnter}>{t('bandKurse.knopfKurs')}</button>
-            ) : (
-              <Link className={band.knopf} href="/kurse">{t('bandKurse.knopf')}</Link>
-            )}
+            {/* Mittig unter der Liste darüber, nicht an ihrer linken Kante:
+                Der Knopf schließt die Aufzählung ab und gehört zu ihr. */}
+            <div className={styles.knopfMitte}>
+              {stand === 'alleKurse' ? (
+                <button className={band.knopf} onClick={onEnter}>{t('bandKurse.knopfKurs')}</button>
+              ) : (
+                <Link className={band.knopf} href="/kurse">{t('bandKurse.knopf')}</Link>
+              )}
+            </div>
           </div>
           <div className={band.beleg}>
             {stand === 'alleKurse' ? (
@@ -209,16 +213,19 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               />
             ) : (
               <div className={styles.preiskarten}>
-                <article className={styles.preiskarte}>
+                {/* Anklickbar: Die Karten sahen aus wie Beschriftungen,
+                    führten aber nirgendwohin. Wer auf einen Preis zeigt, will
+                    zu dem Kurs, der ihn kostet. */}
+                <Link className={styles.preiskarte} href="/kurse/grundkurs">
                   <h3>{t('bandKurse.gk')}</h3>
                   <strong>{PREISE.gk.einmalig}</strong>
                   <span>{t('bandKurse.einmalig')}</span>
-                </article>
-                <article className={styles.preiskarte}>
+                </Link>
+                <Link className={styles.preiskarte} href="/kurse/leistungskurs">
                   <h3>{t('bandKurse.lk')}</h3>
                   <strong>{PREISE.lk.einmalig}</strong>
                   <span>{t('bandKurse.einmalig')}</span>
-                </article>
+                </Link>
               </div>
             )}
           </div>
@@ -240,7 +247,6 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               </details>
             ))}
           </div>
-          <Link className={band.knopf} href="/fragen">{t('bandFragen.knopf')}</Link>
         </section>
 
         {/* Der Abschluss nimmt die volle Spaltenbreite ein: Text links, Knopf
@@ -248,7 +254,7 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
             Ende der Seite aus, als wäre sie abgeschnitten. */}
         <section className={`${band.band} ${band.bandTon}`}>
           <div className={styles.schluss}>
-            <div>
+            <div className={styles.schlussText}>
               <h2 className={band.titel}>
                 {isAuthed ? t('bandSchlussZustand.titelAngemeldet') : t('bandSchluss.titel')}
               </h2>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import MarketingSeite from '@/components/MarketingSeite';
+import ZurueckPfeil from '@/components/ZurueckPfeil';
 import { FRAGEN } from '@/lib/marketing';
 import band from '@/components/SeitenBand.module.css';
 import styles from './fragen.module.css';
@@ -13,6 +14,8 @@ export default function Fragen() {
   return (
     <MarketingSeite>
       <section className={band.band}>
+        <ZurueckPfeil />
+
         <h1 className={band.titel}>Kurz erklärt.</h1>
         <div className={styles.liste}>
           {FRAGEN.map(f => (

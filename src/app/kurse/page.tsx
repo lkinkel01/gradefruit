@@ -1,6 +1,7 @@
 'use client';
 
 import MarketingSeite, { useAuthDialog } from '@/components/MarketingSeite';
+import ZurueckPfeil from '@/components/ZurueckPfeil';
 import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 import { useKundenstand } from '@/lib/kundenstand';
 import { useRouter } from 'next/navigation';
@@ -30,7 +31,7 @@ const KURSE = [
 ];
 
 function Inhalt() {
-  const { anmelden } = useAuthDialog();
+  const { anmelden, registrieren } = useAuthDialog();
   const { stand, angemeldet, owned, ownedLk } = useKundenstand();
   const router = useRouter();
   const hat = { gk: owned, lk: ownedLk };
@@ -46,9 +47,12 @@ function Inhalt() {
             weitergeht. Dasselbe Bauteil, damit beide Wege gleich aussehen. */}
         {stand !== 'alleKurse' && (
           <div className={styles.wahl}>
-            <KursWahl />
+            <KursWahl onTesten={angemeldet ? () => router.push('/?view=dashboard') : registrieren} />
           </div>
         )}
+
+        <ZurueckPfeil />
+
 
         <h1 className={band.titel}>
           {stand === 'alleKurse' ? 'Alles freigeschaltet.' : 'Einmal zahlen, kein Abo.'}

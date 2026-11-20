@@ -62,18 +62,21 @@
   gap: clamp(32px, 6vw, 96px);
 }
 
-/* `width: fit-content` ist hier der Trick, der das Zeichen wirklich mittig
-   über den TEXT setzt und nicht über die Spalte. Die Spalte ist breiter als
-   die Überschrift; zentriert man darin, steht das Zeichen sichtbar zu weit
-   rechts. Schrumpft der Block auf seinen breitesten Inhalt, fällt beides
-   zusammen. */
+/* Der Startbereich ist der einzige zentrierte Block der Seite.
+
+   Vorher war er linksbündig, und dann stimmte nichts zueinander: Das Zeichen
+   stand mittig über einem linksbündigen Titel, und die Angaben darunter
+   begannen an der linken Kante, während der Titel darüber in der Mitte
+   schwerer wog. Drei Elemente, drei Achsen.
+
+   Zentriert ist es eine Achse. Alles andere auf der Seite bleibt
+   linksbündig: Das hier ist der Aufmacher, kein Fließtext. */
 .heroMitte {
   display: grid;
-  justify-items: start;
+  justify-items: center;
   gap: var(--raum-sm);
-  text-align: left;
-  width: fit-content;
-  max-width: 100%;
+  text-align: center;
+  width: 100%;
   min-width: 0;
 }
 
@@ -83,23 +86,16 @@
   .heroRaster { grid-template-columns: minmax(0, 1120px); gap: var(--raum-2xl); }
 }
 
-/* Das Zeichen steht mittig über dem Text, nicht an dessen linker Kante.
-   Über einer linksbündigen Überschrift wirkt es dort wie ein vergessenes
-   Aufzählungszeichen; mittig liest es sich als Absender. */
 .heroMarke {
   width: clamp(44px, 4.5vw, 58px);
   height: auto;
   margin-bottom: var(--raum-sm);
-  justify-self: center;
 }
 
 /* Die Überschrift trägt die Aussage, nicht mehr der Markenname. Der steht
    links oben in der Leiste und muss hier nicht zweimal groß erscheinen. */
-/* Die Breite bestimmt, wo das Zeichen darüber steht: Es wird am Kasten der
-   Überschrift zentriert, nicht an ihrem sichtbaren Text. Je enger der Kasten
-   am Text liegt, desto genauer sitzt das Zeichen. */
 .heroTitel {
-  max-width: 12ch;
+  max-width: 14ch;
   font-family: 'Cabinet Grotesk', sans-serif;
   color: var(--ink);
   font-size: clamp(34px, 6.2vw, 62px);
@@ -237,7 +233,13 @@
 /* Auf dem Handy braucht alles mehr Luft: Überschrift, Zeile und Punkte
    standen zu dicht beieinander und wirkten gequetscht. */
 @media (max-width: 920px) {
-  .hero { padding: var(--raum-4xl) var(--raum-lg) var(--raum-3xl); }
+  /* Auf dem Handy darf der Startbereich NICHT auf 100svh bestehen.
+
+     Mit voller Bildschirmhöhe plus Innenabstand rutschte der Kasten mit der
+     Kurswahl unten aus dem Bild: Man sah „Leistungskurs" angeschnitten und
+     musste scrollen, um zu merken, dass darunter noch etwas steht. Ohne
+     Mindesthöhe ist der Bereich so hoch wie sein Inhalt, und der passt. */
+  .hero { min-height: auto; padding: var(--raum-4xl) var(--raum-lg) var(--raum-3xl); }
   .heroMitte { gap: var(--raum-md); }
   .heroTitel { max-width: 14ch; }
   .heroKnoepfe { margin-top: var(--raum-sm); width: 100%; flex-direction: column; }
@@ -253,20 +255,16 @@
   /* Untereinander: erst die Aussage, dann die Wahl. */
   .heroRaster { grid-template-columns: minmax(0, 1fr); }
   .heroWahl { justify-self: stretch; }
-
-  /* Zentriert, weil das Markenzeichen darüber zentriert steht.
-
-     Nebeneinander trägt die linke Spalte eine eigene Kante, an der sich
-     Überschrift und Angaben ausrichten. Untereinander gibt es diese Kante
-     nicht mehr: Dann steht ein zentriertes Zeichen über linksbündigem Text,
-     und das sieht aus, als wäre eins von beidem verrutscht. */
-  .heroMitte {
-    width: 100%;
-    justify-items: center;
-    text-align: center;
-  }
   .heroTitel { max-width: 16ch; }
-  .heroFakten { justify-content: center; }
+
+  /* Untereinander statt nebeneinander.
+
+     Nebeneinander brachen die drei Angaben auf zwei Zeilen um, und der
+     Trennstrich der dritten landete am Anfang der neuen Zeile: ein Strich,
+     vor dem nichts steht. Gestapelt gibt es keine Striche und keinen
+     Umbruch. */
+  .heroFakten { flex-direction: column; gap: var(--raum-2xs); }
+  .heroFakten li + li::before { display: none; }
 }
 
 
@@ -287,11 +285,16 @@
   display: grid;
   align-content: start;
   gap: var(--raum-2xs);
+  text-decoration: none;
+  transition: border-color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
   padding: var(--raum-lg);
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
   background: var(--surface);
 }
+
+.preiskarte:hover { border-color: var(--btn-ink); transform: translateY(-2px); }
+.preiskarte:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .preiskarte h3 {
   margin: 0;
@@ -324,20 +327,21 @@
    Text links, Knopf rechts, über die volle Spaltenbreite. Vorher stand hier
    ein schmaler Textblock und rechts daneben nichts.
 --------------------------------------------------------------------------- */
-/* Der Knopf steht hinter dem Text, nicht am rechten Rand.
+/* Text links, Knopf mittig in der verbleibenden Fläche.
 
-   Mit `space-between` wurde er über die volle Breite nach außen gedrückt und
-   stand einen halben Bildschirm von dem Satz entfernt, auf den er sich
-   bezieht. Jetzt folgt er dem Text mit festem Abstand. */
+   Zwei Fassungen lagen davor daneben: `space-between` drückte den Knopf an
+   den rechten Rand, einen halben Bildschirm von seinem Satz entfernt. Danach
+   klebte er direkt am Text. Jetzt nimmt der Text seine Spalte und der Knopf
+   steht in der Mitte dessen, was übrig bleibt. */
 .schluss {
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 48ch) minmax(0, 1fr);
   align-items: center;
-  justify-content: flex-start;
-  gap: var(--raum-3xl);
+  gap: var(--raum-2xl);
 }
-.schluss > div { max-width: 48ch; }
+.schlussText { min-width: 0; }
+.schluss > .schlussKnopf { justify-self: center; }
 
 .schlussKnopf {
   display: inline-flex;
@@ -359,7 +363,7 @@
 .schlussKnopf:hover { background: var(--btn-ink-hover); }
 
 @media (max-width: 760px) {
-  .schluss { flex-direction: column; align-items: flex-start; }
+  .schluss { grid-template-columns: minmax(0, 1fr); gap: var(--raum-lg); }
   .schlussKnopf { width: 100%; }
 }
 
@@ -405,6 +409,7 @@
   margin-top: var(--raum-xs);
   padding: 0;
   list-style: none;
+  justify-content: center;
 }
 
 .heroFakten li {
@@ -481,10 +486,16 @@
 /* ---------------------------------------------------------------------------
    Galerie und ihr Knopf nebeneinander
 --------------------------------------------------------------------------- */
+/* Galerie links, Knopf mittig in dem, was rechts übrig bleibt.
+
+   Vorher stand er unten an der Galeriekante. Dort klebte er am Bild und die
+   Fläche darüber blieb trotzdem leer. Mittig in der Restfläche liest er sich
+   als das, was er ist: der Weg zu mehr davon. */
 .galerieZeile {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--raum-2xl);
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--raum-xl);
   width: 100%;
 }
 
@@ -492,9 +503,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex: none;
+  justify-self: center;
   min-height: 46px;
-  margin-bottom: var(--raum-lg);
   padding: 0 var(--raum-lg);
   border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
   border-radius: var(--radius-pill);
@@ -503,6 +513,9 @@
   font-family: inherit;
   font-size: 15px;
   font-weight: 600;
+  /* Nicht umbrechen: Die Restspalte ist knapp bemessen, und „Zum
+     Lernsystem" über zwei Zeilen sieht aus wie ein Fehler. */
+  white-space: nowrap;
   text-decoration: none;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
@@ -511,6 +524,10 @@
 /* Unter 900px passt nichts mehr daneben: Dann steht der Knopf wieder unter
    der Galerie, wo er vorher immer stand. */
 @media (max-width: 900px) {
-  .galerieZeile { flex-direction: column; align-items: flex-start; gap: var(--raum-lg); }
-  .galerieKnopf { margin-bottom: 0; }
+  .galerieZeile { grid-template-columns: minmax(0, 1fr); gap: var(--raum-lg); }
+  .galerieKnopf { justify-self: center; }
 }
+
+
+/* Ein Knopf, der mittig unter dem steht, worauf er sich bezieht. */
+.knopfMitte { display: flex; justify-content: center; width: 100%; max-width: 40ch; }

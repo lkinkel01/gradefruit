@@ -2,8 +2,8 @@
 
 import { use } from 'react';
 import { notFound, useRouter } from 'next/navigation';
-import Link from 'next/link';
 import MarketingSeite, { useAuthDialog } from '@/components/MarketingSeite';
+import ZurueckPfeil from '@/components/ZurueckPfeil';
 import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 import { useKundenstand } from '@/lib/kundenstand';
 import { PROBE_ABSCHNITTE, PROBE_AUFGABEN } from '@/lib/probe';
@@ -74,7 +74,7 @@ function Inhalt({ slug }: { slug: string }) {
 
   return (
     <section className={band.band}>
-      <Link className={styles.zurueck} href="/kurse">Alle Kurse</Link>
+      <ZurueckPfeil />
 
       <h1 className={band.titel}>{kurs.titel}</h1>
       <p className={band.zeile}>{kurs.zeile}</p>

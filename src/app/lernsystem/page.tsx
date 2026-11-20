@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import MarketingSeite from '@/components/MarketingSeite';
+import ZurueckPfeil from '@/components/ZurueckPfeil';
 import LernsystemBilder from './LernsystemBilder';
 import LernSchritte from '@/components/LernSchritte';
 import { MERKMALE } from '@/lib/marketing';
@@ -17,6 +18,8 @@ export default function Lernsystem() {
       {/* Die fünf Schritte als Grafik, nicht als Satz. Dieselbe Darstellung
           wie auf der Startseite — wer von dort kommt, erkennt sie wieder. */}
       <section className={band.band}>
+        <ZurueckPfeil />
+
         <h1 className={band.titel}>So lernst du mit Gradefruit.</h1>
         <p className={band.zeile}>Fünf Schritte, in jedem Thema dieselben.</p>
         <LernSchritte />

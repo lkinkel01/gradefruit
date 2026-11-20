@@ -21,7 +21,8 @@
 
 /* In der Markenfarbe, nicht schwarz: Das ist die Überschrift des einzigen
    Bedienelements im Startbereich und darf sich von normalem Text abheben. */
-.titel {
+.titel,
+.titelKnopf {
   color: var(--accent-d);
   font-family: 'Cabinet Grotesk', sans-serif;
   font-size: 22px;
@@ -29,6 +30,22 @@
   letter-spacing: -.025em;
   line-height: 1.15;
 }
+
+/* Als Knopf: derselbe Text, aber mit Pfeil und ohne eigene Fläche. Ein
+   gefüllter Knopf hier oben würde mit den beiden Kurszeilen darunter um die
+   Aufmerksamkeit streiten, und beide führen ja zum selben Ziel. */
+.titelKnopf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--raum-xs);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: color var(--dur-hover) var(--ease-out), gap var(--dur-hover) var(--ease-out);
+}
+.titelKnopf:hover { color: var(--btn-ink-hover); gap: var(--raum-sm); }
+.titelKnopf:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--radius-control); }
 
 .frage { color: var(--muted); font-size: 15px; }
 

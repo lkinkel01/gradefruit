@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import MarketingSeite from '@/components/MarketingSeite';
+import ZurueckPfeil from '@/components/ZurueckPfeil';
 import band from '@/components/SeitenBand.module.css';
 import styles from './ueber-uns.module.css';
 
@@ -34,6 +35,8 @@ export default function UeberUns() {
   return (
     <MarketingSeite>
       <section className={band.band}>
+        <ZurueckPfeil />
+
         <h1 className={band.titel}>
           In der Schule schlecht in Mathe.{' '}
           <span className={band.akzent}>Im Studium gut.</span>

@@ -33,7 +33,7 @@ export const TEXTE = {
   start: {
     zeile: { de: 'Mathe-Abitur · Hessen 2027 · Nach deinem Lehrplan', en: 'Maths A-levels · Hessen 2027 · Built on your syllabus' },
     fakt1: { de: 'Hessen', en: 'Hessen' },
-    fakt2: { de: 'Jahrgang 2027', en: 'Class of 2027' },
+    fakt2: { de: 'Abitur 2027', en: 'A-levels 2027' },
     fakt3: { de: 'Grundkurs und Leistungskurs', en: 'Both course levels' },
     titelAnfang: { de: 'Online-Kurse für', en: 'Online courses for' },
     titelAkzent: { de: 'dein Mathe\u2011Abitur', en: 'your maths A\u2011levels' },
