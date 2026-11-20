@@ -38,10 +38,15 @@
 .tabOn { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-control); }
 
 /* Themenseite: zwei Karten mit Gliederung — Zusammenfassung und Übungen. */
+/* Drei Wege durch ein Thema, nebeneinander. Bei zwei Karten blieb rechts
+   ein Drittel frei und darunter die halbe Seite. */
 .areaGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--raum-md);
+}
+@media (max-width: 900px) {
+  .areaGrid { grid-template-columns: minmax(0, 1fr); }
 }
 .areaCard {
   display: flex;
@@ -59,7 +64,10 @@
 }
 .areaCard:active { transform: scale(.995); }
 .areaCard:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.areaCardHead { display: flex; align-items: baseline; justify-content: space-between; gap: var(--raum-sm); }
+/* Titel und Anzahl untereinander statt in einer Zeile. Bei drei Karten ist
+   jede schmaler; nebeneinander brach „7 Abschnitte" um, und die Zahl stand
+   dann allein in der Zeile darüber. */
+.areaCardHead { display: grid; gap: var(--raum-2xs); }
 .areaCardTitle {
   font-family: 'Cabinet Grotesk', sans-serif;
   font-weight: 800; font-size: 20px; letter-spacing: -.025em;
@@ -727,4 +735,6 @@
 }
 
 /* „Für offline speichern" — steht unter den Bereichskarten, bewusst ruhig. */
-.offlineRow { display: flex; justify-content: center; margin-top: var(--raum-lg); }
+/* Links wie alles andere auf der Seite. Mittig stand die Zeile als einziges
+   Element auf einer eigenen Achse. */
+.offlineRow { display: flex; justify-content: flex-start; margin-top: var(--raum-xl); }

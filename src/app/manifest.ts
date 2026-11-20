@@ -9,7 +9,7 @@ import type { MetadataRoute } from 'next';
 // nur teilweise aus.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Gradefruit — Mathe-Abi Hessen 2027',
+    name: 'Gradefruit: Mathe-Abitur Hessen 2027',
     short_name: 'Gradefruit',
     description:
       'Deine gesamte Mathe-Abiturvorbereitung an einem Ort: Aufgaben mit Schritt-für-Schritt-Lösungen, Zusammenfassungen, Erklärvideos und ein KI-Coach.',

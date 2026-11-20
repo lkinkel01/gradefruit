@@ -1,23 +1,66 @@
-.themen {
-  width: min(100%, 760px);
+/* Die Angaben zur Person, rechts neben der Geschichte.
+
+   Bewusst als Definitionsliste und nicht als Fließtext: Wer wissen will, wer
+   hinter der Seite steht, überfliegt vier Zeilen und ist fertig. */
+.karte {
+  display: grid;
+  gap: var(--raum-lg);
+  margin: 0;
+  padding: var(--raum-xl);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.karte > div { display: grid; gap: var(--raum-2xs); }
+
+.karte dt {
+  color: var(--faint);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.karte dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Die drei Gründe. Haarlinien statt Kästen, wie überall auf den Seiten. */
+.gruende {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  width: 100%;
   margin-top: var(--raum-2xl);
   padding: 0;
   list-style: none;
   border-top: 1px solid var(--line);
-  text-align: left;
 }
-.themen li {
+.gruende li {
   display: grid;
+  align-content: start;
   gap: var(--raum-xs);
-  padding: var(--raum-lg) var(--raum-2xs);
+  padding: var(--raum-lg) var(--raum-lg) var(--raum-lg) 0;
   border-bottom: 1px solid var(--line);
 }
-.themen strong { color: var(--ink); font-size: 17px; font-weight: 700; }
-.themen span { color: var(--muted); font-size: 15px; line-height: 1.6; }
+.gruende li + li { padding-left: var(--raum-lg); border-left: 1px solid var(--line); }
+.gruende strong { color: var(--ink); font-size: 17px; font-weight: 700; }
+.gruende span { color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+@media (max-width: 760px) {
+  .gruende { grid-template-columns: minmax(0, 1fr); }
+  .gruende li + li { padding-left: 0; border-left: 0; }
+  .karte { padding: var(--raum-lg); }
+}
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .themen li {
+    .gruende li {
       animation: zeileRein linear both;
       animation-timeline: view();
       animation-range: entry 2% cover 18%;

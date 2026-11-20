@@ -18,14 +18,17 @@
 }
 .skipLink:focus { transform: none; }
 
+/* Seit die Punktliste nach unten gewandert ist, trägt der Startbereich nur
+   noch Überschrift, Zeile und zwei Knöpfe. Mit der alten Mindesthöhe stand
+   darunter ein Drittel Bildschirm leer. */
 .hero {
   position: relative;
-  min-height: min(100svh, 760px);
+  min-height: min(92svh, 640px);
   background: var(--surface);
   display: grid;
   align-content: center;
   justify-items: center;
-  padding: var(--raum-4xl) var(--raum-lg) var(--raum-4xl);
+  padding: var(--raum-3xl) var(--raum-lg) var(--raum-3xl);
 }
 
 /* Zwei Spalten: Text links, eine echte Aufnahme aus dem Produkt rechts.
@@ -295,3 +298,29 @@
   .schluss { flex-direction: column; align-items: flex-start; }
   .schlussKnopf { width: 100%; }
 }
+
+
+/* ---------------------------------------------------------------------------
+   Stichpunkte in einem Band
+   Dieselbe Darstellung, die vorher im Startbereich stand: Haken in der
+   Markenfarbe, eine Zeile je Punkt. Oben nahm sie den Knöpfen den Platz
+   weg, in den Bändern trägt sie.
+--------------------------------------------------------------------------- */
+.punkte {
+  display: grid;
+  justify-items: start;
+  gap: var(--raum-xs);
+  max-width: 40ch;
+  margin-top: var(--raum-md);
+  padding: 0;
+  list-style: none;
+}
+.punkte li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--raum-xs);
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+.punkte svg { flex: none; color: var(--btn-ink); }

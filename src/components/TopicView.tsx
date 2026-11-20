@@ -433,6 +433,19 @@ export default function TopicView({
           <span className={styles.areaCardStand}>{doneCount} von {tasks.length} verstanden</span>
           <span className={styles.areaCardGo}>Zu den Übungen <ArrowRightIcon size={15} /></span>
         </button>
+        {/* Dritter Weg: die Erklärvideos. Es gab sie schon, aber nur über die
+            Hauptnavigation — wer in einem Thema steckte, sah hier zwei Karten
+            und darunter eine halbe leere Seite. Jetzt stehen alle drei Wege
+            durch ein Thema nebeneinander. Ohne Zählung: Welches Video zu
+            welchem Thema gehört, entscheidet die Videoseite, und eine Zahl,
+            die hier geraten wird, stimmt irgendwann nicht mehr. */}
+        <button type="button" className={styles.areaCard} onClick={() => onNavigate('videos')}>
+          <span className={styles.areaCardHead}>
+            <span className={styles.areaCardTitle}>Erklärvideos</span>
+          </span>
+          <span className={styles.areaCardStand}>Lieber ansehen als lesen.</span>
+          <span className={styles.areaCardGo}>Zu den Videos <ArrowRightIcon size={15} /></span>
+        </button>
       </div>
       {/* Thema bewusst aufs Gerät laden, statt nur das, was zufällig schon
           geöffnet war. */}

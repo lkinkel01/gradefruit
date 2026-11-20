@@ -22,8 +22,8 @@ const CENT: Record<Kurs, number> = {
 
 /** Produktname in Stripe. Wird gesucht und bei Bedarf angelegt. */
 const PRODUKTNAME: Record<Kurs, string> = {
-  gk: 'Mathe-Abi Hessen 2027 – Grundkurs',
-  lk: 'Mathe-Abi Hessen 2027 – Leistungskurs',
+  gk: 'Mathe-Abitur Hessen 2027, Grundkurs',
+  lk: 'Mathe-Abitur Hessen 2027, Leistungskurs',
 };
 
 const alsEuro = (cent: number) =>

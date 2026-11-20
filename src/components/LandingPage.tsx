@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { BrandMark } from './BrandMark';
 import SeitenKopf from './SeitenKopf';
 import SeitenFuss from './SeitenFuss';
-import ProduktBild from './ProduktBild';
+import ProduktBild, { BILD_VERSION } from './ProduktBild';
+import ProduktGalerie from './ProduktGalerie';
 import LernSchritte from './LernSchritte';
 import { useSprache } from '@/lib/sprache';
 import { useKundenstand } from '@/lib/kundenstand';
@@ -61,20 +62,11 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
             <p className={styles.heroZusatz}>{t('start.titelZusatz')}</p>
 
 
-            {/* Fünf Punkte statt eines Fließtexts. Der erklärende Satz darunter
-                ist entfallen: Je weniger Text im Startbereich steht, desto mehr
-                stehen die beiden Knöpfe im Vordergrund. */}
-            <ul className={styles.nutzen}>
-              {['nutzen1', 'nutzen2', 'nutzen3', 'nutzen4', 'nutzen5'].map(schluessel => (
-                <li key={schluessel}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  {t(`start.${schluessel}` as Parameters<typeof t>[0])}
-                </li>
-              ))}
-            </ul>
-
+            {/* Hier stand eine Liste mit fünf Punkten. Sie ist nach unten zu
+                den Preisen gewandert, wo sie hingehört: Wer gerade die Zahl
+                liest, will wissen, was dafür drin ist. Oben kostete sie nur
+                Platz und schob die beiden Knöpfe nach unten — auf dem Handy
+                aus dem ersten Bildschirm heraus. */}
             <div className={styles.heroKnoepfe}>
               <button className={styles.heroKnopf} onClick={onEnter}>
                 {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
@@ -110,13 +102,16 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           <p className={band.zeile}>{t('bandLernsystem.zeile')}</p>
           <LernSchritte />
           <div className={band.bild}>
-            <ProduktBild
-              name="loesungsweg"
-              alt="Ein Lösungsweg in Gradefruit, Schritt für Schritt aufgeklappt."
+            <ProduktGalerie
+              version={BILD_VERSION}
               breite={2560}
               hoehe={1800}
-              ziel="/lernsystem"
-              hinweis={t('bandLernsystem.knopf')}
+              bilder={[
+                { name: 'zusammenfassung', titel: t('galerie.zusammenfassung'), alt: 'Eine Zusammenfassung in Gradefruit, nach Abschnitten aufgeklappt.' },
+                { name: 'loesungsweg', titel: t('galerie.loesungsweg'), alt: 'Ein Lösungsweg in Gradefruit, Schritt für Schritt aufgeklappt.' },
+                { name: 'videos', titel: t('galerie.videos'), alt: 'Die Erklärvideos in Gradefruit.' },
+                { name: 'wiederholen', titel: t('galerie.wiederholen'), alt: 'Die Wiederholen-Ansicht in Gradefruit.' },
+              ]}
             />
           </div>
           <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
@@ -133,6 +128,18 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               {t('bandUeberUns.titelEnde')}
             </h2>
             <p className={band.zeile}>{t('bandUeberUns.zeile')}</p>
+            {/* Stichpunkte statt Fließtext. Derselbe Inhalt stand vorher als
+                vierzeiliger Absatz da und wurde überflogen statt gelesen. */}
+            <ul className={styles.punkte}>
+              {['punkt1', 'punkt2', 'punkt3'].map(k => (
+                <li key={k}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  {t(`bandUeberUns.${k}` as Parameters<typeof t>[0])}
+                </li>
+              ))}
+            </ul>
             <Link className={band.knopf} href="/ueber-uns">{t('bandUeberUns.knopf')}</Link>
           </div>
           <div className={band.beleg}>
@@ -168,6 +175,19 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
                   ? t('bandKurse.zeileEinKurs')
                   : t('bandKurse.zeileKurz')}
             </p>
+            {/* Was im Kurs steckt, steht direkt neben dem Preis. Oben im
+                Startbereich war dieselbe Liste nur Beiwerk; hier beantwortet
+                sie die Frage, die man sich beim Blick auf die Zahl stellt. */}
+            <ul className={styles.punkte}>
+              {['nutzen1', 'nutzen2', 'nutzen3', 'nutzen4', 'nutzen5'].map(k => (
+                <li key={k}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  {t(`start.${k}` as Parameters<typeof t>[0])}
+                </li>
+              ))}
+            </ul>
             {stand === 'alleKurse' ? (
               <button className={band.knopf} onClick={onEnter}>{t('bandKurse.knopfKurs')}</button>
             ) : (

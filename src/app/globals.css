@@ -45,7 +45,7 @@
      trägt. Eine rosa Grapefruit ist innen korallrot; genau das ist jetzt die
      Akzentfarbe. */
   --accent: #EE4068;
-  --accent-tx: #131315;
+  --accent-tx: #0A0A0C;
   --accent-d: #AB2E4B;
   /* Blass genug, um als Markierung zu wirken statt als warme Fläche. Die
      früheren Cremetöne (#FFF1E3 und Verwandte) haben die Seite in ein
@@ -197,7 +197,7 @@ html { overflow-x: clip; max-width: 100%; }
    Dokuments. Stand sie nur am <body>, blieb dort im dunklen Erscheinungsbild
    ein weißer Streifen stehen. */
 html { background: #F7F7F8; }
-html[data-theme="dark"] { background: #131315; }
+html[data-theme="dark"] { background: #0A0A0C; }
 * { min-width: 0; }
 img, svg, video, canvas { max-width: 100%; }
 html { scroll-behavior: smooth; }
@@ -321,24 +321,27 @@ h1, h2, h3, h4 {
 
 /* Dark Mode ist ein eigenes neutrales Materialsystem, keine Invertierung. */
 body.dark {
-  /* Angehobenes Neutralgrau statt Tiefschwarz: Tiefschwarz plus gesättigtes
-     Orange ist die Signatur aggressiver Werbe-Funnels. Ein paar Prozent
-     Helligkeit nehmen dem Kontrast die Härte, ohne die Ruhe zu verlieren. */
-  --canvas: #131315;
-  --surface: #1A1A1D;
-  --surface-2: #232326;
+  /* Tief und strikt neutral.
+
+     Die vorherigen Werte lagen heller und hatten einen Hauch Wärme; auf einem
+     großen Bildschirm las sich das als Graubraun statt als Dunkelmodus. Jetzt
+     stehen Rot, Grün und Blau fast gleich, und der Grund liegt so tief, dass
+     die Markenfarbe darauf leuchtet statt mitzuschwimmen. */
+  --canvas: #0A0A0C;
+  --surface: #111113;
+  --surface-2: #1A1A1D;
   --ink: #F8F8F9;
   --muted: #B6B6BD;
   --faint: #92939B;
-  --line: #2E2E32;
-  --line-strong: #414147;
+  --line: #26262A;
+  --line-strong: #3A3A40;
   --accent-d: #FF8099;
-  --accent-tx: #131315;
+  --accent-tx: #0A0A0C;
   --accent-soft: #2E1116;
   --accent-progress: #7A2531;
   --green-soft: #102A1D;
-  --control: #26262A;
-  --bubble-ai: #232326;
+  --control: #1F1F23;
+  --bubble-ai: #1A1A1D;
   --danger: #FF6B64;
   --danger-soft: #2A1110;
   --danger-line: #622824;
@@ -347,19 +350,19 @@ body.dark {
   --warn: #F0B24C;
   --yellow: #F0B24C;
   --warn-soft: #2A1F08;
-  --hv-bg-top: #141416;
-  --hv-bg-bottom: #0D0D0F;
-  --hv-line: #292A2E;
-  --hv-panel: #131315;
-  --hv-grid: #202024;
+  --hv-bg-top: #111113;
+  --hv-bg-bottom: #0A0A0C;
+  --hv-line: #26262A;
+  --hv-panel: #0A0A0C;
+  --hv-grid: #1C1C20;
   --hv-axis: #45464C;
-  --hv-coach: #1E1E22;
-  --hv-coach-line: #33343A;
+  --hv-coach: #17171B;
+  --hv-coach-line: #2E2E34;
   /* Im dunklen Modus bleibt die Leiste dunkel — aber etwas abgesetzt vom
      Inhalt, damit die Kante sichtbar bleibt. */
-  --side: #0E0E10;
-  --side-2: #17171A;
-  --side-3: #2A2A2E;
+  --side: #070709;
+  --side-2: #131316;
+  --side-3: #26262A;
   --side-tx: #EEEEF0;
   --side-faint: #9A9BA2;
   --glass: rgba(5, 5, 5, 0.84);
@@ -368,13 +371,16 @@ body.dark {
   --nav-shadow-soft: rgba(0, 0, 0, 0.22);
   --nav-shadow-strong: rgba(0, 0, 0, 0.34);
   --shadow-float: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px rgba(0,0,0,.28);
-  /* Im Dunkeln invertiert: heller Button auf dunklem Grund (Apple-artig) */
-  /* Im dunklen Modus trägt das helle Grapefruit mit dunkler Schrift: 5,31:1
-     und ein kräftiger Punkt auf dunklem Grund. Weiße Schrift darauf käme nur
-     auf 3,49:1, der dunkle Ton wäre auf Schwarz kaum zu sehen. */
-  --btn-ink: var(--accent);
-  --btn-ink-hover: #FF5C80;
-  --btn-ink-tx: #131315;
+  /* Derselbe Knopf wie im hellen Modus: gleiche Farbe, weiße Schrift.
+
+     Vorher drehte sich das Paar um — helle Markenfarbe mit dunkler Schrift.
+     Das war rechnerisch in Ordnung, sah aber aus, als wäre die Schrift
+     ausgeschnitten, und derselbe Knopf trug je nach Modus eine andere
+     Schriftfarbe. #D3395C mit Weiß erreicht 4,66:1 und steht auf dem tiefen
+     Grund klar heraus, also braucht es die Umkehr gar nicht. */
+  --btn-ink: #D3395C;
+  --btn-ink-hover: #E04A6B;
+  --btn-ink-tx: #FFFFFF;
 }
 
 /* Beim Hell/Dunkel-Wechsel kurz ALLE Übergänge aus, damit die ganze Seite

@@ -11,24 +11,24 @@
 
 export const MERKMALE = [
   {
-    titel: 'Ein klarer Weg durch den Stoff',
-    text: 'Zusammenfassungen, Übungen und prüfungsnahe Aufgaben im Stil der hessischen Abiturprüfung, nach Themen sortiert.',
+    titel: 'Klarer Weg durch den Stoff',
+    text: 'Zusammenfassung, Übung, Lösung, Prüfungsaufgabe. In jedem Thema dieselbe Reihenfolge.',
   },
   {
-    titel: 'Ein Coach, der die Stelle kennt',
-    text: 'Frag direkt an der Aufgabe nach, vor der du sitzt. „Kapier ich nicht" reicht völlig.',
+    titel: 'KI-Coach rund um die Uhr',
+    text: 'Stell die Fragen, die du im Unterricht nicht stellen willst. Markier die Stelle, bei der es hakt, und frag genau dazu.',
   },
   {
-    titel: 'Erst selbst rechnen, dann vergleichen',
-    text: 'Jede Aufgabe mit Lösungsweg Schritt für Schritt. Dazu die zwei Fehler, die man dabei typischerweise macht.',
+    titel: 'Detaillierte Erklärvideos',
+    text: 'Keine Lust, alles zu lesen? Lass es dir erklären. Zu jedem Thema und zu jedem Lösungsweg.',
   },
   {
     titel: 'Deine eigenen Unterlagen',
-    text: 'Lade deinen Rechenweg als Foto oder PDF hoch und geh ihn mit dem Coach durch.',
+    text: 'Lad deinen Rechenweg als Foto oder PDF hoch und geh ihn mit dem Coach durch.',
   },
   {
-    titel: 'Wiederholen im Swipe-Format',
-    text: 'Der Reel-Modus zeigt Aufgaben und Formeln im Hochformat, wie du es von TikTok kennst.',
+    titel: 'Swipen. Und dabei lernen.',
+    text: 'Aufgaben und Formeln im Hochformat, wie du es vom Handy kennst.',
   },
 ] as const;
 

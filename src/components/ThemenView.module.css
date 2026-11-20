@@ -1,6 +1,19 @@
 /* Eine Liste, keine Kachelwand: In einer App tippt man durch Zeilen. */
 .seite { padding: var(--raum-xs) 0 0; }
 
+.kopf { display: grid; gap: var(--raum-2xs); padding: var(--raum-lg) var(--raum-lg) var(--raum-xl); }
+
+.titel {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  color: var(--ink);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.unter { color: var(--muted); font-size: 15px; }
+
 .liste { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
 
 .zeile {

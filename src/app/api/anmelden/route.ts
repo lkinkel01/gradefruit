@@ -88,7 +88,7 @@ export async function POST(req: Request) {
   if (error || !data.session) {
     if (error && /email not confirmed/i.test(error.message)) {
       return json(
-        { error: 'email_not_confirmed', message: 'Bitte bestätige zuerst deine E-Mail – der Link ist in deinem Postfach.' },
+        { error: 'email_not_confirmed', message: 'Bitte bestätige zuerst deine E-Mail. Der Link ist in deinem Postfach.' },
         400,
       );
     }

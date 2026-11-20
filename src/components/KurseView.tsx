@@ -32,7 +32,7 @@ export default function KurseView({
       id: 'gk' as const,
       titel: 'Grundkurs',
       beschreibung:
-        'Alle Themen des Grundkurses: Analysis, lineare Algebra und Stochastik — mit prüfungsnahen Aufgaben, Schritt-für-Schritt-Lösungen und Erklärvideos.',
+        'Alle Themen des Grundkurses, mit prüfungsnahen Aufgaben, Lösungswegen Schritt für Schritt und Erklärvideos.',
       hat: owned,
     },
     {

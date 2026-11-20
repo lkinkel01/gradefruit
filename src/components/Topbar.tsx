@@ -8,6 +8,10 @@ import { VORSCHAU_INITIALEN } from '@/lib/vorschauNutzer';
 
 const LABELS: Partial<Record<View, string>> = {
   dashboard: 'Dashboard',
+  /* Fehlte und fiel damit auf den rohen Ansichtsnamen zurück: In der
+     Brotkrumenleiste stand kleingeschrieben „themen". */
+  themen: 'Themen',
+  profil: 'Profil',
   analysis: 'Analysis',
   linalg: 'Lineare Algebra & Geometrie',
   stochastik: 'Stochastik',

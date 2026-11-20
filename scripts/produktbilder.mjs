@@ -139,6 +139,21 @@ const AUFNAHMEN = [
       await warte(1400);
     },
   },
+  // Die Zusammenfassung mit aufgeklapptem ersten Abschnitt: In der Galerie auf
+  // der Startseite ist das die erste Station des Lernwegs.
+  {
+    name: 'zusammenfassung',
+    pfad: '/?view=analysis&tab=zusammenfassung',
+    breite: 1280, hoehe: 900,
+    vorher: async page => {
+      await page.evaluate(() => {
+        const k = document.querySelector('main button[aria-expanded="false"]');
+        if (k instanceof HTMLElement) k.click();
+      });
+      await warte(1200);
+    },
+  },
+  { name: 'videos', pfad: '/?view=videos', breite: 1280, hoehe: 900 },
   { name: 'themen', pfad: '/?view=themen', breite: 1280, hoehe: 900 },
   { name: 'uebersicht', pfad: '/?view=dashboard', breite: 1280, hoehe: 900 },
   { name: 'wiederholen', pfad: '/?view=review', breite: 1280, hoehe: 900 },

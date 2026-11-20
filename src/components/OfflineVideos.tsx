@@ -58,7 +58,7 @@ export default function OfflineVideos() {
             ? `Wird geladen … ${fertig} von ${gesamt}`
             : zustand === 'fehler'
               ? `Nicht alles hat geklappt (${fertig} von ${gesamt}). Prüfe deine Verbindung und versuch es erneut.`
-              : 'Die Kursinhalte sind bereits ohne Netz lesbar. Der Ton der Erklärvideos fehlt noch — rund 11 MB.'}
+              : 'Die Kursinhalte sind bereits ohne Netz lesbar. Der Ton der Erklärvideos fehlt noch, rund 11 MB.'}
       </p>
 
       {zustand === 'laedt' && (

@@ -30,6 +30,14 @@ export default function ThemenView({
 
   return (
     <div className={styles.seite}>
+      {/* Überschrift und eine Zeile Einordnung. Vorher begann die Seite ohne
+          Kopf direkt mit der ersten Zeile, die damit an der Kante der
+          Brotkrumenleiste klebte und wie ein abgeschnittener Ausschnitt
+          wirkte statt wie eine eigene Seite. */}
+      <div className={styles.kopf}>
+        <h1 className={styles.titel}>Themen</h1>
+        <p className={styles.unter}>Die drei Gebiete deiner Prüfung.</p>
+      </div>
       <ul className={styles.liste}>
         {TOPICS.map(topic => {
           const gesamt = topicTotal(topic.id, level) || 1;
