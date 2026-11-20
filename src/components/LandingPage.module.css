@@ -50,6 +50,18 @@
 /* Der Teil, der sagt, für wen es ist, steht in der Markenfarbe. */
 .heroAkzent { color: var(--accent-d); }
 
+/* „2027 in Hessen" steht kleiner und schwarz unter der Überschrift. Groß und
+   farbig gehört nur die Sache selbst: dein Mathe-Abitur. Jahr und Bundesland
+   sind die Einordnung, nicht die Botschaft. */
+.heroZusatz {
+  margin-top: var(--raum-xs);
+  color: var(--ink);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: clamp(18px, 2.4vw, 24px);
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
 .heroUnterzeile {
   max-width: 52ch;
   margin-top: var(--raum-md);
@@ -98,35 +110,6 @@
 }
 .heroKnopf:not(:first-child):hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-
-.fakten {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-.fakten > div {
-  display: grid;
-  align-content: start;
-  justify-items: center;
-  gap: var(--raum-xs);
-  padding: var(--raum-lg) var(--raum-md);
-  text-align: center;
-}
-/* Gleich hohe Zeilen, damit der Abstand zwischen Zahl und Beschreibung
-   überall gleich aussieht — auch wenn eine Beschreibung umbricht. */
-.fakten span { min-height: 2.9em; }
-.fakten > div + div { border-left: 1px solid var(--line); }
-.fakten strong { color: var(--ink); font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
-.fakten span { color: var(--muted); font-size: 13px; }
-
-/* Unter 760px passten zwei Spalten ins Raster und die dritte Angabe stand
-   allein in der zweiten Reihe. Jetzt stehen alle drei untereinander. */
-@media (max-width: 760px) {
-  .fakten { grid-template-columns: 1fr; }
-  .fakten > div + div { border-left: 0; border-top: 1px solid var(--line); }
-}
-
 /* Nur für Vorleseprogramme und Suchmaschinen. */
 .nurVorleser {
   position: absolute;
@@ -159,13 +142,9 @@
   to { opacity: 1; transform: none; }
 }
 
-.fakten > div { animation: hereinKommen .5s var(--ease-out) both; }
-.fakten > div:nth-child(2) { animation-delay: .07s; }
-.fakten > div:nth-child(3) { animation-delay: .14s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroMitte > *,
-  .fakten > div { animation: none; }
+  .heroMitte > * { animation: none; }
 }
 
 
@@ -205,5 +184,4 @@
   .nutzen li { font-size: 14px; }
   .heroKnoepfe { margin-top: var(--raum-xs); width: 100%; flex-direction: column; }
   .heroKnopf { width: 100%; }
-  .fakten > div { padding: var(--raum-lg) var(--raum-md); }
-}
+  }

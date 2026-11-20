@@ -1,13 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { BrandMark } from './BrandMark';
 import SeitenKopf from './SeitenKopf';
 import SeitenFuss from './SeitenFuss';
 import ProduktBild from './ProduktBild';
 import Bildband from './Bildband';
-import { daysUntilExam } from '@/lib/exam';
 import { useSprache } from '@/lib/sprache';
 import { useKundenstand } from '@/lib/kundenstand';
 import { PREISE } from '@/lib/preise';
@@ -31,16 +29,8 @@ interface Props {
  * einzigen Scrollstrecke.
  */
 export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, onSignOut }: Props) {
-  const [tage, setTage] = useState<number | null>(null);
   const { t } = useSprache();
   const { stand } = useKundenstand();
-
-  useEffect(() => {
-    // Kein requestAnimationFrame: Im Hintergrund wird nicht gezeichnet, und der
-    // Countdown bliebe leer, bis jemand den Tab in den Vordergrund holt.
-    const t = window.setTimeout(() => setTage(daysUntilExam()), 0);
-    return () => window.clearTimeout(t);
-  }, []);
 
   return (
     <div className={styles.seite}>
@@ -67,6 +57,8 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               <span className={styles.heroAkzent}>{t('start.titelAkzent')}</span>
             </h1>
 
+            <p className={styles.heroZusatz}>{t('start.titelZusatz')}</p>
+
             <p className={styles.heroUnterzeile}>{t('start.unterzeile')}</p>
 
             {/* Die vier Verkaufsargumente als kurze Punkte statt als Fließtext:
@@ -92,12 +84,6 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           </div>
 
         </header>
-
-        <div className={styles.fakten} id="teaser">
-          <div><strong>{t('start.faktenPruefung')}</strong><span>{t('start.faktenPruefungSub')}</span></div>
-          <div><strong>{t('start.faktenKurse')}</strong><span>{t('start.faktenKurseSub')}</span></div>
-          <div><strong>{tage === null ? '…' : `${tage} ${t('start.tage')}`}</strong><span>{t('start.faktenTageSub')}</span></div>
-        </div>
 
         <section className={band.band}>
           <h2 className={band.titel}>{t('bandLernsystem.titel')}</h2>

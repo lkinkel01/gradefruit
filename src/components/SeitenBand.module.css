@@ -38,6 +38,7 @@ main > .band:first-child {
 
 .zeile {
   max-width: 44ch;
+  white-space: pre-line;
   margin-top: var(--raum-md);
   color: var(--muted);
   font-size: 16px;

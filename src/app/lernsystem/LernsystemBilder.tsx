@@ -16,14 +16,17 @@ export default function LernsystemBilder({ art }: { art: 'uebersicht' | 'reel' }
   const ziel = angemeldet ? '/?view=dashboard' : '/?view=analysis';
 
   if (art === 'reel') {
+    /* Das Reel-Bild führt in den Reel-Modus, nicht ins Dashboard. Für Gäste
+       geht das nicht: /feed verlangt ein Konto und schickt sie sonst wortlos
+       auf die Startseite zurück. Sie landen deshalb im kostenlosen Kurs. */
     return (
       <ProduktBild
         name="reel"
         alt="Der Reel-Modus auf dem Handy: eine Funktion mit ihrem Graphen, darunter verstanden, wiederholen oder nicht verstanden."
         breite={860}
         hoehe={1760}
-        hinweis={hinweis}
-        ziel={ziel}
+        hinweis={angemeldet ? 'Zum Reel-Modus' : hinweis}
+        ziel={angemeldet ? '/feed' : ziel}
       />
     );
   }

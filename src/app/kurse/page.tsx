@@ -73,8 +73,10 @@ function Inhalt() {
         </div>
 
         <p className={styles.hinweis}>
-          {STEUERHINWEIS} Bezahlung über Stripe. Der Zugang gilt bis zum Ende des
-          Prüfungszeitraums.
+          Der Zugang gilt bis zum Ende des Prüfungszeitraums.
+        </p>
+        <p className={styles.hinweis}>
+          {STEUERHINWEIS} Bezahlung über Stripe.
         </p>
         {!angemeldet && (
           <p className={styles.hinweis}>

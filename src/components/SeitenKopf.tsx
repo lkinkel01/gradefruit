@@ -9,13 +9,13 @@ import { BrandMark } from './BrandMark';
 import styles from './SeitenKopf.module.css';
 
 /**
- * Die Menüpunkte. Reihenfolge nach der Frage, die ein Besucher zuerst hat:
- * Was ist das, was kostet es, wer steckt dahinter, was ist noch offen.
+ * Die Menüpunkte. Kurse stehen vorn, weil das Buchen eines Kurses der Zweck
+ * der Seite ist; alles andere erklärt nur, warum man das tun sollte.
  * Jeder Punkt führt auf eine eigene Seite, nicht auf eine Sprungmarke.
  */
 export const MENUE_PUNKTE = [
-  { schluessel: 'menue.lernsystem', href: '/lernsystem' },
   { schluessel: 'menue.kurse', href: '/kurse' },
+  { schluessel: 'menue.lernsystem', href: '/lernsystem' },
   { schluessel: 'menue.ueberUns', href: '/ueber-uns' },
   { schluessel: 'menue.fragen', href: '/fragen' },
 ] as const;
