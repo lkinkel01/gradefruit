@@ -28,16 +28,32 @@
   padding: var(--raum-4xl) var(--raum-lg) var(--raum-4xl);
 }
 
-/* Linksbündig in einer mittig stehenden Spalte, wie die Bänder darunter.
-   Zentriert wirkte der Startbereich wie eine Vorlage; linksbündig liest er
-   sich wie eine Aussage. */
+/* Zwei Spalten: Text links, eine echte Aufnahme aus dem Produkt rechts.
+
+   Vorher stand der Text allein links und rechts daneben blieben zwei Drittel
+   der Seite weiß. Das wirkte nicht luftig, sondern unfertig — als fehle dort
+   etwas. Jetzt steht rechts das, was man kauft. */
+.heroRaster {
+  width: min(100%, 1120px);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 460px) minmax(0, 620px);
+  align-items: center;
+  gap: clamp(32px, 5vw, 80px);
+}
+
 .heroMitte {
   display: grid;
   justify-items: start;
   gap: var(--raum-sm);
   text-align: left;
-  width: min(100%, 1120px);
-  margin-inline: auto;
+  min-width: 0;
+}
+
+.heroBild { min-width: 0; }
+
+@media (max-width: 920px) {
+  .heroRaster { grid-template-columns: minmax(0, 1120px); gap: var(--raum-2xl); }
 }
 
 .heroMarke { width: clamp(40px, 4vw, 52px); height: auto; margin-bottom: var(--raum-2xs); }
@@ -45,7 +61,7 @@
 /* Die Überschrift trägt die Aussage, nicht mehr der Markenname. Der steht
    links oben in der Leiste und muss hier nicht zweimal groß erscheinen. */
 .heroTitel {
-  max-width: 15ch;
+  max-width: 13ch;
   font-family: 'Cabinet Grotesk', sans-serif;
   color: var(--ink);
   font-size: clamp(34px, 6.2vw, 62px);
@@ -94,14 +110,20 @@
 }
 
 /* Der erste Knopf ist gefüllt und damit der auffälligste Punkt der Seite. */
+/* Gefüllte Flächen tragen --btn-ink, nicht --accent.
+
+   Der Grund ist messbar: Weiß auf --accent (#EE4068) erreicht 3,77:1 und
+   verfehlt damit die geforderten 4,5:1 für normalen Text. --btn-ink ist das
+   Gegenstück, das in beiden Modi trägt — hell dunkelrot mit weißer Schrift
+   (6,51:1), dunkel die helle Markenfarbe mit dunkler Schrift (4,92:1). */
 .heroKnopf:first-child {
   border: 0;
-  background: var(--accent);
-  color: #fff;
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
 }
 /* Kein farbiger Schein unter dem Knopf: Dieses Leuchten ist das Erkennungs-
    zeichen schnell zusammengeklickter Seiten und wirkt sofort unecht. */
-.heroKnopf:first-child:hover { background: var(--accent-d); }
+.heroKnopf:first-child:hover { background: var(--btn-ink-hover); }
 
 /* Der zweite tritt zurück, bleibt aber in derselben Farbfamilie. */
 .heroKnopf:not(:first-child) {
@@ -109,7 +131,7 @@
   background: transparent;
   color: var(--accent-d);
 }
-.heroKnopf:not(:first-child):hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.heroKnopf:not(:first-child):hover { background: var(--btn-ink); color: var(--btn-ink-tx); border-color: var(--btn-ink); }
 
 /* Nur für Vorleseprogramme und Suchmaschinen. */
 .nurVorleser {
@@ -151,15 +173,15 @@
 
 
 
-/* Die vier Verkaufsargumente. Haken in der Markenfarbe, damit sie beim
-   Überfliegen sofort auffallen, ohne dass daraus ein Textblock wird. */
+/* Die fünf Verkaufsargumente, untereinander. Nebeneinander umbrachen sie zu
+   zwei, zwei und einem — eine ausgefranste Treppe, die man nicht überfliegen
+   kann. Untereinander ist die Kante links gerade und jede Zeile zählt. */
 .nutzen {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: var(--raum-xs) var(--raum-lg);
-  max-width: 52ch;
-  margin-top: var(--raum-lg);
+  display: grid;
+  justify-items: start;
+  gap: var(--raum-xs);
+  max-width: 40ch;
+  margin-top: var(--raum-md);
   padding: 0;
   list-style: none;
 }
@@ -185,3 +207,91 @@
   .heroKnoepfe { margin-top: var(--raum-xs); width: 100%; flex-direction: column; }
   .heroKnopf { width: 100%; }
   }
+
+
+/* ---------------------------------------------------------------------------
+   Die beiden Kurse als Karten neben dem Text
+   Statt die Preise in einen Satz zu schreiben, stehen sie rechts als zwei
+   Karten. Dasselbe Bauteil wie auf der Kursseite, nur knapper: Wer über die
+   Startseite scrollt, soll beide Preise sehen, ohne sie aus einem Fließtext
+   herauslesen zu müssen.
+--------------------------------------------------------------------------- */
+.preiskarten {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--raum-md);
+}
+
+.preiskarte {
+  display: grid;
+  align-content: start;
+  gap: var(--raum-2xs);
+  padding: var(--raum-lg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.preiskarte h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+.preiskarte strong {
+  color: var(--ink);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -.03em;
+}
+
+.preiskarte span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+@media (max-width: 520px) {
+  .preiskarten { grid-template-columns: minmax(0, 1fr); }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Abschluss der Startseite
+   Text links, Knopf rechts, über die volle Spaltenbreite. Vorher stand hier
+   ein schmaler Textblock und rechts daneben nichts.
+--------------------------------------------------------------------------- */
+.schluss {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--raum-lg);
+}
+
+.schlussKnopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 52px;
+  padding: 0 var(--raum-xl);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out);
+}
+.schlussKnopf:hover { background: var(--btn-ink-hover); }
+
+@media (max-width: 760px) {
+  .schluss { flex-direction: column; align-items: flex-start; }
+  .schlussKnopf { width: 100%; }
+}

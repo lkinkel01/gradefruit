@@ -71,6 +71,13 @@ export const TEXTE = {
       en: 'Basic course {gk}, advanced course {lk}.\nAccess runs until the end of the exam period.',
     },
     knopf: { de: 'Zu den Kursen', en: 'See courses' },
+    zeileKurz: {
+      de: 'Zugang bis zum Ende des Prüfungszeitraums. Keine Verlängerung, keine Kündigung.',
+      en: 'Access until the end of the exam period. No renewal, nothing to cancel.',
+    },
+    gk: { de: 'Grundkurs', en: 'Basic course' },
+    lk: { de: 'Leistungskurs', en: 'Advanced course' },
+    einmalig: { de: 'einmalig', en: 'one-off' },
     titelEinKurs: { de: 'Noch ein Kurs fehlt dir.', en: 'One course still missing.' },
     zeileEinKurs: {
       de: 'Du hast einen Kurs freigeschaltet. Der zweite ist einzeln dazubuchbar.',

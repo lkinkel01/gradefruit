@@ -7,7 +7,9 @@
 .page { max-width: var(--page-max-wide); margin: 0 auto; padding: var(--page-top) var(--page-gutter) var(--page-bottom); }
 
 /* Kopf — ruhig und kompakt: nur Begrüßung + Kurswahl */
-.head { display: flex; justify-content: center; margin-bottom: var(--raum-sm); text-align: center; }
+/* Linksbündig wie alles darunter. Zentriert stand die Begrüßung als einziges
+   Element der Seite in der Mitte und zog eine Achse, der nichts folgte. */
+.head { display: flex; justify-content: flex-start; margin-bottom: var(--raum-md); text-align: left; }
 .greet {
   font-family: 'Cabinet Grotesk', sans-serif;  font-weight: 800; font-size: clamp(30px, 4.2vw, 42px);
   letter-spacing: -0.035em; line-height: 1.05; color: var(--ink);
@@ -199,7 +201,7 @@
 .app .secLabel { margin: var(--raum-xl) 0 2px; }
 
 @media (max-width: 700px) {
-  .head { flex-direction: column; align-items: center; gap: var(--raum-md); }
+  .head { flex-direction: column; align-items: flex-start; gap: var(--raum-md); }
 }
 @media (max-width: 560px) {
   .page { --page-top: 20px; --page-bottom: 90px; }
@@ -231,4 +233,59 @@
      dazu, wie weit man in einem Thema ist — vorher war das „x von y", das
      wegen seiner Länge weichen musste. Eine Prozentzahl passt immer. */
   .topicCount { font-size: 13px; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Der nächste Schritt
+   Steht ganz oben, vor jeder Zahl: ein Thema und ein Pfeil. Wer sich neu
+   anmeldet, soll nicht erst lesen müssen, wie viele Tage bleiben und wie viel
+   er noch nicht kann, sondern wo es losgeht.
+--------------------------------------------------------------------------- */
+.weiter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--raum-md);
+  margin-bottom: var(--raum-lg);
+  padding: var(--raum-lg) var(--raum-xl);
+  border: 0;
+  border-radius: var(--radius-card);
+  /* Gefüllte Flächen tragen --btn-ink, nicht --accent.
+  
+     Der Grund ist messbar: Weiß auf --accent (#EE4068) erreicht 3,77:1 und
+     verfehlt damit die geforderten 4,5:1 für normalen Text. --btn-ink ist das
+     Gegenstück, das in beiden Modi trägt — hell dunkelrot mit weißer Schrift
+     (6,51:1), dunkel die helle Markenfarbe mit dunkler Schrift (4,92:1). */
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out);
+}
+.weiter:hover { background: var(--btn-ink-hover); }
+
+.weiterText { display: grid; gap: var(--raum-2xs); min-width: 0; }
+
+.weiterLabel {
+  color: color-mix(in srgb, var(--btn-ink-tx) 82%, transparent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.weiterThema {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.weiterGo { display: inline-flex; flex: none; }
+
+@media (max-width: 600px) {
+  .weiter { padding: var(--raum-md) var(--raum-lg); }
+  .weiterThema { font-size: 20px; }
 }

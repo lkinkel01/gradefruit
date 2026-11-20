@@ -2,16 +2,20 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 0;
-  width: min(100%, 820px);
+  /* Volle Spaltenbreite statt 820 Pixel: Schmaler als die Überschrift darüber
+     ließ die Tabelle rechts eine Lücke stehen, die wie ein Fehler aussah. */
+  width: 100%;
   margin-top: var(--raum-2xl);
   border-top: 1px solid var(--line);
 }
 
 /* Zeilen statt Kästen: Dieselbe ruhige Preisdarstellung wie eine Eintrittsliste
    — Haarlinien tragen die Ordnung, nicht Rahmen und Schatten. */
+/* Links angeschlagen wie der Rest der Seite. Zentrierter Inhalt in einer
+   linksbündigen Seite zieht eine zweite Achse, der nichts folgt. */
 .karte {
   display: grid;
-  justify-items: center;
+  justify-items: start;
   gap: var(--raum-sm);
   padding: var(--raum-xl) var(--raum-lg);
   border-bottom: 1px solid var(--line);

@@ -87,7 +87,7 @@
   white-space: nowrap;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
-.testen:hover { background: var(--accent); color: #fff; }
+.testen:hover { background: var(--btn-ink); color: var(--btn-ink-tx); }
 
 .linkleiste {
   display: flex;
@@ -172,8 +172,10 @@
   padding: 0 var(--raum-md);
   border: 0;
   border-radius: var(--radius-pill);
-  background: var(--accent);
-  color: #fff;
+  /* --btn-ink, nicht --accent: Weiß auf --accent erreicht nur 3,77:1 und
+     verfehlt damit 4,5:1. Siehe DESIGN.md, Abschnitt Farben. */
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -181,7 +183,7 @@
   white-space: nowrap;
   transition: background-color var(--dur-hover) var(--ease-out);
 }
-.knopf:hover { background: var(--accent-d); }
+.knopf:hover { background: var(--btn-ink-hover); }
 
 .striche {
   display: none;
@@ -335,12 +337,12 @@
 }
 
 /* Registrieren ist der Hauptweg und als einziger gefüllt. */
-.haupt { border: 0; background: var(--accent); color: #fff; }
+.haupt { border: 0; background: var(--btn-ink); color: var(--btn-ink-tx); }
 .haupt:hover { background: var(--accent-d); }
 
 /* Kostenlos testen als Umriss in der Markenfarbe. */
 .probe { border: 1.5px solid var(--accent); background: transparent; color: var(--accent-d); }
-.probe:hover { background: var(--accent); color: #fff; }
+.probe:hover { background: var(--btn-ink); color: var(--btn-ink-tx); }
 
 /* Anmelden tritt zurück: Wer ein Konto hat, sucht gezielt. */
 .zweit { border: 1px solid var(--line-strong); background: transparent; color: var(--ink); }

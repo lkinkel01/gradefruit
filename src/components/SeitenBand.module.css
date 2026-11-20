@@ -20,23 +20,65 @@
   text-align: left;
 }
 
-/* Zweispaltig: Text links, Beleg rechts. */
+/* Zweispaltig: Text links, Beleg rechts.
+
+   Der Grund dafür ist handfest: Stand ein Abschnitt einspaltig da, lag der
+   Text links und rechts daneben blieb die halbe Seite leer. Das sah nicht
+   nach Zurückhaltung aus, sondern nach fehlendem Inhalt. Jeder Abschnitt
+   trägt deshalb jetzt etwas auf der rechten Seite. */
 .bandZwei {
-  grid-template-columns: minmax(0, 480px) minmax(0, 600px);
+  grid-template-columns: minmax(0, 460px) minmax(0, 620px);
   align-items: center;
-  gap: clamp(32px, 5vw, 96px);
+  gap: clamp(32px, 5vw, 80px);
 }
 
+/* Dieselbe Aufteilung, nur andersherum: Beleg links, Text rechts. Die
+   Abschnitte wechseln sich ab, damit die Seite nicht wie eine Liste wirkt.
+   Gedreht wird über die Reihenfolge im Raster, nicht über die Reihenfolge im
+   Markup — vorgelesen wird so weiter Überschrift zuerst, dann das Bild. */
+.bandGedreht { grid-template-columns: minmax(0, 620px) minmax(0, 460px); }
+.bandGedreht > .spalte { order: 2; }
+.bandGedreht > .beleg { order: 1; }
+
+/* Die Belegspalte: Bild, Karten oder was sonst rechts steht. */
+.beleg { width: 100%; min-width: 0; }
+
 @media (max-width: 920px) {
-  .bandZwei { grid-template-columns: minmax(0, 1120px); }
+  .bandZwei,
+  .bandGedreht { grid-template-columns: minmax(0, 1120px); }
+  /* Auf dem Handy steht der Text immer zuerst, egal wie herum das Band
+     auf dem großen Bildschirm aufgebaut ist. */
+  .bandGedreht > .spalte { order: 1; }
+  .bandGedreht > .beleg { order: 2; }
+  .beleg { margin-top: var(--raum-xl); }
 }
 
 /* Die Textspalte eines Zweispalters. */
 .spalte { display: grid; justify-items: start; }
 
 /* Im Zweispalter steht das Bild neben dem Text, nicht darunter. */
-.bandZwei .bild { margin-top: 0; width: 100%; }
-.bandZwei .knopf { margin-top: var(--raum-lg); }
+.bandZwei .bild,
+.bandGedreht .bild { margin-top: 0; width: 100%; }
+.bandZwei .knopf,
+.bandGedreht .knopf { margin-top: var(--raum-lg); }
+
+/* Ein Foto in der Belegspalte: beschnitten auf ein ruhiges Seitenverhältnis
+   und mit demselben Radius wie alles andere. Vorher lief dasselbe Foto über
+   die ganze Fensterbreite — in dieser Höhe blieb von einem Menschen darauf
+   nur ein Ausschnitt übrig, und Fotos ohne Gesicht wirken beliebig. */
+.foto {
+  width: 100%;
+  /* `height: auto` ist hier nicht Kosmetik, sondern nötig: Das Markup gibt
+     width und height an, damit beim Laden nichts springt. Das height-Attribut
+     wirkt wie eine CSS-Höhe und schlägt jedes aspect-ratio — ohne diese Zeile
+     stand das Foto 1350 Pixel hoch in der Spalte. */
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  display: block;
+}
+:global(body.dark) .foto { filter: brightness(.82) saturate(.94); }
 
 /* Das erste Band einer Seite liegt unter der schwebenden Leiste und braucht
    oben mehr Luft. Nur der Abstand wird gesetzt — die Ausrichtung gehört in
@@ -97,7 +139,7 @@ main > .band:first-child {
 }
 /* Korall statt Schwarz: Auf der ganzen Seite ist das die Farbe für „hier
    geht es weiter". */
-.knopf:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.knopf:hover { background: var(--btn-ink); color: var(--btn-ink-tx); border-color: var(--btn-ink); }
 
 /* ---------------------------------------------------------------------------
    Bewegung beim Scrollen

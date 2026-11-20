@@ -39,7 +39,7 @@ export default function KurseView({
       id: 'lk' as const,
       titel: 'Leistungskurs',
       beschreibung:
-        'Der volle Umfang des Leistungskurses: e- und ln-Funktionen, Integrationstechniken, Ebenen und Abstände, Hypothesentests — jeweils auf LK-Niveau.',
+        'Alle Themen des Leistungskurses, jeweils auf LK-Niveau: Zusammenfassungen, Aufgaben mit Lösungsweg, Erklärvideos und der KI-Coach.',
       hat: ownedLk,
     },
   ];

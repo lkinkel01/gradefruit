@@ -190,7 +190,7 @@
 .statusButton:disabled { opacity: 0.42; cursor: default; }
 /* Gewählt: gefüllt in der Markenfarbe — die einzige Farbe im Bild neben der
    Kurve, deshalb sofort zu sehen. */
-.statusButtonActive { color: #fff; background: var(--accent); }
+.statusButtonActive { color: var(--btn-ink-tx); background: var(--btn-ink); }
 
 /* ---------- Aktionsspalte ----------
    Icon über Beschriftung, untereinander am rechten Rand, in Daumenhöhe. */

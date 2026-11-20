@@ -7,16 +7,21 @@ import { useRouter } from 'next/navigation';
 import band from '@/components/SeitenBand.module.css';
 import styles from './kurse.module.css';
 
+/* Beide Kurse führen dieselben Leistungen auf, nur den Umfang unterschiedlich.
+   Einzelne Themen stehen hier bewusst nicht mehr: Wer „e- und ln-Funktionen,
+   Ebenen, Hypothesentests" liest, prüft die Liste gegen seinen eigenen
+   Lehrplan und findet immer etwas, das fehlt. Der Umfang ist die Zusage,
+   nicht eine Auswahl von Stichworten. */
 const KURSE = [
   {
     id: 'gk' as const,
     titel: 'Grundkurs',
-    punkte: ['Alle Themen des Grundkurses', 'Aufgaben mit Lösungsweg', 'Coach und Erklärvideos'],
+    punkte: ['Alle Themen des Grundkurses', 'Aufgaben mit Lösungsweg', 'Erklärvideos und KI-Coach'],
   },
   {
     id: 'lk' as const,
     titel: 'Leistungskurs',
-    punkte: ['Voller LK-Umfang', 'e- und ln-Funktionen, Ebenen, Hypothesentests', 'Coach und Erklärvideos'],
+    punkte: ['Alle Themen des Leistungskurses', 'Aufgaben mit Lösungsweg', 'Erklärvideos und KI-Coach'],
   },
 ];
 
@@ -37,7 +42,7 @@ function Inhalt() {
             ? 'Grundkurs und Leistungskurs liegen bereit. Keine weiteren Kosten.'
             : stand === 'einKurs'
               ? 'Einen Kurs hast du. Der zweite ist einzeln dazubuchbar.'
-              : 'Einmal zahlen, kein Abo. Zugeschnitten auf das hessische Abitur 2027. Von jedem Thema kannst du vorher den Anfang kostenlos ansehen.'}
+              : 'Zugeschnitten auf das hessische Abitur 2027. Von jedem Thema siehst du vorher den Anfang, ohne Zahlungsdaten.'}
         </p>
 
         <div className={styles.karten}>

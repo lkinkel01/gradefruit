@@ -13,6 +13,9 @@ import sharp from 'sharp';
 import { createClient } from '@supabase/supabase-js';
 import { mkdir } from 'node:fs/promises';
 
+/* Derselbe Platzhaltername wie in der Oberfläche — src/lib/vorschauNutzer.ts. */
+const VORSCHAU_NAME = 'Max Mustermann';
+
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const BASIS = 'http://localhost:3000';
 const ZIEL = 'public/produkt';
@@ -40,6 +43,12 @@ async function lernstandFuellen() {
   const { data: nutzer } = await admin.auth.admin.listUsers({ perPage: 1000 });
   const konto = (nutzer?.users ?? []).find(u => u.email === EMAIL);
   if (!konto) throw new Error('Wegwerf-Konto nicht gefunden');
+
+  // Der Name steht auf jeder Aufnahme in der Begrüßung. Aus der Wegwerf-Adresse
+  // leitet sich „Test" ab — das stand dann als Werbebild auf der Startseite.
+  // Deshalb bekommt das Konto denselben Platzhalter, den die Oberfläche auch
+  // ohne Anmeldung zeigt.
+  await admin.auth.admin.updateUserById(konto.id, { user_metadata: { full_name: VORSCHAU_NAME } });
 
   // Nur Analysis — das ist der frei zugängliche Teil, und genau der ist
   // auf den Aufnahmen zu sehen.

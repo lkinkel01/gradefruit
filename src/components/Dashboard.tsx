@@ -47,6 +47,16 @@ export default function Dashboard({ onNavigate, level }: Props) {
     onNavigate('review');
   };
 
+  /* Das Thema, an dem es weitergeht: das erste, das noch nicht fertig ist.
+     Für ein frisches Konto ist das Analysis — und Analysis ist das Thema,
+     dessen Anfang ohne Kauf offensteht. Der Einstieg zeigt also auf etwas,
+     das wirklich offen ist. */
+  const naechstes = TOPICS.find(t => {
+    const ges = topicTotal(t.id, level);
+    return ges === 0 || topicDone(t.id, level) < ges;
+  }) ?? TOPICS[0];
+  const hatFortschritt = zaehler.verstanden + zaehler.wiederholen + zaehler.unklar > 0;
+
   const statusTiles: { status: Exclude<LernStatus, 'none'>; label: string; num: number }[] = [
     { status: 'verstanden', label: 'Verstanden', num: zaehler.verstanden },
     { status: 'wiederholen', label: 'Wiederholen', num: zaehler.wiederholen },
@@ -60,6 +70,22 @@ export default function Dashboard({ onNavigate, level }: Props) {
       <div className={styles.head}>
         <h1 className={styles.greet}>Guten Tag{anrede ? `, ${anrede}` : ''}.</h1>
       </div>
+
+      {/* Der nächste Schritt, bevor irgendeine Zahl kommt.
+
+          Vorher stand hier als Erstes der Countdown und darunter drei Nullen.
+          Wer sich neu anmeldet, sah also zuerst, wie wenig er geschafft hat
+          und wie wenig Zeit bleibt — und nirgends, wo man anfängt. Jetzt
+          steht oben genau ein Satz und ein Knopf. */}
+      <button type="button" className={styles.weiter} onClick={() => onNavigate(naechstes.id)}>
+        <span className={styles.weiterText}>
+          <span className={styles.weiterLabel}>
+            {hatFortschritt ? 'Weiter geht es mit' : 'Fang an mit'}
+          </span>
+          <span className={styles.weiterThema}>{naechstes.label}</span>
+        </span>
+        <span className={styles.weiterGo} aria-hidden="true"><ArrowRightIcon size={18} /></span>
+      </button>
 
       {/* Fortschritt und Lernstand — eine zusammengehörige, klickbare Einheit.
           Der Kopf öffnet die Wiederholen-Seite (die bestehende Detailansicht
@@ -89,6 +115,9 @@ export default function Dashboard({ onNavigate, level }: Props) {
             <span className={styles.progressGo} aria-hidden="true"><ArrowRightIcon size={16} /></span>
           </button>
         </div>
+        {/* Drei Nullen nebeneinander sagen nichts und wirken wie ein Vorwurf.
+            Die Zeile erscheint erst, wenn der erste Lernstand gesetzt ist. */}
+        {hatFortschritt && (
         <div className={styles.statRow}>
           {statusTiles.map(t => (
             <button key={t.status} type="button" className={styles.stat} onClick={() => openReview(t.status)}>
@@ -98,6 +127,7 @@ export default function Dashboard({ onNavigate, level }: Props) {
             </button>
           ))}
         </div>
+        )}
       </section>
 
       {/* Themen — editoriale Liste */}

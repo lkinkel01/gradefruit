@@ -95,7 +95,7 @@
 }
 .courseTick {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 17px; height: 17px; border-radius: 50%; background: var(--accent); color: #fff;
+  width: 17px; height: 17px; border-radius: 50%; background: var(--btn-ink); color: var(--btn-ink-tx);
 }
 
 /* Kursstufe: Umschalter direkt in der Navigation */
@@ -253,23 +253,23 @@
   text-align: center;
 }
 .unlockCard p { margin-bottom: var(--raum-sm); color: var(--side-tx); font-size: 13px; line-height: 1.5; }
-/* Der Knopf hängt an den Leistenfarben, nicht an den Seitenfarben: --side-tx
-   ist immer die Schriftfarbe der Leiste, --side ihr Grund. Dadurch bleibt er
-   in jedem Modus sichtbar — auch jetzt, wo die Leiste im hellen Modus hell
-   ist. Vorher war er fest hell-auf-dunkel verdrahtet und wäre auf der neuen
-   hellen Leiste weiß auf weiß gewesen, ausgerechnet an der Stelle, an der ein
-   Gast zum Kauf eingeladen wird. */
+/* Markenfarbe, nicht Schwarz. Auf der ganzen Seite ist Korall die Farbe für
+   „hier geht es weiter"; ein schwarzer Knopf ausgerechnet an der Stelle, an
+   der ein Gast zum Kauf eingeladen wird, war ein zweites, konkurrierendes
+   Signal. Die Farbe steht fest und hängt nicht mehr an den Leistenfarben —
+   sie trägt in heller wie dunkler Leiste. */
 .unlockCard :global(.btn.primary) {
   width: 100%;
-  background: var(--side-tx);
-  color: var(--side);
-  border-color: var(--side-tx);
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+  border-color: var(--btn-ink);
   box-shadow: none;
   font-size: 13px;
 }
 .unlockCard :global(.btn.primary:hover) {
-  background: color-mix(in srgb, var(--side-tx) 86%, var(--side));
-  color: var(--side);
+  background: var(--btn-ink-hover);
+  border-color: var(--btn-ink-hover);
+  color: var(--btn-ink-tx);
 }
 
 @media (hover: hover) and (pointer: fine) {
