@@ -58,6 +58,11 @@ interface Entry {
   tasks: ContentTask[];
   summary: ContentSummary | null;
   message: string | null;
+  /* Beides kommt vom Server mit und wurde hier bisher stillschweigend
+     verworfen — der Eintrag wurde zwar damit angelegt, der Typ kannte die
+     Felder aber nicht. */
+  vorschau?: boolean;
+  gesamt?: { aufgaben: number; abschnitte: number };
 }
 
 interface ContentCtx {
@@ -265,6 +270,12 @@ export function useTopicContent(topic: ContentTopic, level: ContentLevel): Topic
 
   return {
     state: entry?.state ?? 'loading',
+    /* Diese beiden wurden bisher geladen, aber nicht weitergereicht — die
+       Oberfläche konnte deshalb gar nicht wissen, dass sie nur den
+       kostenlosen Anfang in der Hand hat, und zeigte stattdessen eine
+       Sperrseite. */
+    vorschau: entry?.vorschau === true,
+    gesamt: entry?.gesamt,
     tasks: entry?.tasks ?? [],
     summary: entry?.summary ?? null,
     message: entry?.message ?? null,

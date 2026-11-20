@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './ProduktGalerie.module.css';
 
 /**
@@ -49,23 +49,27 @@ export default function ProduktGalerie({
 }) {
   const [aktiv, setAktiv] = useState(0);
   const [angehalten, setAngehalten] = useState(false);
-  const selbstGesteuert = useRef(false);
+  /* Zustand, nicht Ref: Eine Ref ändert sich stumm. Der Effekt unten lief
+     dann mit dem alten Wert weiter, und die Galerie sprang nach dem
+     Pfeildruck trotzdem von allein weiter — genau das Verhalten, das der
+     Griff zum Pfeil beenden soll. */
+  const [selbstGesteuert, setSelbstGesteuert] = useState(false);
 
   const zeige = useCallback((i: number) => {
     // Ein Griff zum Pfeil heißt: Ab jetzt bestimme ich, nicht die Uhr.
-    selbstGesteuert.current = true;
+    setSelbstGesteuert(true);
     setAktiv((i + bilder.length) % bilder.length);
   }, [bilder.length]);
 
   useEffect(() => {
-    if (angehalten || selbstGesteuert.current) return;
+    if (angehalten || selbstGesteuert) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const uhr = window.setInterval(
       () => setAktiv(i => (i + 1) % bilder.length),
       WECHSEL_MS,
     );
     return () => window.clearInterval(uhr);
-  }, [angehalten, bilder.length]);
+  }, [angehalten, selbstGesteuert, bilder.length]);
 
   const jetzt = bilder[aktiv];
 

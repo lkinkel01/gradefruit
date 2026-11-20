@@ -93,10 +93,23 @@ export default function TopicView({
   const [mistakesOpen, setMistakesOpen] = useState(false);
   const isFree = topicId === 'analysis';
 
+  /* Hat der Server nur den kostenlosen Anfang geschickt?
+
+     Das stand bisher in der Antwort, wurde aber nirgends gelesen. Die Folge:
+     Wer kein Konto oder keinen Kurs hat, bekam für jedes Thema außer Analysis
+     eine Sperrseite zu sehen — obwohl darunter auf derselben Seite stand
+     „Von jedem Thema siehst du den Anfang kostenlos". Das Versprechen stimmte,
+     die Oberfläche hielt es nur nicht ein. */
+  const istVorschau = content.state === 'ready' && content.vorschau === true;
+
   // Listen und Zähler laufen über das Inhaltsverzeichnis — so bleibt die
   // Navigation vollständig, auch während die Inhalte noch geladen werden.
-  const tasks = idx.tasks;
-  const sectionList = idx.sections;
+  // In der Vorschau wird die Liste auf das gekürzt, was wirklich da ist:
+  // Überschriften anzuzeigen, hinter denen nichts liegt, führt in Sackgassen.
+  const tasks = istVorschau ? idx.tasks.slice(0, content.tasks.length) : idx.tasks;
+  const sectionList = istVorschau && content.summary
+    ? idx.sections.slice(0, content.summary.sections.length)
+    : idx.sections;
   const doneCount = tasks.filter(t => statusOf(topicId, t.id) === 'verstanden').length;
   const selectedSummary = tab === 'zusammenfassung'
     ? summary?.sections.find(section => section.title === itemId)
@@ -406,6 +419,33 @@ export default function TopicView({
     </div>
   );
 
+  /* Was noch fehlt und wie man drankommt. Steht unter jeder Liste in der
+     Vorschau, damit nie der Eindruck entsteht, das sei schon alles. */
+  const renderProbeHinweis = () => {
+    if (!istVorschau) return null;
+    const gesamtAufgaben = content.gesamt?.aufgaben ?? tasks.length;
+    const gesamtAbschnitte = content.gesamt?.abschnitte ?? sectionList.length;
+    return (
+      <div className={styles.probe}>
+        <p className={styles.probeTitel}>Das ist der kostenlose Anfang.</p>
+        <p className={styles.probeText}>
+          Du siehst {sectionList.length} von {gesamtAbschnitte} Abschnitten und{' '}
+          {tasks.length} von {gesamtAufgaben} Aufgaben. Mit dem {levelLabel} bekommst du
+          alle, dazu die Erklärvideos und den Coach.
+        </p>
+        {imApp ? (
+          <p className={styles.lockHint}>
+            Den vollen Zugang schaltest du auf gradefruit.de frei.
+          </p>
+        ) : (
+          <button className="btn primary" onClick={() => onOpenCheckout(level)}>
+            {levelLabel} freischalten
+          </button>
+        )}
+      </div>
+    );
+  };
+
   const renderOverview = () => (
     <div className={styles.contentIndex}>
       {/* Zwei Wege, sonst nichts.
@@ -452,6 +492,7 @@ export default function TopicView({
       <div className={styles.offlineRow}>
         <OfflineToggle topic={contentTopic} level={level} />
       </div>
+      {renderProbeHinweis()}
     </div>
   );
 
@@ -479,6 +520,7 @@ export default function TopicView({
           );
         })}
       </div>
+      {renderProbeHinweis()}
     </div>
   );
 
@@ -573,6 +615,7 @@ export default function TopicView({
           );
         })}
       </div>
+      {renderProbeHinweis()}
     </div>
   );
 
@@ -795,7 +838,13 @@ export default function TopicView({
         </div>
       )}
 
-      {!hasAccess ? (
+      {/* Reihenfolge wichtig: Solange noch geladen wird, darf NICHT die
+          Sperrseite erscheinen. Sonst blitzt sie kurz auf und wird dann von
+          der Vorschau ersetzt — man sähe erst „gesperrt" und dann doch
+          Inhalt, was nach einem Fehler aussieht. */}
+      {!hasAccess && content.state === 'loading' ? (
+        renderLoading()
+      ) : !hasAccess && !istVorschau ? (
         <div className={styles.lockCard}>
           <div className={styles.lockBadge} style={{ background: topic.color }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

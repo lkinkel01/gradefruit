@@ -738,3 +738,37 @@
 /* Links wie alles andere auf der Seite. Mittig stand die Zeile als einziges
    Element auf einer eigenen Achse. */
 .offlineRow { display: flex; justify-content: flex-start; margin-top: var(--raum-xl); }
+
+
+/* ---------------------------------------------------------------------------
+   Der kostenlose Anfang
+   Steht unter den Listen in der Vorschau und sagt zwei Dinge: wie viel man
+   gerade sieht und wie man an den Rest kommt. Bewusst am Ende und nicht als
+   Sperrseite davor — wer erst sieht, was es gibt, entscheidet anders als
+   jemand, der vor einem Schloss steht.
+--------------------------------------------------------------------------- */
+.probe {
+  display: grid;
+  justify-items: start;
+  gap: var(--raum-sm);
+  margin-top: var(--raum-xl);
+  padding: var(--raum-xl);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.probeTitel {
+  color: var(--ink);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -.025em;
+}
+
+.probeText {
+  max-width: 54ch;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
