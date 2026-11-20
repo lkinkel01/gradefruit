@@ -26,46 +26,46 @@
   border-bottom: 1px solid var(--line);
   position: relative;
 }
-.dctx { font-size: 12px; font-weight: 650; letter-spacing: .01em; color: var(--accent-d); margin-bottom: 5px; }
-.dhead h2 { font-size: 19px; word-break: break-word; padding-right: 34px; letter-spacing: -.025em; }
-.dsub { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.dctx { font-size: 12px; font-weight: 600; letter-spacing: .01em; color: var(--accent-d); margin-bottom: var(--raum-2xs); }
+.dhead h2 { font-size: 20px; word-break: break-word; padding-right: var(--raum-xl); letter-spacing: -.025em; }
+.dsub { font-size: 13px; color: var(--muted); margin-top: 2px; }
 .dclose {
   position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px;
   border: none; background: var(--control); width: 44px; height: 44px;
   border-radius: var(--radius-control); cursor: pointer; color: var(--muted); font-size: 15px;
 }
 .snippet {
-  margin-top: 10px; font-size: 13px; color: var(--ink);
+  margin-top: var(--raum-sm); font-size: 13px; color: var(--ink);
   background: var(--surface-2); border: 1px solid var(--line);
-  border-radius: var(--radius-control); padding: 9px 12px; line-height: 1.45;
+  border-radius: var(--radius-control); padding: var(--raum-xs) var(--raum-sm); line-height: 1.45;
   /* Aufgaben vollständig zeigen: mehrzeilig, bei sehr langen Texten scrollbar. */
   white-space: pre-wrap;
   overflow-wrap: break-word;
   max-height: 15em;
   overflow-y: auto;
 }
-.snipLabel { display: block; font-size: 11.5px; font-weight: 650; letter-spacing: .01em; color: var(--accent-d); margin-bottom: 3px; }
+.snipLabel { display: block; font-size: 12px; font-weight: 600; letter-spacing: .01em; color: var(--accent-d); margin-bottom: 3px; }
 
 /* Quelle: der ganze Abschnitt, aus dem gefragt wird — der angetippte Teil
    ist hervorgehoben, damit klar ist, worauf sich die Frage bezieht. */
-.srcHead { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+.srcHead { display: flex; align-items: center; gap: var(--raum-xs); margin-bottom: var(--raum-xs); }
 .srcNum {
   display: grid; place-items: center;
   width: 21px; height: 21px; flex-shrink: 0;
-  border-radius: 6px; background: var(--accent); color: var(--accent-tx);
-  font-size: 11.5px; font-weight: 750;
+  border-radius: var(--radius-control); background: var(--accent); color: var(--accent-tx);
+  font-size: 12px; font-weight: 700;
 }
-.srcTitle { font-size: 13.5px; font-weight: 700; letter-spacing: -.01em; }
+.srcTitle { font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
 .srcLine {
-  padding: 5px 8px;
-  border-radius: 6px;
+  padding: var(--raum-2xs) var(--raum-xs);
+  border-radius: var(--radius-control);
   color: var(--muted);
   line-height: 1.55;
 }
 .srcLine + .srcLine { margin-top: 2px; }
 .srcMark {
-  padding: 1px 4px;
-  border-radius: 5px;
+  padding: 1px var(--raum-2xs);
+  border-radius: var(--radius-control);
   background: color-mix(in srgb, var(--accent) 34%, transparent);
   color: var(--ink);
   font-weight: 700;
@@ -79,69 +79,69 @@
 
 .seg {
   display: flex; gap: 3px; background: var(--control);
-  padding: 3px; border-radius: var(--radius-control); margin: 14px 22px 0;
+  padding: 3px; border-radius: var(--radius-control); margin: var(--raum-md) var(--raum-lg) 0;
 }
 .seg button {
   flex: 1; border: none; background: transparent; cursor: pointer;
-  font-family: inherit; font-size: 13.5px; font-weight: 500; color: var(--muted);
-  padding: 9px; border-radius: var(--radius-control);
+  font-family: inherit; font-size: 14px; font-weight: 500; color: var(--muted);
+  padding: var(--raum-xs); border-radius: var(--radius-control);
   transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
-  display: flex; align-items: center; justify-content: center; gap: 7px;
+  display: flex; align-items: center; justify-content: center; gap: var(--raum-xs);
   min-height: 44px;
 }
 .seg button.on { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: var(--shadow-control); }
 
-.modeHint { font-size: 12.5px; color: var(--muted); padding: 10px 22px 2px; }
+.modeHint { font-size: 13px; color: var(--muted); padding: var(--raum-sm) var(--raum-lg) 2px; }
 
-.dbody { flex: 1; overflow-y: auto; padding: 8px 18px 16px; }
-.empty { text-align: center; color: var(--faint); font-size: 13.5px; padding: 24px 10px; line-height: 1.6; }
+.dbody { flex: 1; overflow-y: auto; padding: var(--raum-xs) var(--raum-md) var(--raum-md); }
+.empty { text-align: center; color: var(--faint); font-size: 14px; padding: var(--raum-lg) var(--raum-sm); line-height: 1.6; }
 
 /* Ruhiger Einstieg: Beispielfragen erst nach Klick */
-.starter { padding: 10px 2px 0; }
+.starter { padding: var(--raum-sm) 2px 0; }
 .presetsToggle {
-  display: inline-flex; align-items: center; gap: 7px;
+  display: inline-flex; align-items: center; gap: var(--raum-xs);
   border: 1px solid var(--line); background: var(--surface);
-  color: var(--muted); border-radius: var(--radius-control); padding: 7px 13px;
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
-  cursor: pointer; margin-bottom: 10px;
+  color: var(--muted); border-radius: var(--radius-control); padding: var(--raum-xs) var(--raum-sm);
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  cursor: pointer; margin-bottom: var(--raum-sm);
   min-height: 44px;
   transition: border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
 }
 
-.msg { font-size: 14px; line-height: 1.5; padding: 11px 14px; border-radius: 14px; max-width: 92%; margin-bottom: 7px; white-space: pre-wrap; word-break: break-word; }
+.msg { font-size: 14px; line-height: 1.5; padding: var(--raum-sm) var(--raum-md); border-radius: var(--radius-card); max-width: 92%; margin-bottom: var(--raum-xs); white-space: pre-wrap; word-break: break-word; }
 .q { margin-left: auto; background: var(--accent); color: var(--accent-tx); border-bottom-right-radius: 5px; }
 .a { background: var(--bubble-ai); color: var(--ink); border-bottom-left-radius: 5px; }
 
-.typing { display: inline-flex !important; gap: 4px; align-items: center; }
+.typing { display: inline-flex !important; gap: var(--raum-2xs); align-items: center; }
 .typing span { width: 7px; height: 7px; border-radius: var(--radius-pill); background: var(--faint); animation: tdot 1s infinite; }
 .typing span:nth-child(2) { animation-delay: .15s; }
 .typing span:nth-child(3) { animation-delay: .3s; }
 @keyframes tdot { 0%,60%,100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
 
-.presets { margin-top: 6px; }
-.pt { font-size: 11px; color: var(--faint); font-weight: 500; margin-bottom: 8px; }
+.presets { margin-top: var(--raum-xs); }
+.pt { font-size: 11px; color: var(--faint); font-weight: 500; margin-bottom: var(--raum-xs); }
 .pchip {
   display: block; width: 100%; text-align: left;
   border: 1px solid var(--line); background: var(--surface);
-  border-radius: var(--radius-control); padding: 10px 13px;
-  font-family: inherit; font-size: 13.5px; color: var(--ink);
-  cursor: pointer; margin-bottom: 7px;
+  border-radius: var(--radius-control); padding: var(--raum-sm) var(--raum-sm);
+  font-family: inherit; font-size: 14px; color: var(--ink);
+  cursor: pointer; margin-bottom: var(--raum-xs);
   min-height: 44px;
   transition: border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
 }
 
-.dfoot { border-top: 1px solid var(--line); padding: 12px 14px; }
+.dfoot { border-top: 1px solid var(--line); padding: var(--raum-sm) var(--raum-md); }
 
 .fileError {
-  font-size: 12.5px; color: var(--danger); background: var(--danger-soft);
+  font-size: 13px; color: var(--danger); background: var(--danger-soft);
   border: 1px solid var(--danger-line); border-radius: var(--radius-control);
-  padding: 7px 11px; margin-bottom: 8px; line-height: 1.4;
+  padding: var(--raum-xs) var(--raum-sm); margin-bottom: var(--raum-xs); line-height: 1.4;
 }
 
 .attachChip {
-  display: flex; align-items: center; gap: 7px;
+  display: flex; align-items: center; gap: var(--raum-xs);
   background: var(--surface-2); border: 1px solid var(--line);
-  border-radius: var(--radius-card); padding: 7px 9px; margin-bottom: 8px;
+  border-radius: var(--radius-card); padding: var(--raum-xs) var(--raum-xs); margin-bottom: var(--raum-xs);
   color: var(--ink); font-size: 13px;
 }
 .attachChip svg { color: var(--accent-d); flex-shrink: 0; }
@@ -149,33 +149,33 @@
 .attachRemove {
   border: none; background: transparent; cursor: pointer;
   color: var(--muted); font-size: 14px; line-height: 1;
-  padding: 2px 4px; border-radius: var(--radius-control); flex-shrink: 0;
+  padding: 2px var(--raum-2xs); border-radius: var(--radius-control); flex-shrink: 0;
   min-width: 44px;
   min-height: 44px;
 }
 
-.askform { display: flex; gap: 8px; }
+.askform { display: flex; gap: var(--raum-xs); }
 .askform input[type="text"], .askform > input:not([type]) {
   flex: 1; border: 1px solid var(--line-strong); border-radius: var(--radius-control);
-  padding: 11px 14px; font-family: inherit; font-size: 14px;
+  padding: var(--raum-sm) var(--raum-md); font-family: inherit; font-size: 14px;
   background: var(--canvas); color: var(--ink); outline: none;
 }
 .askform input:focus { border-color: var(--accent); }
 .askform button {
   border: none; background: var(--accent); color: var(--accent-tx);
-  border-radius: var(--radius-control); padding: 0 16px; cursor: pointer;
+  border-radius: var(--radius-control); padding: 0 var(--raum-md); cursor: pointer;
   display: flex; align-items: center;
   min-width: 44px;
   min-height: 44px;
 }
 .attachBtn {
   background: var(--surface-2) !important; color: var(--muted) !important;
-  border: 1px solid var(--line-strong) !important; padding: 0 12px !important;
+  border: 1px solid var(--line-strong) !important; padding: 0 var(--raum-sm) !important;
 }
 /* Spracheingabe: tippen, sprechen, Text landet im Eingabefeld */
 .micBtn {
   background: var(--surface-2) !important; color: var(--muted) !important;
-  border: 1px solid var(--line-strong) !important; padding: 0 11px !important;
+  border: 1px solid var(--line-strong) !important; padding: 0 var(--raum-sm) !important;
 }
 .micBtn:disabled { opacity: .45 !important; }
 .micOn {
@@ -196,9 +196,9 @@
   .drawer { width: 100%; max-width: 100%; }
   .dhead { padding: calc(18px + env(safe-area-inset-top, 0px)) 68px 14px 18px; }
   .dclose { top: calc(12px + env(safe-area-inset-top, 0px)); right: 12px; }
-  .seg { margin-inline: 18px; }
-  .modeHint { padding-inline: 18px; }
-  .dbody { padding-inline: 16px; }
+  .seg { margin-inline: var(--raum-md); }
+  .modeHint { padding-inline: var(--raum-md); }
+  .dbody { padding-inline: var(--raum-md); }
   .dfoot { padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)); }
   .askform {
     display: grid;
@@ -222,7 +222,7 @@
 /* „Antwort melden" — bewusst unauffällig, aber immer erreichbar. */
 .report {
   display: block;
-  margin-top: 10px;
+  margin-top: var(--raum-sm);
   padding: 0;
   border: 0;
   background: none;

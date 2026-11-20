@@ -12,7 +12,7 @@
 .notice {
   position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
   z-index: 200; max-width: min(92vw, 620px);
-  padding: 12px 18px; border: 1px solid var(--glass-line); border-radius: var(--radius-control);
+  padding: var(--raum-sm) var(--raum-md); border: 1px solid var(--glass-line); border-radius: var(--radius-control);
   background: var(--glass-strong); color: var(--ink); box-shadow: var(--shadow-float);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   backdrop-filter: blur(18px) saturate(140%);
@@ -102,5 +102,5 @@
 }
 
 /* Platz für den Einblend-Knopf: Ohne ihn lag er auf dem Pfad oben links. */
-.shellZu .content { padding-left: 46px; }
+.shellZu .content { padding-left: var(--raum-2xl); }
 @media (max-width: 900px) { .shellZu .content { padding-left: 0; } }

@@ -5,7 +5,7 @@
 .seite {
   max-width: 760px;
   margin-inline: auto;
-  padding: 8px 0 64px;
+  padding: var(--raum-xs) 0 var(--raum-3xl);
   text-align: center;
 }
 
@@ -28,7 +28,7 @@
 .liste {
   display: grid;
   gap: 0;
-  margin-top: 44px;
+  margin-top: var(--raum-2xl);
   padding: 0;
   list-style: none;
 }
@@ -36,8 +36,8 @@
 .karte {
   display: grid;
   justify-items: center;
-  gap: 12px;
-  padding: 38px 8px;
+  gap: var(--raum-sm);
+  padding: var(--raum-xl) var(--raum-xs);
   border-top: 1px solid var(--line);
 }
 
@@ -46,20 +46,20 @@
 .titel {
   color: var(--ink);
   font-size: 22px;
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .preis {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: var(--raum-xs);
 }
 
 .preis strong {
   font-family: 'Cabinet Grotesk', sans-serif;
   color: var(--ink);
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 1;
@@ -70,25 +70,25 @@
 .text {
   max-width: 46ch;
   color: var(--muted);
-  font-size: 14.5px;
+  font-size: 15px;
   line-height: 1.65;
 }
 
 .aktiv {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--raum-xs);
   color: var(--success);
-  font-size: 13.5px;
-  font-weight: 650;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.appHinweis { color: var(--faint); font-size: 13.5px; }
+.appHinweis { color: var(--faint); font-size: 14px; }
 
 .fussnote {
   max-width: 52ch;
   margin: 30px auto 0;
   color: var(--faint);
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.6;
 }

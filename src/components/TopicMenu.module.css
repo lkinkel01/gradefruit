@@ -33,7 +33,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--raum-sm);
   /* Der Sicherheitsabstand gehört hier hinein: Die Lade klebt am Fensterrand
      und beginnt deshalb unter der Statusleiste. */
   padding: calc(18px + env(safe-area-inset-top, 0px)) 16px 14px 20px;
@@ -70,10 +70,10 @@
 .zeile {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--raum-sm);
   width: 100%;
   min-height: 52px;
-  padding: 10px 16px 10px 20px;
+  padding: var(--raum-sm) var(--raum-md) var(--raum-sm) var(--raum-lg);
   border: 0;
   background: none;
   color: var(--ink);
@@ -98,16 +98,16 @@
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-control);
   color: var(--muted);
-  font-size: 12.5px;
-  font-weight: 650;
+  font-size: 13px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
 .label {
   flex: 1;
   min-width: 0;
-  font-size: 14.5px;
-  font-weight: 550;
+  font-size: 15px;
+  font-weight: 500;
   line-height: 1.35;
 }
 

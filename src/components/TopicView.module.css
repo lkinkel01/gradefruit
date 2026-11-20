@@ -1,15 +1,15 @@
 .page { max-width: var(--page-max); margin: 0 auto; padding: var(--page-top) var(--page-gutter) var(--page-bottom); }
 @keyframes contentReveal { from { opacity: .72; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
-.headRow { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.headRow { display: flex; align-items: center; justify-content: space-between; gap: var(--raum-md); margin-bottom: var(--raum-md); }
 .ph1 { font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -0.035em; }
 
 /* Umschalter in den Reel-Modus (gleiche Inhalte im Reel-Format) */
 .reelBtn {
-  display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0;
+  display: inline-flex; align-items: center; gap: var(--raum-xs); flex-shrink: 0;
   border: 1px solid var(--line-strong); background: var(--surface);
   cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600;
-  color: var(--ink); padding: 9px 14px; border-radius: var(--radius-control);
+  color: var(--ink); padding: var(--raum-xs) var(--raum-md); border-radius: var(--radius-control);
   min-height: 44px;
 }
 .reelBtn {
@@ -19,19 +19,19 @@
 .reelBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Fortschritt im Thema: kleine Grapefruit + Zähler */
-.progressRow { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-.progressLabel { font-size: 12.5px; color: var(--faint); font-variant-numeric: tabular-nums; }
+.progressRow { display: flex; align-items: center; gap: var(--raum-sm); margin-bottom: var(--raum-lg); }
+.progressLabel { font-size: 13px; color: var(--faint); font-variant-numeric: tabular-nums; }
 
 /* Bereichs-Tabs: Zusammenfassung / Übungen */
 .tabs {
-  display: inline-flex; gap: 4px; margin-bottom: 20px;
+  display: inline-flex; gap: var(--raum-2xs); margin-bottom: var(--raum-lg);
   padding: 3px; border: 1px solid var(--line); border-radius: var(--radius-control);
   background: var(--surface-2);
 }
 .tabBtn {
   border: none; background: transparent;
-  cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 600;
-  color: var(--muted); padding: 8px 18px; border-radius: var(--radius-control);
+  cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600;
+  color: var(--muted); padding: var(--raum-xs) var(--raum-md); border-radius: var(--radius-control);
   min-height: 44px;
 }
 .tabBtn { transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out); }
@@ -41,13 +41,13 @@
 .areaGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: var(--raum-md);
 }
 .areaCard {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 22px 24px 20px;
+  gap: var(--raum-md);
+  padding: var(--raum-lg) var(--raum-lg) var(--raum-lg);
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
   background: var(--surface);
@@ -59,24 +59,24 @@
 }
 .areaCard:active { transform: scale(.995); }
 .areaCard:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.areaCardHead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.areaCardHead { display: flex; align-items: baseline; justify-content: space-between; gap: var(--raum-sm); }
 .areaCardTitle {
   font-family: 'Cabinet Grotesk', sans-serif;
   font-weight: 800; font-size: 20px; letter-spacing: -.025em;
 }
-.areaCardMeta { color: var(--faint); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.areaCardMeta { color: var(--faint); font-size: 13px; font-variant-numeric: tabular-nums; }
 /* Wie weit man in genau diesem Bereich ist. Steht dort, wo vorher die ganze
    Liste stand — die kommt eine Seite später ohnehin. */
 .areaCardStand {
   display: block;
-  margin: 10px 0 16px;
+  margin: var(--raum-sm) 0 var(--raum-md);
   color: var(--muted);
   font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 .areaCardGo {
-  display: inline-flex; align-items: center; gap: 8px; margin-top: auto;
-  color: var(--accent-d); font-size: 13.5px; font-weight: 700;
+  display: inline-flex; align-items: center; gap: var(--raum-xs); margin-top: auto;
+  color: var(--accent-d); font-size: 14px; font-weight: 700;
 }
 
 /* Bereichs-Titel statt Umschalter: Zusammenfassung und Übungen sind eigene
@@ -86,8 +86,8 @@
 .areaKopf {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin: 4px 0 18px;
+  gap: var(--raum-sm);
+  margin: var(--raum-2xs) 0 var(--raum-md);
 }
 .menuKnopf {
   flex: none;
@@ -123,7 +123,7 @@
 }
 .indexIntro {
   max-width: 62ch;
-  margin: 2px 0 24px;
+  margin: 2px 0 var(--raum-lg);
   color: var(--muted);
   font-size: 15px;
   line-height: 1.65;
@@ -138,9 +138,9 @@
   width: 100%;
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr) auto auto;
-  gap: 15px;
+  gap: var(--raum-md);
   align-items: center;
-  padding: 18px 20px;
+  padding: var(--raum-md) var(--raum-lg);
   border: 0;
   border-bottom: 1px solid var(--line);
   background: transparent;
@@ -170,12 +170,12 @@
   background: var(--green);
   color: #fff;
 }
-.indexText { min-width: 0; display: grid; gap: 4px; }
+.indexText { min-width: 0; display: grid; gap: var(--raum-2xs); }
 .indexText strong {
   overflow: hidden;
   color: var(--ink);
   font-size: 15px;
-  font-weight: 680;
+  font-weight: 700;
   letter-spacing: -.012em;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -183,14 +183,14 @@
 .indexText small {
   overflow: hidden;
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 1.45;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .indexVideo {
   color: var(--accent-d);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 700;
 }
 /* Lernstatus als farbiger Punkt: grün/gelb/rot (statt Textlabel). */
@@ -215,7 +215,7 @@
 .backLink {
   min-height: 44px;
   margin: -6px 0 12px;
-  padding: 8px 0;
+  padding: var(--raum-xs) 0;
   border: 0;
   background: transparent;
   color: var(--muted);
@@ -224,13 +224,13 @@
   font-size: 13px;
   font-weight: 600;
 }
-.backLink::before { content: '←'; margin-right: 8px; }
+.backLink::before { content: '←'; margin-right: var(--raum-xs); }
 .backLink:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .detailNav {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 12px;
+  gap: var(--raum-sm);
+  margin-top: var(--raum-sm);
 }
 .detailNavButton {
   min-width: 0;
@@ -239,8 +239,8 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 6px;
-  padding: 12px 14px;
+  gap: var(--raum-xs);
+  padding: var(--raum-sm) var(--raum-md);
   border: 1px solid var(--line);
   border-radius: var(--radius-control);
   background: var(--surface);
@@ -256,7 +256,7 @@
 .detailNavButton strong {
   width: 100%;
   overflow: hidden;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -268,7 +268,7 @@
 .detailNavDirection {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--raum-xs);
   color: var(--muted);
   font-size: 12px;
   font-weight: 600;
@@ -293,31 +293,31 @@
 .detailHeader {
   display: grid;
   grid-template-columns: 30px minmax(0, 1fr) auto;
-  gap: 14px;
+  gap: var(--raum-md);
   align-items: center;
-  padding: 18px 20px 15px;
+  padding: var(--raum-md) var(--raum-lg) var(--raum-md);
 }
 .detailTitle {
   color: var(--ink);
   font-size: clamp(19px, 2.5vw, 25px);
-  font-weight: 760;
+  font-weight: 700;
   letter-spacing: -.025em;
   line-height: 1.15;
 }
 
 .summaryWrap {
-  display: flex; flex-direction: column; gap: 9px;
+  display: flex; flex-direction: column; gap: var(--raum-xs);
   animation: contentReveal var(--dur-enter) var(--ease-out) both;
 }
-.summaryIntro { margin-bottom: 14px; color: var(--muted); font-size: 14.5px; line-height: 1.65; }
-.summaryDetails { padding-top: 16px; animation: contentReveal var(--dur-enter) var(--ease-out) both; }
-.summaryFoot { display: flex; justify-content: center; margin-top: 10px; }
+.summaryIntro { margin-bottom: var(--raum-md); color: var(--muted); font-size: 15px; line-height: 1.65; }
+.summaryDetails { padding-top: var(--raum-md); animation: contentReveal var(--dur-enter) var(--ease-out) both; }
+.summaryFoot { display: flex; justify-content: center; margin-top: var(--raum-sm); }
 
 /* Inhalte stehen als EIN durchgehender Block. Die Abschnitte werden nur durch
    feine Linien getrennt — keine grauen Kästen, keine Monospace-Schrift. Jeder
    Abschnitt ist selbst antippbar und stellt dazu eine Frage. */
 .reader {
-  margin-bottom: 16px;
+  margin-bottom: var(--raum-md);
   border-top: 1px solid var(--line);
 }
 .readerBlock {
@@ -329,7 +329,7 @@
   display: grid;
   justify-items: center;
   text-align: center;
-  padding: 26px 10px;
+  padding: var(--raum-lg) var(--raum-sm);
   border-bottom: 1px solid var(--line);
   cursor: pointer;
   transition: background-color var(--dur-hover) var(--ease-out);
@@ -347,21 +347,21 @@
   place-items: center;
   width: 26px;
   height: 26px;
-  margin-bottom: 10px;
+  margin-bottom: var(--raum-sm);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-pill);
   color: var(--muted);
   font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 .readerLabel {
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: var(--raum-sm);
   color: var(--muted);
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: .01em;
 }
@@ -382,7 +382,7 @@
   font-size: 16px;
   line-height: 1.7;
 }
-.readerText + .readerText { margin-top: 10px; }
+.readerText + .readerText { margin-top: var(--raum-sm); }
 /* Formeln und Rechenschritte: gleiche Schriftfamilie wie der Fließtext, nur
    etwas luftiger gesetzt — deutlich ruhiger als die frühere Monospace. */
 .readerMath {
@@ -397,7 +397,7 @@
   overflow-x: auto;
 }
 /* Mehrere Formeln in einem Schritt: jede in eine eigene Zeile. */
-.readerMath + .readerMath { margin-top: 4px; }
+.readerMath + .readerMath { margin-top: var(--raum-2xs); }
 .readerResult {
   font-weight: 800;
   color: var(--accent-d);
@@ -407,8 +407,8 @@
    ein reiner Fließtextblock. */
 .introBox {
   position: relative;
-  margin-bottom: 24px;
-  padding: 22px 26px 22px 28px;
+  margin-bottom: var(--raum-lg);
+  padding: var(--raum-lg) var(--raum-lg) var(--raum-lg) var(--raum-xl);
   border: 1px solid var(--line);
   border-left: 3px solid var(--accent);
   border-radius: var(--radius-card);
@@ -427,25 +427,25 @@
 /* Der erste Satz trägt die Aussage — er steht etwas größer. */
 .introBox p:first-child {
   font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: -.02em;
   line-height: 1.45;
 }
-.introBox p + p { margin-top: 12px; color: var(--muted); }
+.introBox p + p { margin-top: var(--raum-sm); color: var(--muted); }
 
 /* Abgegrenzte Aktionszone: Lernhilfen + Lernstatus, getrennt vom Inhalt. */
 .actionZone {
-  margin-top: 18px;
-  padding: 16px;
+  margin-top: var(--raum-md);
+  padding: var(--raum-md);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-card);
   background: var(--surface-2);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--raum-md);
 }
-.statusRow { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.statusRow { display: flex; flex-direction: column; align-items: center; gap: var(--raum-xs); }
 .zoneLabel {
   font-size: 11px;
   font-weight: 700;
@@ -460,16 +460,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
+  gap: var(--raum-sm);
+  margin-top: var(--raum-md);
 }
 .pagerBtn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--raum-sm);
   max-width: 48%;
   min-height: 46px;
-  padding: 11px 16px;
+  padding: var(--raum-sm) var(--raum-md);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-control);
   background: var(--surface);
@@ -487,57 +487,57 @@
 .pagerNext { margin-left: auto; }
 
 /* Lernkarten (Akkordeon) */
-.cards { display: flex; flex-direction: column; gap: 9px; }
+.cards { display: flex; flex-direction: column; gap: var(--raum-xs); }
 .card {
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius-card); overflow: hidden;
-  scroll-margin-top: 84px;
+  scroll-margin-top: var(--raum-4xl);
   transition: border-color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
 }
 /* Geschlossene Karte hebt beim Hover leicht an; offene Karte bleibt ruhig. */
 .cardOpen { border-color: var(--line-strong); box-shadow: var(--shadow-card-hover); }
 .cardHead {
-  width: 100%; display: flex; align-items: center; gap: 13px;
+  width: 100%; display: flex; align-items: center; gap: var(--raum-sm);
   background: none; border: none; cursor: pointer;
   font-family: inherit; text-align: left;
-  padding: 17px 20px;
+  padding: var(--raum-md) var(--raum-lg);
   min-height: 58px;
 }
 .cardNum {
   flex: 0 0 26px; height: 26px; border-radius: var(--radius-control);
-  color: var(--accent-tx); font-size: 12.5px; font-weight: 700;
+  color: var(--accent-tx); font-size: 13px; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
 }
 .cardNumDone { background: var(--green); color: #fff; }
-.cardTitle { flex: 1; font-size: 14.5px; font-weight: 700; color: var(--ink); transition: color .15s; letter-spacing: -0.01em; }
-.cardMeta { display: flex; align-items: center; gap: 8px; color: var(--faint); }
+.cardTitle { flex: 1; font-size: 15px; font-weight: 700; color: var(--ink); transition: color .15s; letter-spacing: -0.01em; }
+.cardMeta { display: flex; align-items: center; gap: var(--raum-xs); color: var(--faint); }
 .chev { color: var(--faint); flex-shrink: 0; }
 
-.cardBody { padding: 2px 20px 18px; animation: contentReveal var(--dur-enter) var(--ease-out) both; }
+.cardBody { padding: 2px var(--raum-lg) var(--raum-md); animation: contentReveal var(--dur-enter) var(--ease-out) both; }
 
 /* Lernhilfen-Leiste (KI · Tutor) innerhalb der Aktionszone */
 .rowActions {
-  display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+  display: flex; justify-content: center; gap: var(--raum-xs); flex-wrap: wrap;
 }
 /* Lösungs-Bereich: eigene Zeile über der Aktionsleiste */
-.solRow { display: flex; gap: 8px; flex-wrap: wrap; }
+.solRow { display: flex; gap: var(--raum-xs); flex-wrap: wrap; }
 .solBtn {
   font-weight: 700;
   font-size: 14px;
-  padding: 11px 18px;
+  padding: var(--raum-sm) var(--raum-md);
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent-d);
 }
 .solBtn :global(svg) { order: 2; }
 .solutionStage { animation: contentReveal var(--dur-enter) var(--ease-out) both; }
-.solTools { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.solTools { display: flex; justify-content: center; gap: var(--raum-xs); flex-wrap: wrap; margin-top: var(--raum-md); }
 
 .mini {
   border: 1px solid var(--line-strong); background: var(--surface);
   cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500;
-  color: var(--ink); padding: 8px 13px; border-radius: var(--radius-control);
-  display: inline-flex; align-items: center; gap: 7px;
+  color: var(--ink); padding: var(--raum-xs) var(--raum-sm); border-radius: var(--radius-control);
+  display: inline-flex; align-items: center; gap: var(--raum-xs);
   min-height: 44px;
   transition: transform var(--dur-press) var(--ease-press), border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
@@ -551,29 +551,29 @@
 }
 
 .solution {
-  margin-top: 16px; border-top: 1px solid var(--line);
-  padding-top: 6px; animation: contentReveal var(--dur-enter) var(--ease-out) both;
+  margin-top: var(--raum-md); border-top: 1px solid var(--line);
+  padding-top: var(--raum-xs); animation: contentReveal var(--dur-enter) var(--ease-out) both;
 }
-.solHead { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 13px 0 6px; }
+.solHead { display: flex; align-items: baseline; justify-content: space-between; gap: var(--raum-sm); flex-wrap: wrap; margin: var(--raum-sm) 0 var(--raum-xs); }
 .solTitle { font-size: 12px; font-weight: 700; letter-spacing: .01em; color: var(--muted); }
 .solHint { font-size: 12px; color: var(--faint); }
-.mistakesList { margin: 14px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
-.mistakesList li { font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+.mistakesList { margin: var(--raum-md) 0 0; padding-left: var(--raum-lg); display: flex; flex-direction: column; gap: var(--raum-xs); }
+.mistakesList li { font-size: 14px; line-height: 1.5; color: var(--ink); }
 
 /* Fuß: die drei Lernstufen (Wiederholungssystem) */
 .cardFoot {
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+  display: flex; align-items: center; gap: var(--raum-sm); flex-wrap: wrap;
+  margin-top: var(--raum-md); padding-top: var(--raum-md); border-top: 1px solid var(--line);
 }
-.footLabel { font-size: 12.5px; color: var(--faint); }
+.footLabel { font-size: 13px; color: var(--faint); }
 .statusSeg {
-  display: inline-flex; gap: 4px; padding: 4px;
+  display: inline-flex; gap: var(--raum-2xs); padding: var(--raum-2xs);
   border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--surface-2);
 }
 .statusBtn {
   border: none; background: transparent; cursor: pointer;
-  font-family: inherit; font-size: 12.5px; font-weight: 600;
-  color: var(--muted); padding: 7px 14px; border-radius: var(--radius-control);
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--muted); padding: var(--raum-xs) var(--raum-md); border-radius: var(--radius-control);
   white-space: nowrap;
   transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
@@ -583,7 +583,7 @@
   width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
   opacity: .85;
 }
-.statusBtn { display: inline-flex; align-items: center; gap: 7px; }
+.statusBtn { display: inline-flex; align-items: center; gap: var(--raum-xs); }
 /* Ampel: grün = verstanden, gelb = wiederholen, rot = nicht verstanden. */
 .statusOn_verstanden { background: var(--green-soft); color: var(--success); }
 .statusOn_verstanden .statusBtnDot,
@@ -595,26 +595,26 @@
 /* Status-Hinweis im zugeklappten Kartenkopf */
 .headStatus {
   font-size: 11px; font-weight: 700; color: var(--faint);
-  border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 3px 9px;
+  border: 1px solid var(--line); border-radius: var(--radius-pill); padding: 3px var(--raum-xs);
   white-space: nowrap;
 }
 
-.topicFoot { display: flex; justify-content: flex-start; gap: 10px; margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); }
+.topicFoot { display: flex; justify-content: flex-start; gap: var(--raum-sm); margin-top: var(--raum-lg); padding-top: var(--raum-md); border-top: 1px solid var(--line); }
 
 .lockCard {
   background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius-card); box-shadow: var(--shadow-lg);
-  padding: 38px 28px 32px; text-align: center;
+  padding: var(--raum-xl) var(--raum-xl) var(--raum-xl); text-align: center;
   display: flex; flex-direction: column; align-items: center;
 }
 .lockBadge {
   width: 54px; height: 54px; border-radius: var(--radius-card); color: var(--accent-tx);
-  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: var(--raum-md);
 }
-.lockTitle { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 8px; }
-.lockText { font-size: 14.5px; color: var(--muted); max-width: 46ch; line-height: 1.55; margin-bottom: 20px; }
+.lockTitle { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: var(--raum-xs); }
+.lockText { font-size: 15px; color: var(--muted); max-width: 46ch; line-height: 1.55; margin-bottom: var(--raum-lg); }
 .lockCard .btn { min-width: min(230px, 100%); }
-.lockHint { font-size: 12.5px; color: var(--faint); margin-top: 14px; }
+.lockHint { font-size: 13px; color: var(--faint); margin-top: var(--raum-md); }
 
 @media (hover: hover) and (pointer: fine) {
   .reelBtn:hover { border-color: var(--ink); transform: translateY(-1px); }
@@ -638,17 +638,17 @@
 @media (max-width: 560px) {
   .page { --page-top: 30px; --page-bottom: 96px; }
   .headRow { align-items: flex-start; }
-  .cardHead { padding: 13px 15px; }
-  .cardBody { padding: 2px 15px 14px; }
-  .lockCard { padding: 30px 20px 26px; }
+  .cardHead { padding: var(--raum-sm) var(--raum-md); }
+  .cardBody { padding: 2px var(--raum-md) var(--raum-md); }
+  .lockCard { padding: var(--raum-xl) var(--raum-lg) var(--raum-lg); }
   .readerMath { overflow-x: auto; }
   .progressTrack { max-width: none; }
   .tabs { display: flex; width: 100%; }
-  .tabBtn { flex: 1; padding-inline: 10px; }
+  .tabBtn { flex: 1; padding-inline: var(--raum-sm); }
   .indexRow {
     grid-template-columns: 30px minmax(0, 1fr) auto auto;
-    gap: 11px;
-    padding: 15px 14px;
+    gap: var(--raum-sm);
+    padding: var(--raum-md) var(--raum-md);
   }
   .indexText strong { white-space: normal; }
   .detailNav { grid-template-columns: 1fr; }
@@ -658,8 +658,8 @@
   }
   .detailHeader {
     grid-template-columns: 28px minmax(0, 1fr);
-    gap: 11px;
-    padding: 15px;
+    gap: var(--raum-sm);
+    padding: var(--raum-md);
   }
   .detailHeader .headStatus { grid-column: 2; justify-self: start; }
   /* Die drei Lernstufen untereinander: „Nicht verstanden" passte nebeneinander
@@ -669,16 +669,16 @@
     width: 100%;
     min-height: 46px;
     justify-content: flex-start;
-    padding-inline: 12px;
+    padding-inline: var(--raum-sm);
     white-space: normal;
   }
   /* Lange Formeln dürfen die Seite nicht breiter machen. */
   .reader, .readerBlock { max-width: 100%; }
   .readerText, .readerMath { overflow-wrap: anywhere; }
-  .actionZone { padding: 14px 12px; }
+  .actionZone { padding: var(--raum-md) var(--raum-sm); }
   .rowActions :global(button), .solTools :global(button) { flex: 1 1 auto; }
   .pagerBtn { max-width: 100%; }
-  .pager { gap: 8px; }
+  .pager { gap: var(--raum-xs); }
   .areaTitle { font-size: 20px; }
 }
 
@@ -689,8 +689,8 @@
   transform: translate(-50%, calc(-100% - 10px));
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 8px 13px;
+  gap: var(--raum-xs);
+  padding: var(--raum-xs) var(--raum-sm);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-control);
   background: var(--surface);
@@ -698,7 +698,7 @@
   box-shadow: var(--shadow-float);
   cursor: pointer;
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -715,16 +715,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  padding: 48px 20px;
+  gap: var(--raum-md);
+  padding: var(--raum-2xl) var(--raum-lg);
   text-align: center;
 }
 .stateText {
   max-width: 44ch;
   color: var(--muted);
-  font-size: 14.5px;
+  font-size: 15px;
   line-height: 1.6;
 }
 
 /* „Für offline speichern" — steht unter den Bereichskarten, bewusst ruhig. */
-.offlineRow { display: flex; justify-content: center; margin-top: 22px; }
+.offlineRow { display: flex; justify-content: center; margin-top: var(--raum-lg); }

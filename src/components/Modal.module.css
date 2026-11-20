@@ -17,23 +17,23 @@
 }
 .modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%,-50%) scale(1); }
 
-.mhead { padding: 26px 28px 7px; position: relative; }
-.ptag { font-size: 12px; font-weight: 650; letter-spacing: .01em; color: var(--accent-d); }
-.mhead h2 { font-size: 24px; margin: 7px 0 4px; letter-spacing: -.035em; }
-.mhead p { font-size: 13.5px; color: var(--muted); }
+.mhead { padding: var(--raum-lg) var(--raum-xl) var(--raum-xs); position: relative; }
+.ptag { font-size: 12px; font-weight: 600; letter-spacing: .01em; color: var(--accent-d); }
+.mhead h2 { font-size: 24px; margin: var(--raum-xs) 0 var(--raum-2xs); letter-spacing: -.035em; }
+.mhead p { font-size: 14px; color: var(--muted); }
 .mclose {
   position: absolute; top: 18px; right: 18px;
   border: 1px solid transparent; background: var(--surface-2); width: 44px; height: 44px;
   border-radius: var(--radius-control); cursor: pointer; color: var(--muted); font-size: 15px;
 }
-.mbody { padding: 14px 28px 27px; }
+.mbody { padding: var(--raum-md) var(--raum-xl) var(--raum-lg); }
 
 .opt {
   appearance: none;
   width: 100%;
-  display: flex; align-items: center; gap: 14px;
+  display: flex; align-items: center; gap: var(--raum-md);
   border: 1px solid var(--line-strong); border-radius: var(--radius-card);
-  padding: 15px; cursor: pointer; margin-bottom: 10px;
+  padding: var(--raum-md); cursor: pointer; margin-bottom: var(--raum-sm);
   background: var(--surface);
   color: var(--ink);
   font-family: inherit;
@@ -51,27 +51,27 @@
 .opt.sel .radio::after { content: ""; width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--accent); }
 .ox { flex: 1; }
 .ox b { font-size: 15px; display: block; }
-.ox small { font-size: 12.5px; color: var(--muted); }
+.ox small { font-size: 13px; color: var(--muted); }
 .op { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 17px; }
 .op small { font-size: 11px; color: var(--faint); font-weight: 400; display: block; text-align: right; }
 
 /* Es gibt nur einen Tarif. Die Zeile sieht aus wie die frühere Auswahl,
    verhält sich aber nicht wie ein Knopf — sonst wartet man auf eine Reaktion,
    die nicht kommt. */
-.summary { cursor: default; margin-bottom: 12px; }
+.summary { cursor: default; margin-bottom: var(--raum-sm); }
 .summary:active { transform: none; }
 
 /* Preis- und Rechtshinweise im Checkout */
-.vat { font-size: 12px; color: var(--faint); margin: 2px 0 10px; }
+.vat { font-size: 12px; color: var(--faint); margin: 2px 0 var(--raum-sm); }
 .minderjaehrig {
-  font-size: 12.5px; color: var(--muted); line-height: 1.45;
-  margin: 10px 0 14px;
+  font-size: 13px; color: var(--muted); line-height: 1.45;
+  margin: var(--raum-sm) 0 var(--raum-md);
 }
 .consent {
-  display: flex; align-items: flex-start; gap: 10px;
-  font-size: 12.5px; color: var(--muted); line-height: 1.5;
+  display: flex; align-items: flex-start; gap: var(--raum-sm);
+  font-size: 13px; color: var(--muted); line-height: 1.5;
   background: var(--surface-2); border: 1px solid var(--line);
-  border-radius: var(--radius-control); padding: 11px 13px; margin-bottom: 12px;
+  border-radius: var(--radius-control); padding: var(--raum-sm) var(--raum-sm); margin-bottom: var(--raum-sm);
   cursor: pointer;
 }
 .consent input {
@@ -83,19 +83,19 @@
 .demohint {
   font-size: 12px; color: var(--muted); background: var(--surface-2);
   border: 1px solid var(--line); border-radius: var(--radius-control);
-  padding: 11px 13px; margin: 6px 0 14px;
+  padding: var(--raum-sm) var(--raum-sm); margin: var(--raum-xs) 0 var(--raum-md);
 }
 
 .checkoutError {
-  font-size: 12.5px; color: var(--danger); background: var(--danger-soft);
+  font-size: 13px; color: var(--danger); background: var(--danger-soft);
   border: 1px solid var(--danger-line); border-radius: var(--radius-control);
-  padding: 10px 13px; margin: 4px 0 12px; line-height: 1.45;
+  padding: var(--raum-sm) var(--raum-sm); margin: var(--raum-2xs) 0 var(--raum-sm); line-height: 1.45;
 }
 
 .securenote {
-  display: flex; align-items: center; gap: 7px;
+  display: flex; align-items: center; gap: var(--raum-xs);
   font-size: 12px; color: var(--muted);
-  margin-top: 12px; justify-content: center; text-align: center; line-height: 1.4;
+  margin-top: var(--raum-sm); justify-content: center; text-align: center; line-height: 1.4;
 }
 .securenote svg { color: var(--accent-d); flex-shrink: 0; }
 
@@ -107,7 +107,7 @@
 @media (max-width: 560px) {
   .modal { left: 0; right: 0; top: auto; bottom: 0; width: 100%; max-width: 100%; border-radius: var(--radius-panel) var(--radius-panel) 0 0; transform: translateY(103%); max-height: 92vh; }
   .modal.open { transform: translateY(0); }
-  .mhead { padding: 24px 64px 7px 20px; }
+  .mhead { padding: var(--raum-lg) var(--raum-3xl) var(--raum-xs) var(--raum-lg); }
   .mclose { top: 14px; right: 14px; }
   .mbody { padding: 14px 20px calc(24px + env(safe-area-inset-bottom, 0px)); }
 }

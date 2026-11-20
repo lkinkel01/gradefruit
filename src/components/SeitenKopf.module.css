@@ -26,7 +26,7 @@
      kein Schatten. Nur Marke und Bedienelemente stehen frei auf der Seite.
      Erst beim Scrollen entsteht die Pille. */
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   box-shadow: none;
   transition: background-color var(--dur-enter) var(--ease-out),
@@ -64,7 +64,7 @@
   gap: var(--raum-xs);
   flex: none;
   color: var(--ink);
-  font-size: 15.5px;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: -.02em;
   text-decoration: none;
@@ -77,12 +77,12 @@
   min-height: 38px;
   padding: 0 var(--raum-md);
   border: 1.5px solid var(--accent);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--accent-d);
   font-family: inherit;
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
@@ -99,7 +99,7 @@
 
 .seitenLink {
   padding: var(--raum-xs) var(--raum-sm);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--muted);
   font-size: 14px;
   font-weight: 600;
@@ -127,7 +127,7 @@
      der Skala. Feinwerte dieser Größenordnung bleiben absolut. */
   gap: 2px;
   padding: 3px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--control);
 }
 
@@ -138,7 +138,7 @@
   width: 30px;
   height: 30px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--faint);
   cursor: pointer;
@@ -171,12 +171,12 @@
   min-height: 40px;
   padding: 0 var(--raum-md);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
   color: #fff;
   font-family: inherit;
   font-size: 14px;
-  font-weight: 650;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   transition: background-color var(--dur-hover) var(--ease-out);
@@ -189,7 +189,7 @@
   width: 40px;
   height: 40px;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   cursor: pointer;
 }
@@ -327,10 +327,10 @@
   width: 100%;
   min-height: 48px;
   padding: 0 var(--raum-md);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-family: inherit;
   font-size: 15px;
-  font-weight: 650;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -354,11 +354,11 @@
   min-height: 42px;
   padding: 0 var(--raum-md);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--muted);
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -370,7 +370,7 @@
   margin-top: var(--raum-md);
   padding: var(--raum-md);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius-card);
   background: var(--surface);
   text-align: center;
 }
@@ -378,7 +378,7 @@
 .einstellungTitel {
   margin-bottom: var(--raum-sm);
   color: var(--faint);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -389,7 +389,7 @@
   grid-template-columns: 1fr 1fr;
   gap: var(--raum-2xs);
   padding: var(--raum-2xs);
-  border-radius: 12px;
+  border-radius: var(--radius-card);
   background: var(--control);
 }
 
@@ -397,11 +397,11 @@
 .wahlAktiv {
   min-height: 40px;
   border: 0;
-  border-radius: 9px;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--muted);
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }

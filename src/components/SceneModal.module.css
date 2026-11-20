@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: var(--raum-md);
   background: rgba(0, 0, 0, 0.58);
   -webkit-backdrop-filter: blur(7px);
   backdrop-filter: blur(7px);
@@ -43,8 +43,8 @@
 .head {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: var(--raum-sm);
+  padding: var(--raum-md) var(--raum-lg);
   border-bottom: 1px solid var(--line);
 }
 
@@ -52,7 +52,7 @@
   color: var(--accent-tx);
   font-size: 12px;
   font-weight: 700;
-  padding: 4px 11px;
+  padding: var(--raum-2xs) var(--raum-sm);
   border-radius: var(--radius-pill);
   letter-spacing: 0.01em;
 }
@@ -87,8 +87,8 @@
 .body {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  gap: 20px;
-  padding: 22px;
+  gap: var(--raum-lg);
+  padding: var(--raum-lg);
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -105,16 +105,16 @@
 .left {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--raum-md);
   min-width: 0;
 }
 
 .func {
   align-self: flex-start;
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--ink);
-  padding: 10px 16px;
+  padding: var(--raum-sm) var(--raum-md);
   border: 1.5px solid;
   border-radius: var(--radius-card);
   background: var(--surface-2);
@@ -123,14 +123,14 @@
 .steps {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--raum-sm);
 }
 
 .step {
   display: flex;
-  gap: 12px;
+  gap: var(--raum-sm);
   align-items: flex-start;
-  padding: 12px 14px;
+  padding: var(--raum-sm) var(--raum-md);
   border-radius: var(--radius-card);
   border: 1.5px solid var(--line);
   background: var(--surface);
@@ -164,7 +164,7 @@
   color: var(--ink);
 }
 .stepMath {
-  margin-top: 4px;
+  margin-top: var(--raum-2xs);
   font-size: 16px;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
@@ -172,11 +172,11 @@
 
 .result {
   align-self: flex-start;
-  margin-top: 4px;
+  margin-top: var(--raum-2xs);
   color: var(--accent-tx);
   font-size: 17px;
   font-weight: 800;
-  padding: 10px 18px;
+  padding: var(--raum-sm) var(--raum-md);
   border-radius: var(--radius-card);
   letter-spacing: 0.01em;
   animation: pop 240ms var(--ease-out);
@@ -196,7 +196,7 @@
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
-  padding: 6px;
+  padding: var(--raum-xs);
 }
 
 .axis {
@@ -217,7 +217,7 @@
 }
 
 .gridlabel {
-  font-size: 8.5px;
+  font-size: 10px;
   font-weight: 600;
   fill: var(--muted);
   font-variant-numeric: tabular-nums;
@@ -256,8 +256,8 @@
 
 /* ---------- Untertitel ---------- */
 .caption {
-  margin: 0 22px;
-  padding: 14px 16px;
+  margin: 0 var(--raum-lg);
+  padding: var(--raum-md) var(--raum-md);
   border-radius: var(--radius-card);
   background: var(--surface-2);
   border: 1px solid var(--line);
@@ -269,7 +269,7 @@
 
 /* ---------- Fortschrittsbalken ---------- */
 .progressbar {
-  margin: 12px 22px 0;
+  margin: var(--raum-sm) var(--raum-lg) 0;
   height: 6px;
   border-radius: var(--radius-pill);
   background: var(--line);
@@ -287,8 +287,8 @@
 .foot {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 22px 20px;
+  gap: var(--raum-sm);
+  padding: var(--raum-md) var(--raum-lg) var(--raum-lg);
 }
 
 .ctrl {
@@ -313,10 +313,10 @@
 .rate {
   width: auto;
   min-width: 42px;
-  padding: 0 10px;
+  padding: 0 var(--raum-sm);
   font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 650;
+  font-size: 13px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -337,11 +337,11 @@
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--raum-sm);
 }
 .dots {
   display: flex;
-  gap: 6px;
+  gap: var(--raum-xs);
 }
 .dot {
   width: 8px;
@@ -404,27 +404,27 @@
 @media (max-width: 560px) {
   .backdrop {
     align-items: stretch;
-    padding: 8px;
+    padding: var(--raum-xs);
   }
   .modal {
     max-height: calc(100dvh - 16px);
     border-radius: var(--radius-card);
   }
-  .head { gap: 8px; padding: 12px 14px; }
+  .head { gap: var(--raum-xs); padding: var(--raum-sm) var(--raum-md); }
   .badge { display: none; }
   .htitle { font-size: 16px; }
   .close { width: 44px; height: 44px; }
-  .soundOn { min-height: 44px; padding-inline: 12px; }
-  .body { gap: 14px; padding: 14px; }
+  .soundOn { min-height: 44px; padding-inline: var(--raum-sm); }
+  .body { gap: var(--raum-md); padding: var(--raum-md); }
   .graph { max-height: 220px; }
   .caption {
     min-height: 52px;
-    margin-inline: 14px;
-    padding: 12px 14px;
+    margin-inline: var(--raum-md);
+    padding: var(--raum-sm) var(--raum-md);
     font-size: 14px;
   }
-  .progressbar { margin: 10px 14px 0; }
-  .foot { gap: 9px; padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
+  .progressbar { margin: var(--raum-sm) var(--raum-md) 0; }
+  .foot { gap: var(--raum-xs); padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
   .dots { display: none; }
 }
 
@@ -461,7 +461,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: var(--raum-sm);
   /* Unter der Bewertungsleiste beginnen, nicht dahinter: Die steht oben bei
      Sicherheitsabstand + 24 und ist rund 44 hoch. Vorher stieß die Formel
      direkt daran. */
@@ -471,9 +471,9 @@
 
 .reelFunc {
   flex: none;
-  padding: 7px 14px;
+  padding: var(--raum-xs) var(--raum-md);
   border: 1px solid var(--reel-linie, rgba(255, 255, 255, 0.16));
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--reel-schleier, rgba(255, 255, 255, 0.07));
   font-size: 16px;
   font-weight: 700;
@@ -503,7 +503,7 @@
   max-width: 460px;
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--raum-sm);
   animation: reelRein 260ms var(--ease-out) both;
 }
 .reelStepNum {
@@ -514,14 +514,14 @@
   place-items: center;
   border-radius: 50%;
   color: #fff;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 800;
 }
 .reelStepBody { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .reelStepTitle {
   color: var(--reel-dim, rgba(255, 255, 255, 0.82));
   font-size: 13px;
-  font-weight: 650;
+  font-weight: 600;
 }
 .reelStepMath {
   font-variant-numeric: tabular-nums;
@@ -531,13 +531,13 @@
 }
 
 /* Ohne Graph: Funktion und Formel werden zum Bild. */
-.reelStageText { gap: 20px; }
+.reelStageText { gap: var(--raum-lg); }
 .reelStageText .reelFunc {
   padding: 0;
   border: 0;
   background: none;
   font-size: 22px;
-  font-weight: 750;
+  font-weight: 700;
   line-height: 1.35;
   text-align: center;
 }
@@ -547,11 +547,11 @@
 
 .reelResult {
   flex: none;
-  padding: 8px 14px;
-  border-radius: 999px;
+  padding: var(--raum-xs) var(--raum-md);
+  border-radius: var(--radius-pill);
   color: #fff;
   font-size: 15px;
-  font-weight: 750;
+  font-weight: 700;
   animation: pop 240ms var(--ease-out) both;
 }
 
@@ -564,14 +564,14 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  padding: 18px 16px 10px;
+  padding: var(--raum-md) var(--raum-md) var(--raum-sm);
   padding-right: var(--reel-rail, 16px);
   pointer-events: none;
   background: var(--reel-verlauf, linear-gradient(0deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.36) 52%, transparent));
 }
 .reelTopic {
   color: var(--reel-dim, rgba(255, 255, 255, 0.72));
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -581,13 +581,13 @@
    und ohne Versalien, damit sie nicht wie ein Fehler schreit. */
 .reelOhneTon {
   display: inline-block;
-  margin-left: 8px;
-  padding: 2px 7px;
+  margin-left: var(--raum-xs);
+  padding: 2px var(--raum-xs);
   border: 1px solid var(--reel-linie, rgba(255, 255, 255, 0.16));
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--reel-flaeche, rgba(255, 255, 255, 0.08));
   font-size: 10px;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -595,7 +595,7 @@
 .reelTitle {
   color: var(--reel-ink, #fff);
   font-size: 17px;
-  font-weight: 780;
+  font-weight: 700;
   letter-spacing: -0.015em;
 }
 /* Der gesprochene Satz als Untertitel — zwei Zeilen, der Rest hinter „mehr",
@@ -646,7 +646,7 @@
   width: 100%;
   height: 3px;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--reel-ink, #fff) 26%, transparent);
   transition: height 140ms var(--ease-out);
 }
@@ -683,11 +683,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--raum-sm);
   pointer-events: none;
   font-variant-numeric: tabular-nums;
   font-size: clamp(30px, 9vw, 40px);
-  font-weight: 750;
+  font-weight: 700;
   letter-spacing: -0.02em;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45);
   animation: fadeIn 120ms var(--ease-out) both;
@@ -700,12 +700,12 @@
 .reelMehr {
   align-self: flex-start;
   margin-top: 2px;
-  padding: 4px 0;
+  padding: var(--raum-2xs) 0;
   border: 0;
   background: none;
   color: var(--reel-ink, #fff);
   font: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   pointer-events: auto;
@@ -736,7 +736,7 @@
 .reelPlayIndicator svg {
   width: 68px;
   height: 68px;
-  padding: 20px;
+  padding: var(--raum-lg);
   border-radius: 50%;
   fill: var(--reel-ink, #fff);
   background: var(--reel-flaeche, rgba(0, 0, 0, 0.44));

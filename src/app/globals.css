@@ -219,12 +219,12 @@ h1, h2, h3, h4 {
   min-height: 44px;
   font-family: inherit; font-weight: 600; font-size: 15px;
   letter-spacing: -0.012em;
-  border-radius: var(--radius-control); padding: 13px 24px;
+  border-radius: var(--radius-control); padding: var(--raum-sm) var(--raum-lg);
   transition: transform var(--dur-press) var(--ease-press),
     border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out),
     color var(--dur-hover) var(--ease-out), opacity var(--dur-hover) var(--ease-out);
   display: inline-flex; align-items: center;
-  justify-content: center; gap: 9px;
+  justify-content: center; gap: var(--raum-xs);
 }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn.primary { background: var(--btn-ink); color: var(--btn-ink-tx); }
@@ -235,8 +235,8 @@ h1, h2, h3, h4 {
 .btn.light:active { transform: translateY(0) scale(.98); }
 .btn.dark { background: var(--btn-ink); color: var(--btn-ink-tx); }
 .btn.dark:active { transform: scale(.98); }
-.btn.sm { padding: 10px 17px; font-size: 13.5px; border-radius: var(--radius-control); }
-.btn.big { padding: 16px 30px; font-size: 16px; }
+.btn.sm { padding: var(--raum-sm) var(--raum-md); font-size: 14px; border-radius: var(--radius-control); }
+.btn.big { padding: var(--raum-md) var(--raum-xl); font-size: 16px; }
 .btn:disabled { opacity: .5; cursor: default; transform: none; box-shadow: none; }
 
 /* ---------------------------------------------------------------------------
@@ -247,7 +247,7 @@ h1, h2, h3, h4 {
 /* Meta-Label: klein, ruhig und in natürlicher Schreibweise. */
 .gf-meta {
   font-family: 'Switzer', sans-serif;
-  font-size: 12.5px; font-weight: 650; letter-spacing: 0.01em;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
   color: var(--muted);
 }
 /* Haarlinie als Trenner – trägt die editoriale Ordnung statt Karten-Ränder. */
@@ -260,10 +260,10 @@ h1, h2, h3, h4 {
 }
 /* Text-Link mit Pfeil – die zweite, leise Aktion (statt zweitem Pillen-Button). */
 .gf-arrow {
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: var(--raum-xs);
   min-height: 44px;
   font-family: inherit; font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
-  color: var(--ink); background: none; border: none; cursor: pointer; padding: 4px 0;
+  color: var(--ink); background: none; border: none; cursor: pointer; padding: var(--raum-2xs) 0;
   transition: color var(--dur-hover) var(--ease-out);
 }
 .gf-arrow svg { transition: transform var(--dur-hover) var(--ease-out); }

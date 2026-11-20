@@ -3,7 +3,7 @@
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 0;
   width: min(100%, 820px);
-  margin-top: 46px;
+  margin-top: var(--raum-2xl);
   border-top: 1px solid var(--line);
 }
 
@@ -12,15 +12,15 @@
 .karte {
   display: grid;
   justify-items: center;
-  gap: 12px;
-  padding: 34px 20px;
+  gap: var(--raum-sm);
+  padding: var(--raum-xl) var(--raum-lg);
   border-bottom: 1px solid var(--line);
 }
 .karte + .karte { border-left: 1px solid var(--line); }
 
-.karte h2 { color: var(--ink); font-size: 20px; font-weight: 750; letter-spacing: -.02em; }
+.karte h2 { color: var(--ink); font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
 
-.preis { display: flex; align-items: baseline; gap: 8px; }
+.preis { display: flex; align-items: baseline; gap: var(--raum-xs); }
 .preis strong {
   font-family: 'Cabinet Grotesk', sans-serif;
   color: var(--ink);
@@ -31,17 +31,17 @@
 }
 .preis span { color: var(--faint); font-size: 13px; }
 
-.karte ul { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.karte ul { display: grid; gap: var(--raum-xs); margin: 0; padding: 0; list-style: none; }
 .karte li { color: var(--muted); font-size: 14px; line-height: 1.5; }
 
-.hinweis { max-width: 50ch; margin-top: 24px; color: var(--faint); font-size: 12.5px; line-height: 1.6; }
+.hinweis { max-width: 50ch; margin-top: var(--raum-lg); color: var(--faint); font-size: 13px; line-height: 1.6; }
 
 .textLink {
   border: 0;
   background: none;
   color: var(--accent);
   font: inherit;
-  font-weight: 650;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
 }

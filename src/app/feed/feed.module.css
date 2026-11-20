@@ -153,7 +153,7 @@
   gap: 3px;
   padding: 3px;
   border: 1px solid var(--reel-linie);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--reel-flaeche);
   box-shadow: var(--reel-schatten);
   transform: translateX(-50%);
@@ -163,9 +163,9 @@
    über alle drei Spalten, sonst zerfiele die Pille in ein viertes Feld. */
 .statusHinweis {
   grid-column: 1 / -1;
-  padding: 9px 14px;
+  padding: var(--raum-xs) var(--raum-md);
   color: var(--reel-dim);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 1.3;
   text-align: center;
@@ -174,14 +174,14 @@
 .statusButton {
   min-width: 0;
   min-height: 38px;
-  padding: 0 4px;
+  padding: 0 var(--raum-2xs);
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   color: var(--reel-dim);
   background: transparent;
   font: inherit;
-  font-size: 10.5px;
-  font-weight: 650;
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.15;
   cursor: pointer;
@@ -204,7 +204,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: var(--raum-md);
 }
 
 .railButton {
@@ -212,7 +212,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: var(--raum-2xs);
   padding: 0;
   border: 0;
   background: none;
@@ -235,7 +235,7 @@
 
 .railLabel {
   font-size: 10px;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.1;
   text-align: center;
@@ -264,7 +264,7 @@
 }
 
 @media (max-width: 420px) {
-  .rail { right: 6px; gap: 12px; }
+  .rail { right: 6px; gap: var(--raum-sm); }
   .railIcon { width: 42px; height: 42px; }
 }
 

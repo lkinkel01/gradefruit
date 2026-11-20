@@ -1,6 +1,6 @@
 .liste {
   width: min(100%, 760px);
-  margin-top: 44px;
+  margin-top: var(--raum-2xl);
   border-top: 1px solid var(--line);
   text-align: left;
 }
@@ -10,16 +10,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  padding: 22px 4px;
+  gap: var(--raum-md);
+  padding: var(--raum-lg) var(--raum-2xs);
   color: var(--ink);
   font-size: 16px;
-  font-weight: 650;
+  font-weight: 600;
   cursor: pointer;
   list-style: none;
 }
 .eintrag summary::-webkit-details-marker { display: none; }
-.eintrag p { padding: 0 4px 24px; color: var(--muted); font-size: 14.5px; line-height: 1.65; }
+.eintrag p { padding: 0 var(--raum-2xs) var(--raum-lg); color: var(--muted); font-size: 15px; line-height: 1.65; }
 
 .plus { position: relative; flex: none; width: 14px; height: 14px; }
 .plus::before,

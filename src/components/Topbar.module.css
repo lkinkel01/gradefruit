@@ -5,11 +5,11 @@
   z-index: 20;
   width: calc(100% - 32px);
   height: 52px;
-  margin: 12px 16px 0;
+  margin: var(--raum-sm) var(--raum-md) 0;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 10px 0 16px;
+  gap: var(--raum-sm);
+  padding: 0 var(--raum-sm) 0 var(--raum-md);
   border: 1px solid var(--glass-line);
   border-radius: var(--radius-panel);
   background: var(--glass);
@@ -53,7 +53,7 @@
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--raum-xs);
   overflow: hidden;
   color: var(--muted);
   font-size: 13px;
@@ -72,9 +72,9 @@
   flex-shrink: 0;
   max-width: 100%;
   overflow: hidden;
-  padding: 4px 2px;
+  padding: var(--raum-2xs) 2px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--muted);
   cursor: pointer;
@@ -103,7 +103,7 @@
   transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
 .darkBtn:active { transform: scale(.98); }
-.shield { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
+.shield { display: flex; align-items: center; gap: var(--raum-xs); color: var(--muted); font-size: 12px; }
 .shield svg { width: 13px; height: 13px; }
 .avatarBtn {
   width: 34px;
@@ -121,7 +121,7 @@
 .avatarBtn:active { transform: scale(.98); }
 .loginBtn {
   flex-shrink: 0;
-  padding: 7px 14px;
+  padding: var(--raum-xs) var(--raum-md);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-control);
   background: var(--surface);
@@ -146,15 +146,15 @@
   .shield { display: none; }
 }
 @media (max-width: 560px) {
-  .topbar { top: 8px; width: calc(100% - 20px); height: 60px; margin: 8px 10px 0; padding: 0 8px 0 10px; gap: 8px; }
+  .topbar { top: 8px; width: calc(100% - 20px); height: 60px; margin: var(--raum-xs) var(--raum-sm) 0; padding: 0 var(--raum-xs) 0 var(--raum-sm); gap: var(--raum-xs); }
   .hamb,
   .darkBtn,
   .avatarBtn { width: 44px; height: 44px; }
-  .loginBtn { min-height: 44px; padding-inline: 15px; }
+  .loginBtn { min-height: 44px; padding-inline: var(--raum-md); }
   /* Kontrolliert kürzen statt verstecken: die mittlere Ebene (Themenname)
      bekommt Ellipsis, „Gradefruit" und die aktuelle Seite bleiben lesbar. */
-  .crumbs { gap: 5px; font-size: 12.5px; }
-  .crumbLink { font-size: 12.5px; }
+  .crumbs { gap: var(--raum-2xs); font-size: 13px; }
+  .crumbLink { font-size: 13px; }
   /* Auf kleinen Displays bleibt der sichere Rückweg plus aktueller Ort.
      Die vollständige Hierarchie steht weiterhin in der geöffneten Sidebar. */
   .crumbMid { display: none; }

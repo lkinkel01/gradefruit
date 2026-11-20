@@ -1,15 +1,15 @@
 /* Eine Liste, keine Kachelwand: In einer App tippt man durch Zeilen. */
-.seite { padding: 6px 0 0; }
+.seite { padding: var(--raum-xs) 0 0; }
 
 .liste { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
 
 .zeile {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: var(--raum-md);
   width: 100%;
   min-height: 68px;
-  padding: 14px 20px;
+  padding: var(--raum-md) var(--raum-lg);
   border: 0;
   border-bottom: 1px solid var(--line);
   background: none;
@@ -23,8 +23,8 @@
 .name {
   flex: 1;
   min-width: 0;
-  font-size: 16.5px;
-  font-weight: 650;
+  font-size: 17px;
+  font-weight: 600;
   letter-spacing: -0.015em;
 }
 

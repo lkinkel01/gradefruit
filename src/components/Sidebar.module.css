@@ -18,14 +18,14 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 5px 8px 18px;
+  gap: var(--raum-sm);
+  padding: var(--raum-2xs) var(--raum-xs) var(--raum-md);
   border: none;
   background: transparent;
   color: var(--side-tx);
   cursor: pointer;
   font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.03em;
   text-align: left;
@@ -36,10 +36,10 @@
 .dashLink {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--raum-sm);
   width: calc(100% - 8px);
-  margin: 0 4px 16px;
-  padding: 11px 12px;
+  margin: 0 var(--raum-2xs) var(--raum-md);
+  padding: var(--raum-sm) var(--raum-sm);
   border: 1px solid var(--side-3);
   border-radius: var(--radius-control);
   background: color-mix(in srgb, var(--side-tx) 6%, transparent);
@@ -58,11 +58,11 @@
 
 /* „Meine Kurse": wechselt zwischen den gekauften Kursen. */
 .courseSwap {
-  display: flex; align-items: center; gap: 11px; width: 100%;
-  min-height: 42px; padding: 9px 11px; margin-top: 2px;
+  display: flex; align-items: center; gap: var(--raum-sm); width: 100%;
+  min-height: 42px; padding: var(--raum-xs) var(--raum-sm); margin-top: 2px;
   border: 0; border-radius: var(--radius-control);
   background: transparent; color: var(--side-faint);
-  cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 550;
+  cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 500;
   text-align: left;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
@@ -75,16 +75,16 @@
 .courseChevOpen { transform: rotate(180deg); }
 .courseList {
   display: flex; flex-direction: column; gap: 1px;
-  margin: 1px 0 4px 8px; padding-left: 9px;
+  margin: 1px 0 var(--raum-2xs) var(--raum-xs); padding-left: var(--raum-xs);
   border-left: 1px solid var(--side-3);
 }
 .courseItem {
   position: relative;
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  width: 100%; min-height: 38px; padding: 7px 10px 7px 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--raum-xs);
+  width: 100%; min-height: 38px; padding: var(--raum-xs) var(--raum-sm) var(--raum-xs) var(--raum-sm);
   border: 0; border-radius: var(--radius-control);
   background: transparent; color: var(--side-faint);
-  cursor: pointer; font-family: inherit; font-size: 12.5px; text-align: left;
+  cursor: pointer; font-family: inherit; font-size: 13px; text-align: left;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
 .courseItem:hover { background: color-mix(in srgb, var(--side-tx) 8%, transparent); color: var(--side-tx); }
@@ -103,21 +103,21 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3px;
-  margin: 12px 9px 4px;
+  margin: var(--raum-sm) var(--raum-xs) var(--raum-2xs);
   padding: 3px;
   border: 1px solid color-mix(in srgb, var(--side-tx) 16%, transparent);
   border-radius: var(--radius-control);
 }
 .levelBtn {
   min-height: 38px;
-  padding: 8px 6px;
+  padding: var(--raum-xs) var(--raum-xs);
   border: 0;
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--side-faint);
   cursor: pointer;
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
@@ -127,39 +127,39 @@
 }
 .levelBtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .levelBadge {
-  margin: 12px 9px 4px;
-  padding: 10px 12px;
+  margin: var(--raum-sm) var(--raum-xs) var(--raum-2xs);
+  padding: var(--raum-sm) var(--raum-sm);
   border: 1px solid color-mix(in srgb, var(--side-tx) 16%, transparent);
   border-radius: var(--radius-control);
   color: var(--side-faint);
-  font-size: 12.5px;
-  font-weight: 650;
+  font-size: 13px;
+  font-weight: 600;
   text-align: center;
 }
 
 .navsec {
-  margin: 11px 9px 7px;
+  margin: var(--raum-sm) var(--raum-xs) var(--raum-xs);
   color: var(--side-faint);
-  font-size: 11.5px;
-  font-weight: 650;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: .01em;
 }
-.navsecGap { margin-top: 20px; }
+.navsecGap { margin-top: var(--raum-lg); }
 .snav { display: flex; flex-direction: column; gap: 2px; }
 .snav button {
   position: relative;
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 10px 11px;
+  gap: var(--raum-sm);
+  padding: var(--raum-sm) var(--raum-sm);
   border: 1px solid transparent;
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--side-tx);
   cursor: pointer;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   text-align: left;
   min-height: 44px;
   transition: background-color var(--dur-hover) var(--ease-out), border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
@@ -171,23 +171,23 @@
 /* Sichtbarkeit steuert die Komponente (aktiv, eingeklappt oder nach kurzem
    Hover-Moment) — keine reine CSS-Hover-Öffnung mehr, damit nichts
    versehentlich aufklappt. */
-.flyoutPinned { display: flex; flex-direction: column; gap: 1px; padding: 4px 0 4px 28px; }
+.flyoutPinned { display: flex; flex-direction: column; gap: 1px; padding: var(--raum-2xs) 0 var(--raum-2xs) var(--raum-xl); }
 .flyItem {
   position: relative;
   display: block;
   width: 100%;
-  padding: 7px 10px 7px 30px;
+  padding: var(--raum-xs) var(--raum-sm) var(--raum-xs) var(--raum-xl);
   border: none;
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--side-faint);
   cursor: pointer;
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   text-align: left;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
 }
-.snav .flyItem { padding: 7px 10px 7px 30px; }
+.snav .flyItem { padding: var(--raum-xs) var(--raum-sm) var(--raum-xs) var(--raum-xl); }
 .flyItem:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 /* Aktiver Tab: Punkt-Indikator + Gewicht + Tönung — nicht nur Farbe. */
 .flyOn { color: var(--side-tx); font-weight: 600; background: color-mix(in srgb, var(--accent) 10%, transparent); }
@@ -208,14 +208,14 @@
   display: flex;
   flex-direction: column;
   gap: 1px;
-  margin: 1px 0 4px 8px;
-  padding-left: 9px;
+  margin: 1px 0 var(--raum-2xs) var(--raum-xs);
+  padding-left: var(--raum-xs);
   border-left: 1px solid var(--side-3);
 }
 .sectionItem {
   position: relative;
   min-height: 38px !important;
-  padding: 7px 10px 7px 30px !important;
+  padding: var(--raum-xs) var(--raum-sm) var(--raum-xs) var(--raum-xl) !important;
   color: var(--side-faint) !important;
   font-size: 12px !important;
 }
@@ -245,14 +245,14 @@
 .stLock svg { width: 13px; height: 13px; stroke: var(--side-faint); }
 .spacer { flex: 1; min-height: 22px; }
 .unlockCard {
-  margin: 14px 4px 0;
-  padding: 16px 5px 4px;
+  margin: var(--raum-md) var(--raum-2xs) 0;
+  padding: var(--raum-md) var(--raum-2xs) var(--raum-2xs);
   border-top: 1px solid var(--side-3);
   /* Zentriert wie alles andere — links angeschlagener Fließtext unter einer
      zentrierten Seite wirkt wie ein Rest, den jemand vergessen hat. */
   text-align: center;
 }
-.unlockCard p { margin-bottom: 11px; color: var(--side-tx); font-size: 12.5px; line-height: 1.5; }
+.unlockCard p { margin-bottom: var(--raum-sm); color: var(--side-tx); font-size: 13px; line-height: 1.5; }
 /* Der Knopf hängt an den Leistenfarben, nicht an den Seitenfarben: --side-tx
    ist immer die Schriftfarbe der Leiste, --side ihr Grund. Dadurch bleibt er
    in jedem Modus sichtbar — auch jetzt, wo die Leiste im hellen Modus hell
@@ -310,7 +310,7 @@
 .kopfZeile {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
+  gap: var(--raum-xs);
 }
 .kopfZeile .brand { padding-right: 0; }
 

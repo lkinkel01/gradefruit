@@ -1,6 +1,6 @@
 .themen {
   width: min(100%, 760px);
-  margin-top: 40px;
+  margin-top: var(--raum-2xl);
   padding: 0;
   list-style: none;
   border-top: 1px solid var(--line);
@@ -8,12 +8,12 @@
 }
 .themen li {
   display: grid;
-  gap: 6px;
-  padding: 24px 4px;
+  gap: var(--raum-xs);
+  padding: var(--raum-lg) var(--raum-2xs);
   border-bottom: 1px solid var(--line);
 }
 .themen strong { color: var(--ink); font-size: 17px; font-weight: 700; }
-.themen span { color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+.themen span { color: var(--muted); font-size: 15px; line-height: 1.6; }
 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {

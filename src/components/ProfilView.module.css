@@ -6,10 +6,10 @@
   padding: var(--page-top) var(--page-gutter) var(--page-bottom);
 }
 
-.feld { margin-bottom: 18px; }
+.feld { margin-bottom: var(--raum-md); }
 .feld label {
   display: block;
-  margin-bottom: 7px;
+  margin-bottom: var(--raum-xs);
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
@@ -17,7 +17,7 @@
 .feld input {
   width: 100%;
   min-height: 46px;
-  padding: 12px 14px;
+  padding: var(--raum-sm) var(--raum-md);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-control);
   outline: none;
@@ -29,9 +29,9 @@
 .feld input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .gesperrt input { opacity: .55; cursor: not-allowed; }
 
-.fehler { margin: 0 0 14px; color: var(--danger); font-size: 13.5px; line-height: 1.5; }
+.fehler { margin: 0 0 var(--raum-md); color: var(--danger); font-size: 14px; line-height: 1.5; }
 
-.knoepfe { display: flex; gap: 10px; margin-top: 6px; }
+.knoepfe { display: flex; gap: var(--raum-sm); margin-top: var(--raum-xs); }
 .knoepfe :global(.btn) { flex: 1; justify-content: center; }
 
 @media (max-width: 620px) {

@@ -5,9 +5,9 @@
   z-index: 30;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--raum-2xs);
   min-height: 50px;
-  padding: 8px 16px;
+  padding: var(--raum-xs) var(--raum-md);
   background: var(--canvas);
   border-bottom: 1px solid var(--line);
 }
@@ -32,7 +32,7 @@
   overflow: hidden;
   color: var(--ink);
   font-size: 17px;
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -0.015em;
   text-overflow: ellipsis;
   white-space: nowrap;

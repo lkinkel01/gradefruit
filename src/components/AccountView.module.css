@@ -1,12 +1,12 @@
 .page { max-width: var(--page-max-narrow); margin: 0 auto; padding: var(--page-top) var(--page-gutter) var(--page-bottom); }
-.ph1 { margin-bottom: 26px; font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -.035em; }
+.ph1 { margin-bottom: var(--raum-lg); font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -.035em; }
 .card {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 20px;
-  padding: 4px 0 0;
+  gap: var(--raum-md);
+  margin-bottom: var(--raum-lg);
+  padding: var(--raum-2xs) 0 0;
 }
 .avatar {
   width: 52px;
@@ -22,24 +22,24 @@
   font-weight: 700;
 }
 .meta { min-width: 0; }
-.metaName { color: var(--ink); font-size: 16px; font-weight: 650; }
+.metaName { color: var(--ink); font-size: 16px; font-weight: 600; }
 .metaEmail { margin-top: 2px; overflow: hidden; color: var(--muted); font-size: 13px; text-overflow: ellipsis; }
 .section {
-  margin-bottom: 28px;
-  padding: 0 0 28px;
+  margin-bottom: var(--raum-xl);
+  padding: 0 0 var(--raum-xl);
   border-bottom: 1px solid var(--line-strong);
 }
-.sectionTitle { margin-bottom: 16px; color: var(--muted); font-size: 12.5px; font-weight: 650; letter-spacing: .01em; }
+.sectionTitle { margin-bottom: var(--raum-md); color: var(--muted); font-size: 13px; font-weight: 600; letter-spacing: .01em; }
 /* Überschrift und Schalter in einer Zeile — für Abschnitte, die aus genau
    einem Schalter bestehen (Dark Mode). */
-.titleRow { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+.titleRow { display: flex; align-items: center; justify-content: space-between; gap: var(--raum-md); }
 .titleRow .sectionTitle { margin-bottom: 0; }
-.field { margin-bottom: 13px; }
-.field label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.field { margin-bottom: var(--raum-sm); }
+.field label { display: block; margin-bottom: var(--raum-xs); color: var(--muted); font-size: 13px; font-weight: 600; }
 .field input {
   width: 100%;
   min-height: 44px;
-  padding: 11px 13px;
+  padding: var(--raum-sm) var(--raum-sm);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-control);
   outline: none;
@@ -50,20 +50,20 @@
 }
 .field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .field input:disabled { opacity: .58; cursor: not-allowed; }
-.infoRow { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.infoRow { display: flex; align-items: center; justify-content: space-between; gap: var(--raum-md); padding: var(--raum-sm) 0; border-bottom: 1px solid var(--line); font-size: 14px; }
 .infoRow:last-child { border-bottom: none; }
 .infoRow span:first-child { color: var(--muted); }
-.tag { color: var(--ink); font-size: 12.5px; font-weight: 600; }
+.tag { color: var(--ink); font-size: 13px; font-weight: 600; }
 
 /* Hinweis unter einem Feld — trägt im Fehlerfall denselben Platz, damit die
    Zeile beim Fehler nicht wegspringt. */
-.feldHinweis { display: block; margin-top: 6px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
+.feldHinweis { display: block; margin-top: var(--raum-xs); color: var(--muted); font-size: 13px; line-height: 1.45; }
 .feldFehler { color: var(--danger); }
 
 /* Passwort-Bedingungen, gleiches Bild wie in der Registrierung. */
-.regeln { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.regeln { margin: var(--raum-xs) 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
 .regeln li {
-  display: flex; align-items: baseline; gap: 7px;
+  display: flex; align-items: baseline; gap: var(--raum-xs);
   color: var(--faint); font-size: 12px; line-height: 1.45;
   transition: color var(--dur-hover) var(--ease-out);
 }
@@ -75,9 +75,9 @@
 .linkRow {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--raum-sm);
   width: 100%;
-  padding: 13px 0;
+  padding: var(--raum-sm) 0;
   border: 0;
   border-bottom: 1px solid var(--line);
   background: none;
@@ -94,22 +94,22 @@
 .linkLabel { flex: 1; }
 .linkRow:hover { color: var(--accent-d); }
 .linkRow:hover svg { color: var(--accent-d); }
-.planRow { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 4px 0 18px; }
-.planRow + .planRow { padding-top: 18px; border-top: 1px solid var(--line); }
-.planRow b { display: block; margin-bottom: 4px; font-size: 15px; }
+.planRow { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--raum-lg); padding: var(--raum-2xs) 0 var(--raum-md); }
+.planRow + .planRow { padding-top: var(--raum-md); border-top: 1px solid var(--line); }
+.planRow b { display: block; margin-bottom: var(--raum-2xs); font-size: 15px; }
 .planRow p { max-width: 54ch; color: var(--muted); font-size: 13px; line-height: 1.55; }
-.danger { display: flex; justify-content: flex-end; margin-top: 4px; }
+.danger { display: flex; justify-content: flex-end; margin-top: var(--raum-2xs); }
 .signoutBtn {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 13px;
+  gap: var(--raum-xs);
+  padding: var(--raum-xs) var(--raum-sm);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   min-height: 44px;
   transition: border-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
@@ -139,24 +139,24 @@
   font-size: 11px; line-height: 1;
 }
 .avatarBadge svg { width: 13px; height: 13px; }
-.bildFehler { margin-top: 4px; color: var(--danger); font-size: 12.5px; }
+.bildFehler { margin-top: var(--raum-2xs); color: var(--danger); font-size: 13px; }
 /* Profil bearbeiten und Abmelden untereinander, beide über die volle Breite.
    Auf dem Handy ist ein Knopf am Rand schwerer zu treffen als eine Zeile. */
 .kopfKnoepfe {
-  display: flex; flex-direction: column; gap: 10px;
-  margin-bottom: 28px; padding-bottom: 24px;
+  display: flex; flex-direction: column; gap: var(--raum-sm);
+  margin-bottom: var(--raum-xl); padding-bottom: var(--raum-lg);
   border-bottom: 1px solid var(--line-strong);
 }
 .kopfKnoepfe :global(.btn) { width: 100%; justify-content: center; }
-.keinKurs { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+.keinKurs { margin: var(--raum-xs) 0 0; color: var(--muted); font-size: 14px; }
 
 .signoutTop {
   flex-shrink: 0;
-  display: inline-flex; align-items: center; gap: 8px;
-  min-height: 44px; padding: 10px 16px;
+  display: inline-flex; align-items: center; gap: var(--raum-xs);
+  min-height: 44px; padding: var(--raum-sm) var(--raum-md);
   border: 1px solid var(--line-strong); border-radius: var(--radius-control);
   background: var(--surface); color: var(--ink);
-  cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 600;
+  cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600;
   transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
 }
 .signoutTop { width: 100%; justify-content: center; }
@@ -164,17 +164,17 @@
 .signoutTop:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* Kursliste: nur der Name; ohne Zugang grau mit Hinweis */
-.courseList { display: flex; flex-direction: column; margin-top: 6px; }
+.courseList { display: flex; flex-direction: column; margin-top: var(--raum-xs); }
 .courseRow {
-  display: flex; align-items: center; gap: 12px;
-  padding: 15px 0; border-top: 1px solid var(--line);
+  display: flex; align-items: center; gap: var(--raum-sm);
+  padding: var(--raum-md) 0; border-top: 1px solid var(--line);
 }
 .courseName { flex: 1; min-width: 0; color: var(--ink); font-size: 15px; font-weight: 600; }
 .courseOff .courseName { color: var(--faint); font-weight: 500; }
 .courseTag {
-  flex-shrink: 0; padding: 3px 10px; border-radius: var(--radius-pill);
+  flex-shrink: 0; padding: 3px var(--raum-sm); border-radius: var(--radius-pill);
   background: var(--surface-2); color: var(--faint);
-  font-size: 11.5px; font-weight: 650;
+  font-size: 12px; font-weight: 600;
 }
 
 @media (max-width: 560px) {
@@ -193,21 +193,21 @@
 .kursWahl:active { transform: scale(.99); }
 .kursWahl:not(.kursWahlAn) .courseName { color: var(--muted); font-weight: 500; }
 .kursHaken {
-  flex-shrink: 0; padding: 3px 10px; border-radius: var(--radius-pill);
+  flex-shrink: 0; padding: 3px var(--raum-sm); border-radius: var(--radius-pill);
   background: var(--accent-soft); color: var(--accent-d);
-  font-size: 11.5px; font-weight: 650;
+  font-size: 12px; font-weight: 600;
 }
 
 /* Konto löschen */
-.dangerText { max-width: 58ch; margin-bottom: 14px; color: var(--muted); font-size: 14px; line-height: 1.6; }
-.dangerError { margin: 10px 0 0; color: var(--danger); font-size: 13.5px; line-height: 1.5; }
-.dangerActions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.dangerText { max-width: 58ch; margin-bottom: var(--raum-md); color: var(--muted); font-size: 14px; line-height: 1.6; }
+.dangerError { margin: var(--raum-sm) 0 0; color: var(--danger); font-size: 14px; line-height: 1.5; }
+.dangerActions { display: flex; align-items: center; gap: var(--raum-sm); flex-wrap: wrap; margin-top: var(--raum-md); }
 .dangerBtn {
   display: inline-flex; align-items: center; justify-content: center;
-  min-height: 44px; padding: 11px 18px;
+  min-height: 44px; padding: var(--raum-sm) var(--raum-md);
   border: 1px solid var(--danger); border-radius: var(--radius-control);
   background: transparent; color: var(--danger);
-  cursor: pointer; font-family: inherit; font-size: 13.5px; font-weight: 650;
+  cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 600;
   transition: background-color var(--dur-hover) var(--ease-out);
 }
 .dangerBtn:hover:not(:disabled) { background: var(--danger-soft); }
@@ -223,7 +223,7 @@
   flex-shrink: 0;
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--line-strong);
   cursor: pointer;
   transition: background-color var(--dur-hover) var(--ease-out);

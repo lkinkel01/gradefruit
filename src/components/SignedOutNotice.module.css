@@ -9,16 +9,16 @@
   display: flex;
   justify-content: center;
   /* Sitzt unter der Navigationsleiste, damit sie nichts verdeckt. */
-  padding: 84px 16px 14px;
+  padding: var(--raum-4xl) var(--raum-md) var(--raum-md);
   pointer-events: none;
 }
 
 .card {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: var(--raum-md);
   width: min(560px, 100%);
-  padding: 14px 16px;
+  padding: var(--raum-md) var(--raum-md);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-card);
   background: var(--surface);
@@ -27,10 +27,10 @@
 }
 
 .text { min-width: 0; flex: 1; }
-.title { display: block; color: var(--ink); font-size: 14.5px; font-weight: 650; }
-.body { margin-top: 3px; color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+.title { display: block; color: var(--ink); font-size: 15px; font-weight: 600; }
+.body { margin-top: 3px; color: var(--muted); font-size: 14px; line-height: 1.5; }
 
-.actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.actions { display: flex; align-items: center; gap: var(--raum-xs); flex-shrink: 0; }
 
 .dismiss {
   display: inline-flex;
@@ -49,7 +49,7 @@
 .dismiss:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @media (max-width: 620px) {
-  .card { flex-direction: column; align-items: stretch; gap: 12px; }
+  .card { flex-direction: column; align-items: stretch; gap: var(--raum-sm); }
   .actions { justify-content: space-between; }
   .actions :global(.btn) { flex: 1; }
 }

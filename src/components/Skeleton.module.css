@@ -3,7 +3,7 @@
 .zeile {
   display: block;
   height: 14px;
-  border-radius: 7px;
+  border-radius: var(--radius-control);
   background: var(--surface-2);
   animation: pulsieren 1.4s var(--ease-out) infinite;
 }
@@ -13,8 +13,8 @@
 .reihe {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 18px 20px;
+  gap: var(--raum-md);
+  padding: var(--raum-md) var(--raum-lg);
   border-bottom: 1px solid var(--line);
 }
 
@@ -29,7 +29,7 @@
 
 .text { flex: 1; min-width: 0; }
 
-.block { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
+.block { display: flex; flex-direction: column; gap: var(--raum-sm); padding: var(--raum-lg); }
 
 @keyframes pulsieren {
   0%, 100% { opacity: 1; }

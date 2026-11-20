@@ -40,7 +40,7 @@
 }
 
 .fussLinks { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--raum-md); }
-.fussLinks a { color: var(--muted); font-size: 13.5px; text-decoration: none; }
+.fussLinks a { color: var(--muted); font-size: 14px; text-decoration: none; }
 .fussLinks a:hover { color: var(--ink); text-decoration: underline; }
 
-.fuss p { color: var(--faint); font-size: 12.5px; }
+.fuss p { color: var(--faint); font-size: 13px; }

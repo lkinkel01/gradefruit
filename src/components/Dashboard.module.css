@@ -7,25 +7,25 @@
 .page { max-width: var(--page-max-wide); margin: 0 auto; padding: var(--page-top) var(--page-gutter) var(--page-bottom); }
 
 /* Kopf — ruhig und kompakt: nur Begrüßung + Kurswahl */
-.head { display: flex; justify-content: center; margin-bottom: 10px; text-align: center; }
+.head { display: flex; justify-content: center; margin-bottom: var(--raum-sm); text-align: center; }
 .greet {
   font-family: 'Cabinet Grotesk', sans-serif;  font-weight: 800; font-size: clamp(30px, 4.2vw, 42px);
   letter-spacing: -0.035em; line-height: 1.05; color: var(--ink);
 }
 
 /* Kurswahl */
-.courseSeg { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line-strong); border-radius: var(--radius-control); background: var(--surface-2); flex-shrink: 0; }
+.courseSeg { display: inline-flex; gap: var(--raum-2xs); padding: var(--raum-2xs); border: 1px solid var(--line-strong); border-radius: var(--radius-control); background: var(--surface-2); flex-shrink: 0; }
 .courseBtn {
   border: none; background: transparent; cursor: pointer; font-family: inherit;
-  font-size: 13px; font-weight: 600; color: var(--muted); padding: 8px 15px; border-radius: var(--radius-control);
+  font-size: 13px; font-weight: 600; color: var(--muted); padding: var(--raum-xs) var(--raum-md); border-radius: var(--radius-control);
   transition: color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
   min-height: 44px;
 }
 .courseOn { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-control); }
 .courseBadge {
-  font-family: 'Switzer', sans-serif; font-size: 12.5px; font-weight: 650; letter-spacing: 0.01em;
+  font-family: 'Switzer', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
   color: var(--muted); flex-shrink: 0;
-  border: 1px solid var(--line-strong); padding: 9px 14px; border-radius: var(--radius-control);
+  border: 1px solid var(--line-strong); padding: var(--raum-xs) var(--raum-md); border-radius: var(--radius-control);
 }
 
 /* Übersichts-Kachel: links Countdown, rechts Lernstand */
@@ -40,7 +40,7 @@
 }
 .cdCol {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 3px; padding: 22px 20px; text-align: center;
+  gap: 3px; padding: var(--raum-lg) var(--raum-lg); text-align: center;
   border-right: 1px solid var(--line);
 }
 .cdIcon { display: inline-flex; margin-bottom: 3px; color: var(--accent); }
@@ -48,48 +48,48 @@
   font-family: 'Cabinet Grotesk', sans-serif;  font-weight: 800; font-size: clamp(26px, 3.2vw, 33px); letter-spacing: -0.025em;
   color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1.1;
 }
-.cdLabel { font-size: 13.5px; font-weight: 500; color: var(--muted); }
-.cdDate { margin-top: 4px; font-size: 12.5px; color: var(--faint); }
+.cdLabel { font-size: 14px; font-weight: 500; color: var(--muted); }
+.cdDate { margin-top: var(--raum-2xs); font-size: 13px; color: var(--faint); }
 
 /* Fortschritt und Lernstand — eine zusammengehörige Einheit */
-.statusSec { padding: 16px 0 6px; }
+.statusSec { padding: var(--raum-md) 0 var(--raum-xs); }
 .progressCol {
   position: relative;
-  display: flex; align-items: center; justify-content: center; gap: 18px;
+  display: flex; align-items: center; justify-content: center; gap: var(--raum-md);
   text-align: center; cursor: pointer; font-family: inherit;
-  padding: 22px 46px 22px 26px; border: 0;
+  padding: var(--raum-lg) var(--raum-2xl) var(--raum-lg) var(--raum-lg); border: 0;
   background: transparent; color: var(--ink);
   transition: background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
 }
 .progressCol:active { transform: scale(.995); }
 .progressCol:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .progressBody { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 3px; }
-.progressTitle { font-size: 13.5px; font-weight: 650; color: var(--muted); letter-spacing: 0.005em; }
+.progressTitle { font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: 0.005em; }
 .progressPct { display: flex; align-items: baseline; }
 .pctNum {
   font-family: 'Cabinet Grotesk', sans-serif;  font-weight: 800; font-size: clamp(27px, 3.5vw, 33px); letter-spacing: -0.025em;
   color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1.1;
 }
 .pctUnit { font-size: 17px; font-weight: 700; color: var(--muted); margin-left: 3px; }
-.progressSub { font-size: 13.5px; color: var(--muted); }
+.progressSub { font-size: 14px; color: var(--muted); }
 .progressGo {
   /* Absolut am rechten Rand, damit Ring und Text exakt mittig bleiben. */
   position: absolute; top: 50%; right: 18px; transform: translateY(-50%);
   flex-shrink: 0; color: var(--faint);
   transition: transform var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
 }
-.actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.actions { display: flex; justify-content: center; gap: var(--raum-sm); flex-wrap: wrap; margin-top: var(--raum-lg); }
 
 /* Sektions-Label */
-.secLabel { display: block; margin: 34px 0 4px; }
+.secLabel { display: block; margin: var(--raum-xl) 0 var(--raum-2xs); }
 
 /* Die drei Lernstufen — kompakte, klickbare Reihe unter dem Fortschritt */
-.statRow { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 14px; border-top: 1px solid var(--line); }
+.statRow { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: var(--raum-md); border-top: 1px solid var(--line); }
 .stat {
   position: relative; text-align: center; cursor: pointer; font-family: inherit;
   background: none; border: none; border-left: 1px solid var(--line);
   display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 14px 18px;
+  padding: var(--raum-md) var(--raum-md);
   min-height: 64px;
   transition: background-color var(--dur-hover) var(--ease-out);
 }
@@ -99,7 +99,7 @@
   font-family: 'Cabinet Grotesk', sans-serif;  font-weight: 800; font-size: 22px; letter-spacing: -0.02em;
   color: var(--ink); font-variant-numeric: tabular-nums;
 }
-.statLabel { font-family: 'Switzer', sans-serif; font-size: 12.5px; font-weight: 600; letter-spacing: 0.005em; color: var(--muted); }
+.statLabel { font-family: 'Switzer', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.005em; color: var(--muted); }
 .statGo {
   position: absolute; top: 16px; right: 12px; color: var(--faint);
   opacity: 0; transform: translateX(-4px);
@@ -109,17 +109,17 @@
 /* Themen — Liste */
 .list { display: flex; flex-direction: column; }
 .topicRow {
-  display: flex; align-items: center; gap: 16px; width: 100%;
+  display: flex; align-items: center; gap: var(--raum-md); width: 100%;
   background: none; border: none; border-top: 1px solid var(--line-strong);
   cursor: pointer; font-family: inherit; text-align: left;
-  padding: 18px 6px;
+  padding: var(--raum-md) var(--raum-xs);
   min-height: 76px;
   transition: background-color var(--dur-hover) var(--ease-out);
 }
 .list > *:last-child { border-bottom: 1px solid var(--line-strong); }
 .topicRow:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .topicName {
-  font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 19px;
+  font-family: 'Cabinet Grotesk', sans-serif; font-weight: 700; font-size: 20px;
   letter-spacing: -0.02em; color: var(--ink); flex: 1; min-width: 0;
 }
 .topicCount { font-size: 13px; color: var(--faint); font-variant-numeric: tabular-nums; flex-shrink: 0; }
@@ -148,8 +148,8 @@
    Haarlinien statt Ränder, und die Tage bis zur Prüfung als übergroße Zahl —
    das Motiv der Marke, nicht eine Zeile unter vielen.
    =========================================================================== */
-.app .head { justify-content: center; margin-bottom: 18px; text-align: center; }
-.app .greet { font-size: 25px; letter-spacing: -.03em; }
+.app .head { justify-content: center; margin-bottom: var(--raum-md); text-align: center; }
+.app .greet { font-size: 24px; letter-spacing: -.03em; }
 
 .app .statusSec { padding: 0; }
 .app .overviewCard {
@@ -162,7 +162,7 @@
 
 .app .cdCol {
   flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: center;
-  gap: 0 12px; padding: 0 0 20px; text-align: center;
+  gap: 0 var(--raum-sm); padding: 0 0 var(--raum-lg); text-align: center;
   border-right: 0; border-bottom: 1px solid var(--line-strong);
 }
 .app .cdIcon { display: none; }
@@ -175,14 +175,14 @@
 /* Datum mit Kalendersymbol, mittig. Das Symbol macht aus einer Zeile Text
    eine Angabe, die man als Termin liest. */
 .app .cdDate {
-  width: 100%; margin-top: 7px; font-size: 12.5px;
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; margin-top: var(--raum-xs); font-size: 13px;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--raum-xs);
 }
 .app .cdDate svg { width: 14px; height: 14px; color: var(--accent); flex-shrink: 0; }
 
 .app .progressCol {
-  justify-content: center; text-align: center; gap: 16px;
-  padding: 18px 34px 18px 0; border-bottom: 1px solid var(--line);
+  justify-content: center; text-align: center; gap: var(--raum-md);
+  padding: var(--raum-md) var(--raum-xl) var(--raum-md) 0; border-bottom: 1px solid var(--line);
 }
 .app .progressBody { align-items: center; }
 .app .progressGo { display: block; right: 0; }
@@ -192,43 +192,43 @@
    und soll auf 375 px in einer Zeile stehen. Bricht sie um, stehen die drei
    Zahlen nicht mehr auf einer Linie. Die Mindesthöhe fängt den Umbruch auf
    noch schmaleren Geräten ab, ohne dass die Reihe verspringt. */
-.app .stat { align-items: center; text-align: center; padding: 16px 6px; min-height: 76px; }
-.app .statNum { font-size: 26px; }
+.app .stat { align-items: center; text-align: center; padding: var(--raum-md) var(--raum-xs); min-height: 76px; }
+.app .statNum { font-size: 28px; }
 .app .statLabel { font-size: 11px; }
 
-.app .secLabel { margin: 30px 0 2px; }
+.app .secLabel { margin: var(--raum-xl) 0 2px; }
 
 @media (max-width: 700px) {
-  .head { flex-direction: column; align-items: center; gap: 14px; }
+  .head { flex-direction: column; align-items: center; gap: var(--raum-md); }
 }
 @media (max-width: 560px) {
   .page { --page-top: 20px; --page-bottom: 90px; }
   /* Mobil deutlich kompakter: Begrüßung kleiner, Kachel flacher, damit die
      Themenliste ohne langes Scrollen sichtbar wird. */
-  .greet { font-size: 26px; }
-  .head { margin-bottom: 14px; }
-  .statusSec { padding: 8px 0 4px; }
-  .cdCol { flex-direction: row; align-items: baseline; justify-content: center; gap: 8px; padding: 14px 16px; flex-wrap: wrap; }
+  .greet { font-size: 28px; }
+  .head { margin-bottom: var(--raum-md); }
+  .statusSec { padding: var(--raum-xs) 0 var(--raum-2xs); }
+  .cdCol { flex-direction: row; align-items: baseline; justify-content: center; gap: var(--raum-xs); padding: var(--raum-md) var(--raum-md); flex-wrap: wrap; }
   .cdIcon { display: none; }
   .cdDays { font-size: 24px; }
   .cdLabel { font-size: 13px; }
   .cdDate { width: 100%; margin-top: 2px; }
-  .progressCol { padding: 16px; }
-  .pctNum { font-size: 26px; }
-  .statRow { grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
-  .stat { padding: 12px 4px; min-height: 56px; }
-  .statNum { font-size: 19px; }
+  .progressCol { padding: var(--raum-md); }
+  .pctNum { font-size: 28px; }
+  .statRow { grid-template-columns: repeat(3, 1fr); margin-top: var(--raum-sm); }
+  .stat { padding: var(--raum-sm) var(--raum-2xs); min-height: 56px; }
+  .statNum { font-size: 20px; }
   .statLabel { font-size: 11px; }
   .statGo { display: none; }
-  .secLabel { margin: 22px 0 2px; }
-  .topicRow { gap: 12px; padding: 14px 4px; min-height: 62px; }
+  .secLabel { margin: var(--raum-lg) 0 2px; }
+  .topicRow { gap: var(--raum-sm); padding: var(--raum-md) var(--raum-2xs); min-height: 62px; }
   .topicName { font-size: 17px; }
   .overviewCard { grid-template-columns: 1fr; }
   .cdCol { border-right: 0; border-bottom: 1px solid var(--line); }
-  .progressCol { flex-direction: row; gap: 14px; padding: 16px; }
+  .progressCol { flex-direction: row; gap: var(--raum-md); padding: var(--raum-md); }
   .progressGo { display: none; }
   /* Der Anteil bleibt auch auf dem Handy stehen: Er ist die einzige Angabe
      dazu, wie weit man in einem Thema ist — vorher war das „x von y", das
      wegen seiner Länge weichen musste. Eine Prozentzahl passt immer. */
-  .topicCount { font-size: 12.5px; }
+  .topicCount { font-size: 13px; }
 }

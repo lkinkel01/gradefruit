@@ -1,5 +1,5 @@
 .page { max-width: var(--page-max); margin: 0 auto; padding: var(--page-top) var(--page-gutter) var(--page-bottom); }
-.ph1 { margin-bottom: 8px; text-align: center; font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -0.035em; }
+.ph1 { margin-bottom: var(--raum-xs); text-align: center; font-size: clamp(29px, 4vw, 34px); font-weight: 800; letter-spacing: -0.035em; }
 .blurb { max-width: 58ch; margin: 0 auto 26px; text-align: center; color: var(--muted); font-size: 15px; line-height: 1.6; }
 
 /* Zwei Spalten nebeneinander, in jeder die Einträge untereinander: links die
@@ -9,9 +9,9 @@
 .filters {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4px;
-  margin-bottom: 26px;
-  padding: 5px;
+  gap: var(--raum-2xs);
+  margin-bottom: var(--raum-lg);
+  padding: var(--raum-2xs);
   border-radius: var(--radius-control);
   background: var(--surface-2);
 }
@@ -23,22 +23,22 @@
 }
 /* Feine Trennlinie zwischen den beiden Spalten — ohne sie sieht es aus wie
    eine einzige, unsauber gesetzte Liste. */
-.filterCol + .filterCol { border-left: 1px solid var(--line); padding-left: 5px; }
+.filterCol + .filterCol { border-left: 1px solid var(--line); padding-left: var(--raum-2xs); }
 
 .seg,
 .chip {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--raum-xs);
   min-height: 40px;
-  padding: 8px 10px;
+  padding: var(--raum-xs) var(--raum-sm);
   border: 0;
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--muted);
   cursor: pointer;
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.25;
   text-align: left;
@@ -49,7 +49,7 @@
   background: var(--surface);
   color: var(--ink);
   box-shadow: var(--shadow-control);
-  font-weight: 650;
+  font-weight: 600;
 }
 /* Punkt = Kontrollkästchen: leerer Ring, gefüllt sobald gewählt. Vorher war er
    immer gefüllt und trug damit keine Information — man musste an der
@@ -76,8 +76,8 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 17px 6px;
+  gap: var(--raum-md);
+  padding: var(--raum-md) var(--raum-xs);
   border: none;
   border-bottom: 1px solid var(--line-strong);
   background: transparent;
@@ -87,9 +87,9 @@
 }
 .itemDot { width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; }
 .itemBody { flex: 1; min-width: 0; }
-.itemTag { display: block; color: var(--ink); font-size: 14px; font-weight: 650; letter-spacing: -.01em; }
-.itemQ { display: -webkit-box; overflow: hidden; margin-top: 2px; color: var(--faint); font-size: 12.5px; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
-.status { flex-shrink: 0; padding: 4px 9px; border-radius: var(--radius-pill); font-size: 11px; font-weight: 650; }
+.itemTag { display: block; color: var(--ink); font-size: 14px; font-weight: 600; letter-spacing: -.01em; }
+.itemQ { display: -webkit-box; overflow: hidden; margin-top: 2px; color: var(--faint); font-size: 13px; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+.status { flex-shrink: 0; padding: var(--raum-2xs) var(--raum-xs); border-radius: var(--radius-pill); font-size: 11px; font-weight: 600; }
 .st_verstanden { background: var(--green-soft); color: var(--success); }
 .st_wiederholen { background: var(--warn-soft); color: var(--warn); }
 .st_unklar { background: var(--danger-soft); color: var(--danger); }
@@ -98,14 +98,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 50px 24px;
+  gap: var(--raum-xs);
+  padding: var(--raum-2xl) var(--raum-lg);
   border-top: 1px solid var(--line-strong);
   border-bottom: 1px solid var(--line-strong);
   text-align: center;
 }
-.emptyTitle { margin-top: 10px; font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
-.emptyText { max-width: 44ch; margin-bottom: 14px; color: var(--muted); font-size: 13.5px; line-height: 1.6; }
+.emptyTitle { margin-top: var(--raum-sm); font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+.emptyText { max-width: 44ch; margin-bottom: var(--raum-md); color: var(--muted); font-size: 14px; line-height: 1.6; }
 
 @media (hover: hover) and (pointer: fine) {
   .chip:hover { border-color: var(--faint); }
@@ -118,9 +118,9 @@
   .item {
     display: grid;
     grid-template-columns: 8px minmax(0, 1fr) auto;
-    row-gap: 8px;
+    row-gap: var(--raum-xs);
   }
-  .itemDot { grid-column: 1; grid-row: 1; margin-top: 6px; }
+  .itemDot { grid-column: 1; grid-row: 1; margin-top: var(--raum-xs); }
   .itemBody { grid-column: 2; grid-row: 1; }
   .status { grid-column: 2; grid-row: 2; justify-self: start; }
   .itemGo { grid-column: 3; grid-row: 1 / 3; align-self: center; }

@@ -194,6 +194,19 @@ Beide von Fontshare, kommerziell frei nutzbar, keine Kosten.
    Schriften fehlen einfach. Außerdem: **eine Adresse je Familie** — bei
    einer kombinierten liefert Fontshare nur die erste aus.
 
+### Schriftstärken
+
+**Nur geladene Schnitte.** Alles andere lässt der Browser künstlich fetter
+aussehen, und genau das sieht billig aus.
+
+| Schrift | Erlaubt |
+|---|---|
+| Switzer | 400, 500, 600, 700 |
+| Cabinet Grotesk | 700, 800, 900 |
+
+Werte wie 550, 620, 650, 680, 750, 760 oder 780 sind verboten. Es gab sie an
+52 Stellen; alle liegen jetzt auf echten Schnitten.
+
 ### Größenskala
 
 | Rolle | Größe | Schnitt | Zeilenhöhe |
@@ -204,6 +217,14 @@ Beide von Fontshare, kommerziell frei nutzbar, keine Kosten.
 | Fließtext | 15,5px | 400 | 1,6 |
 | Klein | 13,5px | 500 | 1,5 |
 | Beschriftung | 12px | 600 | 1,4 |
+
+**Feste Größen kommen ausschließlich aus dieser Liste:**
+
+    10  11  12  13  14  15  16  17  18  20  22  24  28  32  40
+
+Keine Halbschritte. 12,5px und 13,5px sind das Zeichen dafür, dass jemand so
+lange geschoben hat, bis es passte. Davon gab es 30 verschiedene Werte im
+Projekt, jetzt sind es 15.
 
 Laufweite: Überschriften −0,028em bis −0,035em, Fließtext 0.
 
@@ -241,7 +262,11 @@ meistens ein anderes Problem.
 
 ## 5. Radien, Schatten, Bewegung
 
-**Radien:** `control 8px`, `card 14px`, `panel 18px`, `pill 999px`.
+**Radien:** ausschließlich die vier Tokens `--radius-control` (8px),
+`--radius-card` (14px), `--radius-panel` (18px), `--radius-pill` (999px),
+dazu `50%` für Kreise und `0`. Feste Pixelwerte sind verboten; es gab 13
+verschiedene, jetzt keinen mehr.
+
 Pillen nur für Knöpfe, Schalter und die schwebende Kopfleiste.
 
 **Schatten** sind weich und sparsam. Verboten ist der **farbige Schein**
@@ -336,3 +361,40 @@ Umgeschaltet über `body.dark`, das die Variablen überschreibt. Zwei Regeln:
 Die Seitenleiste der Lernoberfläche folgt dem Thema. Die frühere Regel
 „immer echtes Schwarz" ist aufgehoben: Sie stellte im hellen Modus einen
 harten schwarzen Block neben eine weiße Lernfläche.
+
+
+---
+
+## 9. Wie die Regeln geprüft werden
+
+Ein Brandbook nützt nur, wenn Abweichungen auffallen. Deshalb gibt es ein
+Skript, das sie zählt:
+
+    node scripts/pruefe-design.mjs
+
+Es gibt am Ende `VERDICT: PASS` oder `VERDICT: FAIL` aus und nennt die
+Fundstellen. **Vor jedem Commit an Gestaltungsdateien laufen lassen.**
+
+Geprüft werden vier Dinge: Schriftgrößen gegen die Skala, Schriftstärken
+gegen die geladenen Schnitte, Radien gegen die Tokens, Abstände gegen die
+Tokens.
+
+### Stand bei der letzten Prüfung
+
+| | vorher | jetzt |
+|---|---|---|
+| Schriftgrößen | 30 Werte | **15** |
+| Schriftstärken ohne Schnitt | 52 Stellen | **0** |
+| Radien ohne Token | 13 Werte | **0** |
+| Abstände ohne Token | 516 Stellen | **0** |
+
+### Bewusste Ausnahmen
+
+- **Werte unter 4px.** Das sind optische Korrekturen an Rahmen und
+  Fassungen, keine Abstände aus dem Raster.
+- **`margin: -1px`** in den Klassen, die Text nur für Vorleseprogramme
+  sichtbar halten. Der Trick hängt an genau diesem einen Pixel; eine
+  Umrechnung hat ihn schon einmal zerstört.
+- **`clamp()`-Werte** für Überschriften und Bandabstände, die mit der
+  Fensterbreite wachsen sollen.
+- **Status- und Reel-Farben**, die sich absichtlich von der Marke abheben.

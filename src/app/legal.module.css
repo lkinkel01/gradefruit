@@ -1,7 +1,7 @@
 .page {
   max-width: 720px;
   margin: 0 auto;
-  padding: 0 26px 96px;
+  padding: 0 var(--raum-lg) var(--raum-4xl);
 }
 
 /* Nav */
@@ -18,7 +18,7 @@
   font-size: 20px;
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--raum-xs);
   letter-spacing: -0.02em;
   text-decoration: none;
   color: inherit;
@@ -26,13 +26,13 @@
 }
 .brand svg { color: var(--accent); }
 .back {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--muted);
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: var(--raum-2xs);
   transition: color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
   min-height: 44px;
 }
@@ -41,21 +41,21 @@
 
 /* Page header */
 .header {
-  padding: 28px 0 40px;
+  padding: var(--raum-xl) 0 var(--raum-2xl);
   border-bottom: 1px solid var(--line);
-  margin-bottom: 52px;
+  margin-bottom: var(--raum-2xl);
 }
 .eyebrow {
   display: inline-block;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--accent-d);
   background: var(--accent-soft);
-  padding: 5px 13px;
+  padding: var(--raum-2xs) var(--raum-sm);
   border-radius: var(--radius-control);
-  margin-bottom: 18px;
+  margin-bottom: var(--raum-md);
 }
 .title {
   font-family: 'Cabinet Grotesk', sans-serif;
@@ -63,7 +63,7 @@
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.06;
-  margin-bottom: 14px;
+  margin-bottom: var(--raum-md);
 }
 .updated {
   font-size: 13px;
@@ -72,40 +72,40 @@
 
 /* Body */
 .section {
-  margin-bottom: 44px;
+  margin-bottom: var(--raum-2xl);
 }
 .section h2 {
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 14px;
+  margin-bottom: var(--raum-md);
   letter-spacing: -0.01em;
-  padding-top: 8px;
+  padding-top: var(--raum-xs);
 }
 .section h3 {
   font-size: 15px;
   font-weight: 600;
-  margin-bottom: 8px;
-  margin-top: 24px;
+  margin-bottom: var(--raum-xs);
+  margin-top: var(--raum-lg);
   color: var(--ink);
 }
 .section p {
-  font-size: 14.5px;
+  font-size: 15px;
   color: var(--muted);
   line-height: 1.68;
-  margin-bottom: 10px;
+  margin-bottom: var(--raum-sm);
 }
 .section ul {
   list-style: none;
-  margin: 10px 0;
+  margin: var(--raum-sm) 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: var(--raum-xs);
 }
 .section li {
-  font-size: 14.5px;
+  font-size: 15px;
   color: var(--muted);
-  padding-left: 16px;
+  padding-left: var(--raum-md);
   position: relative;
   line-height: 1.58;
 }
@@ -122,7 +122,7 @@
 .divider {
   height: 1px;
   background: var(--line);
-  margin: 44px 0;
+  margin: var(--raum-2xl) 0;
 }
 
 /* Placeholder highlight */
@@ -130,7 +130,7 @@
   color: var(--accent-d);
   background: var(--accent-soft);
   border-radius: var(--radius-control);
-  padding: 1px 6px;
+  padding: 1px var(--raum-xs);
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   font-weight: 500;
@@ -142,11 +142,11 @@
   background: var(--accent-soft);
   border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
   border-radius: var(--radius-card);
-  padding: 18px 22px;
-  margin-bottom: 48px;
+  padding: var(--raum-md) var(--raum-lg);
+  margin-bottom: var(--raum-2xl);
 }
 .notice p {
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--accent-d);
   line-height: 1.6;
   margin: 0;
@@ -156,6 +156,6 @@
 }
 
 @media (max-width: 560px) {
-  .page { padding: 0 18px 72px; }
+  .page { padding: 0 var(--raum-md) var(--raum-3xl); }
   .title { font-size: 28px; }
 }

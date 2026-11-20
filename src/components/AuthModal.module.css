@@ -1,7 +1,7 @@
 .googleBtn {
-  width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: var(--raum-sm);
   border: 1px solid var(--line-strong); background: var(--surface);
-  border-radius: var(--radius-control); padding: 12px; font-family: inherit; font-size: 14.5px;
+  border-radius: var(--radius-control); padding: var(--raum-sm); font-family: inherit; font-size: 15px;
   font-weight: 600; color: var(--ink); cursor: pointer;
   min-height: 44px;
   transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out), transform var(--dur-press) var(--ease-press);
@@ -9,29 +9,29 @@
 .googleBtn:active { transform: scale(.99); }
 
 .divider {
-  display: flex; align-items: center; gap: 12px;
-  color: var(--faint); font-size: 12px; margin: 16px 0;
+  display: flex; align-items: center; gap: var(--raum-sm);
+  color: var(--faint); font-size: 12px; margin: var(--raum-md) 0;
 }
 .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
 
-.field { margin-bottom: 14px; }
-.field label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+.field { margin-bottom: var(--raum-md); }
+.field label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: var(--raum-xs); }
 .field input {
   width: 100%; border: 1px solid var(--line-strong); border-radius: var(--radius-control);
-  padding: 12px 15px; font-family: inherit; font-size: 15px;
+  padding: var(--raum-sm) var(--raum-md); font-family: inherit; font-size: 15px;
   background: var(--surface); color: var(--ink); outline: none;
   min-height: 44px;
   transition: border-color var(--dur-hover) var(--ease-out), background-color var(--dur-hover) var(--ease-out);
 }
 .field input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px var(--control); }
-.fieldHint { display: block; font-size: 12px; color: var(--faint); margin-top: 6px; }
+.fieldHint { display: block; font-size: 12px; color: var(--faint); margin-top: var(--raum-xs); }
 
 /* „optional" neben der Beschriftung — leise, aber eindeutig. Ohne diesen
    Hinweis probiert man Felder aus, die man hätte überspringen können. */
 .optional {
-  margin-left: 6px;
+  margin-left: var(--raum-xs);
   color: var(--faint);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   letter-spacing: 0;
 }
@@ -40,7 +40,7 @@
    Das Häkchen ist bewusst zurückhaltend — Grün für „erfüllt" wäre ein
    Belohnungssignal für etwas Selbstverständliches. */
 .regeln {
-  margin: 8px 0 0;
+  margin: var(--raum-xs) 0 0;
   padding: 0;
   list-style: none;
   display: flex;
@@ -50,7 +50,7 @@
 .regeln li {
   display: flex;
   align-items: baseline;
-  gap: 7px;
+  gap: var(--raum-xs);
   color: var(--faint);
   font-size: 12px;
   line-height: 1.45;
@@ -65,25 +65,25 @@
 .ueberspringen {
   display: block;
   width: 100%;
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: var(--raum-sm);
+  padding: var(--raum-sm);
   border: 0;
   background: none;
   color: var(--muted);
   cursor: pointer;
   font: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
 }
 .ueberspringen:hover { color: var(--ink); }
 .ueberspringen:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .error {
   background: var(--danger-soft); border: 1px solid var(--danger-line); border-radius: var(--radius-control);
-  padding: 10px 13px; font-size: 13px; color: var(--danger); margin-bottom: 10px;
+  padding: var(--raum-sm) var(--raum-sm); font-size: 13px; color: var(--danger); margin-bottom: var(--raum-sm);
 }
 .info {
   background: var(--green-soft); border: 1px solid var(--success-line); border-radius: var(--radius-control);
-  padding: 10px 13px; font-size: 13px; color: var(--success); margin-bottom: 10px;
+  padding: var(--raum-sm) var(--raum-sm); font-size: 13px; color: var(--success); margin-bottom: var(--raum-sm);
 }
 
 /* Tag-Zeile neutral wie der Rest der Seite (überschreibt das Orange aus
@@ -91,13 +91,13 @@
 .ptag.ptag { color: var(--muted); }
 
 .switchMode {
-  text-align: center; font-size: 13.5px; color: var(--muted); margin-top: 16px;
+  text-align: center; font-size: 14px; color: var(--muted); margin-top: var(--raum-md);
 }
 .switchMode button {
   border: none; background: transparent; color: var(--ink);
-  font-weight: 600; cursor: pointer; font-size: 13.5px; font-family: inherit;
+  font-weight: 600; cursor: pointer; font-size: 14px; font-family: inherit;
   min-height: 44px;
-  padding: 8px 4px;
+  padding: var(--raum-xs) var(--raum-2xs);
 }
 @media (hover: hover) and (pointer: fine) {
   .googleBtn:hover { border-color: var(--ink); background: var(--surface-2); }

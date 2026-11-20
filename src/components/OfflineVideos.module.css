@@ -1,9 +1,9 @@
-.block { display: flex; flex-direction: column; gap: 12px; }
+.block { display: flex; flex-direction: column; gap: var(--raum-sm); }
 
 .text {
   margin: 0;
   color: var(--muted);
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 1.55;
 }
 
@@ -21,4 +21,4 @@
   transition: transform 200ms var(--ease-out);
 }
 
-.knoepfe { display: flex; flex-wrap: wrap; gap: 10px; }
+.knoepfe { display: flex; flex-wrap: wrap; gap: var(--raum-sm); }

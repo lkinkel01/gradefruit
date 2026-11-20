@@ -14,9 +14,9 @@
   /* Eingerückt, damit sie schwebt. Unten der Sicherheitsabstand, damit sie
      über der Home-Anzeige des iPhones bleibt. */
   margin: 0 12px calc(6px + env(safe-area-inset-bottom, 0px));
-  padding: 6px;
+  padding: var(--raum-xs);
   border: 1px solid var(--glass-line);
-  border-radius: 26px;
+  border-radius: var(--radius-panel);
   /* Bewusst OHNE Weichzeichner im Hintergrund. Der muss auf dem iPhone bei
      jedem Bild neu über den durchlaufenden Inhalt gerechnet werden, und genau
      das ließ das Scrollen abgehackt wirken. Eine fast deckende Fläche sieht
@@ -29,7 +29,7 @@
 /* Beim Herunterscrollen: schmaler, Beschriftungen weg. Beim Hochscrollen
    sofort wieder da. */
 .kompakt { padding: 3px; margin-bottom: calc(4px + env(safe-area-inset-bottom, 0px)); }
-.kompakt .ziel { min-height: 38px; padding: 4px 2px; gap: 0; }
+.kompakt .ziel { min-height: 38px; padding: var(--raum-2xs) 2px; gap: 0; }
 .kompakt .label { max-height: 0; opacity: 0; }
 
 .ziel {
@@ -39,15 +39,15 @@
   justify-content: center;
   gap: 3px;
   min-height: 50px;
-  padding: 6px 2px 5px;
+  padding: var(--raum-xs) 2px var(--raum-2xs);
   border: 0;
-  border-radius: 20px;
+  border-radius: var(--radius-panel);
   background: none;
   color: var(--muted);
   cursor: pointer;
   font-family: inherit;
-  font-size: 10.5px;
-  font-weight: 550;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: -0.005em;
   transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out), min-height var(--dur-hover) var(--ease-out), padding var(--dur-hover) var(--ease-out);
 }
@@ -62,7 +62,7 @@
 .aktiv {
   background: var(--accent-soft);
   color: var(--accent-d);
-  font-weight: 650;
+  font-weight: 600;
 }
 
 /* Reel-Modus: Der Bildschirm ist dort immer schwarz, unabhängig davon, ob der

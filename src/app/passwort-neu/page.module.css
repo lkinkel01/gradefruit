@@ -12,32 +12,32 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: var(--raum-md);
   width: 100%;
   max-width: 360px;
   text-align: center;
 }
 
 .titel {
-  margin-top: 4px;
+  margin-top: var(--raum-2xs);
   color: var(--ink);
   font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 27px;
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: -0.03em;
 }
 
 .text { color: var(--muted); font-size: 15px; line-height: 1.6; }
 
-.form { width: 100%; margin-top: 10px; text-align: left; }
-.form :global(.btn) { width: 100%; justify-content: center; margin-top: 4px; }
+.form { width: 100%; margin-top: var(--raum-sm); text-align: left; }
+.form :global(.btn) { width: 100%; justify-content: center; margin-top: var(--raum-2xs); }
 
-.feld { margin-bottom: 14px; }
-.feld label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 13px; font-weight: 600; }
+.feld { margin-bottom: var(--raum-md); }
+.feld label { display: block; margin-bottom: var(--raum-xs); color: var(--muted); font-size: 13px; font-weight: 600; }
 .feld input {
   width: 100%;
   min-height: 44px;
-  padding: 11px 13px;
+  padding: var(--raum-sm) var(--raum-sm);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-control);
   outline: none;
@@ -49,11 +49,11 @@
 .feld input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 
 /* Wie in der Registrierung: Die Bedingungen stehen dabei und haken sich ab. */
-.regeln { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.regeln { margin: var(--raum-xs) 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 3px; }
 .regeln li {
   display: flex;
   align-items: baseline;
-  gap: 7px;
+  gap: var(--raum-xs);
   color: var(--faint);
   font-size: 12px;
   line-height: 1.45;
@@ -62,8 +62,8 @@
 .regeln li span { width: 9px; flex-shrink: 0; text-align: center; }
 .regelOk { color: var(--ink); }
 
-.fehler { margin: 0 0 12px; color: var(--danger); font-size: 13.5px; line-height: 1.5; }
+.fehler { margin: 0 0 var(--raum-sm); color: var(--danger); font-size: 14px; line-height: 1.5; }
 
 /* Der technische Grund. Klein und leise: Für die meisten bedeutungslos, für die
    Fehlersuche der Unterschied zwischen Wissen und Raten. */
-.technisch { margin: 14px 0 0; color: var(--faint); font-size: 11.5px; }
+.technisch { margin: var(--raum-md) 0 0; color: var(--faint); font-size: 12px; }
