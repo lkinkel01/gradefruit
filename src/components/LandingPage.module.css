@@ -253,6 +253,20 @@
   /* Untereinander: erst die Aussage, dann die Wahl. */
   .heroRaster { grid-template-columns: minmax(0, 1fr); }
   .heroWahl { justify-self: stretch; }
+
+  /* Zentriert, weil das Markenzeichen darüber zentriert steht.
+
+     Nebeneinander trägt die linke Spalte eine eigene Kante, an der sich
+     Überschrift und Angaben ausrichten. Untereinander gibt es diese Kante
+     nicht mehr: Dann steht ein zentriertes Zeichen über linksbündigem Text,
+     und das sieht aus, als wäre eins von beidem verrutscht. */
+  .heroMitte {
+    width: 100%;
+    justify-items: center;
+    text-align: center;
+  }
+  .heroTitel { max-width: 16ch; }
+  .heroFakten { justify-content: center; }
 }
 
 
@@ -310,14 +324,20 @@
    Text links, Knopf rechts, über die volle Spaltenbreite. Vorher stand hier
    ein schmaler Textblock und rechts daneben nichts.
 --------------------------------------------------------------------------- */
+/* Der Knopf steht hinter dem Text, nicht am rechten Rand.
+
+   Mit `space-between` wurde er über die volle Breite nach außen gedrückt und
+   stand einen halben Bildschirm von dem Satz entfernt, auf den er sich
+   bezieht. Jetzt folgt er dem Text mit festem Abstand. */
 .schluss {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--raum-lg);
+  justify-content: flex-start;
+  gap: var(--raum-3xl);
 }
+.schluss > div { max-width: 48ch; }
 
 .schlussKnopf {
   display: inline-flex;
@@ -455,4 +475,42 @@
   .fragen { grid-template-columns: minmax(0, 1fr); }
   .frage:nth-child(-n+2) { border-top: 0; }
   .frage:first-child { border-top: 1px solid var(--line); }
+}
+
+
+/* ---------------------------------------------------------------------------
+   Galerie und ihr Knopf nebeneinander
+--------------------------------------------------------------------------- */
+.galerieZeile {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--raum-2xl);
+  width: 100%;
+}
+
+.galerieKnopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 46px;
+  margin-bottom: var(--raum-lg);
+  padding: 0 var(--raum-lg);
+  border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--accent-d);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.galerieKnopf:hover { background: var(--btn-ink); color: var(--btn-ink-tx); border-color: var(--btn-ink); }
+
+/* Unter 900px passt nichts mehr daneben: Dann steht der Knopf wieder unter
+   der Galerie, wo er vorher immer stand. */
+@media (max-width: 900px) {
+  .galerieZeile { flex-direction: column; align-items: flex-start; gap: var(--raum-lg); }
+  .galerieKnopf { margin-bottom: 0; }
 }

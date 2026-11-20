@@ -5,6 +5,7 @@ import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 import { useKundenstand } from '@/lib/kundenstand';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import KursWahl from '@/components/KursWahl';
 import band from '@/components/SeitenBand.module.css';
 import styles from './kurse.module.css';
 
@@ -37,6 +38,18 @@ function Inhalt() {
   return (
     <>
       <section className={band.band}>
+        {/* Dieselbe Wahl wie im Startbereich, an derselben Stelle im Ablauf.
+
+            „Kostenlos testen" in der Kopfleiste führte bisher direkt in die
+            Lernoberfläche und übersprang damit die Frage, welchen Kurs man
+            überhaupt schreibt. Jetzt landet man hier und wählt, bevor es
+            weitergeht. Dasselbe Bauteil, damit beide Wege gleich aussehen. */}
+        {stand !== 'alleKurse' && (
+          <div className={styles.wahl}>
+            <KursWahl />
+          </div>
+        )}
+
         <h1 className={band.titel}>
           {stand === 'alleKurse' ? 'Alles freigeschaltet.' : 'Einmal zahlen, kein Abo.'}
         </h1>

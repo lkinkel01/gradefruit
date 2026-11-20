@@ -149,9 +149,18 @@ export default function SeitenKopf({
             <span>Gradefruit</span>
           </Link>
 
-          <button className={styles.testen} onClick={onEnter}>
-            {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
-          </button>
+          {/* Angemeldete springen zurück in ihren Kurs. Gäste kommen zur
+              Kurswahl, statt in einer Lernoberfläche zu landen, deren Stufe
+              niemand gewählt hat. */}
+          {isAuthed ? (
+            <button className={styles.testen} onClick={onEnter}>
+              {t('kopf.weiterlernen')}
+            </button>
+          ) : (
+            <Link className={styles.testen} href="/kurse">
+              {t('start.kostenlosTesten')}
+            </Link>
+          )}
         </div>
 
         <div className={styles.linkleiste}>

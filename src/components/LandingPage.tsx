@@ -97,6 +97,12 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           <h2 className={band.titel}>{t('bandLernsystem.titel')}</h2>
           <p className={band.zeile}>{t('bandLernsystem.zeile')}</p>
           <LernSchritte />
+          {/* Galerie und Knopf nebeneinander: Rechts neben der Galerie standen
+              360 Pixel leer, und der Knopf darunter schob das Band unnötig in
+              die Länge. Er steht dicht neben dem Bild, nicht am rechten Rand:
+              Ein Knopf, der weit weg von dem steht, worauf er sich bezieht,
+              wirkt wie ein eigener Abschnitt. */}
+          <div className={styles.galerieZeile}>
           <div className={band.bild}>
             <ProduktGalerie
               version={BILD_VERSION}
@@ -110,7 +116,8 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               ]}
             />
           </div>
-          <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
+          <Link className={styles.galerieKnopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
+          </div>
         </section>
 
         {/* Warum es so gebaut ist. Die Haken neben den Preisen sagen, WAS
@@ -253,9 +260,18 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
                     : t('bandSchlussZustand.zeileMitKurs')}
               </p>
             </div>
-            <button className={styles.schlussKnopf} onClick={isAuthed ? onEnter : onRegister}>
-              {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
-            </button>
+            {/* Gäste wählen erst den Kurs, statt direkt ins Anmeldefenster zu
+                springen: Wer hier unten ankommt, hat die Wahl oben womöglich
+                übersprungen. */}
+            {isAuthed ? (
+              <button className={styles.schlussKnopf} onClick={onEnter}>
+                {t('kopf.weiterlernen')}
+              </button>
+            ) : (
+              <Link className={styles.schlussKnopf} href="/kurse">
+                {t('start.kostenlosTesten')}
+              </Link>
+            )}
           </div>
         </section>
       </main>

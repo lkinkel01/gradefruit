@@ -1,3 +1,7 @@
+/* Die Kurswahl steht vor allem anderen: Wer über „Kostenlos testen" kommt,
+   will wählen, nicht erst eine Preistabelle lesen. */
+.wahl { margin-bottom: var(--raum-3xl); }
+
 .karten {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
