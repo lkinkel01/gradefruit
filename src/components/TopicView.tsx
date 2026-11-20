@@ -806,7 +806,7 @@ export default function TopicView({
               <button className="btn primary" onClick={() => onOpenCheckout(level)}>
                 {levelLabel} freischalten
               </button>
-              <p className={styles.lockHint}>Analysis kannst du kostenlos ausprobieren.</p>
+              <p className={styles.lockHint}>Von jedem Thema siehst du den Anfang kostenlos.</p>
             </>
           )}
         </div>

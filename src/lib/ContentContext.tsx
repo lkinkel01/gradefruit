@@ -43,6 +43,10 @@ export type ContentState = 'loading' | 'ready' | 'locked' | 'signin' | 'error';
 
 export interface TopicContent {
   state: ContentState;
+  /** Wahr, wenn der Server nur den kostenlosen Anfang geliefert hat. */
+  vorschau?: boolean;
+  /** Wie viel es insgesamt gäbe — für den Hinweis „x von y". */
+  gesamt?: { aufgaben: number; abschnitte: number };
   tasks: ContentTask[];
   summary: ContentSummary | null;
   message: string | null;
@@ -102,7 +106,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     if (inFlight.current.has(key)) return;
 
     // Nicht vorab abbrechen, wenn kein Token da ist: Der Server entscheidet,
-    // was ohne Konto sichtbar ist (Analysis als kostenlose Probe). Solange die
+    // was ohne Konto sichtbar ist (der kostenlose Anfang jedes Themas). Solange die
     // Anmeldung noch geprüft wird, warten wir aber.
     if (authLoading) return;
 
@@ -119,13 +123,26 @@ export function ContentProvider({ children }: { children: ReactNode }) {
           cache: 'no-store',
         });
         const body = await res.json().catch(() => null) as
-          | { tasks?: ContentTask[]; summary?: ContentSummary; message?: string }
+          | {
+              tasks?: ContentTask[];
+              summary?: ContentSummary;
+              message?: string;
+              vorschau?: boolean;
+              gesamt?: { aufgaben: number; abschnitte: number };
+            }
           | null;
 
         if (res.ok && body?.tasks && body.summary) {
           setCache(prev => ({
             ...prev,
-            [key]: { state: 'ready', tasks: body.tasks!, summary: body.summary!, message: null },
+            [key]: {
+              state: 'ready',
+              tasks: body.tasks!,
+              summary: body.summary!,
+              message: null,
+              vorschau: body.vorschau === true,
+              gesamt: body.gesamt,
+            },
           }));
           // Für den Offline-Zugriff verschlüsselt ablegen — nur für angemeldete
           // Nutzer, denn die Ablage gehört immer genau einem Konto.

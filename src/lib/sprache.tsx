@@ -89,8 +89,8 @@ export const TEXTE = {
   bandSchlussZustand: {
     titelAngemeldet: { de: 'Weiter, wo du warst.', en: 'Pick up where you left off.' },
     zeileOhneKurs: {
-      de: 'Analysis ist für dich freigeschaltet. Lineare Algebra und Stochastik brauchen einen Kurs.',
-      en: 'Calculus is unlocked for you. Linear algebra and stochastics need a course.',
+      de: 'Du siehst von jedem Thema den Anfang. Für den vollen Zugang brauchst du einen Kurs.',
+      en: 'You can see the start of every topic. Full access needs a course.',
     },
     zeileMitKurs: {
       de: 'Dein Zugang gilt bis zum Ende des Prüfungszeitraums.',
@@ -108,7 +108,7 @@ export const TEXTE = {
   },
   bandSchluss: {
     titel: { de: 'Fang an.', en: 'Get started.' },
-    zeile: { de: 'Analysis ist kostenlos. Ohne Zahlungsdaten, ohne Frist.', en: 'Calculus is free. No payment details, no time limit.' },
+    zeile: { de: 'Von jedem Thema siehst du den Anfang kostenlos. Ohne Zahlungsdaten, ohne Frist.', en: 'See the start of every topic for free. No payment details, no time limit.' },
     titelGast: { de: 'Fang an.', en: 'Get started.' },
   },
   einstellungen: {

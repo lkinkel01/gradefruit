@@ -31,7 +31,7 @@ import Startbild from '@/components/Startbild';
 import styles from './page.module.css';
 
 // Ohne Kauf frei zugänglich (Probezugang): Übersicht, alle Themenseiten und Konto.
-// Achtung: Inhalt bleibt pro Stufe gesperrt – nur Analysis ist gratis, der Rest
+// Achtung: Inhalt bleibt pro Stufe gesperrt. Kostenlos ist überall nur der
 // zeigt Gästen nur die Vorschau-Sperre mit Kauf-Hinweis.
 // 'tutors' ist eine reine Info-Seite (Nachhilfe „bald verfügbar") – kein Kauf nötig.
 // 'review' (Wiederholen) ist persönlicher Lernfortschritt – nie hinter der Bezahlschranke.

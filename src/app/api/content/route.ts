@@ -4,6 +4,8 @@ import {
   isContentTopic,
   summaryFor,
   tasksFor,
+  type ContentLevel,
+  type ContentTopic,
 } from '@/server/content';
 
 // ===========================================================================
@@ -23,8 +25,36 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const COURSE_SLUG = { gk: 'mathe-gk', lk: 'mathe-lk' } as const;
-// Analysis ist die kostenlose Probe. Alles andere ist kostenpflichtig.
-const FREE_TOPIC = 'analysis';
+
+/**
+ * Die kostenlose Probe.
+ *
+ * Früher war ein ganzes Thema frei (Analysis) und der Rest gesperrt. Wer
+ * hereinschaute, sah damit sehr viel von einem Gebiet und nichts von den
+ * anderen beiden. Jetzt gibt es überall denselben Anfang: ein paar
+ * Abschnitte der Zusammenfassung und ein paar Aufgaben, in jedem Thema und
+ * auf beiden Kursstufen.
+ *
+ * Entscheidend ist, dass die Kürzung HIER passiert. Der Browser bekommt den
+ * Rest gar nicht erst — die Bezahlschranke bleibt eine echte Grenze und wird
+ * nicht nur ausgeblendet.
+ */
+const PROBE_ABSCHNITTE = 3;
+const PROBE_AUFGABEN = 5;
+
+function probeVon(topic: ContentTopic, level: ContentLevel) {
+  const alleAufgaben = tasksFor(topic, level);
+  const ganzeZusammenfassung = summaryFor(topic, level);
+  return {
+    tasks: alleAufgaben.slice(0, PROBE_AUFGABEN),
+    summary: { sections: ganzeZusammenfassung.sections.slice(0, PROBE_ABSCHNITTE) },
+    vorschau: true,
+    gesamt: {
+      aufgaben: alleAufgaben.length,
+      abschnitte: ganzeZusammenfassung.sections.length,
+    },
+  };
+}
 
 function json(body: unknown, status: number) {
   return new Response(JSON.stringify(body), {
@@ -50,16 +80,11 @@ export async function GET(req: Request) {
     return json({ error: 'bad_request', message: 'Unbekanntes Thema oder unbekannte Kursstufe.' }, 400);
   }
 
-  // Analysis ist die kostenlose Probe und muss auch ohne Konto lesbar sein —
-  // die Startseite schickt Gäste über „Kostenlos testen" genau dorthin.
-  if (topic === FREE_TOPIC) {
-    return json({ tasks: tasksFor(topic, level), summary: summaryFor(topic, level) }, 200);
-  }
-
+  // Ohne Konto gibt es die Probe — zu jedem Thema, nicht nur zu einem.
   const authHeader = req.headers.get('authorization') ?? '';
   const token = authHeader.toLowerCase().startsWith('bearer ') ? authHeader.slice(7).trim() : '';
   if (!token) {
-    return json({ error: 'unauthorized', message: 'Bitte melde dich an, um die Inhalte zu sehen.' }, 401);
+    return json(probeVon(topic, level), 200);
   }
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey, {
@@ -95,13 +120,11 @@ export async function GET(req: Request) {
     if (purchaseError) {
       return json({ error: 'lookup_failed', message: 'Dein Zugang konnte gerade nicht geprüft werden. Bitte lade die Seite neu.' }, 503);
     }
+    // Angemeldet, aber ohne Kauf: ebenfalls die Probe. Eine Sperrseite hätte
+    // nichts gezeigt; so sieht man von jedem Thema den Anfang und weiß, was
+    // man kauft.
     if (purchase?.status !== 'active') {
-      return json({
-        error: 'locked',
-        message: level === 'lk'
-          ? 'Für dieses Thema brauchst du den Leistungskurs.'
-          : 'Für dieses Thema brauchst du den Grundkurs.',
-      }, 403);
+      return json(probeVon(topic, level), 200);
     }
   }
 

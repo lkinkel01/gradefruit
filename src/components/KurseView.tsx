@@ -50,7 +50,7 @@ export default function KurseView({
         <h1>Kurse</h1>
         <p>
           Beide Kurse bereiten auf das schriftliche Mathe-Abitur in Hessen 2027 vor.
-          Analysis kannst du in beiden kostenlos ausprobieren.
+          Von jedem Thema siehst du in beiden den Anfang kostenlos.
         </p>
       </header>
 

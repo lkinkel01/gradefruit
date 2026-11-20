@@ -22,7 +22,7 @@ const THEMEN: ContentTopic[] = ['analysis', 'linalg', 'stochastik'];
  * weniger als ein einziges Foto. Die Erklärvideos sind ein anderer Fall (rund
  * 11 MB) und bleiben deshalb ein bewusster Knopf unter „Konto".
  *
- * Nur was zum Zugang gehört: Analysis-Grundkurs ist die kostenlose Probe, alles
+ * Nur was zum Zugang gehört: Von jedem Thema ist der Anfang die kostenlose Probe, alles
  * Weitere hängt am Kauf. Ein Abruf ohne Zugang bekäme ohnehin eine Absage.
  */
 export default function OfflineVorrat() {

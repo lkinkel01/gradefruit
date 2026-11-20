@@ -37,7 +37,7 @@ function Inhalt() {
             ? 'Grundkurs und Leistungskurs liegen bereit. Keine weiteren Kosten.'
             : stand === 'einKurs'
               ? 'Einen Kurs hast du. Der zweite ist einzeln dazubuchbar.'
-              : 'Einmal zahlen, kein Abo. Zugeschnitten auf das hessische Abitur 2027. Analysis kannst du vorher kostenlos ausprobieren.'}
+              : 'Einmal zahlen, kein Abo. Zugeschnitten auf das hessische Abitur 2027. Von jedem Thema kannst du vorher den Anfang kostenlos ansehen.'}
         </p>
 
         <div className={styles.karten}>

@@ -60,7 +60,7 @@ export default function AgbPage() {
           der hessischen Abiturprüfung, keine Original-Prüfungsaufgaben.
         </p>
         <p>
-          Der Bereich Analysis ist kostenlos nutzbar. Der volle Zugang zum Grundkurs oder
+          Von jedem Thema sind die ersten Abschnitte der Zusammenfassung und die ersten Aufgaben kostenlos. Der volle Zugang zum Grundkurs oder
           Leistungskurs ist kostenpflichtig. Ein bestimmter Lernerfolg oder eine bestimmte Note
           wird nicht geschuldet.
         </p>

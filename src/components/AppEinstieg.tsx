@@ -8,7 +8,7 @@ import styles from './AppEinstieg.module.css';
  *
  * In der App ist die Werbeseite fehl am Platz: Wer sie installiert hat, muss
  * nicht mehr überzeugt werden. Statt Kacheln, Preisen und Reel-Abschnitt gibt
- * es hier das Nötige — anmelden, oder Analysis kostenlos ansehen.
+ * es hier das Nötige: anmelden, oder den kostenlosen Anfang ansehen.
  *
  * Wurde jemand unfreiwillig abgemeldet, übernimmt derselbe Bildschirm die
  * Erklärung. Vorher lag dafür ein eigener Hinweis-Zettel darüber — mit einem
@@ -61,7 +61,7 @@ export default function AppEinstieg({
             </div>
 
             <button type="button" className={styles.testen} onClick={onTesten}>
-              Analysis kostenlos ansehen
+              Kostenlos ansehen
             </button>
           </>
         )}
