@@ -11,8 +11,8 @@ colors:
   line: "#E6E6E9"
   line-strong: "#D3D3D8"
   control: "#ECECEF"
-  accent: "#F0505E"
-  accent-d: "#B3263A"
+  accent: "#EE4068"
+  accent-d: "#AB2E4B"
   danger: "#C62828"
   success: "#147A49"
   warn: "#9A6500"
@@ -107,8 +107,12 @@ Es gibt **genau zwei**, inklusive Logo. Jeder weitere Rotton ist ein Fehler.
 
 | Token | Wert | Wofür |
 |---|---|---|
-| `--accent` | `#F0505E` | Große Schrift, Symbole, Ränder, Fortschritt, Logo-Fruchtfleisch |
-| `--accent-d` | `#B3263A` | **Flächen mit weißer Schrift**, Fließtext in Farbe, Logo-Schale (dunkel) |
+| `--accent` | `#EE4068` | Große Schrift, Symbole, Ränder, Fortschritt, Logo-Fruchtfleisch |
+| `--accent-d` | `#AB2E4B` | **Flächen mit weißer Schrift**, Fließtext in Farbe, Logo-Schale (dunkel) |
+
+Der Ton liegt bei 346°, also im Pinkroten. Das ist bewusst: Das Fruchtfleisch
+einer rosa Grapefruit ist pink, nicht orange. Zum Vergleich liegt Claudes
+Korall bei 15° — die beiden sind 30 Grad auseinander.
 
 Alle weiteren Rot-Tönungen werden **abgeleitet**, nie neu gewählt:
 
@@ -124,10 +128,10 @@ Gemessen, nicht geschätzt:
 
 | Kombination | Verhältnis | Erlaubt für |
 |---|---|---|
-| Weiß auf `#F0505E` | **3,49 : 1** | nur Schrift ab 24px, oder ab 18,66px fett |
-| Weiß auf `#B3263A` | **6,45 : 1** | alles |
-| `#F0505E` auf Weiß | **3,49 : 1** | nur große Überschriften |
-| `#B3263A` auf Weiß | **6,45 : 1** | alles, auch Fließtext |
+| Weiß auf `#EE4068` | **3,77 : 1** | nur Schrift ab 24px, oder ab 18,66px fett |
+| Weiß auf `#AB2E4B` | **6,51 : 1** | alles |
+| `#EE4068` auf Weiß | **3,77 : 1** | nur große Überschriften |
+| `#AB2E4B` auf Weiß | **6,51 : 1** | alles, auch Fließtext |
 | `#050505` auf `#F7F7F8` | 19,04 : 1 | Fließtext |
 | `#5F6067` auf `#F7F7F8` | 5,85 : 1 | gedämpfter Text |
 
@@ -139,7 +143,7 @@ Gemessen, nicht geschätzt:
 
 Das ist keine Geschmacksfrage. Ab Juni 2025 gilt das
 Barrierefreiheitsstärkungsgesetz auch für Online-Handel; ein Kurs, den man
-online kauft, fällt darunter. 3,49 : 1 auf einem Kaufknopf wäre angreifbar.
+online kauft, fällt darunter. 3,77 : 1 auf einem Kaufknopf wäre angreifbar.
 
 ### Neutrale
 

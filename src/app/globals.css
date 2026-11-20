@@ -32,13 +32,21 @@
   --faint: #6E7078;
   --line: #E6E6E9;
   --line-strong: #D3D3D8;
-  /* Grapefruit heißt Korallrot, nicht Orange. Das frühere #FF7A00 war ein
+  /* Grapefruit heißt Pinkrot, nicht Orange und nicht Korall.
+
+     Nachgemessen: Der frühere Ton #F0505E lag bei 355°, also schon deutlich
+     im Roten. Er ist jetzt bei 346° und damit näher am Fruchtfleisch einer
+     rosa Grapefruit — pinker, weniger orange. Zum Vergleich liegt Claudes
+     Korall bei 15°, also 30 Grad entfernt; die Ähnlichkeit, die man meint zu
+     sehen, kam nie von der Farbe.
+
+     Das frühere #FF7A00 war ein
      Signal-Orange von der Stange — die Farbe, die jedes zweite KI-Produkt
      trägt. Eine rosa Grapefruit ist innen korallrot; genau das ist jetzt die
      Akzentfarbe. */
-  --accent: #F0505E;
+  --accent: #EE4068;
   --accent-tx: #131315;
-  --accent-d: #B3263A;
+  --accent-d: #AB2E4B;
   /* Blass genug, um als Markierung zu wirken statt als warme Fläche. Die
      früheren Cremetöne (#FFF1E3 und Verwandte) haben die Seite in ein
      Beige getaucht, das nach KI-Produkt aussah — nicht nach Gradefruit. */
@@ -63,9 +71,9 @@
   /* Neutral wie der Rest. Vorher #FFF4E8 — ein warmer Beigeschleier über der
      ganzen App. */
   --brand-app-bg: #FFFFFF;
-  --topic-analysis: #F0505E;
-  --topic-linalg: #F0505E;
-  --topic-stochastik: #F0505E;
+  --topic-analysis: var(--accent);
+  --topic-linalg: var(--accent);
+  --topic-stochastik: var(--accent);
   --green: #198754;
   --green-soft: #EAF7F0;
   --control: #ECECEF;
@@ -110,11 +118,11 @@
      roten Akzent waren zwei konkurrierende Signale; jetzt ist Grapefruit
      überall die Farbe für „hier geht es weiter".
 
-     Bewusst der dunkle Ton: Weiß auf #F0505E erreicht nur 3,49:1 und fiele
-     damit unter die Norm für Schrift dieser Größe. Auf #B3263A sind es
-     6,45:1. Siehe Kontrastregel in DESIGN.md. */
-  --btn-ink: #B3263A;
-  --btn-ink-hover: #96182C;
+     Bewusst der dunkle Ton: Weiß auf dem hellen Akzent erreicht nur 3,77:1
+     und fiele damit unter die Norm für Schrift dieser Größe. Auf #AB2E4B
+     sind es 6,51:1. Siehe Kontrastregel in DESIGN.md. */
+  --btn-ink: var(--accent-d);
+  --btn-ink-hover: #91273F;
   --btn-ink-tx: #FFFFFF;
   /* Ein gemeinsames Geometrie- und Tiefensystem fuer Landing und Produkt. */
   /* Abstandsskala. Vorher lagen allein in den vier Marketing-Dateien
@@ -317,7 +325,7 @@ body.dark {
   --faint: #92939B;
   --line: #2E2E32;
   --line-strong: #414147;
-  --accent-d: #FF8A94;
+  --accent-d: #FF8099;
   --accent-tx: #131315;
   --accent-soft: #2E1116;
   --accent-progress: #7A2531;
@@ -357,8 +365,8 @@ body.dark {
   /* Im dunklen Modus trägt das helle Grapefruit mit dunkler Schrift: 5,31:1
      und ein kräftiger Punkt auf dunklem Grund. Weiße Schrift darauf käme nur
      auf 3,49:1, der dunkle Ton wäre auf Schwarz kaum zu sehen. */
-  --btn-ink: #F0505E;
-  --btn-ink-hover: #FF6B77;
+  --btn-ink: var(--accent);
+  --btn-ink-hover: #FF5C80;
   --btn-ink-tx: #131315;
 }
 
