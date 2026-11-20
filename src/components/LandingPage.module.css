@@ -20,7 +20,7 @@
 
 .hero {
   position: relative;
-  min-height: min(100svh, 820px);
+  min-height: min(100svh, 760px);
   /* Der Schimmer liegt tief im Bild, oben bleibt die Seite weiß — dort steht
      die Leiste und braucht Kontrast. */
   background: var(--gf-schimmer), var(--canvas);
@@ -30,14 +30,24 @@
   padding: var(--raum-4xl) var(--raum-lg) var(--raum-4xl);
 }
 
-.heroMitte { display: grid; justify-items: center; gap: var(--raum-sm); text-align: center; }
+/* Linksbündig in einer mittig stehenden Spalte, wie die Bänder darunter.
+   Zentriert wirkte der Startbereich wie eine Vorlage; linksbündig liest er
+   sich wie eine Aussage. */
+.heroMitte {
+  display: grid;
+  justify-items: start;
+  gap: var(--raum-sm);
+  text-align: left;
+  width: min(100%, 1120px);
+  margin-inline: auto;
+}
 
-.heroMarke { width: clamp(46px, 5vw, 62px); height: auto; margin-bottom: var(--raum-xs); }
+.heroMarke { width: clamp(40px, 4vw, 52px); height: auto; margin-bottom: var(--raum-2xs); }
 
 /* Die Überschrift trägt die Aussage, nicht mehr der Markenname. Der steht
    links oben in der Leiste und muss hier nicht zweimal groß erscheinen. */
 .heroTitel {
-  max-width: 17ch;
+  max-width: 15ch;
   font-family: 'Cabinet Grotesk', sans-serif;
   color: var(--ink);
   font-size: clamp(34px, 6.2vw, 62px);
@@ -63,14 +73,14 @@
 }
 
 .heroUnterzeile {
-  max-width: 52ch;
+  max-width: 46ch;
   margin-top: var(--raum-md);
   color: var(--muted);
   font-size: clamp(15px, 1.6vw, 17.5px);
   line-height: 1.6;
 }
 
-.heroKnoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--raum-sm); margin-top: var(--raum-md); }
+.heroKnoepfe { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: var(--raum-sm); margin-top: var(--raum-md); }
 
 /* Beide Knöpfe tragen die Markenfarbe, nicht Schwarz: Auf der ganzen Seite
    ist Korall die Farbe für „hier geht es weiter". Schwarz war ein zweites,
@@ -155,9 +165,9 @@
 .nutzen {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--raum-xs) var(--raum-lg);
-  max-width: 54ch;
+  max-width: 52ch;
   margin-top: var(--raum-lg);
   padding: 0;
   list-style: none;

@@ -36,8 +36,8 @@ export const TEXTE = {
     titelAkzent: { de: 'dein Mathe\u2011Abitur', en: 'your maths A\u2011levels' },
     titelZusatz: { de: '2027 in Hessen', en: '2027 in Hessen' },
     unterzeile: {
-      de: 'Zwei Kurse: einer für den Grundkurs, einer für den Leistungskurs. Beide nach dem hessischen Kerncurriculum.',
-      en: 'Two courses: one for the basic level, one for the advanced level. Both based on the Hessen syllabus.',
+      de: 'Sowohl für den Grundkurs als auch für den Leistungskurs, basierend auf dem hessischen Kerncurriculum.',
+      en: 'For the basic course as well as the advanced one, based on the Hessen syllabus.',
     },
     nutzen1: { de: 'Prüfungsnahe Aufgaben', en: 'Exam-style tasks' },
     nutzen2: { de: 'Lösungswege Schritt für Schritt', en: 'Worked solutions step by step' },

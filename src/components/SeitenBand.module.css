@@ -5,10 +5,38 @@
   /* Unten weniger als oben: Der Knopf am Ende eines Bandes brachte seinen
      eigenen Abstand mit, zusammen klaffte eine Lücke zum nächsten Band. */
   padding: clamp(72px, 10vh, 112px) 24px clamp(56px, 8vh, 88px);
+
+  /* Linksbündig in einer mittig stehenden Spalte.
+
+     Vorher war jeder der zwölf Abschnitte zentriert. Durchgehend zentrierte
+     Spalten sind eines der stärksten Baukasten-Signale: Redaktionell
+     gestaltete Seiten setzen Text links und stellen etwas daneben. Das
+     Raster macht das ohne Änderung am Markup — die Spalte steht mittig, die
+     Inhalte darin stehen links. */
   display: grid;
-  justify-items: center;
-  text-align: center;
+  grid-template-columns: minmax(0, 1120px);
+  justify-content: center;
+  justify-items: start;
+  text-align: left;
 }
+
+/* Zweispaltig: Text links, Beleg rechts. */
+.bandZwei {
+  grid-template-columns: minmax(0, 480px) minmax(0, 600px);
+  align-items: center;
+  gap: clamp(32px, 5vw, 96px);
+}
+
+@media (max-width: 920px) {
+  .bandZwei { grid-template-columns: minmax(0, 1120px); }
+}
+
+/* Die Textspalte eines Zweispalters. */
+.spalte { display: grid; justify-items: start; }
+
+/* Im Zweispalter steht das Bild neben dem Text, nicht darunter. */
+.bandZwei .bild { margin-top: 0; width: 100%; }
+.bandZwei .knopf { margin-top: var(--raum-lg); }
 
 /* Das erste Band einer Seite liegt unter der schwebenden Leiste und braucht
    oben mehr Luft. Nur der Abstand wird gesetzt — die Ausrichtung gehört in
@@ -28,7 +56,7 @@ main > .band:first-child {
 
 
 .titel {
-  max-width: 18ch;
+  max-width: 20ch;
   color: var(--ink);
   font-size: clamp(30px, 5vw, 50px);
   font-weight: 800;
@@ -37,7 +65,7 @@ main > .band:first-child {
 }
 
 .zeile {
-  max-width: 44ch;
+  max-width: 48ch;
   white-space: pre-line;
   margin-top: var(--raum-md);
   color: var(--muted);

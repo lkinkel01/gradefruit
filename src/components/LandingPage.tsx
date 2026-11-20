@@ -85,9 +85,13 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
 
         </header>
 
-        <section className={band.band}>
-          <h2 className={band.titel}>{t('bandLernsystem.titel')}</h2>
-          <p className={band.zeile}>{t('bandLernsystem.zeile')}</p>
+        {/* Text links, Beleg rechts: erst lesen, worum es geht, dann sehen. */}
+        <section className={`${band.band} ${band.bandZwei}`}>
+          <div className={band.spalte}>
+            <h2 className={band.titel}>{t('bandLernsystem.titel')}</h2>
+            <p className={band.zeile}>{t('bandLernsystem.zeile')}</p>
+            <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
+          </div>
           <div className={band.bild}>
             <ProduktBild
               name="uebersicht"
@@ -98,7 +102,6 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               onKlick={onEnter}
             />
           </div>
-          <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
         </section>
 
         <Bildband
