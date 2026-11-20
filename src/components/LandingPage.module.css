@@ -47,35 +47,59 @@
    Vorher stand der Text allein links und rechts daneben blieben zwei Drittel
    der Seite weiß. Das wirkte nicht luftig, sondern unfertig — als fehle dort
    etwas. Jetzt steht rechts das, was man kauft. */
+/* Links die Aussage, rechts die Entscheidung.
+
+   Die Überschrift bekommt jetzt die breitere Spalte: Sie trägt die Aussage
+   und soll in zwei bis drei Zeilen stehen, nicht in fünf. Die Kurswahl
+   daneben ist ein Bedienelement und braucht nur so viel Platz, wie zwei
+   Zeilen und zwei Knöpfe füllen. */
 .heroRaster {
   width: min(100%, 1120px);
   margin-inline: auto;
   display: grid;
-  grid-template-columns: minmax(0, 460px) minmax(0, 620px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
   align-items: center;
-  gap: clamp(32px, 5vw, 80px);
+  gap: clamp(32px, 6vw, 96px);
 }
 
+/* `width: fit-content` ist hier der Trick, der das Zeichen wirklich mittig
+   über den TEXT setzt und nicht über die Spalte. Die Spalte ist breiter als
+   die Überschrift; zentriert man darin, steht das Zeichen sichtbar zu weit
+   rechts. Schrumpft der Block auf seinen breitesten Inhalt, fällt beides
+   zusammen. */
 .heroMitte {
   display: grid;
   justify-items: start;
   gap: var(--raum-sm);
   text-align: left;
+  width: fit-content;
+  max-width: 100%;
   min-width: 0;
 }
 
-.heroBild { min-width: 0; }
+.heroWahl { min-width: 0; justify-self: end; width: 100%; }
 
 @media (max-width: 920px) {
   .heroRaster { grid-template-columns: minmax(0, 1120px); gap: var(--raum-2xl); }
 }
 
-.heroMarke { width: clamp(40px, 4vw, 52px); height: auto; margin-bottom: var(--raum-2xs); }
+/* Das Zeichen steht mittig über dem Text, nicht an dessen linker Kante.
+   Über einer linksbündigen Überschrift wirkt es dort wie ein vergessenes
+   Aufzählungszeichen; mittig liest es sich als Absender. */
+.heroMarke {
+  width: clamp(44px, 4.5vw, 58px);
+  height: auto;
+  margin-bottom: var(--raum-sm);
+  justify-self: center;
+}
 
 /* Die Überschrift trägt die Aussage, nicht mehr der Markenname. Der steht
    links oben in der Leiste und muss hier nicht zweimal groß erscheinen. */
+/* Die Breite bestimmt, wo das Zeichen darüber steht: Es wird am Kasten der
+   Überschrift zentriert, nicht an ihrem sichtbaren Text. Je enger der Kasten
+   am Text liegt, desto genauer sitzt das Zeichen. */
 .heroTitel {
-  max-width: 13ch;
+  max-width: 12ch;
   font-family: 'Cabinet Grotesk', sans-serif;
   color: var(--ink);
   font-size: clamp(34px, 6.2vw, 62px);
@@ -226,8 +250,9 @@
      Produkt überhaupt macht. Die Reihenfolge ist jetzt: Aussage und Knöpfe,
      dann das Lernsystem, dann die Galerie, die dasselbe zeigt und mehr. Das
      Bild fehlt also nicht, es steht nur an der richtigen Stelle. */
-  .heroBild { display: none; }
+  /* Untereinander: erst die Aussage, dann die Wahl. */
   .heroRaster { grid-template-columns: minmax(0, 1fr); }
+  .heroWahl { justify-self: stretch; }
 }
 
 

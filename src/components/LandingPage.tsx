@@ -71,24 +71,19 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               ))}
             </ul>
 
-            {/* Statt zweier allgemeiner Knöpfe die Frage, die sich hier jeder
-                stellt. Wer wählt, ist weiter als wer liest. */}
-            <KursWahl />
           </div>
 
-          {/* Rechts im Startbereich steht das Produkt selbst. Kein Symbolfoto
-              und keine Grafik: Die Aufnahme zeigt, was man nach dem Kauf
-              wirklich vor sich hat. Das ist der stärkste Beleg, den die Seite
-              hat, und er gehört nach ganz oben. */}
-          <div className={styles.heroBild}>
-            <ProduktBild
-              name="uebersicht"
-              alt="Die Übersicht in Gradefruit: Lernfortschritt pro Thema und der nächste Schritt."
-              breite={2560}
-              hoehe={1800}
-              hinweis={isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
-              onKlick={onEnter}
-            />
+          {/* Rechts steht die Kurswahl, nicht mehr eine Produktaufnahme.
+
+              Das Bild zeigte das Dashboard mit „Guten Tag, Alex." Es war der
+              größte Gegenstand auf dem ersten Bildschirm und zeigte
+              ausgerechnet einen fremden Namen und einen Lernstand, der
+              niemandem gehört. Was dort hingehört, ist die Entscheidung:
+              Welchen Kurs schreibst du? Das Produkt sieht man eine
+              Bildschirmhöhe weiter unten, in der Galerie, und dort
+              beantwortet es auch eine Frage. */}
+          <div className={styles.heroWahl}>
+            <KursWahl />
           </div>
           </div>
         </header>

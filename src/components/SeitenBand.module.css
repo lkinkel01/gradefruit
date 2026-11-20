@@ -135,7 +135,11 @@ main > .band:first-child {
   line-height: 1.6;
 }
 
-.bild { width: min(100%, 980px); margin-top: var(--raum-3xl); }
+/* Die Produktaufnahmen standen 980 Pixel breit da und waren damit der
+   größte Gegenstand des jeweiligen Bandes — größer als die Überschrift
+   darüber. Ein Beleg soll stützen, nicht dominieren. 760 Pixel zeigen die
+   Oberfläche immer noch lesbar und lassen die Aussage vorn. */
+.bild { width: min(100%, 760px); margin-top: var(--raum-2xl); }
 .hochkant { width: min(100%, 288px); margin-top: var(--raum-xl); }
 
 .knopf {
