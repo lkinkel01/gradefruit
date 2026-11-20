@@ -4,7 +4,6 @@ import { NavigateTo, TopicTab, View } from '@/lib/types';
 import { useAuth } from '@/lib/AuthContext';
 import { MenuIcon, MoonIcon, SunIcon } from './UiIcons';
 import styles from './Topbar.module.css';
-import { VORSCHAU_INITIALEN } from '@/lib/vorschauNutzer';
 
 const LABELS: Partial<Record<View, string>> = {
   dashboard: 'Dashboard',
@@ -43,16 +42,16 @@ export default function Topbar({ view, topicTab, topicItemLabel, dark, onToggleD
   // beiden Buchstaben des Vornamens (Leon → LE); ohne Namen der Benutzername;
   // ohne beides die E-Mail. Anders als bei der Begrüßung braucht die Kachel
   // zwingend etwas — sie wäre sonst leer.
+  /* Die Kachel wird nur für angemeldete Nutzer gerendert (siehe unten), der
+     frühere Platzhalter für Gäste war also schon tote Last. */
   const initials = (() => {
-    // Ohne Konto zeigt die Vorschau den Mustermann statt einer leeren Kachel.
-    if (!user) return VORSCHAU_INITIALEN;
     const name = anzeigeName?.trim();
     if (name) {
       const parts = name.split(/\s+/).filter(Boolean);
       if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
       return parts[0].slice(0, 2).toUpperCase();
     }
-    return (user.email || 'U').slice(0, 2).toUpperCase();
+    return (user?.email || 'U').slice(0, 2).toUpperCase();
   })();
 
   const [scrolled, setScrolled] = useState(false);

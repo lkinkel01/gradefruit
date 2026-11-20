@@ -32,6 +32,14 @@ export const TEXTE = {
   },
   start: {
     zeile: { de: 'Mathe-Abitur · Hessen 2027 · Nach deinem Lehrplan', en: 'Maths A-levels · Hessen 2027 · Built on your syllabus' },
+    pille: {
+      de: 'Mathe-Abitur · Hessen · Jahrgang 2027',
+      en: 'Maths A-levels · Hessen · Class of 2027',
+    },
+    heroZeile: {
+      de: 'Zugeschnitten auf das hessische Kerncurriculum und das Format der Abiturprüfung.',
+      en: 'Built on the Hessen curriculum and the format of the exam papers.',
+    },
     titelAnfang: { de: 'Online-Kurse für', en: 'Online courses for' },
     titelAkzent: { de: 'dein Mathe\u2011Abitur', en: 'your maths A\u2011levels' },
     titelZusatz: { de: '2027 in Hessen', en: '2027 in Hessen' },
@@ -59,6 +67,25 @@ export const TEXTE = {
     loesungsweg: { de: 'Lösungsweg Schritt für Schritt', en: 'Worked solution, step by step' },
     videos: { de: 'Erklärvideos zu jedem Thema', en: 'Explainer videos for every topic' },
     wiederholen: { de: 'Wiederholen, was noch sitzt', en: 'Revise what has not stuck' },
+  },
+  bandMut: {
+    titel: { de: 'Du musst nicht verzweifeln.', en: 'You are not stuck with it.' },
+    zeile: {
+      de: 'Die meisten, die in Mathe hängen, sind nicht zu dumm dafür. Ihnen fehlt eine Grundlage von vor zwei Jahren, und niemand merkt es.',
+      en: 'Most people stuck in maths are not too stupid for it. They are missing something from two years ago, and nobody notices.',
+    },
+    knopf: { de: 'Die Geschichte dahinter', en: 'The story behind it' },
+  },
+  bandGruende: {
+    titel: { de: 'Warum Gradefruit?', en: 'Why Gradefruit?' },
+    zeile: {
+      de: 'Gebaut für eine Prüfung, nicht für alle.',
+      en: 'Built for one exam, not for all of them.',
+    },
+  },
+  bandFragen: {
+    titel: { de: 'Häufige Fragen.', en: 'Common questions.' },
+    knopf: { de: 'Alle Fragen', en: 'All questions' },
   },
   bandLernsystem: {
     name: { de: 'Lernsystem', en: 'How it works' },

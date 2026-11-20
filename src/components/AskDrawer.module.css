@@ -234,3 +234,39 @@
 }
 .report:hover { color: var(--muted); }
 .report:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+
+/* ---------------------------------------------------------------------------
+   Ohne Konto
+   Erscheint im Coach, sobald jemand ohne Anmeldung fragt. Bewusst im
+   Gesprächsfenster und nicht als Fehlermeldung: Der Weg nach vorn steht
+   direkt darin.
+--------------------------------------------------------------------------- */
+.kontoHinweis {
+  display: grid;
+  justify-items: start;
+  gap: var(--raum-xs);
+  margin: var(--raum-md);
+  padding: var(--raum-lg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface-2);
+}
+
+.kontoTitel { color: var(--ink); font-size: 15px; font-weight: 700; }
+.kontoText { color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+.kontoKnopf {
+  margin-top: var(--raum-xs);
+  min-height: 40px;
+  padding: 0 var(--raum-lg);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.kontoKnopf:hover { background: var(--btn-ink-hover); }

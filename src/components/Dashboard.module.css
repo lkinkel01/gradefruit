@@ -289,3 +289,50 @@
   .weiter { padding: var(--raum-md) var(--raum-lg); }
   .weiterThema { font-size: 20px; }
 }
+
+
+/* ---------------------------------------------------------------------------
+   Hinweis für Gäste
+   Ohne Konto wird nichts gespeichert. Das gehört nach oben, nicht in eine
+   Fußnote: Wer eine Stunde Aufgaben abhakt und danach feststellt, dass alles
+   weg ist, kommt nicht wieder.
+--------------------------------------------------------------------------- */
+.konto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--raum-lg);
+  margin-bottom: var(--raum-lg);
+  padding: var(--raum-lg) var(--raum-xl);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.kontoTitel { color: var(--ink); font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+.kontoText { max-width: 54ch; margin-top: var(--raum-2xs); color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+.kontoKnopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-height: 44px;
+  padding: 0 var(--raum-lg);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out);
+}
+.kontoKnopf:hover { background: var(--btn-ink-hover); }
+
+@media (max-width: 600px) {
+  .konto { flex-direction: column; align-items: flex-start; padding: var(--raum-lg); }
+  .kontoKnopf { width: 100%; }
+}

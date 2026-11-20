@@ -13,7 +13,11 @@ import sharp from 'sharp';
 import { createClient } from '@supabase/supabase-js';
 import { mkdir } from 'node:fs/promises';
 
-/* Derselbe Platzhaltername wie in der Oberfläche — src/lib/vorschauNutzer.ts. */
+/* Der Name, der auf den Werbebildern in der Begrüßung steht.
+
+   Die Oberfläche selbst kennt keinen Platzhalter mehr: Gäste werden ohne
+   Namen begrüßt. Nur für die Aufnahmen bekommt das Wegwerf-Konto einen, denn
+   „Guten Tag, Test." als Werbebild wäre schlechter als gar keins. */
 const VORSCHAU_NAME = 'Alex';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';

@@ -8,15 +8,16 @@ import { GrapefruitProgress } from './Logo';
 import { ArrowRightIcon, CalendarIcon } from './UiIcons';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import styles from './Dashboard.module.css';
-import { VORSCHAU_VORNAME } from '@/lib/vorschauNutzer';
 
 interface Props {
   onNavigate: (v: View) => void;
+  /** Öffnet die Registrierung — nur für Gäste gebraucht. */
+  onRegistrieren: () => void;
   /** Kursstufe, die gerade gelernt wird — alle Zähler hängen daran. */
   level: 'gk' | 'lk';
 }
 
-export default function Dashboard({ onNavigate, level }: Props) {
+export default function Dashboard({ onNavigate, onRegistrieren, level }: Props) {
   const { user, anzeigeName } = useAuth();
   // In der App trägt der Bildschirm nur diese eine Seite — dort darf der
   // Countdown die Fläche nehmen, die ihm laut DESIGN.md zusteht (Zahl als
@@ -36,11 +37,17 @@ export default function Dashboard({ onNavigate, level }: Props) {
     return () => window.clearTimeout(frame);
   }, []);
 
-  // Nur der erste Bestandteil: „Leon Kinkel" wird zu „Leon". Aus einer E-Mail
-  // einen Vornamen zu raten trifft oft daneben — deshalb lieber gar nichts.
-  // Ohne Konto läuft die Vorschau auf den Mustermann, damit die Oberfläche
-  // nicht halbfertig wirkt.
-  const anrede = anzeigeName?.trim().split(/\s+/)[0] ?? (user ? undefined : VORSCHAU_VORNAME);
+  /* Nur der erste Bestandteil: „Leon Kinkel" wird zu „Leon". Aus einer
+     E-Mail einen Vornamen zu raten trifft oft daneben, deshalb lieber gar
+     nichts.
+
+     Ohne Konto stand hier ein Platzhaltername. Das war für die Werbebilder
+     gedacht, traf aber jeden, der „Kostenlos testen" drückt: Man wird mit
+     einem fremden Namen begrüßt, den man nie angegeben hat. Das wirkt nicht
+     einladend, sondern als hätte sich jemand vertan. Gäste bekommen deshalb
+     eine Begrüßung ohne Namen. Die Werbebilder sind davon nicht betroffen,
+     sie entstehen mit einem angemeldeten Konto. */
+  const anrede = anzeigeName?.trim().split(/\s+/)[0];
 
   const openReview = (status: Exclude<LernStatus, 'none'>) => {
     try { localStorage.setItem('gf-review-status', status); } catch { /* Speicher gesperrt */ }
@@ -68,8 +75,27 @@ export default function Dashboard({ onNavigate, level }: Props) {
       {/* Kopf: nur die Begrüßung. Die Kursstufe wird in der Navigation
           umgeschaltet, nicht mehr hier. */}
       <div className={styles.head}>
-        <h1 className={styles.greet}>Guten Tag{anrede ? `, ${anrede}` : ''}.</h1>
+        <h1 className={styles.greet}>
+          {user ? `Guten Tag${anrede ? `, ${anrede}` : ''}.` : 'Schau dich um.'}
+        </h1>
       </div>
+
+      {/* Ohne Konto lässt sich nichts speichern. Das steht hier, bevor jemand
+          eine Stunde lang Aufgaben abhakt und es danach weg ist. */}
+      {!user && (
+        <div className={styles.konto}>
+          <div>
+            <p className={styles.kontoTitel}>Du siehst den kostenlosen Anfang.</p>
+            <p className={styles.kontoText}>
+              Lernstand, Wiederholungen und der Coach brauchen ein Konto. Das ist
+              kostenlos und dauert eine Minute.
+            </p>
+          </div>
+          <button type="button" className={styles.kontoKnopf} onClick={onRegistrieren}>
+            Konto erstellen
+          </button>
+        </div>
+      )}
 
       {/* Der nächste Schritt, bevor irgendeine Zahl kommt.
 

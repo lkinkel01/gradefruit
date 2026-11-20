@@ -6,6 +6,9 @@ import SeitenKopf from './SeitenKopf';
 import SeitenFuss from './SeitenFuss';
 import ProduktBild, { BILD_VERSION } from './ProduktBild';
 import ProduktGalerie from './ProduktGalerie';
+import KursWahl from './KursWahl';
+import Gruende from './Gruende';
+import { FRAGEN } from '@/lib/marketing';
 import LernSchritte from './LernSchritte';
 import { useSprache } from '@/lib/sprache';
 import { useKundenstand } from '@/lib/kundenstand';
@@ -51,28 +54,25 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           <div className={styles.heroMitte}>
             <BrandMark className={styles.heroMarke} size={64} />
 
-            {/* Die Startseite sagt jetzt in einem Satz, für wen das hier ist.
-                Vorher stand nur der Markenname groß da, und für wen es
-                gemacht ist, erfuhr man erst auf den Unterseiten. */}
+            {/* Eine Zeile Einordnung über der Überschrift.
+
+                Gute Lernseiten setzen hier eine Zahl: „20.000 Studierende
+                unterrichtet". Gradefruit hat noch keine Schüler, also steht
+                dort keine erfundene Zahl, sondern die Einordnung selbst. Sie
+                ist nachprüfbar und beantwortet in sieben Wörtern, ob jemand
+                hier richtig ist. */}
+            <p className={styles.heroPille}>{t('start.pille')}</p>
+
             <h1 className={styles.heroTitel}>
               {t('start.titelAnfang')}{' '}
               <span className={styles.heroAkzent}>{t('start.titelAkzent')}</span>
             </h1>
 
-            <p className={styles.heroZusatz}>{t('start.titelZusatz')}</p>
+            <p className={styles.heroZusatz}>{t('start.heroZeile')}</p>
 
-
-            {/* Hier stand eine Liste mit fünf Punkten. Sie ist nach unten zu
-                den Preisen gewandert, wo sie hingehört: Wer gerade die Zahl
-                liest, will wissen, was dafür drin ist. Oben kostete sie nur
-                Platz und schob die beiden Knöpfe nach unten — auf dem Handy
-                aus dem ersten Bildschirm heraus. */}
-            <div className={styles.heroKnoepfe}>
-              <button className={styles.heroKnopf} onClick={onEnter}>
-                {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
-              </button>
-              <Link className={styles.heroKnopf} href="/kurse">{t('start.kurse')}</Link>
-            </div>
+            {/* Statt zweier allgemeiner Knöpfe die Frage, die sich hier jeder
+                stellt. Wer wählt, ist weiter als wer liest. */}
+            <KursWahl onEnter={onEnter} />
           </div>
 
           {/* Rechts im Startbereich steht das Produkt selbst. Kein Symbolfoto
@@ -117,30 +117,30 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
         </section>
 
+        {/* Warum es so gebaut ist. Die Haken neben den Preisen sagen, WAS
+            enthalten ist; hier steht der Grund dahinter. */}
+        <section className={band.band}>
+          <h2 className={band.titel}>{t('bandGruende.titel')}</h2>
+          <p className={band.zeile}>{t('bandGruende.zeile')}</p>
+          <Gruende />
+        </section>
+
         {/* Das einzige Foto der Seite, und es steht neben dem Text statt über
             die volle Breite zu laufen. Vollbreit blieb von der Person darauf
             nur ein Streifen übrig. */}
-        <section className={`${band.band} ${band.bandZwei}`}>
+        <section className={`${band.band} ${band.bandTon} ${band.bandZwei}`}>
+          {/* Dieses Band hieß „Für dein Bundesland gebaut" und zählte dieselben
+              drei Gründe auf, die im Abschnitt darüber schon stehen. Zweimal
+              dasselbe auf einer Seite liest niemand zweimal, es fällt nur auf.
+
+              Jetzt steht hier die andere Hälfte: nicht was das Produkt kann,
+              sondern wen es meint. Wer in Mathe hängt, hält sich meistens für
+              zu dumm dafür, und genau das stimmt fast nie. Der Knopf führt in
+              die Geschichte dahinter. */}
           <div className={band.spalte}>
-            <h2 className={band.titel}>
-              {t('bandUeberUns.titelAnfang')}{' '}
-              <span className={band.akzent}>{t('bandUeberUns.titelAkzent')}</span>{' '}
-              {t('bandUeberUns.titelEnde')}
-            </h2>
-            <p className={band.zeile}>{t('bandUeberUns.zeile')}</p>
-            {/* Stichpunkte statt Fließtext. Derselbe Inhalt stand vorher als
-                vierzeiliger Absatz da und wurde überflogen statt gelesen. */}
-            <ul className={styles.punkte}>
-              {['punkt1', 'punkt2', 'punkt3'].map(k => (
-                <li key={k}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  {t(`bandUeberUns.${k}` as Parameters<typeof t>[0])}
-                </li>
-              ))}
-            </ul>
-            <Link className={band.knopf} href="/ueber-uns">{t('bandUeberUns.knopf')}</Link>
+            <h2 className={band.titel}>{t('bandMut.titel')}</h2>
+            <p className={band.zeile}>{t('bandMut.zeile')}</p>
+            <Link className={band.knopf} href="/ueber-uns">{t('bandMut.knopf')}</Link>
           </div>
           <div className={band.beleg}>
             <img
@@ -219,6 +219,25 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               </div>
             )}
           </div>
+        </section>
+
+        {/* Die häufigsten Fragen direkt auf der Startseite. Sie standen nur
+            auf einer eigenen Seite, die man erst ansteuern musste — und wer
+            eine offene Frage hat, klickt selten weiter, sondern geht weg. */}
+        <section className={band.band}>
+          <h2 className={band.titel}>{t('bandFragen.titel')}</h2>
+          <div className={styles.fragen}>
+            {FRAGEN.slice(0, 6).map(f => (
+              <details key={f.frage} className={styles.frage}>
+                <summary>
+                  <span>{f.frage}</span>
+                  <span className={styles.plus} aria-hidden="true" />
+                </summary>
+                <p>{f.antwort}</p>
+              </details>
+            ))}
+          </div>
+          <Link className={band.knopf} href="/fragen">{t('bandFragen.knopf')}</Link>
         </section>
 
         {/* Der Abschluss nimmt die volle Spaltenbreite ein: Text links, Knopf

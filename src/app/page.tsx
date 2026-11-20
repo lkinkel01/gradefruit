@@ -512,7 +512,13 @@ export default function Home() {
         <LandingPage
           key={themeKey}
           isAuthed={!!user}
-          onEnter={() => navigate(user ? 'dashboard' : 'analysis')}
+          /* Immer ins Dashboard, auch ohne Konto.
+
+             Vorher landete ein Gast direkt in Analysis. Das übersprang die
+             Entscheidung, die er eigentlich treffen wollte: Welches der drei
+             Gebiete schaue ich mir an? Wer „Kostenlos testen" drückt, will
+             sich umsehen, nicht sofort in einem Thema stehen. */
+          onEnter={() => navigate('dashboard')}
           onLogin={() => openAuth('login')}
           onRegister={() => openAuth('register')}
           onSignOut={handleSignOut}
@@ -530,7 +536,7 @@ export default function Home() {
   const renderContent = () => {
     switch (view) {
       case 'dashboard':
-        return <Dashboard onNavigate={navigate} level={level} />;
+        return <Dashboard onNavigate={navigate} onRegistrieren={() => openAuth('register')} level={level} />;
       case 'analysis':
       case 'linalg':
       case 'stochastik':
@@ -560,7 +566,7 @@ export default function Home() {
       case 'review':
         return <ReviewView level={level} onNavigate={navigate} />;
       default:
-        return <Dashboard onNavigate={navigate} level={level} />;
+        return <Dashboard onNavigate={navigate} onRegistrieren={() => openAuth('register')} level={level} />;
     }
   };
 
@@ -655,7 +661,7 @@ export default function Home() {
         onClose={() => setCheckoutOpen(false)}
         course={checkoutCourse}
       />
-      <AskDrawer open={askOpen} ctx={askCtx} snippet={askSnippet} source={askSource} onClose={() => setAskOpen(false)} />
+      <AskDrawer open={askOpen} ctx={askCtx} snippet={askSnippet} source={askSource} onClose={() => setAskOpen(false)} onRegistrieren={() => { setAskOpen(false); openAuth('register'); }} />
     </>
   );
   };

@@ -23,6 +23,8 @@ interface Props {
   snippet: string;
   source?: AskSource | null;
   onClose: () => void;
+  /** Öffnet die Registrierung. Ohne Konto gibt es keinen Coach. */
+  onRegistrieren: () => void;
 }
 
 interface Attachment {
@@ -75,7 +77,7 @@ function updateLastAi(list: Message[], text: string): Message[] {
   return copy;
 }
 
-export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props) {
+export default function AskDrawer({ open, ctx, snippet, source, onClose, onRegistrieren }: Props) {
   // Die markierte Stelle soll sofort sichtbar sein — auch wenn sie weit unten
   // in der Aufgabe steht. Sonst müsste man im Coach erst scrollen.
   const markRef = useRef<HTMLParagraphElement | null>(null);
@@ -93,6 +95,7 @@ export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props
   }, [open, source]);
 
   const { session } = useAuth();
+  const [brauchtKonto, setBrauchtKonto] = useState(false);
   const [mode, setMode] = useState<'ki' | 'tutor'>('ki');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -205,9 +208,19 @@ export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props
       return;
     }
 
-    // KI-Modus: braucht eine Anmeldung
+    /* Der Coach braucht ein Konto, und das ist keine Schikane:
+
+       Jede Frage kostet uns Geld, und die Begrenzung pro Nutzer hängt an der
+       Konto-ID (siehe supabase/ai-rate-limit.sql). Ohne Konto gibt es nichts,
+       woran man eine Begrenzung knüpfen könnte — ein offener Endpunkt wäre
+       innerhalb von Stunden leergeschöpft.
+
+       Vorher stand hier nur „Bitte melde dich an" als Textzeile: eine
+       Sackgasse mitten im Gespräch, ohne Knopf. Jetzt führt der Hinweis
+       weiter, und die Frage bleibt im Feld stehen, damit sie nach der
+       Anmeldung nicht neu getippt werden muss. */
     if (!session?.access_token) {
-      setMessages(prev => [...prev, { role: 'ai', text: 'Bitte melde dich an, um die KI zu nutzen.' }]);
+      setBrauchtKonto(true);
       return;
     }
 
@@ -327,6 +340,20 @@ export default function AskDrawer({ open, ctx, snippet, source, onClose }: Props
             Tutor
           </button>
         </div>
+
+        {/* Ohne Konto: ein Hinweis mit Weg statt einer Fehlermeldung. */}
+        {brauchtKonto && !session?.access_token && (
+          <div className={styles.kontoHinweis}>
+            <p className={styles.kontoTitel}>Dafür brauchst du ein Konto.</p>
+            <p className={styles.kontoText}>
+              Coach und Tutor sind im kostenlosen Konto enthalten. Deine Frage
+              bleibt stehen, du kannst sie gleich abschicken.
+            </p>
+            <button type="button" className={styles.kontoKnopf} onClick={onRegistrieren}>
+              Kostenloses Konto erstellen
+            </button>
+          </div>
+        )}
 
         <div className={styles.dbody} ref={bodyRef}>
                     {messages.map((m, i) => {
