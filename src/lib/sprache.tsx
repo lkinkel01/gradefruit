@@ -32,14 +32,9 @@ export const TEXTE = {
   },
   start: {
     zeile: { de: 'Mathe-Abitur · Hessen 2027 · Nach deinem Lehrplan', en: 'Maths A-levels · Hessen 2027 · Built on your syllabus' },
-    pille: {
-      de: 'Mathe-Abitur · Hessen · Jahrgang 2027',
-      en: 'Maths A-levels · Hessen · Class of 2027',
-    },
-    heroZeile: {
-      de: 'Zugeschnitten auf das hessische Kerncurriculum und das Format der Abiturprüfung.',
-      en: 'Built on the Hessen curriculum and the format of the exam papers.',
-    },
+    fakt1: { de: 'Hessen', en: 'Hessen' },
+    fakt2: { de: 'Jahrgang 2027', en: 'Class of 2027' },
+    fakt3: { de: 'Grundkurs und Leistungskurs', en: 'Both course levels' },
     titelAnfang: { de: 'Online-Kurse für', en: 'Online courses for' },
     titelAkzent: { de: 'dein Mathe\u2011Abitur', en: 'your maths A\u2011levels' },
     titelZusatz: { de: '2027 in Hessen', en: '2027 in Hessen' },

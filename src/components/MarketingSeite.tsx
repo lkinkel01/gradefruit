@@ -61,7 +61,12 @@ export default function MarketingSeite({ children }: { children: ReactNode }) {
         onClose={() => setAuthOffen(false)}
         onAuthenticated={() => {
           setAuthOffen(false);
-          router.push('/');
+          /* Nach der Anmeldung ins Dashboard, nicht auf die Startseite.
+
+             Wer sich gerade registriert hat, um etwas anzusehen, landete
+             sonst wieder auf der Werbeseite und musste den Weg noch einmal
+             gehen. Das Dashboard ist der Ort, an dem es weitergeht. */
+          router.push('/?view=dashboard');
         }}
         initialMode={authModus}
       />

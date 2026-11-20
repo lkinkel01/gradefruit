@@ -4,6 +4,7 @@ import MarketingSeite, { useAuthDialog } from '@/components/MarketingSeite';
 import { PREISE, STEUERHINWEIS } from '@/lib/preise';
 import { useKundenstand } from '@/lib/kundenstand';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import band from '@/components/SeitenBand.module.css';
 import styles from './kurse.module.css';
 
@@ -15,18 +16,20 @@ import styles from './kurse.module.css';
 const KURSE = [
   {
     id: 'gk' as const,
+    slug: 'grundkurs',
     titel: 'Grundkurs',
     punkte: ['Alle Themen des Grundkurses', 'Aufgaben mit Lösungsweg', 'Erklärvideos und KI-Coach'],
   },
   {
     id: 'lk' as const,
+    slug: 'leistungskurs',
     titel: 'Leistungskurs',
     punkte: ['Alle Themen des Leistungskurses', 'Aufgaben mit Lösungsweg', 'Erklärvideos und KI-Coach'],
   },
 ];
 
 function Inhalt() {
-  const { anmelden, registrieren } = useAuthDialog();
+  const { anmelden } = useAuthDialog();
   const { stand, angemeldet, owned, ownedLk } = useKundenstand();
   const router = useRouter();
   const hat = { gk: owned, lk: ownedLk };
@@ -61,17 +64,18 @@ function Inhalt() {
                   hier erst zum Konto und nicht direkt zur Kasse.
                   Wer den Kurs schon hat, bekommt keinen Kaufknopf mehr,
                   sondern den Weg hinein. */}
+              {/* Beide Wege, kaufen und erst ansehen, stehen auf der Seite des
+                  jeweiligen Kurses nebeneinander. Hier führt deshalb nur noch
+                  ein Knopf hin, statt die Entscheidung schon in der Übersicht
+                  zu verlangen. */}
               {hat[kurs.id] ? (
                 <button className={band.knopf} onClick={() => router.push('/?view=dashboard')}>
                   Zu deinem Kurs
                 </button>
               ) : (
-                <button
-                  className={band.knopf}
-                  onClick={() => (angemeldet ? router.push('/?view=kurse') : registrieren())}
-                >
-                  {angemeldet ? 'Freischalten' : 'Kostenlos starten'}
-                </button>
+                <Link className={band.knopf} href={`/kurse/${kurs.slug}`}>
+                  {kurs.titel} ansehen
+                </Link>
               )}
             </article>
           ))}

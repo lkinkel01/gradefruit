@@ -6,7 +6,7 @@
 .wahl {
   display: grid;
   justify-items: start;
-  gap: var(--raum-md);
+  gap: var(--raum-sm);
   width: min(100%, 460px);
   margin-top: var(--raum-lg);
   padding: var(--raum-xl);
@@ -19,67 +19,49 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px rgba(0, 0, 0, .4);
 }
 
-.frage { color: var(--ink); font-size: 15px; font-weight: 600; }
-
-.knoepfe {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--raum-sm);
-  width: 100%;
+.titel {
+  color: var(--ink);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -.025em;
+  line-height: 1.15;
 }
 
-.stufe,
-.stufeAn {
+.frage { color: var(--muted); font-size: 15px; }
+
+.knoepfe { display: grid; gap: var(--raum-sm); width: 100%; margin-top: var(--raum-xs); }
+
+/* Eine Zeile je Kurs: Name links, Preis darunter, Pfeil rechts. Nebeneinander
+   wurden die Namen auf dem Handy umgebrochen und der Preis rutschte weg. */
+.stufe {
   display: grid;
-  justify-items: start;
-  gap: var(--raum-2xs);
-  padding: var(--raum-md);
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 var(--raum-md);
+  padding: var(--raum-md) var(--raum-lg);
+  border: 1.5px solid var(--line-strong);
   border-radius: var(--radius-control);
   background: transparent;
-  font-family: inherit;
-  text-align: left;
-  cursor: pointer;
+  color: var(--ink);
+  text-decoration: none;
   transition: border-color var(--dur-hover) var(--ease-out),
-              background-color var(--dur-hover) var(--ease-out);
+              background-color var(--dur-hover) var(--ease-out),
+              transform var(--dur-hover) var(--ease-out);
 }
-
-/* Die gewählte Stufe trägt die Markenfarbe als Rahmen, nicht als Fläche:
-   Gefüllt sähe sie aus wie der Knopf daneben, der etwas anderes tut. */
-.stufe { border: 1.5px solid var(--line-strong); }
-.stufeAn { border: 1.5px solid var(--btn-ink); background: var(--accent-soft); }
-.stufe:hover { border-color: var(--ink); }
-
-.stufeName { color: var(--ink); font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
-.stufePreis { color: var(--muted); font-size: 13px; }
-
-.weiter { display: flex; flex-wrap: wrap; gap: var(--raum-sm); width: 100%; }
-
-.start,
-.zweit {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1 1 auto;
-  min-height: 48px;
-  padding: 0 var(--raum-lg);
-  border-radius: var(--radius-pill);
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color var(--dur-hover) var(--ease-out),
-              color var(--dur-hover) var(--ease-out);
+.stufe:hover {
+  border-color: var(--btn-ink);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
 }
+.stufe:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.start { border: 0; background: var(--btn-ink); color: var(--btn-ink-tx); }
-.start:hover { background: var(--btn-ink-hover); }
+.stufeName { color: var(--ink); font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
+.stufePreis { grid-column: 1; color: var(--muted); font-size: 13px; }
+.stufePfeil { grid-column: 2; grid-row: 1 / span 2; display: inline-flex; color: var(--accent-d); }
 
-.zweit { border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent); background: transparent; color: var(--accent-d); }
-.zweit:hover { background: var(--btn-ink); color: var(--btn-ink-tx); border-color: var(--btn-ink); }
-
-.fuss { color: var(--faint); font-size: 13px; line-height: 1.5; }
+.fuss { margin-top: var(--raum-xs); color: var(--faint); font-size: 13px; line-height: 1.5; }
 
 @media (max-width: 520px) {
   .wahl { width: 100%; padding: var(--raum-lg); }
-  .weiter { flex-direction: column; }
 }

@@ -1,75 +1,64 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { PREISE } from '@/lib/preise';
 import styles from './KursWahl.module.css';
 
 /**
- * Die erste Frage, die sich jede Schülerin in Hessen stellt: Grundkurs oder
- * Leistungskurs?
+ * Der Einstieg auf der Startseite: Kurs wählen.
  *
- * Warum das im Startbereich steht und nicht erst auf der Kursseite: Die
- * Startseite sprach bisher alle gleichzeitig an und niemanden persönlich.
- * Zwei Knöpfe, auf denen „Grundkurs" und „Leistungskurs" steht, machen aus
- * einer allgemeinen Aussage eine Frage an genau den Menschen davor. Wer eine
- * Wahl trifft, ist bereits einen Schritt weiter als jemand, der nur liest.
+ * Die erste Frage, die sich jede Schülerin in Hessen stellt, ist nicht „was
+ * kostet das", sondern „welchen Kurs schreibe ich eigentlich". Die Startseite
+ * sprach vorher alle gleichzeitig an und niemanden persönlich.
  *
- * Die Wahl wird nicht nur weitergereicht, sondern auch gemerkt: `gf-level`
- * steuert, welche Kursstufe die Oberfläche später zeigt. Wer hier LK wählt,
- * sieht danach überall LK-Inhalte, ohne es ein zweites Mal einzustellen.
+ * Wichtig ist, was NICHT hier steht: kein eigener „Kostenlos testen"-Knopf
+ * mehr neben den beiden Kursen. Drei Knöpfe nebeneinander sind drei
+ * Entscheidungen, und zwei davon führten vorher an denselben Ort. Jetzt gibt
+ * es genau einen Schritt — den Kurs wählen — und die Entscheidung zwischen
+ * kaufen und erst ansehen fällt eine Seite später, wo beide Wege nebeneinander
+ * stehen und man weiß, worum es geht.
+ *
+ * Die Wahl wird auch gemerkt: `gf-level` steuert, welche Kursstufe die
+ * Lernoberfläche später zeigt. Wer hier LK wählt, sieht danach LK-Inhalte,
+ * ohne es ein zweites Mal einzustellen.
  */
 const STUFEN = [
-  { id: 'gk' as const, label: 'Grundkurs', kurz: 'GK' },
-  { id: 'lk' as const, label: 'Leistungskurs', kurz: 'LK' },
+  { id: 'gk' as const, label: 'Grundkurs', pfad: '/kurse/grundkurs' },
+  { id: 'lk' as const, label: 'Leistungskurs', pfad: '/kurse/leistungskurs' },
 ];
 
-export default function KursWahl({ onEnter }: { onEnter: () => void }) {
-  const [gewaehlt, setGewaehlt] = useState<'gk' | 'lk' | null>(null);
-  const router = useRouter();
-
-  const waehlen = (id: 'gk' | 'lk') => {
-    setGewaehlt(id);
+export default function KursWahl() {
+  const merken = (id: 'gk' | 'lk') => {
     try {
       localStorage.setItem('gf-level', id);
     } catch {
-      /* Speicher gesperrt: Die Wahl gilt dann nur für diesen Klick. */
+      /* Speicher gesperrt: Die Stufe wird dann auf der Kursseite neu gesetzt. */
     }
   };
 
   return (
     <div className={styles.wahl}>
-      <p className={styles.frage} id="kurswahl-frage">Welchen Kurs schreibst du?</p>
+      <p className={styles.titel}>Kostenlos testen</p>
+      <p className={styles.frage} id="kurswahl-frage">Wähle deinen Kurs</p>
 
-      <div className={styles.knoepfe} role="group" aria-labelledby="kurswahl-frage">
+      <div className={styles.knoepfe} aria-labelledby="kurswahl-frage">
         {STUFEN.map(s => (
-          <button
+          <Link
             key={s.id}
-            type="button"
-            className={gewaehlt === s.id ? styles.stufeAn : styles.stufe}
-            aria-pressed={gewaehlt === s.id}
-            onClick={() => waehlen(s.id)}
+            className={styles.stufe}
+            href={s.pfad}
+            onClick={() => merken(s.id)}
           >
             <span className={styles.stufeName}>{s.label}</span>
             <span className={styles.stufePreis}>{PREISE[s.id].einmalig} einmalig</span>
-          </button>
+            <span className={styles.stufePfeil} aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </Link>
         ))}
-      </div>
-
-      <div className={styles.weiter}>
-        <button type="button" className={styles.start} onClick={onEnter}>
-          Kostenlos testen
-        </button>
-        {/* Erst nach einer Wahl: Vorher wüsste der Knopf nicht, wohin. */}
-        {gewaehlt && (
-          <button
-            type="button"
-            className={styles.zweit}
-            onClick={() => router.push('/kurse')}
-          >
-            {STUFEN.find(s => s.id === gewaehlt)?.label} ansehen
-          </button>
-        )}
       </div>
 
       <p className={styles.fuss}>Ohne Zahlungsdaten. Die ersten Inhalte jedes Themas sind frei.</p>

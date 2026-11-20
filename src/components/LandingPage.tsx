@@ -54,25 +54,26 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           <div className={styles.heroMitte}>
             <BrandMark className={styles.heroMarke} size={64} />
 
-            {/* Eine Zeile Einordnung über der Überschrift.
-
-                Gute Lernseiten setzen hier eine Zahl: „20.000 Studierende
-                unterrichtet". Gradefruit hat noch keine Schüler, also steht
-                dort keine erfundene Zahl, sondern die Einordnung selbst. Sie
-                ist nachprüfbar und beantwortet in sieben Wörtern, ob jemand
-                hier richtig ist. */}
-            <p className={styles.heroPille}>{t('start.pille')}</p>
-
             <h1 className={styles.heroTitel}>
               {t('start.titelAnfang')}{' '}
               <span className={styles.heroAkzent}>{t('start.titelAkzent')}</span>
             </h1>
 
-            <p className={styles.heroZusatz}>{t('start.heroZeile')}</p>
+            {/* Drei Stichpunkte statt eines erklärenden Satzes.
+
+                Darüber stand eine Einordnungszeile und darunter ein Satz, der
+                dasselbe noch einmal sagte. Zweimal dieselbe Auskunft liest
+                niemand zweimal. Drei kurze Punkte beantworten in einem Blick,
+                ob jemand hier richtig ist: Bundesland, Jahrgang, Kursstufe. */}
+            <ul className={styles.heroFakten}>
+              {['fakt1', 'fakt2', 'fakt3'].map(k => (
+                <li key={k}>{t(`start.${k}` as Parameters<typeof t>[0])}</li>
+              ))}
+            </ul>
 
             {/* Statt zweier allgemeiner Knöpfe die Frage, die sich hier jeder
                 stellt. Wer wählt, ist weiter als wer liest. */}
-            <KursWahl onEnter={onEnter} />
+            <KursWahl />
           </div>
 
           {/* Rechts im Startbereich steht das Produkt selbst. Kein Symbolfoto

@@ -1,0 +1,105 @@
+/* Zwei Wege nebeneinander: kostenlos anfangen oder kaufen.
+
+   Gleich breit und gleich hoch, damit keiner wie der Trostpreis aussieht.
+   Unterschieden werden sie nur durch den Rahmen des Hauptwegs. */
+
+.zurueck {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: var(--raum-lg);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.zurueck:hover { color: var(--ink); text-decoration: underline; }
+
+.wege {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--raum-lg);
+  width: 100%;
+  margin-top: var(--raum-2xl);
+}
+
+/* Spalte statt Raster, damit der Knopf unten abschließt: Die beiden Karten
+   tragen unterschiedlich viel Text, und mit dem Knopf direkt unter dem Text
+   stand er links auf halber Höhe und rechts ganz unten. Zwei gleichwertige
+   Wege müssen gleich weit entfernt aussehen. */
+.weg,
+.wegHaupt {
+  display: flex;
+  flex-direction: column;
+  gap: var(--raum-sm);
+  padding: var(--raum-xl);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+.weg { border: 1px solid var(--line); }
+/* Der gekaufte Zugang ist der Hauptweg und trägt deshalb die Markenfarbe
+   als Rahmen. Gefüllt wäre zu viel: Die Seite soll anbieten, nicht drängen. */
+.wegHaupt { border: 1.5px solid var(--btn-ink); }
+
+.wegKopf {
+  color: var(--faint);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.wegPreis {
+  color: var(--ink);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -.035em;
+  line-height: 1;
+}
+.wegPreis span { color: var(--muted); font-family: inherit; font-size: 14px; font-weight: 500; letter-spacing: 0; }
+
+.wegText { color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+.enthalten { display: grid; gap: var(--raum-xs); margin: var(--raum-xs) 0; padding: 0; list-style: none; }
+.enthalten li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--raum-xs);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.enthalten svg { flex: none; margin-top: 3px; color: var(--btn-ink); }
+
+.wegKnopf,
+.wegKnopfZweit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 50px;
+  /* Schiebt den Knopf ans untere Ende der Karte. */
+  margin-top: auto;
+  padding: 0 var(--raum-lg);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out), color var(--dur-hover) var(--ease-out);
+}
+.wegKnopf { border: 0; background: var(--btn-ink); color: var(--btn-ink-tx); }
+.wegKnopf:hover { background: var(--btn-ink-hover); }
+
+.wegKnopfZweit { border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent); background: transparent; color: var(--accent-d); }
+.wegKnopfZweit:hover { background: var(--btn-ink); color: var(--btn-ink-tx); border-color: var(--btn-ink); }
+
+.wegFuss { color: var(--faint); font-size: 13px; }
+
+.hinweis { max-width: 60ch; margin-top: var(--raum-xl); color: var(--faint); font-size: 13px; line-height: 1.6; }
+
+@media (max-width: 760px) {
+  .wege { grid-template-columns: minmax(0, 1fr); }
+  .weg,
+  .wegHaupt { padding: var(--raum-lg); }
+}

@@ -346,21 +346,40 @@
 
 
 /* ---------------------------------------------------------------------------
-   Einordnungszeile über der Überschrift
-   Keine erfundene Zahl, sondern die Einordnung selbst: Bundesland, Fach,
-   Jahrgang. Wer das liest, weiß in einer Zeile, ob er hier richtig ist.
+   Die drei Fakten unter der Überschrift
+   Bundesland, Jahrgang, Kursstufe. Keine Sätze, sondern drei Angaben, die in
+   einem Blick beantworten, ob jemand hier richtig ist. Durch senkrechte
+   Striche getrennt statt untereinander: Drei kurze Wörter in drei Zeilen
+   sähen aus wie eine Liste mit fehlenden Einträgen.
 --------------------------------------------------------------------------- */
-.heroPille {
-  display: inline-flex;
+.heroFakten {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  padding: var(--raum-2xs) var(--raum-md);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  background: var(--surface-2);
-  color: var(--muted);
-  font-size: 13px;
+  gap: var(--raum-xs) var(--raum-md);
+  margin-top: var(--raum-xs);
+  padding: 0;
+  list-style: none;
+}
+
+.heroFakten li {
+  position: relative;
+  color: var(--ink);
+  font-size: 16px;
   font-weight: 600;
-  letter-spacing: .01em;
+}
+
+/* Der Trennstrich gehört zum Abstand, nicht zum Text: als Rahmen gesetzt,
+   damit Vorleseprogramme ihn nicht mitlesen. */
+.heroFakten li + li::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(var(--raum-md) / -2);
+  width: 1px;
+  height: 14px;
+  transform: translateY(-50%);
+  background: var(--line-strong);
 }
 
 /* ---------------------------------------------------------------------------

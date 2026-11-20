@@ -240,8 +240,8 @@ export default function AccountView({
   // Ein Kurs pro Zeile: nur der Kursname. Kurse ohne Zugang stehen grau
   // darunter und tragen den Hinweis „inaktiv".
   const COURSE_NAME = {
-    gk: 'Mathematik-Abiturvorbereitung 2027 · Grundkurs',
-    lk: 'Mathematik-Abiturvorbereitung 2027 · Leistungskurs',
+    gk: 'Mathe-Abitur Hessen 2027 · Grundkurs',
+    lk: 'Mathe-Abitur Hessen 2027 · Leistungskurs',
   } as const;
 
   const courseRow = (course: 'gk' | 'lk', isOwned: boolean, coursePlan: string | null) => (
