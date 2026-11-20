@@ -14,7 +14,7 @@ import styles from './ProduktBild.module.css';
  * Aufnahmen neu entstehen — Browser zeigen dann weiter die alte Fassung.
  * Nach jedem Lauf von `scripts/produktbilder.mjs` hier hochzählen.
  */
-export const BILD_VERSION = '11';
+export const BILD_VERSION = '12';
 
 export default function ProduktBild({
   name,

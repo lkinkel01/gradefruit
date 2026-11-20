@@ -1,33 +1,27 @@
-/* Die Angaben zur Person, rechts neben der Geschichte.
+/* Die Geschichte als Fließtext in Lesebreite.
 
-   Bewusst als Definitionsliste und nicht als Fließtext: Wer wissen will, wer
-   hinter der Seite steht, überfliegt vier Zeilen und ist fertig. */
-.karte {
+   Die Angaben zur Person standen vorher als Liste daneben: Wer, Studium,
+   Zurzeit. Das las sich wie ein Lebenslauf und nahm der Geschichte genau das,
+   was sie trägt. Jetzt steht alles im Text, wo es hingehört. */
+.text {
   display: grid;
   gap: var(--raum-lg);
-  margin: 0;
-  padding: var(--raum-xl);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--surface);
+  max-width: 62ch;
+  margin-top: var(--raum-xl);
 }
 
-.karte > div { display: grid; gap: var(--raum-2xs); }
-
-.karte dt {
-  color: var(--faint);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
+.text p {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.7;
 }
 
-.karte dd {
-  margin: 0;
+/* Der erste Absatz trägt die Aussage und steht deshalb dunkler und größer. */
+.text p:first-child {
   color: var(--ink);
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.5;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.6;
 }
 
 /* Die drei Gründe. Haarlinien statt Kästen, wie überall auf den Seiten. */

@@ -267,7 +267,12 @@
   gap: var(--raum-xs);
   padding: var(--raum-4xl) var(--raum-lg) var(--raum-2xl);
   background: var(--canvas);
-  overflow-y: auto;
+  /* Das Menü scrollt nicht. Vorher ließ es sich hoch- und runterziehen,
+     obwohl der Inhalt hineinpasste — das Gummiband am Rand fühlte sich an,
+     als wäre etwas abgeschnitten. Es sind vier Punkte und zwei Knöpfe; die
+     passen auf jeden Bildschirm, und was passt, soll stillstehen. */
+  overflow: hidden;
+  overscroll-behavior: contain;
   animation: menueAuf var(--dur-enter) var(--ease-out) both;
 }
 @keyframes menueAuf { from { opacity: 0; } to { opacity: 1; } }
@@ -320,7 +325,6 @@
   width: 100%;
 }
 
-.probe,
 .haupt,
 .zweit {
   display: flex;
@@ -336,13 +340,10 @@
   cursor: pointer;
 }
 
-/* Registrieren ist der Hauptweg und als einziger gefüllt. */
+/* Der Hauptweg, als einziger gefüllt: Registrieren für Gäste,
+   Weiterlernen für Angemeldete. */
 .haupt { border: 0; background: var(--btn-ink); color: var(--btn-ink-tx); }
-.haupt:hover { background: var(--accent-d); }
-
-/* Kostenlos testen als Umriss in der Markenfarbe. */
-.probe { border: 1.5px solid var(--accent); background: transparent; color: var(--accent-d); }
-.probe:hover { background: var(--btn-ink); color: var(--btn-ink-tx); }
+.haupt:hover { background: var(--btn-ink-hover); }
 
 /* Anmelden tritt zurück: Wer ein Konto hat, sucht gezielt. */
 .zweit { border: 1px solid var(--line-strong); background: transparent; color: var(--ink); }

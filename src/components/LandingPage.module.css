@@ -21,9 +21,20 @@
 /* Seit die Punktliste nach unten gewandert ist, trägt der Startbereich nur
    noch Überschrift, Zeile und zwei Knöpfe. Mit der alten Mindesthöhe stand
    darunter ein Drittel Bildschirm leer. */
+/* Der Startbereich füllt den ersten Bildschirm.
+
+   Vorher war er auf 640 Pixel gedeckelt. Auf einem normalen Monitor ragte
+   damit schon das nächste Band ins Bild, und man sah oben die Überschrift und
+   darunter angeschnitten „Einfaches Lernsystem." Der erste Blick soll genau
+   eine Sache zeigen: worum es geht und wo man anfängt. Alles andere kommt
+   beim Scrollen.
+
+   `svh` statt `vh`, weil mobile Browser ihre Leisten ein- und ausblenden:
+   `100vh` rechnet mit der eingeklappten Leiste und schiebt den Inhalt sonst
+   unter den Bildschirmrand. */
 .hero {
   position: relative;
-  min-height: min(92svh, 640px);
+  min-height: 100svh;
   background: var(--surface);
   display: grid;
   align-content: center;
@@ -201,15 +212,23 @@
 
 /* Auf dem Handy braucht alles mehr Luft: Überschrift, Zeile und Punkte
    standen zu dicht beieinander und wirkten gequetscht. */
-@media (max-width: 760px) {
-  .hero { padding: var(--raum-4xl) var(--raum-lg) var(--raum-3xl); min-height: auto; }
+@media (max-width: 920px) {
+  .hero { padding: var(--raum-4xl) var(--raum-lg) var(--raum-3xl); }
   .heroMitte { gap: var(--raum-md); }
   .heroTitel { max-width: 14ch; }
-  .nutzen { gap: var(--raum-sm) var(--raum-md); margin-top: var(--raum-xs); }
-  .nutzen li { font-size: 14px; }
-  .heroKnoepfe { margin-top: var(--raum-xs); width: 100%; flex-direction: column; }
+  .heroKnoepfe { margin-top: var(--raum-sm); width: 100%; flex-direction: column; }
   .heroKnopf { width: 100%; }
-  }
+
+  /* Auf dem Handy steht im Startbereich KEIN Bild.
+
+     Untereinander landete die Produktaufnahme direkt unter den Knöpfen und
+     war damit das Zweite, was man sieht — noch vor der Erklärung, was das
+     Produkt überhaupt macht. Die Reihenfolge ist jetzt: Aussage und Knöpfe,
+     dann das Lernsystem, dann die Galerie, die dasselbe zeigt und mehr. Das
+     Bild fehlt also nicht, es steht nur an der richtigen Stelle. */
+  .heroBild { display: none; }
+  .heroRaster { grid-template-columns: minmax(0, 1fr); }
+}
 
 
 /* ---------------------------------------------------------------------------

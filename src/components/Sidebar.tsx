@@ -1,11 +1,12 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
+import { PROBE_ABSCHNITTE, PROBE_AUFGABEN } from '@/lib/probe';
 import { NavigateTo, TopicTab, View, TOPICS } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { indexFor } from '@/lib/contentIndex';
 import { useImAppRahmen } from '@/lib/nativeApp';
 import { BrandMark } from './BrandMark';
-import { CheckIcon, ChevronIcon, CoursesIcon, LockIcon, OverviewIcon, ReelIcon, ReviewIcon } from './UiIcons';
+import { CheckIcon, ChevronIcon, CoursesIcon, OverviewIcon, ReelIcon, ReviewIcon } from './UiIcons';
 import styles from './Sidebar.module.css';
 
 interface Props {
@@ -55,10 +56,17 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
   const [collapsedSubs, setCollapsedSubs] = useState<Set<string>>(
     () => new Set(TOPICS.flatMap(t => [`${t.id}:zusammenfassung`, `${t.id}:uebungen`])),
   );
-  // Wie `toggleCollapse`, nur eine Ebene tiefer: Auch hier hielt der
-  // Hover-Zustand die Liste offen, bis man den Zeiger wegbewegte.
+  // Ein Thema auf- oder zuklappen.
+  const toggleCollapse = (id: View) => {
+    setCollapsedTopics(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+  // Dasselbe eine Ebene tiefer.
   const toggleSub = (key: string) => {
-    leaveSub();
     setCollapsedSubs(prev => {
       const next = new Set(prev);
       if (next.has(key)) next.delete(key);
@@ -66,40 +74,21 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
       return next;
     });
   };
-  // Hover öffnet Untermenüs erst, wenn die Maus einen Moment liegen bleibt
-  // (280 ms) — lang genug, dass beim Vorbeifahren nichts versehentlich
-  // aufklappt, kurz genug, dass es sich nicht zäh anfühlt.
-  const HOVER_DELAY = 280;
-  const [hoverTopic, setHoverTopic] = useState<View | null>(null);
-  const hoverTimer = useRef<number | null>(null);
-  // Dieselbe Logik eine Ebene tiefer: Zusammenfassung/Übungen klappen ihre
-  // Unterpunkte auch beim Verweilen auf. Schlüssel „id:tab".
-  const [hoverSub, setHoverSub] = useState<string | null>(null);
-  const [coursesOpen, setCoursesOpen] = useState(false);
-  const subTimer = useRef<number | null>(null);
+  /* Aufgeklappt wird ausschließlich per Klick.
 
-  const enterTopic = (id: View) => {
-    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    hoverTimer.current = window.setTimeout(() => setHoverTopic(id), HOVER_DELAY);
-  };
-  const leaveTopic = () => {
-    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    hoverTimer.current = null;
-    setHoverTopic(null);
-  };
-  const enterSub = (key: string) => {
-    if (subTimer.current) window.clearTimeout(subTimer.current);
-    subTimer.current = window.setTimeout(() => setHoverSub(key), HOVER_DELAY);
-  };
-  const leaveSub = () => {
-    if (subTimer.current) window.clearTimeout(subTimer.current);
-    subTimer.current = null;
-    setHoverSub(null);
-  };
-  useEffect(() => () => {
-    if (hoverTimer.current) window.clearTimeout(hoverTimer.current);
-    if (subTimer.current) window.clearTimeout(subTimer.current);
-  }, []);
+     Vorher öffnete sich ein Untermenü, wenn die Maus 280 ms darauf liegen
+     blieb, und schloss sich beim Wegfahren wieder. Zwei Dinge gingen damit
+     schief: Ein Klick auf ein Thema öffnete nichts (man musste erst warten,
+     ohne zu klicken), und was man aufhatte, verschwand, sobald man mit der
+     Maus wegging — auch mitten im Lesen der Liste. Jetzt gilt die einfache
+     Regel: Klick auf, Klick zu, dazwischen bleibt es stehen.
+
+     Damit fallen Hover-Zustand und beide Zeitgeber ersatzlos weg. */
+  const [coursesOpen, setCoursesOpen] = useState(false);
+
+  /* Sieht dieser Nutzer gerade nur den kostenlosen Anfang? Der Kauf gilt je
+     Kursstufe, also entscheidet die Stufe, die gerade gelernt wird. */
+  const inProbe = level === 'gk' ? !owned : !ownedLk;
 
   // Nur die tatsächlich freigeschalteten Kurse.
   const meineKurse = ([
@@ -134,76 +123,58 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
         {TOPICS.map(t => {
           const active = view === t.id;
           const topicId = t.id as 'analysis' | 'linalg' | 'stochastik';
-          // Nur das Inhaltsverzeichnis — die Inhalte selbst kommen vom Server.
-          const { sections, tasks } = indexFor(topicId, level);
+          /* Nur das Inhaltsverzeichnis — die Inhalte selbst kommen vom Server.
+
+             Ohne Kauf wird die Gliederung auf den kostenlosen Anfang gekürzt.
+             Vorher bot die Leiste alle sieben Abschnitte an, während in der
+             Liste daneben drei standen: Die übrigen vier führten ins Leere. */
+          const alles = indexFor(topicId, level);
+          const sections = inProbe ? alles.sections.slice(0, PROBE_ABSCHNITTE) : alles.sections;
+          const tasks = inProbe ? alles.tasks.slice(0, PROBE_AUFGABEN) : alles.tasks;
           const summaryActive = active && topicTab === 'zusammenfassung';
           const exercisesActive = active && topicTab === 'uebungen';
-          const expanded = (active && !collapsedTopics.has(t.id)) || hoverTopic === t.id;
-          // Unterpunkte sind offen, wenn ihr Bereich aktiv (und nicht manuell
-          // zugeklappt) ist ODER die Maus einen Moment darauf liegt.
-          const summaryOpen = (summaryActive && (!!topicItemId || !collapsedSubs.has(`${t.id}:zusammenfassung`)))
-            || hoverSub === `${t.id}:zusammenfassung`;
-          const exercisesOpen = (exercisesActive && (!!topicItemId || !collapsedSubs.has(`${t.id}:uebungen`)))
-            || hoverSub === `${t.id}:uebungen`;
+          const expanded = !collapsedTopics.has(t.id);
+          /* Ein Unterpunkt ist offen, solange er nicht zugeklappt wurde. Nicht
+             mehr an „ist gerade aktiv" gebunden: Wer Übungen aufklappt und
+             danach in die Zusammenfassung wechselt, soll die Übungen weiter
+             aufgeklappt vorfinden. */
+          const summaryOpen = !collapsedSubs.has(`${t.id}:zusammenfassung`);
+          const exercisesOpen = !collapsedSubs.has(`${t.id}:uebungen`);
           return (
-            <div
-              key={t.id}
-              className={styles.topicWrap}
-              onMouseEnter={() => enterTopic(t.id)}
-              onMouseLeave={leaveTopic}
-            >
+            <div key={t.id} className={styles.topicWrap}>
               <button
                 className={active ? styles.on : ''}
                 aria-expanded={expanded}
                 onClick={() => {
-                  if (active) {
-                    // Aktives Thema: alles einklappen und auf die Themenseite —
-                    // dort wird zwischen Zusammenfassung und Übungen gewählt.
-                    setCollapsedTopics(prev => new Set(prev).add(t.id));
-                    setCollapsedSubs(prev => {
-                      const next = new Set(prev);
-                      next.add(`${t.id}:zusammenfassung`);
-                      next.add(`${t.id}:uebungen`);
-                      return next;
-                    });
-                    if (hoverTimer.current) { window.clearTimeout(hoverTimer.current); hoverTimer.current = null; }
-                    setHoverTopic(null);
-                    if (subTimer.current) { window.clearTimeout(subTimer.current); subTimer.current = null; }
-                    setHoverSub(null);
-                    onNavigate(t.id, { tab: 'uebersicht', itemId: null });
-                  } else {
-                    setCollapsedTopics(prev => {
-                      const next = new Set(prev);
-                      next.delete(t.id);
-                      return next;
-                    });
-                    onNavigate(t.id, { tab: 'uebersicht', itemId: null });
-                  }
+                  /* Ein Klick klappt auf oder zu und führt ins Thema. Beim
+                     Zuklappen bleiben die Unterpunkte so, wie sie waren —
+                     wer sie beim nächsten Aufklappen wieder offen vorfindet,
+                     muss sich nicht jedes Mal neu durchhangeln. */
+                  toggleCollapse(t.id);
+                  onNavigate(t.id, { tab: 'uebersicht', itemId: null });
                 }}
               >
                 <span className={styles.cdot} style={{ background: t.color }} />
                 <span className={styles.ti}>{t.label}</span>
-                {topicTotal(t.id, level) > 0 && topicDone(t.id, level) === topicTotal(t.id, level)
-                  ? <span className={styles.stDone}><CheckIcon size={11} /></span>
-                  : t.id !== 'analysis' && !owned && !ownedLk && <span className={styles.stLock}><LockIcon size={13} /></span>
-                }
+                {/* Kein Schloss mehr. Es stammte aus der Zeit, als außer
+                    Analysis alles gesperrt war. Seit es in jedem Thema einen
+                    kostenlosen Anfang gibt, ist es schlicht falsch: Es sagt
+                    „hier kommst du nicht rein", und man kommt rein. */}
+                {topicTotal(t.id, level) > 0 && topicDone(t.id, level) === topicTotal(t.id, level) && (
+                  <span className={styles.stDone}><CheckIcon size={11} /></span>
+                )}
               </button>
               {/* Untermenü: im aktiven Thema offen (einklappbar per Klick auf
                   das Thema), sonst nach kurzem Hover-Moment. */}
               <div className={`${styles.flyout} ${expanded ? styles.flyoutPinned : ''}`}>
-                <div
-                  onMouseEnter={() => enterSub(`${t.id}:zusammenfassung`)}
-                  onMouseLeave={leaveSub}
-                >
+                <div>
                 <button
                   className={`${styles.flyItem} ${summaryActive && !topicItemId ? styles.flyOn : ''} ${summaryActive && topicItemId ? styles.flyParentOn : ''}`}
                   aria-current={summaryActive && !topicItemId ? 'page' : undefined}
                   aria-expanded={summaryOpen}
                   onClick={() => {
-                    // Steht ein einzelner Abschnitt offen, führt der Klick zurück
-                    // zur vollständigen Liste — sonst klappt er nur ein/aus.
-                    if (summaryActive && !topicItemId) toggleSub(`${t.id}:zusammenfassung`);
-                    else onNavigate(t.id, { tab: 'zusammenfassung', itemId: null });
+                    toggleSub(`${t.id}:zusammenfassung`);
+                    onNavigate(t.id, { tab: 'zusammenfassung', itemId: null });
                   }}
                 >
                   Zusammenfassung
@@ -230,17 +201,14 @@ export default function Sidebar({ view, topicTab, topicItemId, owned, ownedLk, l
                   </div>
                 )}
                 </div>
-                <div
-                  onMouseEnter={() => enterSub(`${t.id}:uebungen`)}
-                  onMouseLeave={leaveSub}
-                >
+                <div>
                 <button
                   className={`${styles.flyItem} ${exercisesActive && !topicItemId ? styles.flyOn : ''} ${exercisesActive && topicItemId ? styles.flyParentOn : ''}`}
                   aria-current={exercisesActive && !topicItemId ? 'page' : undefined}
                   aria-expanded={exercisesOpen}
                   onClick={() => {
-                    if (exercisesActive && !topicItemId) toggleSub(`${t.id}:uebungen`);
-                    else onNavigate(t.id, { tab: 'uebungen', itemId: null });
+                    toggleSub(`${t.id}:uebungen`);
+                    onNavigate(t.id, { tab: 'uebungen', itemId: null });
                   }}
                 >
                   Übungen

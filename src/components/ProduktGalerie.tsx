@@ -73,6 +73,35 @@ export default function ProduktGalerie({
 
   const jetzt = bilder[aktiv];
 
+  /* Wischen auf Touchgeräten.
+
+     Die Pfeile sind auf dem Handy ausgeblendet, weil sie zu viel vom Bild
+     wegnehmen. Ohne Wischen blieben dort nur die Punkte, und eine Galerie,
+     die sich nicht wischen lässt, fühlt sich auf dem Handy kaputt an.
+
+     Bewusst eigene Logik statt Scroll-Snap: Die Bilder liegen übereinander
+     und werden ein- und ausgeblendet, es gibt also gar keine Scrollstrecke,
+     an der etwas einrasten könnte. */
+  const [tippStart, setTippStart] = useState<{ x: number; y: number } | null>(null);
+  const MINDEST_WEG = 40;
+
+  const tippBeginn = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    setTippStart({ x: t.clientX, y: t.clientY });
+  };
+
+  const tippEnde = (e: React.TouchEvent) => {
+    if (!tippStart) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - tippStart.x;
+    const dy = t.clientY - tippStart.y;
+    setTippStart(null);
+    // Nur waagerechtes Wischen zählt. Ohne diesen Vergleich löst jedes
+    // Hoch- und Runterscrollen über der Galerie einen Bildwechsel aus.
+    if (Math.abs(dx) < MINDEST_WEG || Math.abs(dx) <= Math.abs(dy)) return;
+    zeige(dx < 0 ? aktiv + 1 : aktiv - 1);
+  };
+
   return (
     <div
       className={styles.galerie}
@@ -81,7 +110,7 @@ export default function ProduktGalerie({
       onFocusCapture={() => setAngehalten(true)}
       onBlurCapture={() => setAngehalten(false)}
     >
-      <div className={styles.rahmen}>
+      <div className={styles.rahmen} onTouchStart={tippBeginn} onTouchEnd={tippEnde}>
         {bilder.map((b, i) => (
           <div key={b.name} className={i === aktiv ? styles.blattAktiv : styles.blatt} aria-hidden={i !== aktiv}>
             <img
@@ -129,10 +158,12 @@ export default function ProduktGalerie({
       </div>
 
       <div className={styles.fuss}>
-        {/* Die Beschriftung wechselt mit dem Bild. aria-live sorgt dafür, dass
-            ein Vorleseprogramm den Wechsel mitbekommt, ohne dass der Fokus
-            springt. */}
-        <p className={styles.beschriftung} aria-live="polite">{jetzt.titel}</p>
+        {/* Die sichtbare Beschriftung ist entfallen: Die Bilder zeigen die
+            Oberfläche, und darin steht bereits „Zusammenfassung", „Übungen"
+            und so weiter. Eine Zeile, die dasselbe noch einmal sagt, ist
+            Dopplung. Für Vorleseprogramme bleibt der Titel erhalten — die
+            lesen keine Bilder. */}
+        <p className={styles.nurVorleser} aria-live="polite">{jetzt.titel}</p>
         <div className={styles.punkte} role="tablist" aria-label="Bild wählen">
           {bilder.map((b, i) => (
             <button

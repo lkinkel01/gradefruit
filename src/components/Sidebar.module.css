@@ -241,8 +241,6 @@
 .icon svg { width: 17px; height: 17px; }
 .stDone { width: 18px; height: 18px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--green); }
 .stDone svg { width: 11px; height: 11px; }
-.stLock { display: flex; align-items: center; }
-.stLock svg { width: 13px; height: 13px; stroke: var(--side-faint); }
 .spacer { flex: 1; min-height: 22px; }
 .unlockCard {
   margin: var(--raum-md) var(--raum-2xs) 0;

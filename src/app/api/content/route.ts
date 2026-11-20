@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { PROBE_ABSCHNITTE, PROBE_AUFGABEN } from '@/lib/probe';
 import {
   isContentLevel,
   isContentTopic,
@@ -39,9 +40,6 @@ const COURSE_SLUG = { gk: 'mathe-gk', lk: 'mathe-lk' } as const;
  * Rest gar nicht erst — die Bezahlschranke bleibt eine echte Grenze und wird
  * nicht nur ausgeblendet.
  */
-const PROBE_ABSCHNITTE = 3;
-const PROBE_AUFGABEN = 5;
-
 function probeVon(topic: ContentTopic, level: ContentLevel) {
   const alleAufgaben = tasksFor(topic, level);
   const ganzeZusammenfassung = summaryFor(topic, level);

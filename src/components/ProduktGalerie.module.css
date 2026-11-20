@@ -76,14 +76,26 @@
 .links { left: var(--raum-md); }
 .rechts { right: var(--raum-md); }
 
+/* Ohne Beschriftung bleiben nur die Punkte. Die stehen jetzt mittig unter
+   dem Bild statt rechts außen an einer Zeile zu kleben, die es nicht mehr
+   gibt. */
 .fuss {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--raum-md);
+  justify-content: center;
 }
 
-.beschriftung { color: var(--muted); font-size: 14px; font-weight: 600; }
+/* Nur für Vorleseprogramme. */
+.nurVorleser {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 .punkte { display: flex; gap: var(--raum-xs); }
 
@@ -106,5 +118,6 @@
    Punkte durch die Galerie, und der Selbstlauf macht den Rest. */
 @media (max-width: 620px) {
   .pfeil { display: none; }
-  .fuss { justify-content: space-between; }
+  /* Wischen braucht Fläche, die der Browser nicht selbst beansprucht. */
+  .rahmen { touch-action: pan-y; }
 }

@@ -551,7 +551,7 @@ export default function Home() {
             onItemLabelChange={setTopicItemLabel}
           />
         );
-      case 'themen': return <ThemenView owned={owned} ownedLk={ownedLk} level={level} onNavigate={navigate} />;
+      case 'themen': return <ThemenView level={level} onNavigate={navigate} />;
       case 'kurse': return <KurseView owned={owned} ownedLk={ownedLk} onOpenCheckout={openCheckout} />;
       case 'videos': return <VideosView level={level} />;
       case 'tutors': return <TutorsView />;

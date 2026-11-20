@@ -17,7 +17,7 @@ export default function Lernsystem() {
       {/* Die fünf Schritte als Grafik, nicht als Satz. Dieselbe Darstellung
           wie auf der Startseite — wer von dort kommt, erkennt sie wieder. */}
       <section className={band.band}>
-        <h1 className={band.titel}>So lernst du damit.</h1>
+        <h1 className={band.titel}>So lernst du mit Gradefruit.</h1>
         <p className={band.zeile}>Fünf Schritte, in jedem Thema dieselben.</p>
         <LernSchritte />
         <div className={band.bild}>

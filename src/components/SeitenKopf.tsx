@@ -216,14 +216,21 @@ export default function SeitenKopf({
               Deshalb stehen sie hier als vollbreite Knöpfe ganz oben im Fuß,
               so wie man es von anderen Seiten kennt. */}
           <div className={styles.fuss}>
+            {/* Nur noch Konto-Knöpfe. „Kostenlos testen" stand hier als dritter
+                und hätte neben Registrieren und Anmelden eine dritte
+                Entscheidung verlangt — bei drei etwa gleich aussehenden
+                Knöpfen wählt man keinen. Der Weg in die kostenlose Probe
+                steht oben in der Leiste und auf der Startseite zweimal. */}
             <div className={styles.kontoKnoepfe}>
-              <button className={styles.probe} onClick={() => { schliessen(); onEnter(); }}>
-                {isAuthed ? t('kopf.weiterlernen') : t('start.kostenlosTesten')}
-              </button>
               {isAuthed ? (
-                <button className={styles.zweit} onClick={() => { schliessen(); onSignOut(); }}>
-                  {t('kopf.abmelden')}
-                </button>
+                <>
+                  <button className={styles.haupt} onClick={() => { schliessen(); onEnter(); }}>
+                    {t('kopf.weiterlernen')}
+                  </button>
+                  <button className={styles.zweit} onClick={() => { schliessen(); onSignOut(); }}>
+                    {t('kopf.abmelden')}
+                  </button>
+                </>
               ) : (
                 <>
                   <button className={styles.haupt} onClick={() => { schliessen(); onRegister(); }}>

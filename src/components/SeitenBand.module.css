@@ -4,7 +4,10 @@
 .band {
   /* Unten weniger als oben: Der Knopf am Ende eines Bandes brachte seinen
      eigenen Abstand mit, zusammen klaffte eine Lücke zum nächsten Band. */
-  padding: clamp(72px, 10vh, 112px) 24px clamp(56px, 8vh, 88px);
+  /* Mehr Luft als vorher (72/56). Die Abschnitte standen dicht beieinander,
+     und je enger der Takt, desto voller wirkt eine Seite — auch wenn gleich
+     viel darauf steht. */
+  padding: clamp(96px, 13vh, 152px) 24px clamp(80px, 11vh, 128px);
 
   /* Linksbündig in einer mittig stehenden Spalte.
 
@@ -29,7 +32,7 @@
 .bandZwei {
   grid-template-columns: minmax(0, 460px) minmax(0, 620px);
   align-items: center;
-  gap: clamp(32px, 5vw, 80px);
+  gap: clamp(40px, 6vw, 104px);
 }
 
 /* Dieselbe Aufteilung, nur andersherum: Beleg links, Text rechts. Die
@@ -96,7 +99,7 @@
    oben mehr Luft. Nur der Abstand wird gesetzt — die Ausrichtung gehört in
    `.band` und darf hier nicht noch einmal auftauchen. */
 main > .band:first-child {
-  padding-top: clamp(118px, 15vh, 168px);
+  padding-top: clamp(132px, 17vh, 184px);
 }
 
 /* Flächen im Wechsel, beide neutral: ein Band weiß, das nächste auf dem
@@ -132,7 +135,7 @@ main > .band:first-child {
   line-height: 1.6;
 }
 
-.bild { width: min(100%, 980px); margin-top: var(--raum-2xl); }
+.bild { width: min(100%, 980px); margin-top: var(--raum-3xl); }
 .hochkant { width: min(100%, 288px); margin-top: var(--raum-xl); }
 
 .knopf {

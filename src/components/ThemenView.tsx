@@ -3,7 +3,7 @@
 import { TOPICS, type NavigateTo, type View } from '@/lib/types';
 import { useProgress } from '@/lib/ProgressContext';
 import { GrapefruitProgress } from './Logo';
-import { ArrowRightIcon, LockIcon } from './UiIcons';
+import { ArrowRightIcon } from './UiIcons';
 import styles from './ThemenView.module.css';
 
 /**
@@ -13,20 +13,17 @@ import styles from './ThemenView.module.css';
  * seine Bereiche dort hat. Vorher waren die drei Prüfungsgebiete nur über das
  * Dashboard erreichbar, also einen Umweg entfernt.
  */
+/* `owned` und `ownedLk` sind entfallen: Sie dienten nur dazu, Themen mit
+   einem Schloss zu versehen. Das Schloss ist weg, also auch die Angaben. */
 export default function ThemenView({
-  owned,
-  ownedLk,
   level,
   onNavigate,
 }: {
-  owned: boolean;
-  ownedLk: boolean;
   /** Kursstufe — sonst zählt der Nenner die Aufgaben der anderen Stufe mit. */
   level: 'gk' | 'lk';
   onNavigate: NavigateTo;
 }) {
   const { topicDone, topicTotal } = useProgress();
-  const hatZugang = owned || ownedLk;
 
   return (
     <div className={styles.seite}>
@@ -42,7 +39,6 @@ export default function ThemenView({
         {TOPICS.map(topic => {
           const gesamt = topicTotal(topic.id, level) || 1;
           const fertig = topicDone(topic.id, level);
-          const gesperrt = topic.id !== 'analysis' && !hatZugang;
 
           return (
             <li key={topic.id}>
@@ -57,9 +53,9 @@ export default function ThemenView({
                     beiden irgendwann nicht mehr stimmt. Hier geht es ums
                     Hineingehen, nicht ums Nachrechnen. */}
                 <span className={styles.name}>{topic.label}</span>
-                {gesperrt
-                  ? <span className={styles.schloss} aria-label="Nicht in deinem Zugang"><LockIcon size={15} /></span>
-                  : <ArrowRightIcon size={17} />}
+                {/* Kein Schloss: In jedes Thema führt ein kostenloser Anfang,
+                    also stimmt „gesperrt" nicht mehr. */}
+                <ArrowRightIcon size={17} />
               </button>
             </li>
           );
