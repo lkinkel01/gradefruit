@@ -105,8 +105,8 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
         </section>
 
         <Bildband
-          datei="/bild-laptop.webp"
-          alt="Ein aufgeklappter Laptop neben einem College-Block mit zwei Stiften."
+          datei="/bild-lernen.webp"
+          alt="Eine Schülerin lernt konzentriert an ihrem Laptop am Schreibtisch."
         />
 
         <section className={`${band.band} ${band.bandTon}`}>

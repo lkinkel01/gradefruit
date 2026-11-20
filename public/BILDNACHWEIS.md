@@ -2,9 +2,7 @@
 
 | Datei | Quelle | Urheber | Lizenz |
 |---|---|---|---|
-| `startbild.webp` | [Unsplash `mjPs0heWsek`](https://unsplash.com/photos/mjPs0heWsek) | H&CO | [Unsplash-Lizenz](https://unsplash.com/license) — kommerzielle Nutzung erlaubt, keine Namensnennung nötig |
-| `bild-raster.webp` | [Unsplash `oZ7BB-dB4gc`](https://unsplash.com/photos/oZ7BB-dB4gc) | Alexander Nedviga | [Unsplash-Lizenz](https://unsplash.com/license) |
-| `bild-laptop.webp` | [Unsplash `yW-Qgw_IJXg`](https://unsplash.com/photos/yW-Qgw_IJXg) | Maya Maceka | [Unsplash-Lizenz](https://unsplash.com/license) |
+| `bild-lernen.webp` | [Unsplash `HA-0i0E7sq4`](https://unsplash.com/photos/HA-0i0E7sq4) | Daniel Thomas | [Unsplash-Lizenz](https://unsplash.com/license) |
 | `bild-karo.webp` | [Unsplash `333oj7zFsdg`](https://unsplash.com/photos/333oj7zFsdg) | lilartsy | [Unsplash-Lizenz](https://unsplash.com/license) |
 | `hero-lernplatz.jpg`, `hero-lernplatz-dark.jpg` | Projektbestand | — | — |
 | `produkt/*.webp` | eigene Aufnahmen aus Gradefruit (`scripts/produktbilder.mjs`) | — | eigenes Werk |
