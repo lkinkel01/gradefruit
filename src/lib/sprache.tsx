@@ -37,7 +37,7 @@ export const TEXTE = {
     titelZusatz: { de: '2027 in Hessen', en: '2027 in Hessen' },
     nutzen1: { de: 'Prüfungsnahe Aufgaben', en: 'Exam-style tasks' },
     nutzen2: { de: 'Lösungswege Schritt für Schritt', en: 'Worked solutions step by step' },
-    nutzen3: { de: 'Erklärvideos', en: 'Explainer videos' },
+    nutzen3: { de: 'Detaillierte Erklärvideos', en: 'Detailed explainer videos' },
     nutzen4: { de: 'KI-Coach rund um die Uhr', en: 'AI coach around the clock' },
     nutzen5: { de: 'Grundkurs und Leistungskurs', en: 'Basic and advanced course' },
     titelVersteckt: {
@@ -56,10 +56,10 @@ export const TEXTE = {
   },
   bandLernsystem: {
     name: { de: 'Lernsystem', en: 'How it works' },
-    titel: { de: 'Einfaches Lernsystem.', en: 'A simple way to study.' },
+    titel: { de: 'So lernst du damit.', en: 'How you study with it.' },
     zeile: {
-      de: 'Zusammenfassung lesen, Übungsaufgabe rechnen, mit dem Lösungsweg vergleichen, Erklärvideo ansehen und am Ende prüfungsnahe Aufgaben lösen.',
-      en: 'Read the summary, work through an exercise, compare it with the solution, watch the explainer video, then tackle exam-style tasks.',
+      de: 'Fünf Schritte, in jedem Thema dieselben.',
+      en: 'Five steps, the same in every topic.',
     },
     knopf: { de: 'Zum Lernsystem', en: 'See how it works' },
   },
@@ -72,8 +72,8 @@ export const TEXTE = {
     },
     knopf: { de: 'Zu den Kursen', en: 'See courses' },
     zeileKurz: {
-      de: 'Zugang bis zum Ende des Prüfungszeitraums. Keine Verlängerung, keine Kündigung.',
-      en: 'Access until the end of the exam period. No renewal, nothing to cancel.',
+      de: 'Zugang bis zum Ende des Prüfungszeitraums. Keine automatische Verlängerung.',
+      en: 'Access until the end of the exam period. No automatic renewal.',
     },
     gk: { de: 'Grundkurs', en: 'Basic course' },
     lk: { de: 'Leistungskurs', en: 'Advanced course' },
@@ -93,8 +93,8 @@ export const TEXTE = {
   bandSchlussZustand: {
     titelAngemeldet: { de: 'Weiter, wo du warst.', en: 'Pick up where you left off.' },
     zeileOhneKurs: {
-      de: 'Du siehst von jedem Thema den Anfang. Für den vollen Zugang brauchst du einen Kurs.',
-      en: 'You can see the start of every topic. Full access needs a course.',
+      de: 'Die ersten Inhalte jedes Themas stehen dir offen. Für alles Weitere brauchst du einen Kurs.',
+      en: 'The first content of every topic is open to you. Everything beyond needs a course.',
     },
     zeileMitKurs: {
       de: 'Dein Zugang gilt bis zum Ende des Prüfungszeitraums.',
@@ -103,16 +103,19 @@ export const TEXTE = {
   },
   bandUeberUns: {
     name: { de: 'Über uns', en: 'About' },
+    titelAnfang: { de: 'Für', en: 'Built for' },
+    titelAkzent: { de: 'dein', en: 'your' },
+    titelEnde: { de: 'Bundesland gebaut.', en: 'state.' },
     titel: { de: 'Für dein Bundesland gebaut.', en: 'Built for your state.' },
     zeile: {
-      de: 'Mathe-Abitur in Hessen 2027, sowohl für den Grundkurs als auch für den Leistungskurs.',
-      en: 'Maths A-levels in Hessen 2027, for the basic course as well as the advanced one.',
+      de: 'Mathe-Abitur in Hessen 2027, für Grundkurs und Leistungskurs. Aufgaben und Zusammenfassungen folgen dem hessischen Kerncurriculum und sind an Aufbau und Anforderungen der Abiturprüfungen der letzten Jahre ausgerichtet.',
+      en: 'Maths A-levels in Hessen 2027, for both course levels. Tasks and summaries follow the Hessen curriculum and match the structure and demands of recent A-level papers.',
     },
     knopf: { de: 'Mehr über uns', en: 'More about us' },
   },
   bandSchluss: {
     titel: { de: 'Fang an.', en: 'Get started.' },
-    zeile: { de: 'Von jedem Thema siehst du den Anfang kostenlos. Ohne Zahlungsdaten, ohne Frist.', en: 'See the start of every topic for free. No payment details, no time limit.' },
+    zeile: { de: 'Die ersten Inhalte sind für dich kostenlos. Überzeug dich selbst.', en: 'The first content is free for you. See for yourself.' },
     titelGast: { de: 'Fang an.', en: 'Get started.' },
   },
   einstellungen: {

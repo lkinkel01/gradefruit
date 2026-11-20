@@ -1,0 +1,108 @@
+/* Fünf Schritte nebeneinander, verbunden durch eine durchgehende Linie.
+
+   Die Linie liegt hinter den Nummern und läuft durch deren Mitte. Sie ist das
+   Einzige, was aus der Reihe eine Reihenfolge macht — ohne sie stünden hier
+   nur fünf Kästchen nebeneinander. */
+
+.schritte {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--raum-lg);
+  width: 100%;
+  margin-top: var(--raum-2xl);
+  padding: 0;
+  list-style: none;
+  counter-reset: schritt;
+}
+
+.schritt {
+  position: relative;
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--raum-xs);
+  padding-top: var(--raum-xl);
+}
+
+/* Die Verbindungslinie. Sie sitzt auf der Höhe der Nummernmitte und läuft von
+   dieser Nummer bis zur nächsten — beim letzten Schritt entfällt sie, sonst
+   liefe sie ins Leere. */
+.schritt::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: var(--raum-xl);
+  right: calc(var(--raum-lg) * -1);
+  height: 1px;
+  background: var(--line-strong);
+}
+.schritt:last-child::before { display: none; }
+
+.nummer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-pill);
+  background: var(--btn-ink);
+  color: var(--btn-ink-tx);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.titel {
+  color: var(--ink);
+  font-family: 'Cabinet Grotesk', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+}
+
+.text {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.nurVorleser {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Unter 900px wird aus der Reihe eine Spalte: Fünf Spalten nebeneinander
+   lassen auf dem Handy je 50 Pixel übrig, und darin bricht jedes Wort
+   einzeln um. Die Linie läuft dann senkrecht von Nummer zu Nummer. */
+@media (max-width: 900px) {
+  .schritte {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--raum-lg);
+    margin-top: var(--raum-xl);
+  }
+
+  .schritt {
+    padding-top: 0;
+    padding-left: calc(28px + var(--raum-md));
+    min-height: 28px;
+  }
+
+  .schritt::before {
+    top: 28px;
+    bottom: calc(var(--raum-lg) * -1);
+    left: 14px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+}

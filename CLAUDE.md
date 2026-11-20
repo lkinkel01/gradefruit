@@ -93,8 +93,19 @@ Diese Datei verweist nur.
    `node --env-file=.env.local scripts/create-test-user.mjs <zweck>`
    anlegen, nach dem Test mit `scripts/delete-test-user.mjs <zweck>` löschen.
    (E-Mail-Muster `gradefruit.<zweck>.test@gmail.com`, Bestätigung ist aus.)
-5. Gezielt stagen: `git add <dateien>` — nie pauschal `git add -A`.
-6. Committen, pushen, fertig. PROJECT_STATUS.md nur nach größeren Änderungen.
+5. **Hat sich die Lernoberfläche verändert, Produktbilder erneuern.**
+   Die Werbebilder auf der Startseite sind echte Aufnahmen aus dem Produkt.
+   Ändert sich darin etwas — Farbe eines Knopfs, eine neue Kachel, ein
+   anderer Text —, zeigen sie sonst weiter den alten Stand, und das fällt
+   genau dort auf, wo jemand zum Kauf überlegt.
+   ```
+   node --env-file=.env.local scripts/create-test-user.mjs bilder
+   SHOT_EMAIL=… SHOT_PASSWORT=… node --env-file=.env.local scripts/produktbilder.mjs
+   ```
+   Danach `BILD_VERSION` in `src/components/ProduktBild.tsx` hochzählen —
+   die Dateinamen bleiben gleich, sonst zeigen Browser die alte Fassung.
+6. Gezielt stagen: `git add <dateien>` — nie pauschal `git add -A`.
+7. Committen, pushen, fertig. PROJECT_STATUS.md nur nach größeren Änderungen.
 
 ## Projektstruktur
 

@@ -5,6 +5,7 @@ import { BrandMark } from './BrandMark';
 import SeitenKopf from './SeitenKopf';
 import SeitenFuss from './SeitenFuss';
 import ProduktBild from './ProduktBild';
+import LernSchritte from './LernSchritte';
 import { useSprache } from '@/lib/sprache';
 import { useKundenstand } from '@/lib/kundenstand';
 import { PREISE } from '@/lib/preise';
@@ -99,14 +100,16 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
           </div>
         </header>
 
-        {/* Beleg links, Text rechts — andersherum als der Startbereich. */}
-        <section className={`${band.band} ${band.bandTon} ${band.bandZwei} ${band.bandGedreht}`}>
-          <div className={band.spalte}>
-            <h2 className={band.titel}>{t('bandLernsystem.titel')}</h2>
-            <p className={band.zeile}>{t('bandLernsystem.zeile')}</p>
-            <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
-          </div>
-          <div className={band.beleg}>
+        {/* Der Weg durch ein Thema über die volle Breite — fünf Schritte von
+            links nach rechts. Als Satz musste man die Reihenfolge lesen und
+            sich merken; nebeneinander sieht man sie. Darunter die Aufnahme des
+            Lösungswegs, weil das der Schritt ist, den man sich am schwersten
+            vorstellt. */}
+        <section className={`${band.band} ${band.bandTon}`}>
+          <h2 className={band.titel}>{t('bandLernsystem.titel')}</h2>
+          <p className={band.zeile}>{t('bandLernsystem.zeile')}</p>
+          <LernSchritte />
+          <div className={band.bild}>
             <ProduktBild
               name="loesungsweg"
               alt="Ein Lösungsweg in Gradefruit, Schritt für Schritt aufgeklappt."
@@ -116,6 +119,7 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
               hinweis={t('bandLernsystem.knopf')}
             />
           </div>
+          <Link className={band.knopf} href="/lernsystem">{t('bandLernsystem.knopf')}</Link>
         </section>
 
         {/* Das einzige Foto der Seite, und es steht neben dem Text statt über
@@ -123,7 +127,11 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
             nur ein Streifen übrig. */}
         <section className={`${band.band} ${band.bandZwei}`}>
           <div className={band.spalte}>
-            <h2 className={band.titel}>{t('bandUeberUns.titel')}</h2>
+            <h2 className={band.titel}>
+              {t('bandUeberUns.titelAnfang')}{' '}
+              <span className={band.akzent}>{t('bandUeberUns.titelAkzent')}</span>{' '}
+              {t('bandUeberUns.titelEnde')}
+            </h2>
             <p className={band.zeile}>{t('bandUeberUns.zeile')}</p>
             <Link className={band.knopf} href="/ueber-uns">{t('bandUeberUns.knopf')}</Link>
           </div>

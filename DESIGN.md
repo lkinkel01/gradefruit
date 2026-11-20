@@ -108,7 +108,8 @@ Es gibt **genau zwei**, inklusive Logo. Jeder weitere Rotton ist ein Fehler.
 | Token | Wert | Wofür |
 |---|---|---|
 | `--accent` | `#EE4068` | Große Schrift, Symbole, Ränder, Fortschritt, Logo-Fruchtfleisch |
-| `--accent-d` | `#AB2E4B` | **Flächen mit weißer Schrift**, Fließtext in Farbe, Logo-Schale (dunkel) |
+| `--accent-d` | `#AB2E4B` | Farbige **Schrift** auf hellem Grund, Logo-Schale (dunkel) |
+| `--btn-ink` | `#D3395C` (hell) | **Gefüllte Flächen mit weißer Schrift** — Knöpfe, Karten, Nummern |
 
 Der Ton liegt bei 346°, also im Pinkroten. Das ist bewusst: Das Fruchtfleisch
 einer rosa Grapefruit ist pink, nicht orange. Zum Vergleich liegt Claudes
@@ -137,9 +138,16 @@ Gemessen, nicht geschätzt:
 
 **Daraus folgt die wichtigste Farbregel des Hauses:**
 
-> Eine gefüllte Fläche mit weißer Schrift benutzt `--accent-d`, niemals
-> `--accent`. Das helle Grapefruit ist für Schrift, die groß genug ist, für
-> Symbole, Ränder und Dekoration.
+> Eine gefüllte Fläche mit weißer Schrift benutzt `--btn-ink`, niemals
+> `--accent`.
+>
+> Gemessen: Weiß auf `--accent` (#EE4068) erreicht **3,77:1** und verfehlt die
+> geforderten 4,5:1 für normalen Text. `--btn-ink` ist der *hellste* Ton, der
+> die Schwelle noch schafft (**4,66:1**) — dunkler wäre zulässig, aber
+> `--accent-d` wirkt in kleinen Flächen wie ein schwarzer Knopf, und das war
+> der Punkt, an dem die Seite nicht mehr nach Marke aussah, sondern nach
+> Baukasten. Im dunklen Modus dreht sich das Paar um: helle Markenfarbe,
+> dunkle Schrift (**4,92:1**).
 
 Das ist keine Geschmacksfrage. Ab Juni 2025 gilt das
 Barrierefreiheitsstärkungsgesetz auch für Online-Handel; ein Kurs, den man
@@ -306,7 +314,7 @@ Alles respektiert `prefers-reduced-motion`.
 
 | Art | Fläche | Schrift | Wofür |
 |---|---|---|---|
-| Haupt | `--accent-d` | weiß | genau einer je Bildschirm |
+| Haupt | `--btn-ink` | `--btn-ink-tx` | genau einer je Bildschirm |
 | Umriss | transparent, 1,5px `--accent` | `--accent-d` | zweite Wahl |
 | Still | transparent | `--muted` | Nebensachen |
 

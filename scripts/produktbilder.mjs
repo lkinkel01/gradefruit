@@ -14,7 +14,7 @@ import { createClient } from '@supabase/supabase-js';
 import { mkdir } from 'node:fs/promises';
 
 /* Derselbe Platzhaltername wie in der Oberfläche — src/lib/vorschauNutzer.ts. */
-const VORSCHAU_NAME = 'Max Mustermann';
+const VORSCHAU_NAME = 'Alex';
 
 const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const BASIS = 'http://localhost:3000';

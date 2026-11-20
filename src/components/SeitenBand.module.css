@@ -75,10 +75,22 @@
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: var(--radius-card);
   display: block;
+
+  /* Dieselbe Rahmung wie die Produktaufnahmen: feine Linie, gleicher Radius,
+     derselbe weiche Schatten. Ohne das lag das Foto als harte Kante auf der
+     weißen Fläche und wirkte danebengelegt statt eingebaut — während die
+     Aufnahmen daneben getragen aussahen. Zwei Bildsorten auf einer Seite
+     müssen gleich behandelt werden, sonst sieht man den Unterschied und
+     hält ihn für einen Fehler. */
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 12px 32px rgba(0, 0, 0, .07);
 }
-:global(body.dark) .foto { filter: brightness(.82) saturate(.94); }
+:global(body.dark) .foto {
+  filter: brightness(.82) saturate(.94);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 12px 32px rgba(0, 0, 0, .45);
+}
 
 /* Das erste Band einer Seite liegt unter der schwebenden Leiste und braucht
    oben mehr Luft. Nur der Abstand wird gesetzt — die Ausrichtung gehört in
@@ -106,6 +118,10 @@ main > .band:first-child {
   letter-spacing: -.035em;
   line-height: 1.04;
 }
+
+/* Hervorgehobenes Wort in einer Bandüberschrift. Farbe trägt hier Bedeutung:
+   „für DEIN Bundesland" ist der Kern der Aussage, nicht Schmuck. */
+.akzent { color: var(--accent-d); }
 
 .zeile {
   max-width: 48ch;
@@ -155,6 +171,7 @@ main > .band:first-child {
     .name,
     .titel,
     .zeile,
+    .akzent,
     .bild,
     .hochkant,
     .knopf {

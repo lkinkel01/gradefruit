@@ -1,32 +1,32 @@
 import type { Metadata } from 'next';
 import MarketingSeite from '@/components/MarketingSeite';
 import LernsystemBilder from './LernsystemBilder';
+import LernSchritte from '@/components/LernSchritte';
 import { MERKMALE } from '@/lib/marketing';
 import band from '@/components/SeitenBand.module.css';
 import styles from './lernsystem.module.css';
 
 export const metadata: Metadata = {
   title: 'Lernsystem | Gradefruit',
-  description: 'Aufgaben mit vollständigem Lösungsweg, ein Coach im Lernkontext und Wiederholen im Swipe-Format.',
+  description: 'In fünf Schritten durch jedes Thema: verstehen, rechnen, vergleichen, nachschauen, prüfen.',
 };
 
 export default function Lernsystem() {
   return (
     <MarketingSeite>
+      {/* Die fünf Schritte als Grafik, nicht als Satz. Dieselbe Darstellung
+          wie auf der Startseite — wer von dort kommt, erkennt sie wieder. */}
       <section className={band.band}>
-        <h1 className={band.titel}>Einfaches Lernsystem.</h1>
-        <p className={band.zeile}>
-          Zusammenfassung lesen, Übungsaufgabe rechnen, mit dem Lösungsweg
-          vergleichen, Erklärvideo ansehen und am Ende prüfungsnahe Aufgaben
-          lösen.
-        </p>
+        <h1 className={band.titel}>So lernst du damit.</h1>
+        <p className={band.zeile}>Fünf Schritte, in jedem Thema dieselben.</p>
+        <LernSchritte />
         <div className={band.bild}>
           <LernsystemBilder art="uebersicht" />
         </div>
       </section>
 
       <section className={`${band.band} ${band.bandTon}`}>
-        <h2 className={band.titel}>Was drinsteckt.</h2>
+        <h2 className={band.titel}>Was Gradefruit dir bietet.</h2>
         <ul className={styles.liste}>
           {MERKMALE.map(m => (
             <li key={m.titel}>

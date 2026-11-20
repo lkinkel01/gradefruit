@@ -42,7 +42,7 @@ function Inhalt() {
             ? 'Grundkurs und Leistungskurs liegen bereit. Keine weiteren Kosten.'
             : stand === 'einKurs'
               ? 'Einen Kurs hast du. Der zweite ist einzeln dazubuchbar.'
-              : 'Zugeschnitten auf das hessische Abitur 2027. Von jedem Thema siehst du vorher den Anfang, ohne Zahlungsdaten.'}
+              : 'Zugeschnitten auf das hessische Abitur 2027. Die ersten Inhalte jedes Themas sind kostenlos — überzeug dich vorher selbst.'}
         </p>
 
         <div className={styles.karten}>
@@ -78,7 +78,7 @@ function Inhalt() {
         </div>
 
         <p className={styles.hinweis}>
-          Der Zugang gilt bis zum Ende des Prüfungszeitraums.
+          Der Zugang gilt bis zum Ende des Prüfungszeitraums. Keine automatische Verlängerung.
         </p>
         <p className={styles.hinweis}>
           {STEUERHINWEIS} Bezahlung über Stripe.

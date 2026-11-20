@@ -121,8 +121,15 @@
      Bewusst der dunkle Ton: Weiß auf dem hellen Akzent erreicht nur 3,77:1
      und fiele damit unter die Norm für Schrift dieser Größe. Auf #AB2E4B
      sind es 6,51:1. Siehe Kontrastregel in DESIGN.md. */
-  --btn-ink: var(--accent-d);
-  --btn-ink-hover: #91273F;
+  /* Gefüllte Knöpfe: der HELLSTE Ton, der mit weißer Schrift noch 4,5:1
+     erreicht (gemessen 4,66). --accent selbst schafft nur 3,77 und fällt
+     durch; --accent-d schafft 6,51, wirkt in kleinen Flächen aber fast
+     schwarz — und ein schwarz wirkender Knopf war genau die Rückmeldung.
+     Dieser Ton liegt dazwischen: sichtbar rot und trotzdem lesbar.
+     --accent-d bleibt davon unberührt und trägt weiter farbige SCHRIFT auf
+     hellem Grund, wo ein dunklerer Ton richtig ist. */
+  --btn-ink: #D3395C;
+  --btn-ink-hover: #BF3354;
   --btn-ink-tx: #FFFFFF;
   /* Ein gemeinsames Geometrie- und Tiefensystem fuer Landing und Produkt. */
   /* Abstandsskala. Vorher lagen allein in den vier Marketing-Dateien
