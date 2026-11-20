@@ -34,7 +34,7 @@
   left: 50%;
   bottom: 18px;
   transform: translate(-50%, 6px);
-  padding: 10px 20px;
+  padding: var(--raum-xs) var(--raum-md);
   border-radius: var(--radius-pill);
   /* Durchscheinendes Glas statt schwarzer Pille: Ein schwarzer Block auf dem
      Produktbild war der einzige Ort auf der Seite, an dem Schwarz als Fläche

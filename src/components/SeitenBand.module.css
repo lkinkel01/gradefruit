@@ -38,22 +38,22 @@ main > .band:first-child {
 
 .zeile {
   max-width: 44ch;
-  margin-top: 16px;
+  margin-top: var(--raum-md);
   color: var(--muted);
   font-size: 15.5px;
   line-height: 1.6;
 }
 
-.bild { width: min(100%, 980px); margin-top: 44px; }
-.hochkant { width: min(100%, 288px); margin-top: 40px; }
+.bild { width: min(100%, 980px); margin-top: var(--raum-2xl); }
+.hochkant { width: min(100%, 288px); margin-top: var(--raum-xl); }
 
 .knopf {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 46px;
-  margin-top: 26px;
-  padding: 0 26px;
+  margin-top: var(--raum-lg);
+  padding: 0 var(--raum-lg);
   border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
   border-radius: 999px;
   background: transparent;

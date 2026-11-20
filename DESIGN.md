@@ -51,13 +51,15 @@ rounded:
   panel: "18px"
   pill: "999px"
 spacing:
+  2xs: "4px"
   xs: "8px"
   sm: "12px"
   md: "16px"
   lg: "24px"
   xl: "32px"
   2xl: "48px"
-  3xl: "72px"
+  3xl: "64px"
+  4xl: "96px"
 ---
 
 # Brandbook Gradefruit
@@ -216,9 +218,13 @@ waren eines der Dinge, die nach Baukasten aussahen.
 Eine Skala, keine frei gewählten Zahlen:
 
 ```
-xs  8px    sm 12px    md 16px    lg 24px
-xl  32px   2xl 48px   3xl 72px
+2xs  4px    xs  8px    sm  12px   md  16px
+lg  24px    xl 32px    2xl 48px   3xl 64px   4xl 96px
 ```
+
+Im Code als `--raum-xs` bis `--raum-4xl`. **Neue Abstände kommen
+ausschließlich aus dieser Liste.** Wer einen Zwischenwert braucht, hat
+meistens ein anderes Problem.
 
 - Zwischen Beschriftung und Wert: `xs`
 - Innerhalb einer Karte: `lg`

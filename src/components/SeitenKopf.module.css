@@ -19,8 +19,8 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 16px;
-  padding: 8px 8px 8px 18px;
+  gap: var(--raum-md);
+  padding: var(--raum-xs) var(--raum-xs) var(--raum-xs) var(--raum-md);
 
   /* Am Seitenanfang trägt die Leiste nichts: keine Fläche, kein Rahmen,
      kein Schatten. Nur Marke und Bedienelemente stehen frei auf der Seite.
@@ -61,7 +61,7 @@
 .marke {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--raum-xs);
   flex: none;
   color: var(--ink);
   font-size: 15.5px;
@@ -75,7 +75,7 @@
 .testen {
   flex: none;
   min-height: 38px;
-  padding: 0 18px;
+  padding: 0 var(--raum-md);
   border: 1.5px solid var(--accent);
   border-radius: 999px;
   background: transparent;
@@ -94,11 +94,11 @@
   align-items: center;
   justify-content: center;
   justify-self: center;
-  gap: 4px;
+  gap: var(--raum-2xs);
 }
 
 .seitenLink {
-  padding: 9px 12px;
+  padding: var(--raum-xs) var(--raum-sm);
   border-radius: 999px;
   color: var(--muted);
   font-size: 14px;
@@ -115,7 +115,7 @@
   align-items: center;
   justify-content: flex-end;
   justify-self: end;
-  gap: 6px;
+  gap: var(--raum-xs);
 }
 
 /* Hell/Dunkel als Schalter mit zwei Symbolen, nicht als Zahnrad-Umweg.
@@ -123,6 +123,8 @@
 .modus {
   display: inline-flex;
   align-items: center;
+  /* Zwei und drei Pixel: Das ist die Fassung des Schalters, kein Abstand aus
+     der Skala. Feinwerte dieser Größenordnung bleiben absolut. */
   gap: 2px;
   padding: 3px;
   border-radius: 999px;
@@ -150,7 +152,7 @@
 }
 
 .textLink {
-  padding: 9px 12px;
+  padding: var(--raum-xs) var(--raum-sm);
   border: 0;
   background: none;
   color: var(--muted);
@@ -167,7 +169,7 @@
 .knopf {
   flex: none;
   min-height: 40px;
-  padding: 0 20px;
+  padding: 0 var(--raum-md);
   border: 0;
   border-radius: 999px;
   background: var(--accent);
@@ -191,7 +193,7 @@
   background: transparent;
   cursor: pointer;
 }
-.striche span { display: grid; gap: 4px; }
+.striche span { display: grid; gap: var(--raum-2xs); }
 .striche i { display: block; width: 16px; height: 1.5px; background: var(--ink); }
 
 .nurVorleser {
@@ -218,7 +220,7 @@
 }
 @media (max-width: 560px) {
   .knopf { display: none; }
-  .kopf { padding-left: 14px; }
+  .kopf { padding-left: var(--raum-sm); }
 }
 
 /* Auf dem Handy nimmt die Leiste beim Scrollen Platz weg, den der Inhalt
@@ -260,8 +262,8 @@
   display: grid;
   align-content: center;
   justify-items: center;
-  gap: 8px;
-  padding: 104px 24px 48px;
+  gap: var(--raum-xs);
+  padding: var(--raum-4xl) var(--raum-lg) var(--raum-2xl);
   background: var(--canvas);
   overflow-y: auto;
   animation: menueAuf var(--dur-enter) var(--ease-out) both;
@@ -283,8 +285,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  padding: 20px 6px;
+  gap: var(--raum-md);
+  padding: var(--raum-md) var(--raum-2xs);
   color: var(--ink);
   font-family: 'Cabinet Grotesk', sans-serif;
   font-size: clamp(26px, 4.6vw, 38px);
@@ -294,7 +296,7 @@
   transition: color var(--dur-hover) var(--ease-out), padding-left var(--dur-hover) var(--ease-out);
 }
 .punkt svg { flex: none; color: var(--faint); transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out); }
-.punkt:hover { color: var(--accent); padding-left: 14px; }
+.punkt:hover { color: var(--accent); padding-left: var(--raum-sm); }
 .punkt:hover svg { color: var(--accent); transform: translateX(4px); }
 .punkt[aria-current='page'] { color: var(--accent); }
 
@@ -305,14 +307,14 @@
 .fuss {
   display: grid;
   justify-items: center;
-  gap: 18px;
+  gap: var(--raum-md);
   width: min(100%, 340px);
-  margin-top: 34px;
+  margin-top: var(--raum-xl);
 }
 
 .kontoKnoepfe {
   display: grid;
-  gap: 10px;
+  gap: var(--raum-xs);
   width: 100%;
 }
 
@@ -324,7 +326,7 @@
   justify-content: center;
   width: 100%;
   min-height: 48px;
-  padding: 0 20px;
+  padding: 0 var(--raum-md);
   border-radius: 999px;
   font-family: inherit;
   font-size: 15px;
@@ -348,9 +350,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--raum-xs);
   min-height: 42px;
-  padding: 0 16px;
+  padding: 0 var(--raum-md);
   border: 0;
   border-radius: 999px;
   background: transparent;
@@ -365,8 +367,8 @@
 
 .einstellungen {
   width: min(100%, 360px);
-  margin-top: 18px;
-  padding: 20px;
+  margin-top: var(--raum-md);
+  padding: var(--raum-md);
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--surface);
@@ -374,7 +376,7 @@
 }
 
 .einstellungTitel {
-  margin-bottom: 12px;
+  margin-bottom: var(--raum-sm);
   color: var(--faint);
   font-size: 11.5px;
   font-weight: 700;
@@ -385,8 +387,8 @@
 .wahl {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  padding: 4px;
+  gap: var(--raum-2xs);
+  padding: var(--raum-2xs);
   border-radius: 12px;
   background: var(--control);
 }

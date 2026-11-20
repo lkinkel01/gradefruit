@@ -117,6 +117,21 @@
   --btn-ink-hover: #96182C;
   --btn-ink-tx: #FFFFFF;
   /* Ein gemeinsames Geometrie- und Tiefensystem fuer Landing und Produkt. */
+  /* Abstandsskala. Vorher lagen allein in den vier Marketing-Dateien
+     20 verschiedene Werte (2, 3, 4, 6, 8, 9, 10, 12, 14, 16, 18, 20, 22, 26,
+     34, 40, 44, 64, 116, 136). Das ist der Grund, warum Abstände mal zu eng
+     und mal zu weit wirkten: Jeder Wert war einzeln geraten.
+     Neue Werte kommen ausschließlich aus dieser Liste. */
+  --raum-2xs: 4px;
+  --raum-xs: 8px;
+  --raum-sm: 12px;
+  --raum-md: 16px;
+  --raum-lg: 24px;
+  --raum-xl: 32px;
+  --raum-2xl: 48px;
+  --raum-3xl: 64px;
+  --raum-4xl: 96px;
+
   --radius-control: 8px;
   --radius-card: 14px;
   --radius-panel: 18px;

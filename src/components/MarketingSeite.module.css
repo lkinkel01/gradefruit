@@ -11,7 +11,7 @@
   top: 10px;
   left: 10px;
   z-index: 100;
-  padding: 10px 14px;
+  padding: var(--raum-xs) var(--raum-sm);
   border-radius: var(--radius-control);
   background: var(--ink);
   color: var(--surface);
@@ -24,8 +24,8 @@
 .fuss {
   display: grid;
   justify-items: center;
-  gap: 16px;
-  padding: 64px 24px 56px;
+  gap: var(--raum-md);
+  padding: var(--raum-3xl) var(--raum-lg) var(--raum-2xl);
   border-top: 1px solid var(--line);
   text-align: center;
 }
@@ -33,13 +33,13 @@
 .fussMarke {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--raum-xs);
   color: var(--ink);
   font-size: 15px;
   font-weight: 700;
 }
 
-.fussLinks { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.fussLinks { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--raum-md); }
 .fussLinks a { color: var(--muted); font-size: 13.5px; text-decoration: none; }
 .fussLinks a:hover { color: var(--ink); text-decoration: underline; }
 

@@ -8,7 +8,7 @@
   top: 10px;
   left: 10px;
   z-index: 100;
-  padding: 10px 14px;
+  padding: var(--raum-xs) var(--raum-sm);
   border-radius: var(--radius-control);
   background: var(--ink);
   color: var(--surface);
@@ -27,12 +27,12 @@
   display: grid;
   align-content: center;
   justify-items: center;
-  padding: 136px 22px 104px;
+  padding: var(--raum-4xl) var(--raum-lg) var(--raum-4xl);
 }
 
-.heroMitte { display: grid; justify-items: center; gap: 14px; text-align: center; }
+.heroMitte { display: grid; justify-items: center; gap: var(--raum-sm); text-align: center; }
 
-.heroMarke { width: clamp(46px, 5vw, 62px); height: auto; margin-bottom: 6px; }
+.heroMarke { width: clamp(46px, 5vw, 62px); height: auto; margin-bottom: var(--raum-xs); }
 
 /* Die Überschrift trägt die Aussage, nicht mehr der Markenname. Der steht
    links oben in der Leiste und muss hier nicht zweimal groß erscheinen. */
@@ -52,13 +52,13 @@
 
 .heroUnterzeile {
   max-width: 52ch;
-  margin-top: 18px;
+  margin-top: var(--raum-md);
   color: var(--muted);
   font-size: clamp(15px, 1.6vw, 17.5px);
   line-height: 1.6;
 }
 
-.heroKnoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 18px; }
+.heroKnoepfe { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--raum-sm); margin-top: var(--raum-md); }
 
 /* Beide Knöpfe tragen die Markenfarbe, nicht Schwarz: Auf der ganzen Seite
    ist Korall die Farbe für „hier geht es weiter". Schwarz war ein zweites,
@@ -68,7 +68,7 @@
   align-items: center;
   justify-content: center;
   min-height: 52px;
-  padding: 0 30px;
+  padding: 0 var(--raum-xl);
   border-radius: 999px;
   font-family: inherit;
   font-size: 15px;
@@ -109,8 +109,8 @@
   display: grid;
   align-content: start;
   justify-items: center;
-  gap: 6px;
-  padding: 26px 18px;
+  gap: var(--raum-xs);
+  padding: var(--raum-lg) var(--raum-md);
   text-align: center;
 }
 /* Gleich hohe Zeilen, damit der Abstand zwischen Zahl und Beschreibung
@@ -177,16 +177,16 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px 22px;
+  gap: var(--raum-xs) var(--raum-lg);
   max-width: 54ch;
-  margin-top: 22px;
+  margin-top: var(--raum-lg);
   padding: 0;
   list-style: none;
 }
 .nutzen li {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--raum-xs);
   color: var(--ink);
   font-size: 14.5px;
   font-weight: 620;
@@ -197,13 +197,13 @@
 /* Auf dem Handy braucht alles mehr Luft: Überschrift, Zeile und Punkte
    standen zu dicht beieinander und wirkten gequetscht. */
 @media (max-width: 760px) {
-  .hero { padding: 116px 22px 76px; min-height: auto; }
-  .heroMitte { gap: 18px; }
+  .hero { padding: var(--raum-4xl) var(--raum-lg) var(--raum-3xl); min-height: auto; }
+  .heroMitte { gap: var(--raum-md); }
   .heroTitel { max-width: 14ch; }
-  .heroUnterzeile { margin-top: 4px; }
-  .nutzen { gap: 12px 18px; margin-top: 10px; }
+  .heroUnterzeile { margin-top: var(--raum-2xs); }
+  .nutzen { gap: var(--raum-sm) var(--raum-md); margin-top: var(--raum-xs); }
   .nutzen li { font-size: 14px; }
-  .heroKnoepfe { margin-top: 8px; width: 100%; flex-direction: column; }
+  .heroKnoepfe { margin-top: var(--raum-xs); width: 100%; flex-direction: column; }
   .heroKnopf { width: 100%; }
-  .fakten > div { padding: 22px 18px; }
+  .fakten > div { padding: var(--raum-lg) var(--raum-md); }
 }
