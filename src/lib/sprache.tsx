@@ -35,14 +35,11 @@ export const TEXTE = {
     titelAnfang: { de: 'Online-Kurse für', en: 'Online courses for' },
     titelAkzent: { de: 'dein Mathe\u2011Abitur', en: 'your maths A\u2011levels' },
     titelZusatz: { de: '2027 in Hessen', en: '2027 in Hessen' },
-    unterzeile: {
-      de: 'Sowohl für den Grundkurs als auch für den Leistungskurs, basierend auf dem hessischen Kerncurriculum.',
-      en: 'For the basic course as well as the advanced one, based on the Hessen syllabus.',
-    },
     nutzen1: { de: 'Prüfungsnahe Aufgaben', en: 'Exam-style tasks' },
     nutzen2: { de: 'Lösungswege Schritt für Schritt', en: 'Worked solutions step by step' },
     nutzen3: { de: 'Erklärvideos', en: 'Explainer videos' },
     nutzen4: { de: 'KI-Coach rund um die Uhr', en: 'AI coach around the clock' },
+    nutzen5: { de: 'Grundkurs und Leistungskurs', en: 'Basic and advanced course' },
     titelVersteckt: {
       de: 'Gradefruit: Vorbereitungskurse, Mathe-Abitur, Hessen 2027',
       en: 'Gradefruit: preparation courses for the Maths A-levels in Hessen 2027',

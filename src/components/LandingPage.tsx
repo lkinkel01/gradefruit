@@ -59,13 +59,12 @@ export default function LandingPage({ isAuthed, onEnter, onLogin, onRegister, on
 
             <p className={styles.heroZusatz}>{t('start.titelZusatz')}</p>
 
-            <p className={styles.heroUnterzeile}>{t('start.unterzeile')}</p>
 
-            {/* Die vier Verkaufsargumente als kurze Punkte statt als Fließtext:
-                So sieht man beim Überfliegen, was man bekommt. Jede Angabe ist
-                nachgezählt — 137 Aufgaben, 14 Erklärvideos. */}
+            {/* Fünf Punkte statt eines Fließtexts. Der erklärende Satz darunter
+                ist entfallen: Je weniger Text im Startbereich steht, desto mehr
+                stehen die beiden Knöpfe im Vordergrund. */}
             <ul className={styles.nutzen}>
-              {['nutzen1', 'nutzen2', 'nutzen3', 'nutzen4'].map(schluessel => (
+              {['nutzen1', 'nutzen2', 'nutzen3', 'nutzen4', 'nutzen5'].map(schluessel => (
                 <li key={schluessel}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <polyline points="20 6 9 17 4 12" />

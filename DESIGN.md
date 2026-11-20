@@ -166,13 +166,23 @@ Diese drei **dürfen** sich von der Markenfarbe unterscheiden — ein Fehler
 muss als Fehler lesbar sein und nicht als Markenauftritt. Sie erscheinen
 ausschließlich in der Lernoberfläche, nie auf den Marketing-Seiten.
 
-### Der Schimmer
+### Flächenwechsel
 
-Statt flächiger Farbe gibt es einen sehr schwachen Verlauf, abgelegt als
-`--gf-schimmer`. Flächen wechseln sich ab: eine mit Schimmer, die nächste
-schlicht weiß. **Der Rhythmus entsteht aus dem Wechsel, nicht aus
-Farbstärke.** Im dunklen Modus etwa halb so stark, weil derselbe Wert auf
-Schwarz sofort wie ein Fleck wirkt.
+Abschnitte wechseln zwischen **reinem Weiß** (`--surface`) und dem **leicht
+abgesetzten Seitengrund** (`--canvas`). Beide Töne sind neutral.
+
+Vier Versuche lagen davor daneben und sind als Warnung festgehalten:
+
+| Versuch | Warum es nicht ging |
+|---|---|
+| Blasses Rosa | sah aus wie mit dem Textmarker gezogen |
+| Tiefes Rot | zu laut für eine Lernseite |
+| Warmes Beige | brachte einen zweiten Farbton ins Spiel |
+| Verlauf in der Markenfarbe | machte die ansonsten weiße Seite unruhig |
+
+**Die Lehre daraus:** Farbe erklärt an dieser Stelle nichts. Der Wechsel
+allein reicht, und er muss so klein sein, dass er nicht auffällt — groß
+genug nur, damit man die Abschnitte auseinanderhält.
 
 ---
 

@@ -21,9 +21,7 @@
 .hero {
   position: relative;
   min-height: min(100svh, 760px);
-  /* Der Schimmer liegt tief im Bild, oben bleibt die Seite weiß — dort steht
-     die Leiste und braucht Kontrast. */
-  background: var(--gf-schimmer), var(--canvas);
+  background: var(--surface);
   display: grid;
   align-content: center;
   justify-items: center;
@@ -72,13 +70,6 @@
   letter-spacing: -.02em;
 }
 
-.heroUnterzeile {
-  max-width: 46ch;
-  margin-top: var(--raum-md);
-  color: var(--muted);
-  font-size: clamp(15px, 1.6vw, 17.5px);
-  line-height: 1.6;
-}
 
 .heroKnoepfe { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: var(--raum-sm); margin-top: var(--raum-md); }
 
@@ -189,7 +180,6 @@
   .hero { padding: var(--raum-4xl) var(--raum-lg) var(--raum-3xl); min-height: auto; }
   .heroMitte { gap: var(--raum-md); }
   .heroTitel { max-width: 14ch; }
-  .heroUnterzeile { margin-top: var(--raum-2xs); }
   .nutzen { gap: var(--raum-sm) var(--raum-md); margin-top: var(--raum-xs); }
   .nutzen li { font-size: 14px; }
   .heroKnoepfe { margin-top: var(--raum-xs); width: 100%; flex-direction: column; }

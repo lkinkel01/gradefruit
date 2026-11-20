@@ -45,14 +45,15 @@ main > .band:first-child {
   padding-top: clamp(118px, 15vh, 168px);
 }
 
-/* Flächen im Wechsel: Ein Band trägt den Schimmer, das nächste ist schlicht
-   weiß. Der Rhythmus entsteht aus dem Wechsel, nicht aus Farbstärke.
+/* Flächen im Wechsel, beide neutral: ein Band weiß, das nächste auf dem
+   leicht abgesetzten Seitengrund.
 
-   Drei Versuche lagen davor daneben: blasses Rosa sah aus wie mit dem
+   Vier Versuche lagen davor daneben: blasses Rosa sah aus wie mit dem
    Textmarker gezogen, ein tiefes Rot war zu laut, ein warmes Beige brachte
-   einen zweiten Farbton ins Spiel. */
-.band { background: var(--canvas); }
-.bandTon { background: var(--gf-schimmer), var(--canvas); }
+   einen zweiten Farbton, und ein zarter Verlauf in der Markenfarbe machte
+   die Seite unruhig. Farbe erklärt hier nichts — der Wechsel allein reicht. */
+.band { background: var(--surface); }
+.bandTon { background: var(--canvas); }
 
 
 .titel {

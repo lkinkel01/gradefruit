@@ -467,28 +467,16 @@ body {
    Bewusst sehr blass: Es soll nach Licht aussehen, nicht nach Farbe.
 --------------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------------
-   Der Schimmer
+   Flächenwechsel
 
-   Eine einzige Verlaufsdefinition für die ganze Seite, als Variable abgelegt.
-   Dadurch sieht jede Fläche, die ihn benutzt, gleich aus, und eine Änderung
-   wirkt überall.
+   Es gab hier einen zarten Verlauf in der Markenfarbe. Er ist entfallen: Die
+   Seite ist weiß (im dunklen Modus dunkel), und ein roter Hauch darüber hat
+   sie unruhig gemacht, ohne etwas zu erklären.
 
-   Bewusst sehr schwach und tief angesetzt: Oben bleibt die Seite weiß, damit
-   die Leiste Kontrast hat; der Hauch Farbe liegt darunter. Der Versuch davor
-   war kräftig und begann ganz oben — die Seite wirkte rot statt weiß.
+   Den Rhythmus tragen jetzt zwei neutrale Töne, die ohnehin zum System
+   gehören — reines Weiß und der leicht abgesetzte Seitengrund. Der
+   Unterschied ist klein genug, um nicht aufzufallen, und groß genug, damit
+   man die Abschnitte auseinanderhält.
 --------------------------------------------------------------------------- */
-:root {
-  --gf-schimmer:
-    radial-gradient(92% 58% at 18% 46%, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 64%),
-    radial-gradient(84% 52% at 86% 30%, color-mix(in srgb, var(--accent) 7%, transparent) 0%, transparent 60%);
-}
-
-body.dark {
-  --gf-schimmer:
-    radial-gradient(92% 58% at 18% 46%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 64%),
-    radial-gradient(84% 52% at 86% 30%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 60%);
-}
-
-/* Flächen wechseln sich ab: eine mit Schimmer, die nächste schlicht weiß. */
-.gf-schimmer { background: var(--gf-schimmer), var(--canvas); }
-.gf-weiss { background: var(--canvas); }
+/* Die beiden Töne stehen als Variablen bereit; die Bänder setzen sie selbst.
+   Eigene Hilfsklassen dafür gab es, sie wurden nirgends benutzt. */
